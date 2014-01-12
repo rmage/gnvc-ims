@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 23, 2012 11:35:36 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.GoodreceiveDetail" table="goodreceive_detail" schema="dbo" catalog="inventory">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="grnumber" type="string">
+            <column name="grnumber" length="10" />
+        </property>
+        <property name="productcode" type="string">
+            <column name="productcode" length="10" />
+        </property>
+        <property name="qtyreal" type="java.math.BigDecimal">
+            <column name="qtyreal" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="10" />
+        </property>
+        <property name="producttype" type="string">
+            <column name="producttype" length="20" />
+        </property>
+        <property name="expirydate" type="timestamp">
+            <column name="expirydate" length="23" />
+        </property>
+        <property name="remark" type="string">
+            <column name="remark" length="300" />
+        </property>
+        <property name="lotid" type="java.lang.Integer">
+            <column name="lotid" />
+        </property>
+        
+         <property name="qtygood" type="java.math.BigDecimal">
+            <column name="qtygood" />
+        </property>
+        
+         <property name="qtydmg" type="java.math.BigDecimal">
+            <column name="qtydmg" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

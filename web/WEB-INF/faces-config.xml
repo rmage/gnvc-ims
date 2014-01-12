@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="1.2" 
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+    <!--
+    <application>
+        <variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>es</supported-locale>
+        </locale-config>
+        <message-bundle>messages</message-bundle>
+    </application>
+    -->
+
+    <application>
+        <el-resolver>
+            org.springframework.web.jsf.el.SpringBeanFacesELResolver
+        </el-resolver>
+        <variable-resolver>
+            org.springframework.web.jsf.DelegatingVariableResolver
+        </variable-resolver>
+    </application>
+
+    <managed-bean>
+        <managed-bean-name>baseReportManager</managed-bean-name>
+        <managed-bean-class>com.app.wms.engine.report.BaseReportManager</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope></managed-bean>
+    <managed-bean>
+        <managed-bean-name>reportManager</managed-bean-name>
+        <managed-bean-class>com.app.wms.engine.report.ReportManager</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope></managed-bean>
+    <managed-bean>
+        <managed-bean-name>reportProperty</managed-bean-name>
+        <managed-bean-class>com.app.wms.engine.report.model.ReportProperty</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope></managed-bean>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/success.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>rptAgentList</from-outcome>
+            <to-view-id>/rptAgentList.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failure</from-outcome>
+            <to-view-id>/welcomeJSF.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>report</from-outcome>
+            <to-view-id>/report.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>preview</from-outcome>
+            <to-view-id>/preview.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>
+

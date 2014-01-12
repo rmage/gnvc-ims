@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 25, 2012 11:25:14 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.Putaway" table="putaway" schema="dbo" catalog="inventory">
+        <id name="putawayId" type="string">
+            <column name="putaway_id" length="30" />
+            <generator class="assigned" />
+        </id>
+        <property name="putawayDate" type="timestamp">
+            <column name="putaway_date" length="23" />
+        </property>
+        <property name="grNumber" type="string">
+            <column name="gr_number" length="30" />
+        </property>
+        <property name="grDate" type="timestamp">
+            <column name="gr_date" length="23" />
+        </property>
+        <property name="statusApp" type="string">
+            <column name="status_app" length="30" />
+        </property>
+        <property name="appDate" type="timestamp">
+            <column name="app_date" length="23" />
+        </property>
+        <property name="createdBy" type="string">
+            <column name="created_by" length="30" />
+        </property>
+        <property name="createdDate" type="timestamp">
+            <column name="created_date" length="23" />
+        </property>
+        <property name="updatedBy" type="string">
+            <column name="updated_by" length="30" />
+        </property>
+        <property name="updatedDate" type="timestamp">
+            <column name="updated_date" length="23" />
+        </property> 
+        
+        <property name="tallyman" type="string">
+            <column name="tallyman" length="10" />
+        </property>
+                          
+    </class>
+</hibernate-mapping>

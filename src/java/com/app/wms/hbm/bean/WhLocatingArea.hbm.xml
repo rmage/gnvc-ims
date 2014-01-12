@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Feb 13, 2013 2:11:06 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.WhLocatingArea" table="wh_locating_area" schema="dbo" catalog="inventory">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="locatingId" type="string">
+            <column name="locating_id" length="7" />
+        </property>
+        <property name="locatingArea" type="string">
+            <column name="locating_area" length="30" />
+        </property>
+        <property name="locatingCondition" type="string">
+            <column name="locating_condition" length="30" />
+        </property>
+        <property name="userId" type="string">
+            <column name="user_id" length="30" />
+        </property>
+        <property name="corpId" type="string">
+            <column name="corp_id" length="30" />
+        </property>
+        <property name="whCode" type="string">
+            <column name="wh_code" length="30" />
+        </property>
+    </class>
+</hibernate-mapping>

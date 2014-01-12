@@ -1,0 +1,175 @@
+@charset "utf-8";
+/* CSS Document */
+body{
+	padding:0; 
+	width:100%; 
+	vertical-align:top;
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	color:#636363; line-height:16px; font-size:16px;
+	margin-bottom:0;margin-left:0;margin-right:0;margin-top:0;	
+}
+form, div{ margin:0; padding:0;}
+label {font-size:11px; font-weight:bold;}
+img{
+	border:none;
+}
+input{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:14px; 		
+}
+select{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif;  
+	font-size:14px;
+	border: 1px solid #C3BBB6;	
+	background-color: #FFFF99;
+	border: 1px solid #C3BBB6;
+}
+.judul{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:18px; 
+	font-weight:bold;}
+
+
+/*	table etc	*/
+.view_table{
+	border: solid 1px gray;
+}
+.table_header{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:14px; text-align:center; 
+	vertical-align:middle; 
+	color:#ffffff;
+	background: #fff url(../images/bg.gif) 0 0 repeat;
+}
+.top_header{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:16px; text-align:right; 
+	vertical-align:bottom; 
+	color:#333333;
+	background-color: #466BA9;
+	color:#FFFFFF;
+	height:50px;
+}
+.top_header2{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:20px; text-align:left; 
+	vertical-align:bottom; 
+	color:#333333;
+	background-color:#466BA9;
+	color:#FFFFFF;
+	height:50px;
+	padding-bottom:2px;
+}
+.other_header{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:18px; 
+	background: #fff url(../images/bg.gif) repeat-X;
+	color:#FFFFFF;
+	vertical-align:middle;
+	height:30px;
+	padding-bottom:2px;	
+	
+}
+
+caption{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:18px; 
+	background: #fff url(../images/bg.gif) repeat-X;
+	color:#FFFFFF;
+	vertical-align:middle;
+	padding:5px 0 1px 18px;
+	text-align:left;	
+	
+}
+.menu_nav{
+	font-family:modena pro cond, myriad pro cond, arial narrow,arial, helvetica, sans-serif; 
+	font-size:18px; 
+}
+.menu_popup{
+	font-family:myriad pro cond,tahoma,  arial, helvetica, sans-serif; 
+	font-size:18px; color:#FFFFFF;
+}
+.ganjil{background-color:#ECF4FE;}
+
+.detail_ganjil{
+	background-color:#ECF4FE;
+}
+
+.number{text-align:right;}
+.mid{text-align:center;}
+
+.numbertext{width:90px; background-color:#CCFF66;}
+.shorttext{width:150px; background-color:#CCFF66;}
+.longtext{width:200px; background-color:#CCFF66;}
+.disabled{width:150px; background-color:#CCCCCC;}
+
+td_title
+{
+vertical-align:top;
+padding-top:5px;
+padding-bottom: 2px;
+}
+
+td{vertical-align:top}
+.tabletr td, .view_table td {vertical-align: middle; }
+.tbl-nav { }
+.tbl-nav td { vertical-align: top; }
+.tableborder{border-color:#66CCFF;}
+
+/* overlay */
+FIELDSET {
+	border: solid 1px #CCC;
+	-moz-border-radius: 16px;
+	-webkit-border-radius: 16px;
+	border-radius: 16px;
+	padding: 1em 2em;
+	margin: 1em 0em;
+}
+
+LEGEND {
+	color: #666;
+	font-size: 16px;
+	padding: 0em .5em;
+}
+
+PRE {
+	font-family: "Courier New", monospace;
+	font-size: 11px;
+	color: #666;
+	background: #F8F8F8;
+	padding: 1em;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+}
+
+/* Custom dialog styles */
+#popup_container.style_1 {
+	font-family: Georgia, serif;
+	color: #A4C6E2;
+	background: #005294;
+	border-color: #113F66;
+}
+
+#popup_container.style_1 #popup_title {
+	color: #FFF;
+	font-weight: normal;
+	text-align: left;
+	background: #76A5CC;
+	border: solid 1px #005294;
+	padding-left: 1em;
+}
+
+#popup_container.style_1 #popup_content {
+	background: none;
+}
+
+#popup_container.style_1 #popup_message {
+	padding-left: 0em;
+}
+
+#popup_container.style_1 INPUT[type='button'] {
+	border: outset 2px #76A5CC;
+	color: #A4C6E2;
+	background: #3778AE;
+}

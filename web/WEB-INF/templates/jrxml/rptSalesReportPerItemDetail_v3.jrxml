@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSalesReportPerItemDetail_v2_1_" pageWidth="800" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="740" leftMargin="30" rightMargin="30" topMargin="0" bottomMargin="20">
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="216"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="P_LOCATION" class="java.lang.String"/>
+	<parameter name="P_START_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["01/11/2005 00:00:00"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_END_DATE" class="java.lang.String"/>
+	<parameter name="P_USERNAME" class="java.lang.String"/>
+	<parameter name="P_BG_TYPE" class="java.lang.String"/>
+	<parameter name="P_DEALER_CODE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+BG.BG_CODE AS BG_CODE
+,BG.NAME as BG_NAME
+,B."NAME" AS AREA_NAME
+,S.DOCUMENT_DATE AS SALES_DATE
+,S.DOCUMENT_NO AS INVOICE_NAME
+,P.ITEM_CODE AS ITEM_CODE
+,P."NAME" AS ITEM_NAME
+,CU."NAME" AS CUSTOMER_NAME
+,D.QUANTITY AS QUANTITY
+,D.CUSTOMER_PRICE AS ITEM_PRICE --HARGA SATUAN
+,D.TOTAL_PRICE AS TOTAL_PRICE
+,D.DISCOUNT_PERCENT AS DISCOUNT_PERCENT
+,D.DISCOUNT_PRICE AS DISCOUNT_AMOUNT
+,D.VALUE_VAT AS VALUE_VAT -- INI UDAH GABUNGAN BELUM YA ?
+,D.VALUE_PRICE AS DISCOUNTED_PRICE
+,D.SN_START AS SERIAL_START -- YAKIN CARANYA
+,D.SN_END AS SERIAL_END -- BELUM YAKIN CARA NYA
+,D.IDENT_NO AS IDENT_NO
+,(D.QUANTITY * D.CUSTOMER_PRICE) AS CUSTOMER_PRICE
+,U.NAME AS AGENT_NAME
+FROM SALES S
+INNER JOIN BG BG ON S.BG_CODE=BG.BG_CODE
+LEFT JOIN BRANCH B ON BG.BRANCH_CODE=B.BRANCH_CODE
+LEFT JOIN CUSTOMER CU ON S.CUSTOMER_ID=CU.CUSTOMER_ID
+LEFT JOIN "USER" U ON U.USER_ID = S.USER_ID
+LEFT JOIN
+  (SELECT SD.DOCUMENT_NO
+  ,SD.ITEM_CODE
+  ,SD.QUANTITY
+  ,SD.BASE_PRICE
+  ,SD.QUANTITY * SD.CUSTOMER_PRICE AS TOTAL_PRICE
+  ,SD.DISCOUNT_PERCENT
+  ,SD.DISCOUNT_PRICE
+  ,SD.VALUE_VAT
+  ,SD.VALUE_PRICE
+  ,SD.CUSTOMER_PRICE
+  ,SDR.SN_START
+  ,SDR.SN_END
+  ,SDI.IDENT_NO
+  FROM SALES_DTL_PRODUCT SD
+  LEFT JOIN SALES_DTL_RANGE SDR on SD.CATALOG_CODE=SDR.CATALOG_CODE AND
+  SD.ITEM_CODE=SDR.ITEM_CODE AND
+  SD.DOCUMENT_NO=SDR.DOCUMENT_NO
+  LEFT JOIN SALES_DTL_IDENT SDI ON SD.CATALOG_CODE=SDI.CATALOG_CODE AND
+  SD.ITEM_CODE=SDI.ITEM_CODE AND
+  SD.DOCUMENT_NO=SDI.DOCUMENT_NO
+  UNION
+  SELECT SD.DOCUMENT_NO
+  ,SDP.ITEM_CODE
+  ,SDP.QUANTITY
+  ,SDP.BASE_PRICE
+  ,SDP.QUANTITY * (SDP.VALUE_VAT + SDP.VALUE_PRICE) AS TOTAL_PRICE
+  ,SDP.DISCOUNT_PERCENT
+  ,SDP.DISCOUNT_PRICE
+  ,SDP.VALUE_VAT
+  ,SDP.VALUE_PRICE
+  ,SD.CUSTOMER_PRICE
+  ,SDR.SN_START
+  ,SDR.SN_END
+  ,SBDI.IDENT_NO
+  FROM SALES_DTL_BUNDLE SD
+  LEFT JOIN SALES_DTL_BUNDLE_DTL SDP ON SD.DOCUMENT_NO=SDP.DOCUMENT_NO
+  AND SD.BUNDLE_CODE=SDP.BUNDLE_CODE
+  AND SD.CATALOG_CODE=SDP.CATALOG_CODE
+  LEFT JOIN SALES_DTL_RANGE SDR ON SDP.DOCUMENT_NO=SDR.DOCUMENT_NO
+  AND SDP.ITEM_CODE=SDR.ITEM_CODE
+  AND SDP.CATALOG_CODE=SDR.CATALOG_CODE
+  LEFT JOIN SALES_DTL_BUNDLE_DTL_IDENT SBDI ON SDP.DOCUMENT_NO=SBDI.DOCUMENT_NO
+  AND SDP.ITEM_CODE=SBDI.ITEM_CODE
+  AND SDP.CATALOG_CODE=SBDI.CATALOG_CODE
+  ) D ON S.DOCUMENT_NO=D.DOCUMENT_NO
+INNER JOIN PRODUCT P ON D.ITEM_CODE=P.ITEM_CODE
+where S.DOCUMENT_DATE >= to_date($P{P_START_DATE}||',00:00','dd-mm-yyyy,HH24:MI')
+and S.DOCUMENT_DATE <= to_date($P{P_END_DATE}||',23:59','dd-mm-yyyy,HH24:MI')
+and B.BRANCH_CODE like $P{P_LOCATION}
+and BG.BG_TYPE_CODE like $P{P_BG_TYPE}
+and BG.BG_CODE like $P{P_DEALER_CODE}
+and
+S.STATUS_CODE = 'PAID'
+union
+SELECT
+BG.BG_CODE AS BG_CODE
+,BG.NAME as BG_NAME
+,B."NAME" AS AREA_NAME
+,S.DOCUMENT_DATE AS SALES_DATE
+,S.DOCUMENT_NO AS INVOICE_NAME
+,P.ITEM_CODE AS ITEM_CODE
+,P."NAME" AS ITEM_NAME
+,'' AS CUSTOMER_NAME
+,D.QUANTITY AS QUANTITY
+,D.CUSTOMER_PRICE AS ITEM_PRICE --HARGA SATUAN
+,D.TOTAL_PRICE AS TOTAL_PRICE
+,D.DISCOUNT_PERCENT AS DISCOUNT_PERCENT
+,D.DISCOUNT_PRICE AS DISCOUNT_AMOUNT
+,D.VALUE_VAT AS VALUE_VAT -- INI UDAH GABUNGAN BELUM YA ?
+,D.VALUE_PRICE AS DISCOUNTED_PRICE
+,D.SN_START AS SERIAL_START -- YAKIN CARANYA
+,D.SN_END AS SERIAL_END -- BELUM YAKIN CARA NYA
+,'' AS IDENT_NO
+,(D.QUANTITY * D.CUSTOMER_PRICE) AS CUSTOMER_PRICE
+,'' AS AGENT_NAME
+FROM AGENT_SALES S
+INNER JOIN BG BG ON S.BG_CODE=BG.BG_CODE
+LEFT JOIN BRANCH B ON BG.BRANCH_CODE=B.BRANCH_CODE
+--LEFT JOIN CUSTOMER CU ON S.CUSTOMER_ID=CU.CUSTOMER_ID
+LEFT JOIN
+  (
+  select
+  ASD.DOCUMENT_NO
+  ,ASD.ITEM_CODE
+  ,ASD.QUANTITY
+  ,ASD.BASE_PRICE
+  ,ASD.QUANTITY * ASD.CUSTOMER_PRICE AS TOTAL_PRICE
+  ,ASD.DISCOUNT_PERCENT
+  ,ASD.DISCOUNT_PRICE
+  ,ASD.VALUE_VAT
+  ,ASD.VALUE_PRICE
+  ,ASD.CUSTOMER_PRICE
+  ,ASR.SN_START
+  ,ASR.SN_END
+  from AGENT_SALES_DTL ASD
+  left join AGENT_SALES_RANGE ASR on ASR.DOCUMENT_NO=ASD.DOCUMENT_NO and ASR.ITEM_CODE=ASD.ITEM_CODE
+  ) D ON S.DOCUMENT_NO=D.DOCUMENT_NO
+INNER JOIN PRODUCT P ON D.ITEM_CODE=P.ITEM_CODE
+where S.DOCUMENT_DATE >= to_date($P{P_START_DATE}||',00:00','dd-mm-yyyy,HH24:MI')
+and S.DOCUMENT_DATE <= to_date($P{P_END_DATE}||',23:59','dd-mm-yyyy,HH24:MI')
+and B.BRANCH_CODE like $P{P_LOCATION}
+and BG.BG_TYPE_CODE like $P{P_BG_TYPE}
+and BG.BG_CODE like $P{P_DEALER_CODE}
+order by SALES_DATE, INVOICE_NAME]]>
+	</queryString>
+	<field name="BG_CODE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="BG_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AREA_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SALES_DATE" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="INVOICE_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ITEM_CODE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ITEM_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CUSTOMER_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="QUANTITY" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ITEM_PRICE" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TOTAL_PRICE" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DISCOUNT_PERCENT" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DISCOUNT_AMOUNT" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="VALUE_VAT" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DISCOUNTED_PRICE" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SERIAL_START" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SERIAL_END" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="IDENT_NO" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CUSTOMER_PRICE" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AGENT_NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="ROW_NUMBER" class="java.lang.Integer" resetType="Group" resetGroup="bgCode">
+		<variableExpression><![CDATA[$F{ITEM_CODE}!=null?
+new Integer($V{ROW_NUMBER}.intValue()+1):$V{ROW_NUMBER}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<variable name="REPEAT_FLAG" class="java.lang.Boolean">
+		<initialValueExpression><![CDATA[new Boolean(false)]]></initialValueExpression>
+	</variable>
+	<group name="bgCode">
+		<groupExpression><![CDATA[$F{BG_CODE}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<textField>
+					<reportElement x="0" y="0" width="250" height="22"/>
+					<textElement>
+						<font fontName="Modena Condensed Regular" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{BG_NAME}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="60">
+				<line>
+					<reportElement x="0" y="0" width="740" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="29" width="740" height="1"/>
+				</line>
+				<line>
+					<reportElement x="0" y="59" width="740" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="0" y="30" width="138" height="29"/>
+					<textElement>
+						<font fontName="Modena Condensed Regular" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Sales]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="1" width="138" height="28"/>
+					<textElement>
+						<font fontName="Modena Condensed Regular" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sub Total Sales]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement x="607" y="30" width="133" height="30"/>
+					<textElement textAlignment="Right">
+						<font fontName="Modena Condensed Regular"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{TOTAL_SALES}!=null?$V{TOTAL_SALES}:new BigDecimal(0)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00">
+					<reportElement x="607" y="1" width="133" height="28"/>
+					<textElement textAlignment="Right">
+						<font fontName="Modena Condensed Regular"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{TOTAL_SALES}!=null?$V{TOTAL_SALES}:new BigDecimal(0)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="docNo">
+		<groupExpression><![CDATA[$F{INVOICE_NAME}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement isPrintRepeatedValues="false" x="0" y="0" width="250" height="20" printWhenGroupChanges="bgCode"/>
+					<textElement>
+						<font fontName="Modena Condensed Regular" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{INVOICE_NAME}!=null ?
+("Invoice No: " + $F{INVOICE_NAME})
+: ""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="itemCode">
+		<groupExpression><![CDATA[$F{ITEM_CODE}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" mode="Transparent" x="0" y="0" width="740" height="41" forecolor="#000000" backcolor="#9999FF"/>
+				<box leftPadding="5" rightPadding="10">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="SansSerif" size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[SALES REPORT PER ITEM DETAIL]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="84" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="0" y="54" width="75" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Store]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-28" mode="Transparent" x="75" y="54" width="27" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="473" y="0" width="94" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Page]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-28" mode="Transparent" x="567" y="0" width="24" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="0" y="18" width="75" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Start Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-28" mode="Transparent" x="75" y="18" width="27" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="591" y="0" width="68" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Modena Condensed Regular" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[""+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="659" y="0" width="51" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Modena Condensed Regular" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="0" y="36" width="75" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[End Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-28" mode="Transparent" x="75" y="36" width="27" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="102" y="18" width="210" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Modena Condensed Regular" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_START_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="36" width="210" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Modena Condensed Regular" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_END_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="54" width="210" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Modena Condensed Regular" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_DEALER_CODE}.equalsIgnoreCase( "%%" )==true ? "All" : $P{P_DEALER_CODE}.equalsIgnoreCase( "%wic%" )==true ? "All WIC" : $P{P_DEALER_CODE}.equalsIgnoreCase( "%dsa%" )==true ? "All DSA" : $P{P_DEALER_CODE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="0" y="0" width="311" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[PT. Hutchison CP Telecommunications]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="51" splitType="Stretch">
+			<elementGroup>
+				<elementGroup>
+					<staticText>
+						<reportElement key="staticText-62" mode="Opaque" x="0" y="1" width="22" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+							<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						</textElement>
+						<text><![CDATA[No]]></text>
+					</staticText>
+					<staticText>
+						<reportElement key="staticText-62" mode="Opaque" x="22" y="1" width="60" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+							<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						</textElement>
+						<text><![CDATA[Sales Date]]></text>
+					</staticText>
+					<staticText>
+						<reportElement key="staticText-62" mode="Opaque" x="308" y="1" width="114" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+							<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						</textElement>
+						<text><![CDATA[Product Name]]></text>
+					</staticText>
+					<staticText>
+						<reportElement key="staticText-62" mode="Opaque" x="250" y="1" width="58" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+							<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						</textElement>
+						<text><![CDATA[Product Code ERP or Item code]]></text>
+					</staticText>
+					<staticText>
+						<reportElement key="staticText-75" mode="Opaque" x="481" y="1" width="53" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+							<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						</textElement>
+						<text><![CDATA[End Serial Number]]></text>
+					</staticText>
+					<staticText>
+						<reportElement key="staticText-62" mode="Opaque" x="423" y="1" width="58" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+						<box>
+							<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+							<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						</textElement>
+						<text><![CDATA[Start Serial Number]]></text>
+					</staticText>
+				</elementGroup>
+			</elementGroup>
+			<staticText>
+				<reportElement key="staticText-62" mode="Opaque" x="82" y="1" width="63" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Invoice Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-62" mode="Opaque" x="591" y="1" width="25" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-62" mode="Opaque" x="534" y="1" width="57" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[IMEI or hapus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-62" mode="Opaque" x="616" y="1" width="60" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Price Per Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-62" mode="Opaque" x="676" y="1" width="64" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-75" mode="Opaque" x="145" y="1" width="105" height="50" forecolor="#000000" backcolor="#EDECEB"/>
+				<box>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Agent Name]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="21" y="0" width="61" height="22" printWhenGroupChanges="bgCode"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{SALES_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="false">
+				<reportElement isPrintRepeatedValues="false" x="590" y="0" width="26" height="22" printWhenGroupChanges="itemCode"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{QUANTITY} != null ? $F{QUANTITY} : new BigDecimal(0)]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-6" x="0" y="0" width="22" height="22"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{ROW_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Transparent" x="308" y="0" width="115" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ITEM_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement x="615" y="0" width="61" height="22"/>
+				<textElement textAlignment="Right">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{ITEM_PRICE} != null ? $F{ITEM_PRICE} : new BigDecimal(0)]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="422" y="0" width="60" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SERIAL_START}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="481" y="0" width="53" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SERIAL_END}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement x="676" y="0" width="64" height="22"/>
+				<textElement textAlignment="Right">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTAL_PRICE} != null ? $F{TOTAL_PRICE} : new BigDecimal(0)]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="533" y="0" width="58" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{IDENT_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="81" y="0" width="63" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{BG_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="144" y="0" width="106" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{AGENT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="250" y="0" width="58" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Modena Condensed Regular" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ITEM_CODE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="41">
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="0" y="0" width="82" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Printed by :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="81" y="0" width="245" height="18"/>
+				<textElement>
+					<font fontName="Modena Condensed Regular" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_USERNAME} + ", " +
+new SimpleDateFormat("dd-MM-yyyy HH:mm aaa").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-22" mode="Transparent" x="0" y="18" width="82" height="23" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box leftPadding="5">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="Modena Condensed Regular" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Printed Date :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="82" y="18" width="275" height="23"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Modena Condensed Regular" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new SimpleDateFormat("dd-MM-yyyy HH:mm aaa").format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

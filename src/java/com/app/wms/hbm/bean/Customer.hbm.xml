@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 15, 2012 6:19:21 PM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.Customer" table="customer" schema="dbo" catalog="inventory">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="customercode" type="string">
+            <column name="customercode" length="10" />
+        </property>
+        <property name="customername" type="string">
+            <column name="customername" length="20" />
+        </property>
+        <property name="customeraddress" type="string">
+            <column name="customeraddress"  length="200"/>
+        </property>
+    </class>
+</hibernate-mapping>

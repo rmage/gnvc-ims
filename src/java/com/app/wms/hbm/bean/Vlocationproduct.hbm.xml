@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 13, 2012 3:10:14 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.Vlocationproduct" table="vlocationproduct" schema="dbo" catalog="inventory">
+        
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        
+        
+            <property name="locationId" type="string">
+                <column name="location_id" length="9" />
+            </property>
+            <property name="locationName" type="string">
+                <column name="location_name" length="50" />
+            </property>
+            <property name="locationCode" type="string">
+                <column name="location_code" length="50" />
+            </property>
+            <property name="locationArea" type="string">
+                <column name="locating_area" length="30" />
+            </property>
+            <property name="productId" type="string">
+                <column name="product_id" length="30" />
+            </property>
+            <property name="productCode" type="string">
+                <column name="product_code" length="30" />
+            </property>
+            <property name="minProduct" type="java.lang.Integer">
+                <column name="min_product" />
+            </property>
+            <property name="maxProduct" type="java.lang.Integer">
+                <column name="max_product" />
+            </property>
+            <property name="userId" type="string">
+                <column name="user_id" length="10" />
+            </property>
+            <property name="corpId" type="string">
+                <column name="corp_id" length="10" />
+            </property>
+            <property name="whCode" type="string">
+                <column name="wh_code" length="30" />
+            </property>
+            <property name="balance" type="java.lang.Integer">
+                <column name="balance" />
+            </property>
+       
+    </class>
+</hibernate-mapping>

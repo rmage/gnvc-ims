@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="AppWEB">
+        <wb-resource deploy-path="/" source-path="/web" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/report"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/fish"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/stratchpad"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/jagg"/>
+        <property name="context-root" value="AppWEB"/>
+        <property name="java-output-path" value="/AppWEB/build/classes"/>
+    </wb-module>
+</project-modules>

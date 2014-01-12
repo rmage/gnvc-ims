@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 22, 2012 8:23:42 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.Tallyman" table="tallyman" schema="dbo" catalog="inventory">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+<!--        <property name="tallyId" type="string">
+            <column name="tally_id" length="11" />
+        </property>-->
+        <property name="code" type="string">
+            <column name="code" length="30" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="50" />
+        </property>
+        <property name="tallyname" type="string">
+            <column name="tallyname" length="50" />
+        </property>
+        <property name="jobfunction" type="string">
+            <column name="jobfunction" length="50" />
+        </property>
+        <property name="corpId" type="string">
+            <column name="corp_id" length="10" />
+        </property>
+        <property name="whCode" type="string">
+            <column name="wh_code" length="30" />
+        </property>
+        <property name="isActive" type="java.lang.Character">
+            <column name="is_active" length="1" />
+        </property>
+        <property name="isDelete" type="java.lang.Character">
+            <column name="is_delete" length="1" />
+        </property>
+        <property name="createdBy" type="java.lang.Integer">
+            <column name="created_by" />
+        </property>
+        <property name="createdDate" type="timestamp">
+            <column name="created_date" length="23" not-null="true" />
+        </property>
+        <property name="updatedBy" type="java.lang.Integer">
+            <column name="updated_by" />
+        </property>
+        <property name="updatedDate" type="timestamp">
+            <column name="updated_date" length="23" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<job>
+  <name>etlBundleJob</name>
+    <description/>
+    <extended_description/>
+    <job_version/>
+    <job_status>0</job_status>
+  <directory>&#47;</directory>
+  <created_user>-</created_user>
+  <created_date>2010&#47;07&#47;14 11:12:41.640</created_date>
+  <modified_user>-</modified_user>
+  <modified_date>2010&#47;07&#47;14 11:12:41.640</modified_date>
+    <parameters>
+        <parameter>
+            <name>ParDbAddress</name>
+            <default_value>10.100.11.4</default_value>
+            <description>null</description>
+        </parameter>
+        <parameter>
+            <name>ParDbName</name>
+            <default_value>DEV</default_value>
+            <description>null</description>
+        </parameter>
+        <parameter>
+            <name>ParDbPassword</name>
+            <default_value>poshcpt</default_value>
+            <description>null</description>
+        </parameter>
+        <parameter>
+            <name>ParDbPort</name>
+            <default_value>1521</default_value>
+            <description>null</description>
+        </parameter>
+        <parameter>
+            <name>ParDbUsername</name>
+            <default_value>poshcpt</default_value>
+            <description>null</description>
+        </parameter>
+        <parameter>
+            <name>ParExcelInput</name>
+            <default_value>file:///c:/app/input/BUNDLE_DTL.xls</default_value>
+            <description>null</description>
+        </parameter>
+        <parameter>
+            <name>ParUpdatedBy</name>
+            <default_value>188</default_value>
+            <description>null</description>
+        </parameter>
+    </parameters>
+    <slaveservers>
+    </slaveservers>
+  <logconnection/>
+  <logtable/>
+  <size_limit_lines/>
+   <use_batchid>Y</use_batchid>
+   <pass_batchid>N</pass_batchid>
+   <use_logfield>Y</use_logfield>
+   <shared_objects_file/>
+  <entries>
+    <entry>
+      <name>START</name>
+      <description>Special entries</description>
+      <type>SPECIAL</type>
+      <start>Y</start>
+      <dummy>N</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>147</xloc>
+      <yloc>116</yloc>
+      </entry>
+    <entry>
+      <name>bundle_insertion</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <filename>${Internal.Job.Filename.Directory}&#47;loadBundle.xml</filename>
+      <transname/>
+      <arg_from_previous>N</arg_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+            <parameter>            <name>ParExcelInput</name>
+            <stream_name>ParExcelInput</stream_name>
+            <value>${ParExcelInput}</value>
+            </parameter>            <parameter>            <name>ParDbAddress</name>
+            <stream_name>ParDbAddress</stream_name>
+            <value>${ParDbAddress}</value>
+            </parameter>            <parameter>            <name>ParDbPort</name>
+            <stream_name>ParDbPort</stream_name>
+            <value>${ParDbPort}</value>
+            </parameter>            <parameter>            <name>ParDbPassword</name>
+            <stream_name>ParDbPassword</stream_name>
+            <value>${ParDbPassword}</value>
+            </parameter>            <parameter>            <name>ParDbName</name>
+            <stream_name>ParDbName</stream_name>
+            <value>${ParDbName}</value>
+            </parameter>            <parameter>            <name>ParDbUsername</name>
+            <stream_name>ParDbUsername</stream_name>
+            <value>${ParDbUsername}</value>
+            </parameter>            <parameter>            <name>ParUpdatedBy</name>
+            <stream_name>ParUpdatedBy</stream_name>
+            <value>${ParUpdatedBy}</value>
+            </parameter>      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>147</xloc>
+      <yloc>248</yloc>
+      </entry>
+    <entry>
+      <name>bundle_transformation</name>
+      <description>Transformation</description>
+      <type>TRANS</type>
+      <filename>${Internal.Job.Filename.Directory}&#47;transformBundle.xml</filename>
+      <transname/>
+      <arg_from_previous>N</arg_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Nothing</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <parameters>        <pass_all_parameters>Y</pass_all_parameters>
+            <parameter>            <name>ParDbAddress</name>
+            <stream_name>ParDbAddress</stream_name>
+            <value>${ParDbAddress}</value>
+            </parameter>            <parameter>            <name>ParDbPort</name>
+            <stream_name>ParDbPort</stream_name>
+            <value>${ParDbPort}</value>
+            </parameter>            <parameter>            <name>ParDbPassword</name>
+            <stream_name>ParDbPassword</stream_name>
+            <value>${ParDbPassword}</value>
+            </parameter>            <parameter>            <name>ParDbName</name>
+            <stream_name>ParDbName</stream_name>
+            <value>${ParDbName}</value>
+            </parameter>            <parameter>            <name>ParDbUsername</name>
+            <stream_name>ParDbUsername</stream_name>
+            <value>${ParDbUsername}</value>
+            </parameter>            <parameter>            <name>ParUpdatedBy</name>
+            <stream_name>ParUpdatedBy</stream_name>
+            <value>${ParUpdatedBy}</value>
+            </parameter>      </parameters>      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>303</xloc>
+      <yloc>248</yloc>
+      </entry>
+  </entries>
+  <hops>
+    <hop>
+      <from>bundle_insertion</from>
+      <to>bundle_transformation</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>START</from>
+      <to>bundle_insertion</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+  </hops>
+  <notepads>
+  </notepads>
+</job>

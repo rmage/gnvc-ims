@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 25, 2012 11:25:14 AM by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.app.wms.hbm.bean.PutawayDetail" table="putaway_detail" schema="dbo" catalog="inventory">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="native" />
+        </id>
+        <property name="putawayId" type="string">
+            <column name="putaway_id" length="30" />
+        </property>
+        <property name="productId" type="string">
+            <column name="product_id" length="30" />
+        </property>
+        <property name="productCode" type="string">
+            <column name="product_code" length="30" />
+        </property>
+        <property name="receivedDate" type="timestamp">
+            <column name="received_date" length="23" />
+        </property>
+        <property name="expiredDate" type="timestamp">
+            <column name="expired_date" length="23" />
+        </property>
+        <property name="unitCode" type="string">
+            <column name="unit_code" length="30" />
+        </property>
+        <property name="qtyOrder" type="java.lang.Integer">
+            <column name="qty_order" />
+        </property>
+        <property name="qtyPut" type="java.lang.Integer">
+            <column name="qty_put" />
+        </property>
+        <property name="balance" type="java.lang.Integer">
+            <column name="balance" />
+        </property>
+        <property name="userId" type="string">
+            <column name="user_id" length="10" />
+        </property>
+        <property name="corpId" type="string">
+            <column name="corp_id" length="10" />
+        </property>
+        <property name="locationCode" type="string">
+            <column name="location_code" length="30" />
+        </property>
+        <property name="whCode" type="string">
+            <column name="wh_code" length="30" />
+        </property>
+        <property name="productType" type="string">
+            <column name="product_type" length="30" />
+        </property>
+        <property name="lotid" type="java.lang.Integer">
+            <column name="lotid"  />
+        </property>
+    </class>
+</hibernate-mapping>

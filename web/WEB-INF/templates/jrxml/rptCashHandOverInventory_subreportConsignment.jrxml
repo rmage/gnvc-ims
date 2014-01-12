@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptCashHandOverInventory_subreportConsignment" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="792" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_DEALER_CODE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CUSTOM"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select to_char(sysdate,'DD-MON-YY') as tanggal, s.bg_code, swh.item_code, pa.name, swh.wh_code, swh.balance from stock s
+left join stock_wh swh on s.stock_code=swh.stock_code
+left join product p on swh.item_code=p.item_code
+left join product_alias pa on p.alias=pa.code
+where p.catalog_code='CS' and swh.wh_code not in ('WHS')
+and s.bg_code like $P{P_DEALER_CODE}
+order by s.bg_code, swh.item_code, swh.wh_code]]>
+	</queryString>
+	<field name="TANGGAL" class="java.lang.String"/>
+	<field name="BG_CODE" class="java.lang.String"/>
+	<field name="ITEM_CODE" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="WH_CODE" class="java.lang.String"/>
+	<field name="BALANCE" class="java.math.BigDecimal"/>
+	<variable name="ROW_NUMBER" class="java.lang.Integer">
+		<variableExpression><![CDATA[new Integer($V{ROW_NUMBER}.intValue()+1)]]></variableExpression>
+		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="41" height="25"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Modena Condensed Regular" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{ROW_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="588" y="0" width="160" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Modena Condensed Regular" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{BALANCE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="401" y="0" width="187" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Modena Condensed Regular" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{WH_CODE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="238" y="0" width="163" height="25"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Modena Condensed Regular" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="43" y="0" width="195" height="25"/>
+				<textElement verticalAlignment="Bottom" markup="none">
+					<font fontName="Modena Condensed Regular" size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ITEM_CODE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

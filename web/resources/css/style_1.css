@@ -1,0 +1,466 @@
+/*
+ 	Header Layout
+*/
+.header {
+	background: url(../images/bg.gif) top repeat-x;
+	height: 96px;
+}
+.header-nav {
+	text-align: right;
+	color: #fff;
+	margin-right: 10px;
+}
+.header-logo {
+	margin-left: 10px;
+}
+.header-menu {
+	background: url(../images/bg.gif) top repeat-x;
+}
+.footer {
+	padding-left: 1.5em;
+}
+
+/*
+	Body Layout
+*/
+body {
+	/*background-image: url('../img/bg_pattern.jpg');*/
+	background-color: #EBE9E1;
+}
+.container { background-color: #fff; border-left: 0px solid #fff; border-right: 0px solid #fff; }
+
+caption {
+	background-color: #fff;
+	text-align: right;
+	padding-right: 0;
+}
+.box-small {
+	height: 28px;
+}
+.td-top {
+	vertical-align: baseline;
+}
+.td-bottom {
+	vertical-align: bottom;
+}
+
+.box {
+	background-color: #fff;
+}
+.box-header {
+	padding: 1em 1em 0 1em;
+}
+.box-login {
+	margin: 1em 20em;
+	padding: 1.5em;
+	background-color: #fff;
+}
+
+.box-signup {
+	margin: 1em 15em;
+	padding: 1.5em;
+	background-color: #fff;
+	border: 3px solid #ccc;
+}
+
+.box-sidemenu {
+	padding-right: 1.5em;
+	background-color: #fff;
+}
+
+
+/*
+	Alignment and TableCSS
+*/
+.left {
+	text-align: left;
+}
+
+.right {
+	text-align: right;
+}
+
+.center {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.top {
+	vertical-align: top;
+	padding-top: 5px;
+}
+
+.bottom {
+	vertical-align: bottom;
+}
+
+.tab {
+	padding-left: 30px;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.bigger {
+	font-size: larger;
+}
+
+.tblDisplay {
+	background-color: #fff;
+}
+
+.tblDisplay th {
+	text-align: center;
+	border-left: 1px solid #fff;
+	border-top: 1px solid #fff;
+}
+
+.tblDisplay tfoot td {
+	border-left: 1px solid #fff;
+	border-top: 1px solid #fff;
+}
+
+.tblDisplay td {
+	/*border-bottom: 1px solid #bbb;*/
+}
+
+/*.*/
+/*
+	Sidemenu CSS
+*/
+#sidemenu {
+	text-align: left;
+}
+
+#sidemenu #header {
+	background-color: #466BA9;
+	color: #fff;
+	font-size: 110%;
+	text-align: center;
+	padding: 3px;
+}
+
+#sidemenu .item {
+	color: #000;
+	padding: 3px;
+	border-top: 1px solid #d6d9dE;
+	cursor: pointer;
+}
+
+#sidemenu .item:hover {
+	background-color: #eceef4;
+}
+
+#sidemenu .item a {
+	text-decoration: none !important;
+	color: #555;
+}
+
+#sidemenu .activesidemenu {
+	/*background-color: #eceef4;*/
+	font-weight: bold;
+}
+
+#sidemenu .disabledsidemenu {
+	cursor: default;
+	color: #eee;
+}
+
+/*
+	Form CSS
+*/
+
+.cssform .input label {
+	float: left;
+	margin-top: 5px;
+	display: block;
+}
+
+input[type=text], input[type=password] {
+	padding: 1px;
+}
+
+
+/*
+	Skin for asset
+*/
+.asset-active {
+	border: 1px solid green;
+	vertical-align: middle;
+	background-color: green;
+}
+.asset-writeoff {
+	border: 1px solid red;
+	vertical-align: middle;
+	background-color: red;
+}
+.asset-sold {
+	border: 1px solid yellow;
+	vertical-align: middle;
+	background-color: yellow;
+}
+.asset-drained {
+	border: 1px solid navy;
+	vertical-align: middle;
+	background-color: navy;
+}
+
+button {
+	font-size: 10px !important;
+}
+
+/*
+	Checkbox & Radio
+*/
+/*.input input[type=checkbox] {position: relative; top: 8px;}*/
+
+/*
+	Flash Message
+*/
+.flash {
+	font-weight: bold;
+	font-size: 120%;
+}
+
+.readonly {
+	background-color: #eee;
+}
+
+.auto {
+	width: auto;
+}
+
+.minus {
+	color: red;
+}
+
+fieldset.popup {
+	padding: 5px 1.4em 5px 1.4em;
+	margin: 0;
+}
+
+.row-subheader {
+	font-weight: bold;
+	background-color: #eee;
+}
+
+.row-total {
+	font-weight: bold;
+}
+
+.report {
+	margin-bottom: 1px;
+}
+
+.collapse {
+	border-collapse: collapse;
+}
+
+.report th {
+	text-align: center;
+	background: #fff;
+	font-size: 120%;
+}
+
+.tblBorder {
+	border-width: 1px;
+	border-color: #000;
+	border-spacing: 2px 2px;
+	border-collapse: collapse;
+}
+
+.tblBorder thead th {
+	text-align: center;
+	background: #fff !important;
+	font-weight: bold;
+	border: 1px solid black;
+}
+
+.tblBorder tbody td {
+	border: 1px solid black;
+}
+
+h2 {
+	/*text-shadow: 2px 2px 1px #ddd;*/
+	text-shadow: 0 -1px 2px rgba(0, 0, 0, 0.35);
+	font-size: 2em;
+	color: #666;
+}
+
+h2#title {
+	padding-left: 1.2em;
+	background: url('../img/h2.png') no-repeat center left;
+}
+
+/* Report */
+
+#paper, .paper {
+	border: 1px solid #ccc;
+	padding: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-box-shadow: 5px 5px 0 grey;
+	-webkit-box-shadow: 5px 5px 0  grey;
+}
+
+.boxed {
+	border: 1px solid black;
+}
+
+.text-header-form {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.text-header-title {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.text-header-sub-title {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.text-header-year {
+	font-size: 20px;
+	font-weight: bold;
+	letter-spacing: 8px;
+}
+
+.pad {
+	padding-left: 10px;
+}
+
+.border-left {
+	border-left: 1px solid;
+}
+
+.border-right {
+	border-right: 1px solid;
+}
+
+.border-top {
+	border-top: 1px solid;
+}
+
+.border-top-thick {
+	border-top: 3px solid;
+}
+
+.border-bottom {
+	border-bottom: 1px solid;
+}
+
+.bg-grey {
+	background-color: #eee;
+}
+
+.span-box {
+	border: 1px solid black;
+	padding: 5px;
+}
+
+/* Menu accordion */
+
+#accordion-menu {
+	/*padding: 1em 0 0 1em;*/
+	font-size: 12px;
+}
+
+#accordion-menu .ui-accordion-content {
+	padding: 5px 10px 10px 10px;
+	text-align: left;
+	line-height: 1.5;
+}
+
+#accordion-menu div ul {
+	margin: 0;
+	padding-left: 0;
+	display: block;
+}
+
+#accordion-menu div ul li {
+	list-style: none;
+	padding: 3px 0;
+	/*margin-top: 1px;*/
+	border-collapse: collapse;
+	border-bottom: 1px dotted #ddd;
+	padding-left: .3em;
+}
+
+#accordion-menu div ul li:hover {
+	background-color: #eceef4;
+	/*border-left: 4px solid beige;*/
+}
+
+#accordion-menu div ul li.parent:hover {
+	/*background-color: #fff;*/
+}
+
+#accordion-menu div ul li a {
+	text-decoration: none;
+	display: block;
+}
+
+.grid td {
+	border: 1px solid black;
+}
+
+.scroll {
+	overflow: auto;
+}
+
+.center td {
+	text-align: center;
+}
+
+.bold td {
+	font-weight: bold;
+}
+
+/* Forms */
+
+fieldset {
+	position: relative;
+	padding: 1em;
+	/*
+	margin-top: 3em;
+	*/
+}
+
+legend {
+    font-size:1em;
+    padding:.4em .8em;
+	/*
+	position: absolute;
+    background:#fff;
+    border-top:1px solid #bbb;
+	border-left:1px solid #bbb;
+	border-right:1px solid #bbb;
+	margin-left: -1.1em;
+	margin-top: -3.4em;
+	*/
+}
+
+.shadow {
+	-moz-box-shadow: 5px 0 5px 0 #ccc;
+	-webkit-box-shadow: 5px 0 5px 0 #ccc;
+}
+
+.state-disabled {
+	opacity: .85; filter:Alpha(Opacity=85);
+	background-image: none;	
+}
+
+.menu {
+	padding-right: 0;
+	margin-right: 0;
+}
+
+.zebra {
+	text-decoration: underline;
+}
+
+textarea { width:390px;height:100px;padding:5px; }

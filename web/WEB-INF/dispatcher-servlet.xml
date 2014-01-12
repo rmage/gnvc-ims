@@ -1,0 +1,1142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <!--
+    Most controllers will use the ControllerClassNameHandlerMapping above, but
+    for the index controller we are using ParameterizableViewController, so we must
+    define an explicit mapping for it.
+
+    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<property name="mappings">
+	    <props>
+		<prop key="index.htm">indexController</prop>
+		<prop key="main.htm">mainController</prop>
+	 </props>
+	</property>
+    </bean>
+    <bean id="jsfViewResolver"
+	  class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	<property name="viewClass"
+		  value="org.springframework.faces.mvc.JsfView" />
+	<property name="prefix" value="/WEB-INF/report/" />
+	<property name="suffix" value=".jsf" />
+	<property name="order"><value>0</value></property>
+	<property name="viewNames" value=".*"/>
+    </bean>
+    -->
+    <bean id="viewResolver"
+	  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	<property name="prefix" value="/WEB-INF/jsp/" />
+	<property name="suffix" value=".jsp" />
+	<property name="order"><value>10</value></property>
+    </bean>
+    <bean id="xmlFileViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="order"><value>1</value></property>
+    </bean>
+    <context:component-scan base-package="com.app.wms.web.controller" />
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<property name="maxUploadSize" value="5242880" />
+    </bean>
+    <bean id="defaultMethodNameResolver" class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver">
+	<property name="paramName" value="action" />
+	<property name="defaultMethodName" value="findByPrimaryKey" />
+    </bean>
+    <bean id="listResolver" class="org.springframework.web.servlet.mvc.multiaction.ParameterMethodNameResolver">
+	<property name="paramName" value="action" />
+	<property name="defaultMethodName" value="list" />
+    </bean>
+
+    <!--
+    The index controller.
+    -->
+    <bean name="indexController"
+	  class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+	  p:viewName="index" />
+    <bean name="mainController"
+	  class="org.springframework.web.servlet.mvc.ParameterizableViewController"
+	  p:viewName="main" />
+    <bean name="/index.htm" class="com.app.wms.web.controller.common.LoginController">
+    </bean>
+    <bean name="/main.htm" class="com.app.wms.web.controller.common.HomeController">
+    </bean>
+<!--<bean name="/ActivityLog.htm" class="com.app.wms.web.controller.ActivityLogController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Agent.htm" class="com.app.wms.web.controller.AgentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentIn.htm" class="com.app.wms.web.controller.AgentInController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentInDtl.htm" class="com.app.wms.web.controller.AgentInDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentInDtlIdent.htm" class="com.app.wms.web.controller.AgentInDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentInDtlSn.htm" class="com.app.wms.web.controller.AgentInDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentInRange.htm" class="com.app.wms.web.controller.AgentInRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentInSales.htm" class="com.app.wms.web.controller.AgentInSalesController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentOut.htm" class="com.app.wms.web.controller.AgentOutController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentOutDtl.htm" class="com.app.wms.web.controller.AgentOutDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentOutDtlIdent.htm" class="com.app.wms.web.controller.AgentOutDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentOutDtlSn.htm" class="com.app.wms.web.controller.AgentOutDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentOutRange.htm" class="com.app.wms.web.controller.AgentOutRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentQuotaPerEvent.htm" class="com.app.wms.web.controller.AgentQuotaPerEventController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentSales.htm" class="com.app.wms.web.controller.AgentSalesController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentSupplier.htm" class="com.app.wms.web.controller.AgentSupplierController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentTeam.htm" class="com.app.wms.web.controller.AgentTeamController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentTeamMember.htm" class="com.app.wms.web.controller.AgentTeamMemberController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AgentTeamRole.htm" class="com.app.wms.web.controller.AgentTeamRoleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+   
+    <bean name="/Bg.htm" class="com.app.wms.web.controller.BgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BgQuotaPerEvent.htm" class="com.app.wms.web.controller.BgQuotaPerEventController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BgType.htm" class="com.app.wms.web.controller.BgTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Branch.htm" class="com.app.wms.web.controller.BranchController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/brand.htm" class="com.app.wms.web.controller.BrandController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Bundle.htm" class="com.app.wms.web.controller.BundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundleAlias.htm" class="com.app.wms.web.controller.BundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundleDtl.htm" class="com.app.wms.web.controller.BundleDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundleDtlAlias.htm" class="com.app.wms.web.controller.BundleDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundlePrice.htm" class="com.app.wms.web.controller.BundlePriceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundlePriceBg.htm" class="com.app.wms.web.controller.BundlePriceBgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundlePriceDtl.htm" class="com.app.wms.web.controller.BundlePriceDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundlePriceAlias.htm" class="com.app.wms.web.controller.BundlePriceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BundlePriceDtlAlias.htm" class="com.app.wms.web.controller.BundlePriceDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Cash.htm" class="com.app.wms.web.controller.CashController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CashDtl.htm" class="com.app.wms.web.controller.CashDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CashMove.htm" class="com.app.wms.web.controller.CashMoveController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CashTrans.htm" class="com.app.wms.web.controller.CashTransController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CashTransPostPaid.htm" class="com.app.wms.web.controller.CashTransPostPaidController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/CashTransType.htm" class="com.app.wms.web.controller.CashTransTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CashType.htm" class="com.app.wms.web.controller.CashTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/City.htm" class="com.app.wms.web.controller.CityController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Region.htm" class="com.app.wms.web.controller.RegionController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Coa.htm" class="com.app.wms.web.controller.CoaController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CoaBundle.htm" class="com.app.wms.web.controller.CoaBundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CoaProduct.htm" class="com.app.wms.web.controller.CoaProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CoaProductAlias.htm" class="com.app.wms.web.controller.CoaProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CoaService.htm" class="com.app.wms.web.controller.CoaServiceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Customer.htm" class="com.app.wms.web.controller.CustomerController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CustomerBg.htm" class="com.app.wms.web.controller.CustomerBgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Evoucher.htm" class="com.app.wms.web.controller.EvoucherController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/EvoucherIn.htm" class="com.app.wms.web.controller.EvoucherInController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/EvoucherOut.htm" class="com.app.wms.web.controller.EvoucherOutController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtl.htm" class="com.app.wms.web.controller.GrDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlCnf.htm" class="com.app.wms.web.controller.GrDtlCnfController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlCnfIdent.htm" class="com.app.wms.web.controller.GrDtlCnfIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlCnfRange.htm" class="com.app.wms.web.controller.GrDtlCnfRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlCnfSn.htm" class="com.app.wms.web.controller.GrDtlCnfSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlIdent.htm" class="com.app.wms.web.controller.GrDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlNcnf.htm" class="com.app.wms.web.controller.GrDtlNcnfController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlNcnfIdent.htm" class="com.app.wms.web.controller.GrDtlNcnfIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlNcnfRange.htm" class="com.app.wms.web.controller.GrDtlNcnfRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlNcnfSn.htm" class="com.app.wms.web.controller.GrDtlNcnfSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrDtlRange.htm" class="com.app.wms.web.controller.GrDtlRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+     Controller mapping put by eka 
+     special controller to  
+    <bean name="/PaymentPrintInterface.htm" class="com.app.wms.web.controller.PrintPaymentController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/PostpaidPaymentPrintInterface.htm" class="com.app.wms.web.controller.PrintPostpaidPaymentController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/SalesView.htm" class="com.app.wms.web.controller.SalesViewController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptAgentList.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptDsaOrderList.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptPostPaidPaymentReport.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptSalesReportPerItemDetail.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptDsaSalesReport.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptSalesReportPerInvoice.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptSalesReportPerPaymentMethods.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptInvStockIN.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptInvStatusSum.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptInvStatusDetail.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptCashBalance.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptPettyCashManagement.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptCashStoredToBank.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptNonCashReceiptReport.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptStockMovement.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptScmInventoryBalance.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptTrackingHistory.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptDsaActivationStatusDetail.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptDsaActivationSummary.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptSalesRecapSummary.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptDsaDetailTransaction.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptAgentTransactionDetail.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptDsaSummary.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptMonthActivationChart.htm" class="com.app.wms.web.controller.rptMonthActivationController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptSalesRecapPerAlias.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptCoaMapping.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptVendorList.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/rptCashHandOver.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/rptCashHandOverInventory.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/rptPostPaidPymnt.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+     Controller export to excel 
+    <bean name="/xlsPostPaidPaymentReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsSalesEvoucherReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsSalesServiceReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsSalesConsignmentReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsSalesSerialReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsSalesBundleReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsSalesPaymentReport.htm" class="com.app.wms.web.controller.excel.ExportExcelController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+     testing 
+    <bean name="/rptExcellBgList.htm" class="com.app.wms.web.controller.ExcelExportController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/xlsPostPaidPayment.htm" class="com.app.wms.web.controller.ExcelExportController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+     end testing 
+
+     Upload section conf
+
+    <bean name="/UploadProduct.htm" class="com.app.wms.web.controller.ProductParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadProductAlias.htm" class="com.app.wms.web.controller.ProductAliasParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadService.htm" class="com.app.wms.web.controller.ServiceParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadPP.htm" class="com.app.wms.web.controller.ProductPriceParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadPAP.htm" class="com.app.wms.web.controller.ProductAliasPriceParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadSP.htm" class="com.app.wms.web.controller.ServicePriceParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadUser.htm" class="com.app.wms.web.controller.UserParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadSnHistory.htm" class="com.app.wms.web.controller.SnHistoryParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadBundle.htm" class="com.app.wms.web.controller.BundleParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadBundlePrice.htm" class="com.app.wms.web.controller.BundlePriceParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadBundleDtlAlias.htm" class="com.app.wms.web.controller.BundleDtlAliasParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadBundleDtlAliasPrice.htm" class="com.app.wms.web.controller.BundleDtlAliasPriceParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadBG.htm" class="com.app.wms.web.controller.BgParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadAgent.htm" class="com.app.wms.web.controller.AgentParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadStockSn.htm" class="com.app.wms.web.controller.StockSnParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadAgentSupplier.htm" class="com.app.wms.web.controller.AgentSupplierParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/UploadVendor.htm" class="com.app.wms.web.controller.VendorParserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+     End section
+
+    <bean name="/GrDtlSn.htm" class="com.app.wms.web.controller.GrDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrMst.htm" class="com.app.wms.web.controller.GrMstController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/HistoryEvent.htm" class="com.app.wms.web.controller.HistoryEventController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Ho.htm" class="com.app.wms.web.controller.HoController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IdentType.htm" class="com.app.wms.web.controller.IdentTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrApproval.htm" class="com.app.wms.web.controller.IrApprovalController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrDtl.htm" class="com.app.wms.web.controller.IrDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrDtlRange.htm" class="com.app.wms.web.controller.IrDtlRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrDtlSn.htm" class="com.app.wms.web.controller.IrDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrErpDtl.htm" class="com.app.wms.web.controller.IrErpDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrErpDtlRange.htm" class="com.app.wms.web.controller.IrErpDtlRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrErpDtlSn.htm" class="com.app.wms.web.controller.IrErpDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrErpMst.htm" class="com.app.wms.web.controller.IrErpMstController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrMail.htm" class="com.app.wms.web.controller.IrMailController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/IrMst.htm" class="com.app.wms.web.controller.IrMstController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SmMst.htm" class="com.app.wms.web.controller.SmMstController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SrMst.htm" class="com.app.wms.web.controller.SrMstController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SaMst.htm" class="com.app.wms.web.controller.SaMstController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Journal.htm" class="com.app.wms.web.controller.JournalController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/JournalAlias.htm" class="com.app.wms.web.controller.JournalController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/JournalDtl.htm" class="com.app.wms.web.controller.JournalDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/JournalDtlBundle.htm" class="com.app.wms.web.controller.JournalDtlBundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/JournalDtlProduct.htm" class="com.app.wms.web.controller.JournalDtlProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/JournalDtlService.htm" class="com.app.wms.web.controller.JournalDtlServiceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PaymentMethod.htm" class="com.app.wms.web.controller.PaymentMethodController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Petty.htm" class="com.app.wms.web.controller.PettyController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PettyIn.htm" class="com.app.wms.web.controller.PettyInController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PettyOut.htm" class="com.app.wms.web.controller.PettyOutController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PettyOutType.htm" class="com.app.wms.web.controller.PettyOutTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Poc.htm" class="com.app.wms.web.controller.PocController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PostPaid.htm" class="com.app.wms.web.controller.PostPaidEntryController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/PostpaidDtl.htm" class="com.app.wms.web.controller.PostpaidDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PostPaidLog.htm" class="com.app.wms.web.controller.PostpaidLogController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/PriceCatalog.htm" class="com.app.wms.web.controller.PriceCatalogController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PriceUpload.htm" class="com.app.wms.web.controller.PriceUploadController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+   
+    <bean name="/ProductAlias.htm" class="com.app.wms.web.controller.ProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductCatalog.htm" class="com.app.wms.web.controller.ProductCatalogController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductCategory.htm" class="com.app.wms.web.controller.ProductCategoryController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductPrice.htm" class="com.app.wms.web.controller.ProductPriceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductAliasPrice.htm" class="com.app.wms.web.controller.ProductPriceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductPriceBg.htm" class="com.app.wms.web.controller.ProductPriceBgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductAliasPriceBg.htm" class="com.app.wms.web.controller.ProductPriceBgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/QuotaPerAgent.htm" class="com.app.wms.web.controller.QuotaPerAgentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/QuotaPerEvent.htm" class="com.app.wms.web.controller.QuotaPerEventController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/QuotaPerHo.htm" class="com.app.wms.web.controller.QuotaPerHoController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Repair.htm" class="com.app.wms.web.controller.RepairController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/RepairDtl.htm" class="com.app.wms.web.controller.RepairDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/RepairDtlIdent.htm" class="com.app.wms.web.controller.RepairDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/RepairMail.htm" class="com.app.wms.web.controller.RepairMailController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/RepairMovement.htm" class="com.app.wms.web.controller.RepairMovementController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/RepairStock.htm" class="com.app.wms.web.controller.RepairStockController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/RepairStockIdent.htm" class="com.app.wms.web.controller.RepairStockIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/RepairWh.htm" class="com.app.wms.web.controller.RepairWhController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/ReqDataSource.htm" class="com.app.wms.web.controller.ReqDataSourceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Reservation.htm" class="com.app.wms.web.controller.ReservationController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/ReservationDtlBundle.htm" class="com.app.wms.web.controller.ReservationDtlBundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ReservationDtlProduct.htm" class="com.app.wms.web.controller.ReservationDtlProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ReservationStatus.htm" class="com.app.wms.web.controller.ReservationStatusController">
+	<property name="methodNameResolver" ref="listResolver" />
+    </bean>
+    <bean name="/AReturn.htm" class="com.app.wms.web.controller.AReturnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ReturnDtl.htm" class="com.app.wms.web.controller.ReturnDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ReturnDtlIdent.htm" class="com.app.wms.web.controller.ReturnDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ReturnDtlSn.htm" class="com.app.wms.web.controller.ReturnDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Sales.htm" class="com.app.wms.web.controller.SalesController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlBundle.htm" class="com.app.wms.web.controller.SalesDtlBundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlBundleDtl.htm" class="com.app.wms.web.controller.SalesDtlBundleDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlBundleDtlIdent.htm" class="com.app.wms.web.controller.SalesDtlBundleDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlBundleDtlSn.htm" class="com.app.wms.web.controller.SalesDtlBundleDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlIdent.htm" class="com.app.wms.web.controller.SalesDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlProduct.htm" class="com.app.wms.web.controller.SalesDtlProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlRange.htm" class="com.app.wms.web.controller.SalesDtlRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlService.htm" class="com.app.wms.web.controller.SalesDtlServiceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesDtlSn.htm" class="com.app.wms.web.controller.SalesDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesPayment.htm" class="com.app.wms.web.controller.SalesPaymentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesPayment.htm" class="com.app.wms.web.controller.PaymentSalesController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesPaymentDtl.htm" class="com.app.wms.web.controller.SalesPaymentDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SalesStatus.htm" class="com.app.wms.web.controller.SalesStatusController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Service.htm" class="com.app.wms.web.controller.ServiceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ServiceCategory.htm" class="com.app.wms.web.controller.ServiceCategoryController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ServicePrice.htm" class="com.app.wms.web.controller.ServicePriceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ServicePriceBg.htm" class="com.app.wms.web.controller.ServicePriceBgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SnHistory.htm" class="com.app.wms.web.controller.SnHistoryController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SnHistoryDtl.htm" class="com.app.wms.web.controller.SnHistoryDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SnStatus.htm" class="com.app.wms.web.controller.SnStatusController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Stock.htm" class="com.app.wms.web.controller.StockController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockIdent.htm" class="com.app.wms.web.controller.StockIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockInvalidType.htm" class="com.app.wms.web.controller.StockInvalidTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockOc.htm" class="com.app.wms.web.controller.StockOcController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockOcDtl.htm" class="com.app.wms.web.controller.StockOcDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockOcDtlIdent.htm" class="com.app.wms.web.controller.StockOcDtlIdentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockOcDtlRange.htm" class="com.app.wms.web.controller.StockOcDtlRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockOcDtlSn.htm" class="com.app.wms.web.controller.StockOcDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockSn.htm" class="com.app.wms.web.controller.StockSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockSnInvalid.htm" class="com.app.wms.web.controller.StockSnInvalidController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Subinv.htm" class="com.app.wms.web.controller.SubinvController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SvcPic.htm" class="com.app.wms.web.controller.SvcPicController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/SvcPoint.htm" class="com.app.wms.web.controller.SvcPointController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/TransGroup.htm" class="com.app.wms.web.controller.TransGroupController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/TransType.htm" class="com.app.wms.web.controller.TransTypeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Uom.htm" class="com.app.wms.web.controller.UomController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/UserAttendance.htm" class="com.app.wms.web.controller.UserAttendanceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/UserBg.htm" class="com.app.wms.web.controller.UserBgController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/UserLog.htm" class="com.app.wms.web.controller.UserLogController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+   
+    <bean name="/Vendor.htm" class="com.app.wms.web.controller.VendorController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/VendorRepair.htm" class="com.app.wms.web.controller.VendorRepairController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+   
+    <bean name="/BgPoc.htm" class="com.app.wms.web.controller.BgPocController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/StockAgent.htm" class="com.app.wms.web.controller.StockAgentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockAgentDtl.htm" class="com.app.wms.web.controller.StockAgentDtlController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockAgentDtlRange.htm" class="com.app.wms.web.controller.StockAgentDtlRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockAgentDtlSn.htm" class="com.app.wms.web.controller.StockAgentDtlSnController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GrMoving.htm" class="com.app.wms.web.controller.GrMovingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/StockUpdate.htm" class="com.app.wms.web.controller.StockUpdateController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/GrMovingMerchandise.htm" class="com.app.wms.web.controller.GrMovingMerchandiseController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/rptGoodReceive.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptStockMovingReturn.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptStockReturn.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+     <bean name="/rptStockReturnSerialized.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+     <bean name="/rptSlsDtl.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptSlsPerPaymentMethod.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+     <bean name="/rptPymntRcvDtl.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptPymntRecivSum.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptSerializedStockStatus.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptConsignmentStockStatus.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/rptCashHandOverInventoryNew.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/rptJournalBundle.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>    
+     <bean name="/rptJournalProductAlias.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>    
+    <bean name="/rptJournalService.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/rptPymntRecivSumForFinc.htm" class="com.app.wms.web.controller.ReportManagerController">
+	 default method called by this ref bean is findByPrimaryKey
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>-->
+    <!-- Add 30 juli 2012; app warehouse management system -->
+    <bean name="/Corporate.htm" class="com.app.wms.web.controller.CorporateController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Location.htm" class="com.app.wms.web.controller.WarehouseLocationController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Purchase.htm" class="com.app.wms.web.controller.PurchaseController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GoodReceive.htm" class="com.app.wms.web.controller.GoodReceiveController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Putaway.htm" class="com.app.wms.web.controller.PutawayController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <!--  
+    <bean name="/CrossDock.htm" class="com.app.wms.web.controller.CrossDockController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    -->
+    <bean name="/Replenish.htm" class="com.app.wms.web.controller.ReplenishController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Sws.htm" class="com.app.wms.web.controller.StoreWithdrawalSlipController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PickingAdm.htm" class="com.app.wms.web.controller.PickingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PickingSpv.htm" class="com.app.wms.web.controller.Picking2Controller">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Packing.htm" class="com.app.wms.web.controller.PackingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Delivery.htm" class="com.app.wms.web.controller.DeliveryController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Report.htm" class="com.app.wms.web.controller.ReportController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/User.htm" class="com.app.wms.web.controller.UserController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/UserRole.htm" class="com.app.wms.web.controller.UserRoleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AppMenu.htm" class="com.app.wms.web.controller.AppMenuController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AppMenuRole.htm" class="com.app.wms.web.controller.AppMenuRoleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Wh.htm" class="com.app.wms.web.controller.WarehouseController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Product.htm" class="com.app.wms.web.controller.ProductController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Stock.htm" class="com.app.wms.web.controller.StockController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Consolidate.htm" class="com.app.wms.web.controller.ConsolidateController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Kitting.htm" class="com.app.wms.web.controller.KittingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Return.htm" class="com.app.wms.web.controller.ReturnContoller">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+     <bean name="/stocktake2.htm" class="com.app.wms.web.controller.StockTake2Controller">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Tallyman.htm" class="com.app.wms.web.controller.Tallyman2Controller">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/report.htm" class="com.app.wms.web.controller.report.ReportController">
+ 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ChangePwd.htm" class="com.app.wms.web.controller.ChangePwdController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Consignee.htm" class="com.app.wms.web.controller.ConsigneeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductCategory.htm" class="com.app.wms.web.controller.ProductCategoryController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Bundle.htm" class="com.app.wms.web.controller.BundleController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/LocatingArea.htm" class="com.app.wms.web.controller.WhLocatingAreaController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Uom.htm" class="com.app.wms.web.controller.UomController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Department.htm" class="com.app.wms.web.controller.DepartmentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Supplier.htm" class="com.app.wms.web.controller.SupplierController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Currency.htm" class="com.app.wms.web.controller.CurrencyController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PriceCatalog.htm" class="com.app.wms.web.controller.PriceCatalogController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Pts.htm" class="com.app.wms.web.controller.PTSController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Ws.htm" class="com.app.wms.web.controller.WSController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Bor.htm" class="com.app.wms.web.controller.BorController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/TransferSlip.htm" class="com.app.wms.web.controller.TransferSlipController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Eds.htm" class="com.app.wms.web.controller.EDSController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ProductPrice.htm" class="com.app.wms.web.controller.ProductPriceController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PurchaseRequisition.htm" class="com.app.wms.web.controller.PurchaseRequisitionController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/Canvassing.htm" class="com.app.wms.web.controller.CanvassingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CanvassingAssignment.htm" class="com.app.wms.web.controller.CanvassingAssignmentController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/ApprovalRange.htm" class="com.app.wms.web.controller.ApprovalRangeController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+	<!-- <bean name="/customerjson.htm" class="com.app.wms.web.controller.Customer2Controller">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>-->
+    
+    <!-- Crated by Badr Interactive for Fish Inventory System -->
+    <bean name="/Fish.htm" class="com.app.wms.web.controller.FishController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishType.htm" class="com.app.wms.web.controller.FishTypeController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishWeightType.htm" class="com.app.wms.web.controller.FishWeightTypeController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishWsType.htm" class="com.app.wms.web.controller.FishWSTypeController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishStorage.htm" class="com.app.wms.web.controller.FishStorageController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishWs.htm" class="com.app.wms.web.controller.FishWsController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishRr.htm" class="com.app.wms.web.controller.FishRrController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishSpoilageData.htm" class="com.app.wms.web.controller.FishSpoilageDataController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishSupplier.htm" class="com.app.wms.web.controller.FishSupplierController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishVessel.htm" class="com.app.wms.web.controller.FishVesselController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishJson.htm" class="com.app.wms.web.controller.json.FishJsonController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GeneralReport.htm" class="com.app.wms.web.controller.NewReportController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishWds.htm" class="com.app.wms.web.controller.FishWdsController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishTs.htm" class="com.app.wms.web.controller.FishTsController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/GenerateReport.htm" class="com.app.wms.web.controller.GenerateReportController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishBs.htm" class="com.app.wms.web.controller.FishBadStockController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+</beans>
