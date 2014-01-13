@@ -7,4 +7,4 @@ Geneva Consulting IDN - Inventory Management System
 >
 > Find 7z file with name "gnvc-ims.7z"
 
-Please contact [Me](mailto:febryan.dreamer@gmail.com "Let me know!") if you find any problem with this repository
+Please contact [Me](mailto:febryan.dreamer@gmail.com?subject=Support for Geneva Consulting IDN - Inventory Management System on GitHub.com "Let me know!") if you find any problem with this repository
