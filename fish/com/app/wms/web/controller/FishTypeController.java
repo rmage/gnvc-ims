@@ -27,23 +27,32 @@ public class FishTypeController extends MultiActionController
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		
 		try {
-			Integer page = null;
-            Integer paging = null;
+			Integer page = 1;
+            Integer paging = 10;
+            Integer offset = 1;
+            
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
+                offset = (page - 1) * paging + 1;
             }
             if (request.getParameter("paging") != null) {
                 paging = Integer.parseInt(request.getParameter("paging"));
             }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
             
             FishTypeDao dao = DaoFactory.createFishTypeDao();
-            List<FishType> fishTypes = dao.findAll();
+            List<FishType> fishTypes = null;
+            
+            if(request.getParameter("search") != null) {
+            	String typeCode = request.getParameter("typeCode");
+            	fishTypes = dao.searchAndPaging(typeCode, paging, offset);
+            	String querySearch = "&search=true&typeCode="+typeCode;
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryTypeCode", typeCode);
+            }
+            else {
+                fishTypes = dao.findAllAndPaging(paging, offset);
+            }
+            
             modelMap.put("fishTypes", fishTypes);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
@@ -57,7 +66,12 @@ public class FishTypeController extends MultiActionController
 	}
 	
 	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response)throws Exception {
-		return null;
+		int id = Integer.valueOf(request.getParameter("id"));
+        FishTypeDao dao = DaoFactory.createFishTypeDao();
+        dao.delete(id);
+        
+		HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("1_setup/FishTypeList", "model", modelMap);
 	}
 	
 	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -66,9 +80,22 @@ public class FishTypeController extends MultiActionController
 		modelMap.put("mode", "create");
 		return new ModelAndView("1_setup/FishTypeAdd", "model", modelMap);
 	}
+    
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishTypeDao dao = DaoFactory.createFishTypeDao();
+        FishType dto = dao.findByPrimaryKey(id);
+        
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+        modelMap.put("dto", dto);
+        modelMap.put("mode", "edit");
+        
+        return new ModelAndView("1_setup/FishTypeEdit", "model", modelMap);
+    }
 	
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginUser user = (LoginUser) request.getSession().getAttribute("user");
+        String mode = request.getParameter("mode");
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
         
         if (user == null) {
@@ -89,15 +116,24 @@ public class FishTypeController extends MultiActionController
         	FishType dto = new FishType();
         	dto.setCode(code);
         	dto.setDescription(description);
-        	dto.setCreatedDate(createdDate);
-        	dto.setCreatedBy(createdBy);
         	dto.setIsActive(isActive);
         	dto.setIsDelete(isDelete);
         	
         	FishTypeDao dao = DaoFactory.createFishTypeDao();
-        	int id = dao.insert(dto);
-        	
-        	dto.setId(id);
+            if(mode.equalsIgnoreCase("edit")) {
+                int id = Integer.valueOf(request.getParameter("id"));
+                dto.setUpdatedDate(new Date());
+                dto.setUpdatedBy(user.getUserId());
+                dao.update(id, dto);
+            }
+            else {
+                dto.setCreatedDate(createdDate);
+                dto.setCreatedBy(createdBy);
+            
+                int id = dao.insert(dto);
+                dto.setId(id);
+            }
+            
         	return new ModelAndView("1_setup/FishTypeView", "dto", dto);
         }
 	}

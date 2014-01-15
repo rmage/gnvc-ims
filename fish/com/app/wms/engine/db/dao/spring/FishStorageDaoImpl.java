@@ -119,4 +119,36 @@ public class FishStorageDaoImpl extends AbstractDAO
 	public String getTableName() {
 		return "inventory..fish_storage";
 	}
+
+    public List<FishStorage> findAllAndPaging(int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"	FROM "+getTableName()+" " +
+                "   WHERE is_active = 'Y' " +
+				") AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishStorage> resultList = jdbcTemplate.query(query, this, limit, offset);
+		return resultList;
+    }
+
+    public List<FishStorage> searchAndPaging(String code, int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"	FROM "+getTableName()+" " +
+                "   WHERE is_active = 'Y' AND code LIKE ?" +
+				") AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishStorage> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+code+"%");
+		return resultList;
+    }
 }

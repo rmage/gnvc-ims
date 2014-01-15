@@ -1,3 +1,4 @@
+<%@page import="java.util.HashMap"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -5,6 +6,18 @@
     <head>
         <title>IMS - Fish Type List</title>
         <%@include file="../metaheader.jsp" %>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#btnSearch').click(function() {
+        			var fishCode = $('#queryFishCode').val();
+        			location.href = "Fish.htm?search=true&fishCode="+fishCode;
+        		});
+                
+                $('#btnCleanFilter').click(function() {
+                   location.href = "Fish.htm"; 
+                });
+            });
+        </script>
     </head>
     <body>
         <%
@@ -12,6 +25,10 @@
             if (request.getSession().getAttribute("FishSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishTypeSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryFishCode = m.get("queryFishCode") == null ? "" : (String) m.get("queryFishCode");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -28,7 +45,7 @@
                                         Fish Code
                                     </td>
                                     <td>
-                                        <input type="text" name="fishCode" value=""/>
+                                        <input type="text" id="queryFishCode" name="fishCode" value="<%=queryFishCode%>"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -38,11 +55,14 @@
                             <tfoot>
                                 <td colspan="4">
                                     <span class="style1">
-                                        <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+                                        <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
                                      <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
+                                    <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+	                                </label>
                                 </td>
                                 <td></td>
                             </tfoot>
@@ -70,21 +90,19 @@
                                         </td>
                                        
                                         <c:url value="Fish.htm" var="urlEdit">
-                                            <c:param name="fishTypeId" value="${fish.id}"/>
+                                            <c:param name="id" value="${fish.id}"/>
                                             <c:param name="page" value="${model.page}" />
-                                            <c:param name="mode" value="edit"/>
+                                            <c:param name="action" value="edit"/>
                                         </c:url>
                                        
                                         <c:url value="Fish.htm" var="urlDelete">
-                                            <c:param name="fishTypeId" value="${fish.id}"/>
+                                            <c:param name="id" value="${fish.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
                                         <td class="center" width="5%">
-                                        <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                        --%>    
+                                                <img src="resources/images/edit.gif" width="16" height="16" /></a> 
                                             <a href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
@@ -98,13 +116,13 @@
                                 <td colspan="5">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="Fish.htm?page=<c:out value="${model.page-1}" />">
+                                            <a href="Fish.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
                                                 &lt;
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="Fish.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="Fish.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>
