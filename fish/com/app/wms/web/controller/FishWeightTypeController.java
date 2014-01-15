@@ -27,24 +27,33 @@ public class FishWeightTypeController extends MultiActionController
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		
 		try {
-			Integer page = null;
-            Integer paging = null;
+			Integer page = 1;
+            Integer paging = 10;
+            Integer offset = 1;
+            
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
+                offset = (page - 1) * paging + 1;
             }
             if (request.getParameter("paging") != null) {
                 paging = Integer.parseInt(request.getParameter("paging"));
             }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
             
             FishWeightTypeDao dao = DaoFactory.createFishWeightTypeDao();
-            List<FishWeightType> fishTypes = dao.findAll();
-            modelMap.put("weightTypes", fishTypes);
+            List<FishWeightType> weightTypeList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String weightCode = request.getParameter("weightCode");
+            	weightTypeList = dao.searchAndPaging(weightCode, paging, offset);
+            	String querySearch = "&search=true&weightCode="+weightCode;
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryWeightCode", weightCode);
+            }
+            else {
+                weightTypeList = dao.findAllAndPaging(paging, offset);
+            }
+            
+            modelMap.put("weightTypes", weightTypeList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
             modelMap.put("paging", paging);
@@ -57,7 +66,12 @@ public class FishWeightTypeController extends MultiActionController
 	}
 	
 	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response)throws Exception {
-		return null;
+		int id = Integer.valueOf(request.getParameter("id"));
+        FishWeightTypeDao dao = DaoFactory.createFishWeightTypeDao();
+        dao.delete(id);
+        
+		HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("1_setup/FishWeightTypeList", "model", modelMap);
 	}
 	
 	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -67,8 +81,9 @@ public class FishWeightTypeController extends MultiActionController
 		return new ModelAndView("1_setup/FishWeightTypeAdd", "model", modelMap);
 	}
 	
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginUser user = (LoginUser) request.getSession().getAttribute("user");
+        String mode = request.getParameter("mode");
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
         
         if (user == null) {
@@ -89,16 +104,36 @@ public class FishWeightTypeController extends MultiActionController
         	FishWeightType dto = new FishWeightType();
         	dto.setCode(code);
         	dto.setDescription(description);
-        	dto.setCreatedDate(createdDate);
-        	dto.setCreatedBy(createdBy);
         	dto.setIsActive(isActive);
         	dto.setIsDelete(isDelete);
         	
         	FishWeightTypeDao dao = DaoFactory.createFishWeightTypeDao();
-        	int id = dao.insert(dto);
+            if(mode.equalsIgnoreCase("edit")) {
+                int id = Integer.valueOf(request.getParameter("id"));
+                dto.setUpdatedDate(new Date());
+                dto.setUpdatedBy(user.getUserId());
+                dao.update(id, dto);
+            }
+            else {
+                dto.setCreatedDate(createdDate);
+                dto.setCreatedBy(createdBy);
+                int id = dao.insert(dto);
+                dto.setId(id);  
+            }
         	
-        	dto.setId(id);
         	return new ModelAndView("1_setup/FishWeightTypeView", "dto", dto);
         }
 	}
+    
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishWeightTypeDao dao = DaoFactory.createFishWeightTypeDao();
+        FishWeightType dto = dao.findByPrimaryKey(id);
+        
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+        modelMap.put("dto", dto);
+        modelMap.put("mode", "edit");
+        
+        return new ModelAndView("1_setup/FishWeightTypeEdit", "model", modelMap);
+    }
 }

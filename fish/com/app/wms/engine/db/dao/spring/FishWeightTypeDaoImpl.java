@@ -99,6 +99,38 @@ public class FishWeightTypeDaoImpl extends AbstractDAO
 		
 		return resultList;
 	}
+    
+    public List<FishWeightType> findAllAndPaging(int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"	FROM "+getTableName()+" " +
+                "   WHERE is_active = 'Y' " +
+				") AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishWeightType> resultList = jdbcTemplate.query(query, this, limit, offset);
+		return resultList;
+    }
+
+    public List<FishWeightType> searchAndPaging(String code, int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"	FROM "+getTableName()+" " +
+                "   WHERE is_active = 'Y' AND code LIKE ? " +
+				") AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishWeightType> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+code+"%");
+		return resultList;
+    }
 	
 	@Override
 	public FishWeightType mapRow(ResultSet rs, int row) throws SQLException {
