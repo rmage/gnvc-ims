@@ -17,7 +17,6 @@ import com.app.wms.engine.db.dao.FishSpoilageDao;
 import com.app.wms.engine.db.dao.FishVesselDao;
 import com.app.wms.engine.db.dto.Fish;
 import com.app.wms.engine.db.dto.FishSpoilage;
-import com.app.wms.engine.db.dto.FishTs;
 import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -224,5 +223,33 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 	
 	public String getTableName() {
 		return "inventory..fish_spoilage";
+	}
+
+	@Override
+	public List<FishSpoilage> searchDistinctAndPaging(String batchNo, Date dateShift,
+			int limit, int offset) {
+		String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ?; " +
+				"WITH Results_CTE AS " +
+				"(" +
+				"	select MAX(sp.id) as id, MAX(sp.catcher_no) as catcher_no, " +
+				"	MAX(sp.fish_id) as fish_id, sp.date_shift, sp.time_shift, " +
+				"	sp.vessel_id, SUM(sp.cooked_weight) as cooked_weight, " +
+				"	SUM(sp.raw_weight) as raw_weight, SUM(sp.total_processed) as total_processed, " +
+				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
+				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
+				"	ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
+				"	from inventory..fish_spoilage sp " +
+				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
+				") " +
+				"SELECT *, vs.batch_no FROM Results_CTE cte " +
+				"LEFT JOIN inventory..fish_vessel vs ON vs.id = cte.vessel_id " +
+				"WHERE vs.batch_no LIKE ? AND cte.date_shift = ? " +
+				"AND RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishSpoilage> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+batchNo+"%", dateShift);
+		return resultList;
 	}
 }

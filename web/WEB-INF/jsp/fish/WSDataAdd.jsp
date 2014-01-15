@@ -8,6 +8,10 @@
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript">
         	$(document).ready(function() {
+        		$('.numeric').on('input', function() {
+        			this.value = this.value.replace(/[^0-9.]/g,'');	
+        		});
+        		
         		$('#batchNo').click(function() {
 					$("#dialog-ajaxSearch").dialog({ 
 						width: 500, 
@@ -17,7 +21,37 @@
 						zindex: 9999, 
 						title: 'Select Batch Number' });
                 });
-				
+        		
+        		$('#addItem').click(function() {
+        			$("#dialog-add-item").dialog({ 
+    					width: 500, 
+    					height: 200, 
+    					position: "center", 
+    					modal: true, 
+    					zindex: 9999, 
+    					title: 'Add Item' 
+    				});
+        		});
+        		
+        		$('#btnItemSet').click(function() {
+        			var fishType = $('#fishType option:selected').html();
+        			var fishId = $('#fishType').val();
+        			var totalWeight = $('#totalWeight').val();
+        			
+        			var rowCount = $('#main tr').length - 1;
+        			
+        			$("<tr class='ganjil'>" + 
+        					"<td class='style1'>"+rowCount+"</td>" +
+        					"<td id='fishType"+rowCount+"' class='center'>"+fishType+"</td>" +
+        						"<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+fishId+"' /></td>" +
+        					"<td id='totalWeightHTML"+rowCount+"' class='center'>"+totalWeight+"</td>" +
+        						"<input id='totalWeight"+rowCount+"' type='hidden' name='totalWeight"+rowCount+"' value='"+totalWeight+"' /></td>" +
+        					"</tr>").appendTo("#main tbody");
+                	
+                	$('#totalData').val(rowCount);
+                	$('#dialog-add-item').dialog('close');
+        		});
+        		
         		$('#wsNo').focus().on("blur",function() {
         			var wsNo = $('#wsNo').val();
         			$.ajax({
@@ -94,6 +128,7 @@
                     	<input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" id="vesselId" name="vesselId" value="" />
+                        <input type="hidden" id="totalData" name="totalData" value="0" />
                         <input type="hidden" name="isActive" value="Y"/>
 
                         <table class="collapse tblForm row-select">
@@ -135,7 +170,7 @@
                                     <td class="style1">
                                         <label>
                                             <input type="text" name="wsNo" id="wsNo" size="30"                                                    
-                                                   value="" class="validate[required] text-input" />
+                                                   value="" class="validate[required] text-input numeric" />
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>
@@ -203,40 +238,16 @@
                             </tbody>
                         </table>
                         
-                        <table class="collapse tblForm row-select">
-                            <caption>WS Data</caption>
-                            <tbody class="tbl-nohover">
-                            	 <tr class="detail_genap">
-                            	 	<td width="15px"></td>
-                                    <td width="20%">Fish Type</td>
-                                    <td class="style1">
-                                        <label>
-                                            <select name="fishId">
-                                            	<c:forEach items="${model.fishes}" var="fish">
-                                            		<option value="${fish.id}">
-                                            			<c:out value="${fish.code}" />
-                                            		</option>
-                                            	</c:forEach>
-                                            </select>
-                                            <label class="requiredfield" title="This Field Is Required!">*</label>
-                                        </label>
-                                    </td>
-                               	 </tr>
-                               	 <tr>
-                               	 <td width="15px"></td>
-                               	 <td width="20%">Total Weight</td>
-                                    <td class="style1">
-                                        <label>                                                                                                                                                                             
-                                            <input type="text" name="totalWeight" size="10" id="fishTotalWeight" value="" 
-                                            class="validate[required] text-input" /> Kg 
-                                            <label class="requiredfield" title="This Field Is Required!">*</label>                                                           
-                                        </label>
-                                    </td> 
-                               	 </tr>
-                            </tbody>
-                        </table>
+                        <a href="javascript:void(0)" id="addItem">Add Item</a><br /><br />
                         
-                        <table class="collapse tblForm row-select ui-widget-content">
+                        <table id="main" class="collapse tblForm row-select ui-widget-content">
+                        	<thead>
+                        		<tr>
+                        			<td class="center">No.</td>
+                        			<td class="center">Fish Type</td>
+                        			<td class="center">Total Weight</td>
+                        		</tr>
+                        	</thead>
                             <tbody class="tbl-nohover">
                             </tbody>
                             <tfoot class="ui-widget-header">
@@ -255,6 +266,50 @@
                     </form>
                 </div>
             </div>
+            
+            <div id="dialog-add-item">
+	            <table class="collapse tblForm row-select">
+		            <tbody class="tbl-nohover">
+		            	 <tr class="detail_genap">
+		            	 	<td width="15px"></td>
+		                    <td width="20%">Fish Type</td>
+		                    <td class="style1">
+		                        <label>
+		                            <select id="fishType" name="fishId">
+		                            	<c:forEach items="${model.fishes}" var="fish">
+		                            		<option value="${fish.id}">
+		                            			<c:out value="${fish.code}" />
+		                            		</option>
+		                            	</c:forEach>
+		                            </select>
+		                            <label class="requiredfield" title="This Field Is Required!">*</label>
+		                        </label>
+		                    </td>
+		               	 </tr>
+		               	 <tr>
+		               	 <td width="15px"></td>
+		               	 <td width="20%">Total Weight</td>
+		                    <td class="style1">
+		                        <label>                                                                                                                                                                             
+		                            <input type="text" id="totalWeight" name="totalWeight" size="10" id="fishTotalWeight" value="" 
+		                            class="validate[required] text-input numeric" /> Kg 
+		                            <label class="requiredfield" title="This Field Is Required!">*</label>                                                           
+		                        </label>
+		                    </td> 
+		               	 </tr>
+		            </tbody>
+		            <tfoot class="ui-widget-header">
+	                    <tr><td colspan="7">
+	                            <label>
+	                                <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+	                                       role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
+	                                       name="btnSave" id="btnItemSet" value="Set" class="simpan" />
+	                            </label>
+	                        </td>
+	                    </tr>
+                  </tfoot>
+	        	</table>
+            </div>
             <div id="dialog-ajaxSearch" title="Batch Number Search" style="display:none;z-index:1;">
 	        	<label>Batch Number</label>
 	        	<label>:</label>
@@ -265,12 +320,14 @@
 	        	<table id="list"></table> 
 	            <div id="pager"></div> 
         	</div>
+        	
             <div class="span-24 last border-top">
                 <div class="box">
                     &copy; 2013 SPFI
                 </div>
             </div>
         </div>
+        
         <script type="text/javascript">
             $(function() {
                 $('#btnBack').click(function() {

@@ -934,4 +934,13 @@
     <bean id="FishTsDetailDao" class="com.app.wms.engine.db.dao.spring.FishTsDetailDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="FishBalanceHistoryDao" class="com.app.wms.engine.db.dao.spring.FishBalanceHistoryDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishBadStockDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishBadStockDetailDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDetailDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>

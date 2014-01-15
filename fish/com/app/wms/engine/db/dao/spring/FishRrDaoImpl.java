@@ -2,6 +2,7 @@ package com.app.wms.engine.db.dao.spring;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -173,5 +174,21 @@ public class FishRrDaoImpl extends AbstractDAO implements
 		List<FishRr> resultList = jdbcTemplate.query(query, this, rrNo);
 		
 		return resultList.size() == 0 ? false : true;
+	}
+
+	@Override
+	public List<FishRr> searchAndPaging(String rrNo, Date rrDate, int limit, int offset) {
+		String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"FROM inventory..fish_rr WHERE rr_no LIKE ? AND rr_date = ?) " +
+				"AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishRr> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+rrNo+"%", rrDate);
+		return resultList;
 	}
 }

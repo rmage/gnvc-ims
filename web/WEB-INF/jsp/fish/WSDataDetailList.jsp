@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -38,9 +39,11 @@
 					      				${map.value.fishName}
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td class="right" width="150px">&nbsp;
 					      			<c:if test="${map.value.totalWeight ne null}">
-					      				${map.value.totalWeight}
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.totalWeight}"></fmt:formatNumber>
 					      			</c:if>
 					      		</td>
 						</c:forEach>

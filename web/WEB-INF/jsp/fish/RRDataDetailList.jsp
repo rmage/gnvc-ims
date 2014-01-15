@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -11,7 +12,7 @@
    			<thead>
 			    <tr>
 					<td class="style1">No.</td>
-                    <td class="style1">RR No.</td>
+                    <td class="style1">WS No.</td>
 			        <td class="style1">Fish Type</td>
 			        <td class="style1">Fish Name</td>
 			        <td class="style1">Storage</td>
@@ -27,8 +28,8 @@
 						    <tr class="ganjil">
 								<td align="right">&nbsp;${mapCounter.count}</td>
 								<td align="center">&nbsp;
-					      			<c:if test="${map.value.rrNo ne null}">
-					      				${map.value.rrNo}
+					      			<c:if test="${map.value.wsNo ne null}">
+					      				${map.value.wsNo}
 					      			</c:if>
 					      		</td>
 								<td align="center">&nbsp;
@@ -46,19 +47,25 @@
 					      				${map.value.storage}
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td class="right" widht="150px">&nbsp;
 					      			<c:if test="${map.value.goodWeight ne null}">
-					      				${map.value.goodWeight}
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.goodWeight}"></fmt:formatNumber>
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td class="right" widht="150px">&nbsp;
 					      			<c:if test="${map.value.spoilageWeight ne null}">
-					      				${map.value.spoilageWeight}
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.spoilageWeight}"></fmt:formatNumber>
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td class="right" widht="150px">&nbsp;
 					      			<c:if test="${map.value.totalWeight ne null}">
-					      				${map.value.totalWeight}
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.totalWeight}"></fmt:formatNumber>
 					      			</c:if>
 					      		</td>
 						</c:forEach>

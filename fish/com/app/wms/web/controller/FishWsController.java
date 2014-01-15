@@ -14,13 +14,11 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.FishDao;
 import com.app.wms.engine.db.dao.FishStorageDao;
-import com.app.wms.engine.db.dao.FishVesselDao;
 import com.app.wms.engine.db.dao.FishWsDao;
 import com.app.wms.engine.db.dao.FishWsDetailDao;
 import com.app.wms.engine.db.dao.FishWsTypeDao;
 import com.app.wms.engine.db.dto.Fish;
 import com.app.wms.engine.db.dto.FishStorage;
-import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.dto.FishWSType;
 import com.app.wms.engine.db.dto.FishWs;
 import com.app.wms.engine.db.dto.FishWsDetail;
@@ -30,7 +28,7 @@ import com.app.wms.engine.db.factory.DaoFactory;
 
 public class FishWsController extends MultiActionController {
 	
-	private SimpleDateFormat dfApp = new SimpleDateFormat("dd/MM/yyyy");
+	private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	
 	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
@@ -53,7 +51,21 @@ public class FishWsController extends MultiActionController {
             }
             
             FishWsDao dao = DaoFactory.createFishWsDao();
-            List<FishWs> fishWsDataList = dao.findAllAndPaging(paging, offset);
+            List<FishWs> fishWsDataList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String wsNo = request.getParameter("wsNo");
+            	Date wsDate = df.parse(request.getParameter("wsDate"));
+            	fishWsDataList = dao.searchAndPaging(wsNo, wsDate, paging, offset);
+            	String querySearch = "&search=true&wsNo="+wsNo+"&wsDate="+df.format(wsDate);
+            	modelMap.put("queryWsNo", wsNo);
+            	modelMap.put("queryWsDate", wsDate);
+            	modelMap.put("querySearch", querySearch);
+            }
+            else {
+                fishWsDataList = dao.findAllAndPaging(paging, offset);
+            }
+
             modelMap.put("fishWsData", fishWsDataList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
@@ -109,7 +121,7 @@ public class FishWsController extends MultiActionController {
         	Integer wsTypeId = Integer.valueOf(request.getParameter("wsTypeId"));
         	Integer vesselId = Integer.valueOf(request.getParameter("vesselId"));
         	Integer storageId = Integer.valueOf(request.getParameter("storageId"));
-        	Date dateShift = dfApp.parse(request.getParameter("dateShift"));
+        	Date dateShift = df.parse(request.getParameter("dateShift"));
         	String timeShift = request.getParameter("timeShift");
         	String regu = request.getParameter("regu");
         	
@@ -130,37 +142,26 @@ public class FishWsController extends MultiActionController {
         	int id = dao.insert(dto);
         	dto.setId(id);
         	
-        	Integer fishId = Integer.valueOf(request.getParameter("fishId"));
-        	Double totalWeight = Double.valueOf(request.getParameter("totalWeight"));
+        	int totalData = Integer.valueOf(request.getParameter("totalData"));
+        	for(int i=1; i<=totalData; i++) {
+        		Integer fishId = Integer.valueOf(request.getParameter("fishId"+i));
+            	Double totalWeight = Double.valueOf(request.getParameter("totalWeight"+i));
+            	
+            	FishWsDetail wsDetail = new FishWsDetail();
+            	wsDetail.setWsId(dto.getId());
+            	wsDetail.setFishId(fishId);
+            	wsDetail.setTotalWeight(totalWeight);
+            	wsDetail.setCreatedDate(new Date());
+            	wsDetail.setCreatedBy(userId);
+            	wsDetail.setIsActive("Y");
+            	wsDetail.setIsDelete("N");
+            	
+            	FishWsDetailDao wsDetailDao = DaoFactory.createFishWsDetailDao();
+            	wsDetailDao.insert(wsDetail);	
+        	}
         	
-        	FishWsDetail wsDetail = new FishWsDetail();
-        	wsDetail.setWsId(dto.getId());
-        	wsDetail.setFishId(fishId);
-        	wsDetail.setTotalWeight(totalWeight);
-        	wsDetail.setCreatedDate(new Date());
-        	wsDetail.setCreatedBy(userId);
-        	wsDetail.setIsActive("Y");
-        	wsDetail.setIsDelete("N");
-        	
-        	FishWsDetailDao wsDetailDao = DaoFactory.createFishWsDetailDao();
-        	wsDetailDao.insert(wsDetail);
-        	List<FishWsDetail> wsDetails = wsDetailDao.findByWsId(dto.getId());
-        	
-        	FishVesselDao fishVesselDao = DaoFactory.createFishVesselDao();
-        	FishVessel fishVessel = fishVesselDao.findByPrimaryKey(dto.getVesselId());
-        	dto.setVessel(fishVessel);
-        	
-        	FishWsTypeDao wsTypeDao = DaoFactory.createFishWsTypeDao();
-        	FishWSType wsType = wsTypeDao.findByPrimaryKey(dto.getWsTypeId());
-        	dto.setWsType(wsType);
-        	
-        	FishDao fishDao = DaoFactory.createFishDao();
-        	List<Fish> fishes = fishDao.findAllActive();
-        	
-        	modelMap.put("dto", dto);
-        	modelMap.put("wsDetails", wsDetails);
-        	modelMap.put("fishes", fishes);
-    		return new ModelAndView("fish/WSDataView", "model", modelMap);
+        	modelMap = this.searchAndPaging(request, response);
+    		return new ModelAndView("fish/WSDataList", "model", modelMap);
         }
 	}
 	

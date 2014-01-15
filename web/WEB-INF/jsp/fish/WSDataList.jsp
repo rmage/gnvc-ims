@@ -1,3 +1,6 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="freemarker.template.SimpleDate"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -6,6 +9,22 @@
         <title>IMS - Fish WS Data List</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript">
+        	$(document).ready(function() {
+        		$('#queryWsDate').datepicker({                        
+                    dateFormat: "dd/mm/yy",
+                });	
+        		
+        		$('#btnSearch').click(function() {
+        			var wsNo = $('#queryWsNo').val();
+        			var wsDate = $('#queryWsDate').val();
+        			location.href = "FishWs.htm?search=true&wsNo="+wsNo+"&wsDate="+wsDate;
+        		});	
+        		
+        		$('#btnCleanFilter').click(function() {
+        			location.href = "FishWs.htm";
+        		});
+        	});
+        	
         	function showDetails(selectedRow) {
         		var title = 'WS Details';
         		var wsId = selectedRow.getAttribute('id');
@@ -32,11 +51,17 @@
             if (request.getSession().getAttribute("FishWsDataSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishWsDataSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryWsNo = m.get("queryWsNo") == null ? "" : (String) m.get("queryWsNo");
+            Date queryWsDate = m.get("queryWsDate") == null ? new Date() : (Date) m.get("queryWsDate");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-			<div id="dtl-panel" class="div-dtl" style="width: 1337px; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
+			<div id="dtl-panel" class="div-dtl" style="width: 100%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishWs.htm" method="post">
@@ -48,29 +73,31 @@
                                         WS No
                                     </td>
                                     <td>
-                                        <input type="text" name="wsNo" value=""/>
+                                        <input type="text" id="queryWsNo" name="wsNo" value="<%=queryWsNo%>"/>
                                     </td>
                                     <td>
-                                        WS Type
+                                        Date
                                     </td>
                                     <td>
-                                        <input type="text" name="wsType" value="" />
+                                        <input type="text" id="queryWsDate" name="wsDate" value="<%= df.format(queryWsDate)%>" />
                                     </td>
                                     <td colspan="2">
                                     </td>
                                 </tr>
                                 <tr>
-                                   
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="4">
                                     <span class="style1">
-                                        <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+                                        <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
                                      <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
+                                    <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+	                                </label>
                                 </td>
                                 <td></td>
                             </tfoot>
@@ -149,13 +176,13 @@
                                 <td colspan="7">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="FishWs.htm?page=<c:out value="${model.page-1}" />">
+                                            <a href="FishWs.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
                                                 &lt;
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishWs.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="FishWs.htm?page=<c:out value="${model.page+1}"/><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>

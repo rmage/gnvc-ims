@@ -2,6 +2,7 @@ package com.app.wms.engine.db.dao.spring;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -176,5 +177,21 @@ public class FishWdsDaoImpl extends AbstractDAO implements
 		List<FishWds> resultList = jdbcTemplate.query(query, this, wdsNo);
 		
 		return resultList.size() == 0 ? false : true;
+	}
+
+	@Override
+	public List<FishWds> searchAndPaging(String wdsNo, Date wdsDate, int limit, int offset) {
+		String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"FROM inventory..fish_wds WHERE wds_no LIKE ? AND wds_date = ?) " +
+				"AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishWds> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+wdsNo+"%", wdsDate);
+		return resultList;
 	}
 }

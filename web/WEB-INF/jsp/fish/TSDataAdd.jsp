@@ -12,9 +12,12 @@
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function(){
+            	$('.numeric').on('input', function() {
+        			this.value = this.value.replace(/[^0-9.]/g,'');	
+        		});
             	
             	$('#tsDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });
             	
             	$('#wdsNo').click(function() {
@@ -67,8 +70,8 @@
 	        	            						"<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+v.fishId+"' />"+"</td>" +
 	        	            					"<td class='style1'>"+v.description+"</td>" +
 	        	            						"<input id='description"+rowCount+"' type='hidden' name='description"+rowCount+"' value='"+v.description+"' />"+"</td>" +
-	        	            					"<td id='qtyHTML"+rowCount+"' class='center'>"+v.qty+"</td>" +
-	        	            						"<input id='qty"+rowCount+"' type='hidden' name='qty"+rowCount+"' value='"+v.qty+"' /></td>" +
+	        	            					"<td class='right' id='qtyHTML"+rowCount+"' class='center'>"+v.qty+"</td>" +
+	        	            						"<input id='qty"+rowCount+"' type='hidden' name='qty"+rowCount+"' value='"+v.qty.replace(/\,/g,'')+"' /></td>" +
 	        	            					"<td id='uomCodeHTML"+rowCount+"' class='center'>"+v.uomCode+"</td>" +
 	        	            						"<input id='uomCode"+rowCount+"' type='hidden' name='uomCode"+rowCount+"' value='"+v.uomCode+"' /></td>" +
 	        	            					"<td id='storageHTML"+rowCount+"' class='center'>"+v.storageName+"</td>" +
@@ -167,7 +170,7 @@
                                    <td class="style1">TS No.</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" id="tsNo" name="tsNo" value="" size="30" class="validate[numeric] text-input"/>
+                                            <input type="text" id="tsNo" name="tsNo" value="" size="30" class="validate[required] text-input numeric"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>

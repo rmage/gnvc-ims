@@ -1,3 +1,5 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -7,6 +9,20 @@
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
         	$(document).ready(function() {
+        		$('#btnCleanFilter').click(function() {
+        			location.href = "FishSpoilageData.htm";	
+        		});
+        		
+        		$('#btnSearch').click(function() {
+        			var batchNo = $('#queryBatchNo').val();
+        			var dateShift = $('#queryDateShift').val();
+        			location.href = "FishSpoilageData.htm?search=true&batchNo="+batchNo+"&dateShift="+dateShift;
+        		});
+        		
+        		$('#queryDateShift').datepicker({                        
+                    dateFormat: "dd/mm/yy",
+                });
+        		
 				$('#btnAdd').click(function() {
 					location.href="FishSpoilageData.htm?action=create";
                 });
@@ -23,6 +39,24 @@
 
                 $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
 			});
+        	
+        	function showDetails(vesselId, dateShift, timeShift) {
+        		var title = "Fish Spoilage Details:";
+				$('#dtl-panel').fadeIn(500, function() {
+					$.ajax({
+	                    url: "FishSpoilageData.htm",
+	                    data: "action=ajaxDocument&vesselId="+vesselId+"&dateShift="+dateShift+"&timeShift="+timeShift,
+	                    success: function(html){
+	                        $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
+	                        $('#dtl-panel').append(html);
+	                    },
+	                    error: function(jqXHR, textStatus){
+	                        $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
+	                        $('#dtl-panel').append(jqXHR + " - " + textStatus);
+	                    }
+	                });
+				});
+        	}
 		</script>
     </head>
     <body>
@@ -31,11 +65,17 @@
             if (request.getSession().getAttribute("FishRRDataSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishRRDataSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryBatchNo = m.get("queryBatchNo") == null ? "" : (String) m.get("queryBatchNo");
+            Date queryDateShift = m.get("queryDateShift") == null ? new Date() : (Date) m.get("queryDateShift");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-
+			<div id="dtl-panel" class="div-dtl" style="width: 100%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishSpoilageData.htm" method="post">
@@ -47,22 +87,29 @@
                                         Batch No
                                     </td>
                                     <td>
-                                        <input type="text" name="batchNo" value=""/>
+                                        <input type="text" id="queryBatchNo" name="batchNo" value="<%=queryBatchNo%>"/>
+                                    </td>
+                                    <td width="20%">
+                                        Date Shift
+                                    </td>
+                                    <td>
+                                        <input type="text" id="queryDateShift" name="dateShift" value="<%=df.format(queryDateShift)%>"/>
                                     </td>
                                 </tr>
-                                <tr></tr>
                             </tbody>
                             <tfoot>
                             <tr>
 	                            <td colspan="4">
 	                                <span class="style1">
-	                                    <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+	                                    <input type="button" value="Search" id="btnSearch" name="btnSearch" />
 	                                </span>
 	                                 <label>
 	                                    <input type="button" name="button" id="btnAdd" value="Add" />
 	                                </label>
+	                                <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+	                                </label>
 	                            </td>
-	                            <td></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -131,12 +178,19 @@
                                             <a href='<c:out value="${urlReportXLS}"/>'>
                                             	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>
                                         </td>
-                                        <td class="center"><c:out value="${spoilageData.vessel.batchNo}"/></td>
+                                        <td class="center"><a onclick="showDetails('${spoilageData.vesselId}', 
+                                        	'${spoilageData.dateShift}', '${spoilageData.timeShift}')"><c:out value="${spoilageData.vessel.batchNo}"/></a></td>
                                         <td class="center"><c:out value="${spoilageData.dateShift}"/></td>
                                         <td class="center"><c:out value="${spoilageData.timeShift}"/></td>
-                                        <td class="center"><c:out value="${spoilageData.cookedWeight}"/></td>
-                                        <td class="center"><c:out value="${spoilageData.rawWeight}"/></td>
-                                        <td class="center"><c:out value="${spoilageData.totalProcessed}"/></td>
+                                        <td class="right"><fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${spoilageData.cookedWeight}"></fmt:formatNumber></td>
+                                        <td class="right"><fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${spoilageData.rawWeight}"></fmt:formatNumber></td>
+                                        <td class="right"><fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${spoilageData.totalProcessed}"></fmt:formatNumber></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
@@ -144,13 +198,13 @@
                                 <td colspan="10">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="FishSpoilageData.htm?page=<c:out value="${model.page-1}" />">
+                                            <a href="FishSpoilageData.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
                                                 &lt;
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishSpoilageData.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="FishSpoilageData.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>

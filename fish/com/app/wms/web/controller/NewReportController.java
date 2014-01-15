@@ -3,8 +3,10 @@ package com.app.wms.web.controller;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -81,12 +83,23 @@ public class NewReportController extends MultiActionController {
 		List<FishRrDetail> rrDetails = dao.findByRrIdGroupByFishAndStorage(rrId);
 		FishRrDetail dto = rrDetails.get(0);
 		
+		Set<String> wsNumbers = new HashSet<String>();
+		for (FishRrDetail rrDetail : rrDetails) {
+			wsNumbers.add(rrDetail.getWeightSlip().getWsNo());
+		}
+		
+		String wsNumberString = "";
+		for (String wsNumber : wsNumbers) {
+			wsNumberString += wsNumber + ",";
+		}
+		wsNumberString = wsNumberString.substring(0, wsNumberString.length() - 1);
+		
 		Map<String, Object> info =  new HashMap<String, Object>();
 		String supplierName = dto.getReceivingReport().getVessel().getSupplier().getName();
 		String batchNo = dto.getReceivingReport().getVessel().getBatchNo();
 		String from = supplierName + "/" + batchNo;
 		info.put("from", from);
-		info.put("wsno", dto.getWeightSlip().getWsNo());
+		info.put("wsno", wsNumberString);
 		info.put("batchno", dto.getWeightSlip().getVessel().getBatchNo());
 		info.put("no", dto.getReceivingReport().getRrNo());
 		info.put("date", df.format(dto.getReceivingReport().getRrDate()));

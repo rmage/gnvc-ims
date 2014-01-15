@@ -1,12 +1,28 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>IMS - Fish Bad Stock Slip List</title>
+        <title>IMS - Transfer Slip (Bad Stock) List</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
         	$(document).ready(function() {
+        		$('#btnCleanFilter').click(function() {
+        			location.href = "FishBs.htm";	
+        		});
+        		
+        		$('#queryBsDate').datepicker({                        
+                    dateFormat: "dd/mm/yy"
+                });	
+        		
+        		$('#btnSearch').click(function() {
+        			var bsNo = $('#queryBsNo').val();
+        			var bsDate = $('#queryBsDate').val();
+        			location.href = "FishBs.htm?search=true&bsNo="+bsNo+"&bsDate="+bsDate;
+        		});
+        		
 				$('#btnAdd').click(function() {
 					location.href="FishBs.htm?action=create";
                 });
@@ -50,23 +66,37 @@
             if (request.getSession().getAttribute("FishRRDataSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishRRDataSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryBsNo = m.get("queryBsNo") == null ? "" : (String) m.get("queryBsNo");
+            Date queryBsDate = m.get("queryBsDate") == null ? new Date() : (Date) m.get("queryBsDate");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-			<div id="dtl-panel" class="div-dtl" style="width: 1337px; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
+			<div id="dtl-panel" class="div-dtl" style="width: 100%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishBs.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search Bad Stock Slip</caption>
+                            <caption>Search Transfer Slip (Bad Stock)</caption>
                             <tbody>
                                 <tr>
                                     <td width="20%">
-                                        BS No.
+                                        TS No.
                                     </td>
                                     <td>
-                                        <input type="text" name="tsNo" value=""/>
+                                        <input type="text" id="queryBsNo" name="bsNo" value="<%=queryBsNo%>"/>
+                                    </td>
+                                    <td>
+                                        Date
+                                    </td>
+                                    <td>
+                                        <input type="text" id="queryBsDate" name="bsDate" value="<%= df.format(queryBsDate)%>" />
+                                    </td>
+                                    <td colspan="2">
                                     </td>
                                 </tr>
                                 <tr></tr>
@@ -75,10 +105,13 @@
                             <tr>
 	                            <td colspan="4">
 	                                <span class="style1">
-	                                    <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+	                                    <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
 	                                </span>
 	                                 <label>
 	                                    <input type="button" name="button" id="btnAdd" value="Add" />
+	                                </label>
+	                                <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
 	                                </label>
 	                            </td>
 	                            <td></td>
@@ -93,8 +126,7 @@
                                 <td class="center">No</td>
                                 <td class="center">Action</td>
                                 <td class="center">BS NO</td>
-                                <td class="center">Issued By</td>
-                                <td class="center">Noted By</td>
+                                <td class="center">Received By</td>
                                 <td class="center">Approved By</td>
                                 <td class="center">Date Created</td>
                             </tr>
@@ -147,8 +179,7 @@
                                             	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>
                                         </td>
                                         <td class="center"><a id="${bsData.id}" onclick="showDetails(this)"><c:out value="${bsData.bsNo}"/></a></td>
-                                        <td class="center"><c:out value="${bsData.issuedBy}"/></td>
-                                        <td class="center"><c:out value="${bsData.notedBy}"/></td>
+                                        <td class="center"><c:out value="${bsData.receivedBy}"/></td>
                                         <td class="center"><c:out value="${bsData.approvedBy}"/></td>
                                         <td class="center"><c:out value="${bsData.createdDate}"/></td>
                                     </tr>
@@ -158,13 +189,13 @@
                                 <td colspan="10">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="FishBs.htm?page=<c:out value="${model.page-1}" />">
+                                            <a href="FishBs.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
                                                 &lt;
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishBs.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="FishBs.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>
