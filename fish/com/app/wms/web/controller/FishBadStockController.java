@@ -49,8 +49,22 @@ private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             }
             
             FishBadStockDao dao = DaoFactory.createFishBadStockDao();
-            List<FishBadStock> bsDataList = dao.findAllAndPaging(paging, offset);
-            modelMap.put("bsDataList", bsDataList);
+            List<FishBadStock> fishBsList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String bsNo = request.getParameter("bsNo");
+            	Date bsDate = df.parse(request.getParameter("bsDate"));
+            	fishBsList = dao.searchAndPaging(bsNo, bsDate, paging, offset);
+            	String querySearch = "&search=true&bsNo="+bsNo+"&bsDate="+df.format(bsDate);
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryBsNo", bsNo);
+            	modelMap.put("queryBsDate", bsDate);
+            }
+            else {
+                fishBsList = dao.findAllAndPaging(paging, offset);
+            }
+            
+            modelMap.put("bsDataList", fishBsList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
             modelMap.put("paging", paging);

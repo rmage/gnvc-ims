@@ -16,7 +16,7 @@
     </head>
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
         %>
         <div class="container">
@@ -38,13 +38,13 @@
                                     <td class="style1">PRS No</td>
                                     <td class="style1">
                                         <label>
-	                                        <select name="prsnumber">
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListPrs}">
-	                                        		  <option value="${droplist.prsnumber}" ${(droplist.prsnumber eq requestScope.model.prsnumber)? "selected": ""}>
-	                                        		  	${droplist.prsnumber} - ${droplist.prsdate}
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                        </select>
+                                            <select name="prsnumber">
+                                                <c:forEach var="droplist" items="${requestScope.model.dropListPrs}">
+                                                    <option value="${droplist.prsnumber}" ${(droplist.prsnumber eq requestScope.model.prsnumber)? "selected": ""}>
+                                                        ${droplist.departmentName} :: <fmt:formatDate pattern="yyyy-MM-dd" value="${droplist.prsdate}" /> :: ${droplist.prsnumber}
+                                                    </option> 
+                                                </c:forEach>
+                                            </select>
                                     	</label>
                                     	<label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -53,13 +53,11 @@
                                     <td class="style1">Canvasser Name</td>
                                     <td class="style1">
                                         <label>
-	                                        <select name="canvassername">
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListUser}">
-	                                        		  <option value="${droplist.username}" ${(droplist.username eq requestScope.model.username)? "selected": ""}>
-	                                        		  	${droplist.username}
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                        </select>
+                                            <select name="canvasserid">
+                                                <c:forEach var="droplist" items="${requestScope.model.dropListUser}">
+                                                    <option value="${droplist.userId}" >${droplist.name}</option> 
+                                                </c:forEach>
+                                            </select>
                                     	</label>
                                     	<label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>

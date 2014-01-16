@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +14,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.FishDao;
 import com.app.wms.engine.db.dao.FishSpoilageDao;
-import com.app.wms.engine.db.dao.FishTypeDao;
 import com.app.wms.engine.db.dto.Fish;
 import com.app.wms.engine.db.dto.FishSpoilage;
-import com.app.wms.engine.db.dto.FishType;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 
@@ -46,9 +45,22 @@ public class FishSpoilageDataController extends MultiActionController {
             }
             
             FishSpoilageDao dao = DaoFactory.createFishSpoilageDao();
-    		List<FishSpoilage> spoilageDataList = dao.findAllDistinctAndPaging(paging, offset);
+            List<FishSpoilage> spoilageList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String batchNo = request.getParameter("batchNo");
+            	Date dateShift = df.parse(request.getParameter("dateShift"));
+            	spoilageList = dao.searchDistinctAndPaging(batchNo, dateShift, paging, offset);
+            	String querySearch = "&search=true&batchNo="+batchNo+"&dateShift="+df.format(dateShift);
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryBatchNo", batchNo);
+            	modelMap.put("queryDateShift", dateShift);
+            }
+            else {
+                spoilageList = dao.findAllDistinctAndPaging(paging, offset);
+            }
 
-    		modelMap.put("spoilageDataList", spoilageDataList);
+    		modelMap.put("spoilageDataList", spoilageList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
             modelMap.put("paging", paging);
@@ -149,13 +161,38 @@ public class FishSpoilageDataController extends MultiActionController {
         		dao.insert(dto);
         	}
         	
-        	FishDao fishDao = DaoFactory.createFishDao();
-    		List<Fish> fishDataList = fishDao.findAllActive();
-    		
-    		modelMap = new HashMap<String, Object>();
-    		modelMap.put("fishDataList", fishDataList);
-    		
-    		return new ModelAndView("fish/FishSpoilageAdd", "model", modelMap);
-        }
+        	modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("fish/FishSpoilageList", "model", modelMap);
+            }
+	}
+	
+	public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		 
+		Map<String, Object> modelMap = new HashMap<String, Object>();
+		int vesselId = Integer.valueOf(request.getParameter("vesselId"));
+		String timeShift = request.getParameter("timeShift");
+		Date dateShift = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateShift"));
+		
+		FishSpoilageDao dao = DaoFactory.createFishSpoilageDao();
+		List<FishSpoilage> spoilageDetailList = dao.findAllForReport(vesselId, dateShift, timeShift);
+		
+		Map tableMap = new HashMap();
+		for (FishSpoilage fishSpoilageDetail : spoilageDetailList) {
+			Map<String, Object> returnMap = new HashMap<String, Object>();
+			returnMap.put("batchNo", fishSpoilageDetail.getVessel().getBatchNo());
+			returnMap.put("catcherNo", fishSpoilageDetail.getCatcherNo());
+			returnMap.put("fishType", fishSpoilageDetail.getFish().getCode());
+			returnMap.put("fishName", fishSpoilageDetail.getFish().getFishType().getDescription());
+			returnMap.put("rawWeight", fishSpoilageDetail.getRawWeight());
+			returnMap.put("cookedWeight", fishSpoilageDetail.getCookedWeight());
+			returnMap.put("totalProcessed", fishSpoilageDetail.getTotalProcessed());
+			returnMap.put("reason", fishSpoilageDetail.getReason());
+			
+			tableMap.put(returnMap, returnMap);
+		}
+		
+		modelMap.put("tableMap", tableMap);
+		return new ModelAndView("fish/FishSpoilageDetailList", "model", modelMap);
 	}
 }

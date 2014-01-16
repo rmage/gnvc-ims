@@ -7,10 +7,10 @@
     </head>
     <body>
         <%
-        	Canvasserassignment  dto = (Canvasserassignment) request.getAttribute("dto");    
+            Canvasserassignment  dto = (Canvasserassignment) request.getAttribute("dto");    
             String prsnumber = (String)dto.getPrsnumber();
             String canvassername = (String)dto.getCanvassername();
-     		String id = Integer.toString(dto.getId());
+            String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>

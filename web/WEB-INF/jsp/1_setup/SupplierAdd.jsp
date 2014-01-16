@@ -16,7 +16,7 @@
     </head>
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
         %>
         <div class="container">
@@ -38,7 +38,7 @@
                                     <td class="style1">Supplier Code</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="supplierCode" maxlength="3" size="4" class="validate[required] text-input"/>
+                                            <input type="text" name="supplierCode" maxlength="10" size="12" class="validate[required] text-input"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>

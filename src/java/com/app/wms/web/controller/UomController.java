@@ -321,8 +321,8 @@ public class UomController extends MultiActionController {
             List<Uom> tmp = dao.findWhereUomCodeEquals(puomCode);
             
             if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getUomCode().equals(puomCode))) {
-		  		  strError += "UoM code already exists. Please try a different values" + AppConstant.EOL;
-		  	}
+                strError += "UoM code already exists. Please try a different values" + AppConstant.EOL;
+            }
 
             if (strError.length() > 0) {
                 throw new Exception(strError);
@@ -343,10 +343,11 @@ public class UomController extends MultiActionController {
             dto.setIsActive(request.getParameter("isActive"));
             
             if (isCreate) {
-                dao.insert(dto);
+                UomPk up = dao.insert(dto);
+                dto.setId(up.getId());
             } else {
-				dto.setUpdatedBy(userId);
-				dto.setUpdatedDate(now);
+                dto.setUpdatedBy(userId);
+                dto.setUpdatedDate(now);
                 dao.update(dto.createPk(), dto);
             }
 

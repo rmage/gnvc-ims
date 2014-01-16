@@ -9,17 +9,17 @@
     
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             Supplier dto = (Supplier) m.get("dto");
-     		String mode = (String) m.get("mode");
-     		String supplierCode = (String) dto.getSupplierCode();
-     		String supplierName = (String) dto.getSupplierName();
-     		String supplierAddress = (String) dto.getSupplierAddress();
-     		String telephone = (String)dto.getTelephone();
-     		String fax = (String)dto.getFax();
-     		String email = (String)dto.getEmail();
-     		String contactPerson = (String) dto.getContactPerson();
-     		String id = Integer.toString(dto.getId());
+            String mode = (String) m.get("mode");
+            String supplierCode = (String) dto.getSupplierCode();
+            String supplierName = (String) dto.getSupplierName();
+            String supplierAddress = (String) dto.getSupplierAddress();
+            String telephone = (String)dto.getTelephone();
+            String fax = (String)dto.getFax();
+            String email = (String)dto.getEmail();
+            String contactPerson = (String) dto.getContactPerson();
+            String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -41,7 +41,7 @@
                                     <td class="style1">Supplier Code</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" class="shorttext" name="supplierCode" value="<%=supplierCode%>" maxlength="3" size="4" />
+                                            <input type="text" class="shorttext" name="supplierCode" value="<%=supplierCode%>" maxlength="10" size="12" />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>

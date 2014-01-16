@@ -14,51 +14,40 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.DepartmentDao;
-import com.app.wms.engine.db.dao.PoDetailDao;
 import com.app.wms.engine.db.dao.PrsDao;
 import com.app.wms.engine.db.dao.PrsDetailDao;
-import com.app.wms.engine.db.dao.SupplierDao;
-import com.app.wms.engine.db.dao.UomDao;
 import com.app.wms.engine.db.dto.Department;
-import com.app.wms.engine.db.dto.PoDetail;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
-import com.app.wms.hbm.bean.Po;
 
 public class PurchaseRequisitionController extends ReportManagerController {
 	
-	private Integer size = 0;
-	
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
-			
-			Map m = new HashMap();
-			final String mode = request.getParameter("mode");
-			if(mode != null && mode.equals("edit")){
-				
-				m = this.getModelByPrimaryKey(request);
-				m.put("mode", "edit");
-				return new ModelAndView ("2_receive/PRSEdit", "model", m);
-			}else{
-				
-				m = this.searchAndPaging(request, response);
-				return new ModelAndView ("2_receive/PRSList", "model", m);
-			}
-			
-		}catch (Exception e){
-			e.printStackTrace();
-			return new ModelAndView("Error", "th", e);
-		}
-	}
-	
-	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
+    private Integer size = 0;
 
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try{
+            Map m = new HashMap();
+            final String mode = request.getParameter("mode");
+            if(mode != null && mode.equals("edit")){
+                m = this.getModelByPrimaryKey(request);
+                m.put("mode", "edit");
+                return new ModelAndView ("2_receive/PRSEdit", "model", m);
+            } else{
+                m = this.searchAndPaging(request, response);
+                return new ModelAndView ("2_receive/PRSList", "model", m);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
+        }
+    }
+	
+    private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try{
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -83,11 +72,18 @@ public class PurchaseRequisitionController extends ReportManagerController {
             String prsDate = request.getParameter("prsdate");
             p.setPrsnumber(prsNo);
             
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
             PrsDao dao = DaoFactory.createPrsDao();
-            if(prsDate == null || prsDate == ""){
-            	List<Prs> listSearchPage = dao.findAll();
+            if(prsDate == null || prsDate.isEmpty()){
+            	List<Prs> listSearchPage = dao.findByDepartment(lu.getDepartmentCode());
+                DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+                for(Prs x : listSearchPage) {
+                    List<Department> d = departmentDao.findWhereDepartmentCodeEquals(x.getDepartmentName());
+                    x.setDepartmentName(d.isEmpty() ? "- department not found -" : d.get(0).getDepartmentName());
+                }
             	m.put("purchaseReq", listSearchPage);
-            }else if (prsDate != null && prsDate != ""){
+            } else if (prsDate != null && prsDate != ""){
             	p.setPrsdate(new SimpleDateFormat("dd/MM/yyyy").parse(prsDate));
             	List<Prs> listSearchPage = dao.findPrsPaging(p, page);
             	m.put("purchaseReq", listSearchPage);
@@ -103,112 +99,110 @@ public class PurchaseRequisitionController extends ReportManagerController {
 
             return m;
 
-		}catch (Exception e){
-			throw e;
-		}
+            }catch (Exception e){
+                throw e;
+            }
 		
 	}
 	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
 	try {
-			Prs dto = new Prs();
-		 
-	         //edit
-	         HashMap m = new HashMap();
-	         DepartmentDao daoDep = DaoFactory.createDepartmentDao();
-	         SupplierDao daoSupp = DaoFactory.createSupplierDao();
-	         CurrencyDao daoCurr = DaoFactory.createCurrencyDao();
-	         UomDao daoUoM = DaoFactory.createUomDao();
-	         List<Department> dropListDepartment = daoDep.findAll();
-	 		 //List<Supplier> dropListSupplier = daoSupp.findAll();
-	 		 //List<Currency> dropListCurrency = daoCurr.findAll();
-	 		 
-			 m.put("dropListDepartment", dropListDepartment);
-			 //m.put("dropListSupplier", dropListSupplier);
-			 //m.put("dropListCurrency", dropListCurrency);
-	         m.put("dto", dto);
-	         
-	         return m;
-         
-		} catch (Exception e) {
+            Prs dto = new Prs();
+
+             //edit
+            HashMap m = new HashMap();
+            DepartmentDao daoDep = DaoFactory.createDepartmentDao();
+//            SupplierDao daoSupp = DaoFactory.createSupplierDao();
+//            CurrencyDao daoCurr = DaoFactory.createCurrencyDao();
+//            UomDao daoUoM = DaoFactory.createUomDao();
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            List<Department> ds = daoDep.findAll();
+            List<Department> dropListDepartment = new ArrayList<Department>();
+            for(Department d : ds) {
+                if(lu.getDepartmentCode().equals(d.getDepartmentCode()))
+                    dropListDepartment.add(d);
+            }
+//            List<Supplier> dropListSupplier = daoSupp.findAll();
+//            List<Currency> dropListCurrency = daoCurr.findAll();
+
+            m.put("dropListDepartment", dropListDepartment);
+//            m.put("dropListSupplier", dropListSupplier);
+//            m.put("dropListCurrency", dropListCurrency);
+             m.put("dto", dto);
+
+             return m;
+        } catch (Exception e) {
             throw e;
         }
+    }
+	
+	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
+            Map map = new HashMap();
+            map = this.getModelByPrimaryKey(request);
+            map.put("mode", "create");		
+
+//		SupplierDao dao = DaoFactory.createSupplierDao();
+            return new ModelAndView ("2_receive/PRSAdd", "model", map);
 	}
 	
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		Map map = new HashMap();
-		map = this.getModelByPrimaryKey(request);
-		map.put("mode", "create");		
-		
-		SupplierDao dao = DaoFactory.createSupplierDao();
-		return new ModelAndView ("2_receive/PRSAdd", "model", map);
-	}
-	
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response){
-		
-		try{
-			
-			LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-			String createdBy = "";
-			if (lu == null) {
-				HashMap m = new HashMap();
-	            String msg = "You haven't login or your session has been expired! Please do login again";
-	            m.put("msg", msg);
-	            return new ModelAndView("login", "model", m);
-	        }else{
-	        	createdBy = lu.getUserId();
-	        }
-			
-			Prs p = new Prs();
-			PrsDao dao = DaoFactory.createPrsDao();
-			PrsDetailDao daod = DaoFactory.createPrsDetailDao();
-			
-			p.setPrsnumber(generatePrsNumber(request));
-			p.setPrsdate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("prsdate") + ""));
-			p.setRequestdate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("requestdate") + ""));
-//			p.setDeliverydate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("deliverydate") + ""));
-			p.setDeliverydate(new Date());
-//			p.setPoreferensi(request.getParameter("poreferensi"));
-			p.setRemarks(request.getParameter("remarks"));
-			
-			p.setCreatedby(createdBy);
-			p.setDepartmentName(request.getParameter("departmentName"));
-			p.setIsApproved("N");
-			
-			String[] productcode1s = request.getParameterValues("productCode1");
-			String[] productname1 = request.getParameterValues("productName1");
-	        String[] qtys = request.getParameterValues("qty");
-	        String[] uomName = request.getParameterValues("uomName1");
-	        
-	        List<PrsDetail> prsDetails = new ArrayList<PrsDetail>();
-	        
-	        for(int i = 0; i < productcode1s.length; i++){
-	        	PrsDetail prsDetail = new PrsDetail();
-	        	prsDetail.setPrsnumber(p.getPrsnumber());
-	        	prsDetail.setProductcode(productcode1s[i]);
-	        	prsDetail.setProductname(productname1[i]);
-	        	prsDetail.setQty(new BigDecimal(qtys[i]));
-	        	prsDetail.setUomName(uomName[i]);
-	        	daod.insert(prsDetail);
-	        	
-	        }
-	        
-	        dao.insert(p);
-	        
-	        Map m = new HashMap();
-	        
-	        List<Prs> listSearchPage = dao.findAll();
-        	m.put("purchaseReq", listSearchPage);
-	        //m = this.searchAndPaging(request, response);
-	        return new ModelAndView("2_receive/PRSList","model",m);
-			
-		}catch(Exception e){
-			e.printStackTrace();
-			logger.error(e, e);
-			 return new ModelAndView("2_receive/PRSList");
-		}
-	}
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            String createdBy = "";
+            if (lu == null) {
+                HashMap m = new HashMap();
+                String msg = "You haven't login or your session has been expired! Please do login again";
+                m.put("msg", msg);
+                return new ModelAndView("login", "model", m);
+            } else{
+                createdBy = lu.getUserId();
+            }
+
+            Prs p = new Prs();
+            PrsDao dao = DaoFactory.createPrsDao();
+            PrsDetailDao daod = DaoFactory.createPrsDetailDao();
+
+            p.setPrsnumber(generatePrsNumber(request));
+            p.setPrsdate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("prsdate") + ""));
+            p.setRequestdate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("requestdate") + ""));
+//          p.setDeliverydate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("deliverydate") + ""));
+            p.setDeliverydate(new Date());
+//          p.setPoreferensi(request.getParameter("poreferensi"));
+            p.setRemarks(request.getParameter("remarks"));
+            p.setCreatedby(createdBy);
+            p.setDepartmentName(request.getParameter("departmentName"));
+            p.setIsApproved("N");
+
+            String[] productcode1s = request.getParameterValues("productCode1");
+            String[] productname1 = request.getParameterValues("productName1");
+            String[] qtys = request.getParameterValues("qty");
+            String[] uomName = request.getParameterValues("uomName1");
+
+            List<PrsDetail> prsDetails = new ArrayList<PrsDetail>();
+
+            for(int i = 0; i < productcode1s.length; i++){
+                PrsDetail prsDetail = new PrsDetail();
+                prsDetail.setPrsnumber(p.getPrsnumber());
+                prsDetail.setProductcode(productcode1s[i]);
+                prsDetail.setProductname(productname1[i]);
+                prsDetail.setQty(new BigDecimal(qtys[i]));
+                prsDetail.setUomName(uomName[i]);
+                daod.insert(prsDetail);
+            }
+
+            dao.insert(p);
+
+            Map m = new HashMap();
+            List<Prs> listSearchPage = dao.findByDepartment(lu.getDepartmentCode());
+            m.put("purchaseReq", listSearchPage);
+            //m = this.searchAndPaging(request, response);
+            return new ModelAndView("2_receive/PRSList","model",m);
+        } catch(Exception e){
+            e.printStackTrace();
+            logger.error(e, e);
+            return new ModelAndView("2_receive/PRSList");
+        }
+    }
 	
 	private String generatePrsNumber (HttpServletRequest request) throws PrsDaoException{
 		

@@ -165,6 +165,11 @@ public class AppConstant {
     public static final int APP_NOTCONFIRM = 0;
     public static final int APP_SENT_TO_ERP = 1000;
     public static final int APP_GRN_CONFIRMED = 120;
+    
+    /* FYA : 07 January 2014 */
+    public static final int PO_APPROVAL_MGR_DEPT = 0;
+    public static final int PO_APPROVAL_MGR_SPEC = 4000001;
+    public static final int PO_APPROVAL_MGR_DIRC = 10000001;
 
     public static HashMap createMapLevel() {
         HashMap mapWIC = new HashMap();

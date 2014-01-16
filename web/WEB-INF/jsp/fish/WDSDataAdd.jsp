@@ -13,8 +13,12 @@
         <script language="JavaScript">
             $(document).ready(function(){
             	
+            	$('.numeric').on('input', function() {
+        			this.value = this.value.replace(/[^0-9.]/g,'');	
+        		});
+            	
             	$('#wdsDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });
             	
             	$('#batchNo').click(function() {
@@ -70,7 +74,7 @@
 					
 					var vesselId = $('#vesselId').val();
 					var ajaxUrl = 'FishJson.htm?action=findFishStockByVesselId&vesselId='+vesselId;
-					$("#list").jqGrid('setGridParam',{url:ajaxUrl,page:1}).trigger("reloadGrid");
+					$("#list2").jqGrid('setGridParam',{url:ajaxUrl,page:1}).trigger("reloadGrid");
                 	$("#list2").jqGrid({ 
 						url:ajaxUrl, 
 						datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
@@ -78,7 +82,7 @@
 	                    colModel:[ 
 								   {name:'fishCode',index:'fishCode',width:150},
 	                               {name:'storageName',index:'storageName',width:150}, 
-	                               {name:'balance',index:'balance',width:200},
+	                               {name:'balance',index:'balance',width:200, align:'right'},
 	                               {name:'fishId',index:'fishId',width:0, hidden:true},
 	                               {name:'storageId',index:'storageId',width:0, hidden:true},
 	                               {name:'fishDesc',index:'fishDesc',width:0, hidden:true}], 
@@ -95,8 +99,8 @@
 	            						"<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+localRowData.fishId+"' />"+"</td>" +
 	            					"<td class='style1'>"+localRowData.fishDesc+"</td>" +
 	            						"<input id='description"+rowCount+"' type='hidden' name='description"+rowCount+"' value='"+localRowData.fishDesc+"' />"+"</td>" +
-	            					"<td id='balance"+rowCount+"' class='center'>"+localRowData.balance+"</td>" +
-	            					"<td id='qtyHTML"+rowCount+"' class='center'>0</td>" +
+	            					"<td class='right' id='balance"+rowCount+"' class='center'>"+localRowData.balance+"</td>" +
+	            					"<td class='right' id='qtyHTML"+rowCount+"' class='center'>0</td>" +
 	            						"<input id='qty"+rowCount+"' type='hidden' name='qty"+rowCount+"' value='0' /></td>" +
 	            					"<td id='uomCodeHTML"+rowCount+"' class='center'>Kg</td>" +
 	            						"<input id='uomCode"+rowCount+"' type='hidden' name='uomCode"+rowCount+"' value='Kg' /></td>" +
@@ -119,7 +123,7 @@
                 $('#btnRequestSet').click(function() {
                 	var id = $('#dId').val();
                 	var requestedQty = $('#dRequestedQty').val();
-                	$('#qtyHTML'+id).html(requestedQty);
+                	$('#qtyHTML'+id).html(addCommas(requestedQty));
                 	$('#qty'+id).val(requestedQty);
                 	$('#dialog-request').dialog('close');
                 });
@@ -167,6 +171,18 @@
 					title: 'Request Qty' 
 				});
             }
+            
+            function addCommas(nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+            }
         </script>
     </head>
     <body>
@@ -195,7 +211,7 @@
                                    <td class="style1">WDS No.</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" id="wdsNo" name="wdsNo" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="wdsNo" name="wdsNo" value="" size="30" class="validate[required] text-input numeric"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -386,7 +402,7 @@
         		<tr>
         			<td>Request</td>
         			<td>:</td>
-        			<td><input type="text" size="30" id="dRequestedQty" value="0" /></td>
+        			<td><input type="text" size="30" id="dRequestedQty" class="numeric" value="0" /></td>
         		</tr>
         	</table>
         	<input type="hidden" id="dId" value="" />

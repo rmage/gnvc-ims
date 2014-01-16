@@ -12,20 +12,15 @@
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function(){
+            	$('.numeric').on('input', function() {
+        			this.value = this.value.replace(/[^0-9.]/g,'');	
+        		});
             	
             	$('#bsDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });
             	
                 $('#addForm').validationEngine('attach');
-                
-                $('#btnRequestSet').click(function() {
-                	var id = $('#dId').val();
-                	var requestedQty = $('#dBadStockQty').val();
-                	$('#qtyHTML'+id).html(requestedQty);
-                	$('#qty'+id).val(requestedQty);
-                	$('#dialog-request').dialog('close');
-                });
                 
                 $('#batchNo').click(function() {
 					$("#dialog-ajaxSearch").dialog({ 
@@ -117,7 +112,7 @@
 					
 					var vesselId = $('#vesselId').val();
 					var ajaxUrl = 'FishJson.htm?action=findFishStockByVesselId&vesselId='+vesselId;
-					$("#list").jqGrid('setGridParam',{url:ajaxUrl,page:1}).trigger("reloadGrid");
+					$("#list2").jqGrid('setGridParam',{url:ajaxUrl,page:1}).trigger("reloadGrid");
                 	$("#list2").jqGrid({ 
 						url:ajaxUrl, 
 						datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
@@ -161,10 +156,10 @@
 					jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
                 });
 				
-				$('#btnBadStockSet').click(function() {
+		$('#btnBadStockSet').click(function() {
                 	var id = $('#dId').val();
                 	var requestedQty = $('#dBadStockQty').val();
-                	$('#qtyHTML'+id).html(requestedQty);
+                	$('#qtyHTML'+id).html(addCommas(requestedQty));
                 	$('#qty'+id).val(requestedQty);
                 	$('#dialog-badStock').dialog('close');
                 });
@@ -184,6 +179,18 @@
 					zindex: 9999, 
 					title: 'Request Qty' 
 				});
+            }
+            
+            function addCommas(nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
             }
         </script>
     </head>
@@ -213,7 +220,7 @@
                                    <td class="style1">TS No.</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" id="autofocus" name="bsNo" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="autofocus" name="bsNo" value="" size="30" class="validate[required] text-input numeric"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -257,7 +264,7 @@
                                     <td class="style1">Received By</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="approvedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" name="receivedBy" value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>

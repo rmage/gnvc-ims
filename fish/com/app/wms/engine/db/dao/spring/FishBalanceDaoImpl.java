@@ -128,7 +128,8 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
 	
 	@Override
 	public List<FishBalance> findBalanceByVesselId(int vesselId) {
-		String query = "SELECT * FROM " + getTableName() + " WHERE vessel_id=?";
+		String query = "SELECT * FROM " + getTableName() + 
+                        " WHERE vessel_id=? AND balance > 0";
 		List<FishBalance> resultList = jdbcTemplate.query(query, this, vesselId);
 		
 		return resultList;

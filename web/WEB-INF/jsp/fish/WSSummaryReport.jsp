@@ -28,7 +28,7 @@
                 	var params = $('#params').val();
                 	var url = "GenerateReport.htm?action=index&type="+type+"&item="+item;
                 	
-                	if(params) {
+                	if(!(params == "null")) {
                 		url += "&params="+params;
                 	}
                 	

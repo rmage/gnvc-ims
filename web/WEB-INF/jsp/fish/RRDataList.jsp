@@ -1,3 +1,5 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -7,6 +9,21 @@
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
         	$(document).ready(function() {
+        		
+        		$('#queryRrDate').datepicker({                        
+                            dateFormat: "dd/mm/yy"
+                        });	
+        		
+        		$('#btnSearch').click(function() {
+        			var rrNo = $('#queryRrNo').val();
+        			var rrDate = $('#queryRrDate').val();
+        			location.href = "FishRr.htm?search=true&rrNo="+rrNo+"&rrDate="+rrDate;
+        		});	
+        		
+        		$('#btnCleanFilter').click(function() {
+        			location.href = "FishRr.htm";
+        		});
+        		
 				$('#btnAdd').click(function() {
 					location.href="FishRr.htm?action=create";
                 });
@@ -50,11 +67,17 @@
             if (request.getSession().getAttribute("FishRRDataSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishRRDataSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryRrNo = m.get("queryRrNo") == null ? "" : (String) m.get("queryRrNo");
+            Date queryRrDate = m.get("queryRrDate") == null ? new Date() : (Date) m.get("queryRrDate");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-			<div id="dtl-panel" class="div-dtl" style="width: 1337px; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
+			<div id="dtl-panel" class="div-dtl" style="width: 100%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishRr.htm" method="post">
@@ -66,7 +89,15 @@
                                         RR No
                                     </td>
                                     <td>
-                                        <input type="text" name="wsNo" value=""/>
+                                        <input type="text" id="queryRrNo" name="rrNo" value="<%=queryRrNo%>"/>
+                                    </td>
+                                    <td>
+                                        Date
+                                    </td>
+                                    <td>
+                                        <input type="text" id="queryRrDate" name="rrDate" value="<%= df.format(queryRrDate)%>" />
+                                    </td>
+                                    <td colspan="2">
                                     </td>
                                 </tr>
                                 <tr></tr>
@@ -75,10 +106,13 @@
                             <tr>
 	                            <td colspan="4">
 	                                <span class="style1">
-	                                    <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+	                                    <input class ="style1" type="button" id="btnSearch" value="Search" id="btnSearch" name="btnSearch" />
 	                                </span>
 	                                 <label>
 	                                    <input type="button" name="button" id="btnAdd" value="Add" />
+	                                </label>
+	                                <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
 	                                </label>
 	                            </td>
 	                            <td></td>
@@ -155,13 +189,13 @@
                                 <td colspan="10">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="FishRr.htm?page=<c:out value="${model.page-1}" />">
+                                            <a href="FishRr.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
                                                 &lt;
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishRr.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="FishRr.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>

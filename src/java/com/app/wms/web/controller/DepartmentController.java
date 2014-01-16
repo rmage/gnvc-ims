@@ -10,25 +10,22 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import com.app.wms.engine.db.dao.DepartmentDao;
 import com.app.wms.engine.db.dto.Department;
+import com.app.wms.engine.db.dto.DepartmentPk;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 
 public class DepartmentController extends MultiActionController {
-
-
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-           
+    /**
+     * Method 'findByPrimaryKey'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -36,18 +33,14 @@ public class DepartmentController extends MultiActionController {
                 m.put("mode", "edit");
                 return new ModelAndView("1_setup/DepartmentEdit", "model", m);
             } else {
-
                 m = this.searchAndPaging(request, response);
                 return new ModelAndView("1_setup/DepartmentList", "model", m);
             }
-
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView( "Error", "th", e );
         }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
+    }
 	
 	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
@@ -91,41 +84,38 @@ public class DepartmentController extends MultiActionController {
 		
 	}
 	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-		try {
-		 DepartmentDao dao = DaoFactory.createDepartmentDao();
-         Department dto = new Department();
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
+            DepartmentDao dao = DaoFactory.createDepartmentDao();
+            Department dto = new Department();
 
-         String mode = request.getParameter("mode");
-         if (mode != null && mode.equals("edit")) {
-        	 Integer id = Integer.parseInt(request.getParameter("id"));
-             dto = dao.findByPrimaryKey(id);
-            
-         }
-         if (dto.getDepartmentCode() == null) {
-        	 
-        	 dto.setDepartmentCode("");
-        	 dto.setDepartmentName("");
-             dto.setIsActive("Y");
-             dto.setIsDelete("N");
-         }
-         
-         if (dto.getDepartmentCode() != null || dto.getDepartmentName() != null) {
-        	 dto.setDepartmentCode(dto.getDepartmentCode());
-        	 dto.setDepartmentName(dto.getDepartmentName());
-             dto.setIsActive(dto.getIsActive());
-             dto.setIsDelete(dto.getIsDelete());
-         }
-         //edit
-         HashMap m = new HashMap();
-         m.put("dto", dto);
-         
-         return m;
-         
-		} catch (Exception e) {
+            String mode = request.getParameter("mode");
+            if (mode != null && mode.equals("edit")) {
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
+            }
+            if (dto.getDepartmentCode() == null) {
+                dto.setDepartmentCode("");
+                dto.setDepartmentName("");
+                dto.setIsActive("Y");
+                dto.setIsDelete("N");
+            }
+
+            if (dto.getDepartmentCode() != null || dto.getDepartmentName() != null) {
+                dto.setDepartmentCode(dto.getDepartmentCode());
+                dto.setDepartmentName(dto.getDepartmentName());
+                dto.setIsActive(dto.getIsActive());
+                dto.setIsDelete(dto.getIsDelete());
+            }
+            //edit
+            HashMap m = new HashMap();
+            m.put("dto", dto);
+
+            return m;
+        } catch (Exception e) {
             throw e;
         }
-	}
+    }
 	
 	/**
 	 * Method 'findAll'
@@ -193,7 +183,7 @@ public class DepartmentController extends MultiActionController {
 		map = this.getModelByPrimaryKey(request);
 		map.put("mode", "create");		
 		
-		DepartmentDao dao = DaoFactory.createDepartmentDao();
+//		DepartmentDao dao = DaoFactory.createDepartmentDao();
 		
 		return new ModelAndView( "1_setup/DepartmentAdd", "model", map);
 	}
@@ -207,90 +197,88 @@ public class DepartmentController extends MultiActionController {
 	 * @throws Exception
 	 * @return ModelAndView
 	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-      boolean isCreate = true;
-      String strError = "";
-      Date now = new Date();
-      java.lang.String mode = request.getParameter("mode");
-      Department dto = null;
-      try {
-          if (mode.equalsIgnoreCase("create")) {
-              isCreate = true;
-          } else {
-              isCreate = false;
-          }
+        boolean isCreate = true;
+        String strError = "";
+        Date now = new Date();
+        java.lang.String mode = request.getParameter("mode");
+        Department dto = null;
+        try {
+            if (mode.equalsIgnoreCase("create")) {
+                isCreate = true;
+            } else {
+                isCreate = false;
+            }
 
-          DepartmentDao dao = DaoFactory.createDepartmentDao();
-          if (isCreate) {
-        	  dto = new Department();
-          } else {
-        	  Integer id = Integer.parseInt(request.getParameter("id"));
-              dto = dao.findByPrimaryKey(id);
-          }
+            DepartmentDao dao = DaoFactory.createDepartmentDao();
+            if (isCreate) {
+                dto = new Department();
+            } else {
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
+            }
           
-          String departmentCode = request.getParameter("departmentCode");
-          String departmentName = request.getParameter("departmentName");
-          List<Department> tmp = dao.findWhereDepartmentCodeEquals(departmentCode);
+            String departmentCode = request.getParameter("departmentCode");
+            String departmentName = request.getParameter("departmentName");
+            List<Department> tmp = dao.findWhereDepartmentCodeEquals(departmentCode);
           
-	  	  if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getDepartmentCode().equals(departmentCode))) {
-	  		  strError += "Department code already exists. Please try a different values" + AppConstant.EOL;
-	  	  }
+            if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getDepartmentCode().equals(departmentCode))) {
+                strError += "Department code already exists. Please try a different values" + AppConstant.EOL;
+            }
 	  	  
-          LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-          String userId = "";
-          if (lu == null) {
-  			  HashMap m = new HashMap();
-              String msg = "You haven't login or your session has been expired! Please do login again";
-              m.put("msg", msg);
-              return new ModelAndView("login", "model", m);
-          }else{
-        	  userId = (String)lu.getUserId();
-          }
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            String userId = "";
+            if (lu == null) {
+                HashMap m = new HashMap();
+                String msg = "You haven't login or your session has been expired! Please do login again";
+                m.put("msg", msg);
+                return new ModelAndView("login", "model", m);
+            } else {
+                userId = (String)lu.getUserId();
+            }
           
-          if (isCreate) {
-              dto.setCreatedBy(userId);
-              dto.setCreatedDate(now);
-          }
+            if (isCreate) {
+                dto.setCreatedBy(userId);
+                dto.setCreatedDate(now);
+            }
           
-          dto.setDepartmentCode(departmentCode);
-          dto.setDepartmentName(departmentName);
-          dto.setIsActive(request.getParameter("isActive"));
-          dto.setIsDelete("N");
-          dto.setUpdatedBy(userId);
-          dto.setUpdatedDate(new java.util.Date());
+            dto.setDepartmentCode(departmentCode);
+            dto.setDepartmentName(departmentName);
+            dto.setIsActive(request.getParameter("isActive"));
+            dto.setIsDelete("N");
+            dto.setUpdatedBy(userId);
+            dto.setUpdatedDate(new java.util.Date());
 
-          if (strError.length() > 0) {
-              throw new Exception(strError);
-          }
+            if (strError.length() > 0) {
+                throw new Exception(strError);
+            }
 
-          if (isCreate) {
-              dao.insert(dto);
-          } 
-          
-          else {
-              dto.setUpdatedBy(userId);
-              dto.setUpdatedDate(new java.util.Date());
-              dao.update(dto.createPk(), dto);
-          }
+            if (isCreate) {
+                DepartmentPk dp = dao.insert(dto);
+                dto.setId(dp.getId());
+            } else {
+                dto.setUpdatedBy(userId);
+                dto.setUpdatedDate(new java.util.Date());
+                dao.update(dto.createPk(), dto);
+            }
 		 
-          return new ModelAndView("1_setup/DepartmentView", "dto", dto);
+            return new ModelAndView("1_setup/DepartmentView", "dto", dto);
 
-      } catch (Exception e) {
-    	  e.printStackTrace();
-          String errorMsg = e.getMessage();
-          HashMap m = this.getModelByPrimaryKey(request);
-          m.put("mode", mode);
-          m.put("msg", errorMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            HashMap m = this.getModelByPrimaryKey(request);
+            m.put("mode", mode);
+            m.put("msg", errorMsg);
 
-          if (isCreate) {
-              return new ModelAndView("1_setup/DepartmentAdd", "model", m);
-          } else {
-              return new ModelAndView("1_setup/DepartmentEdit", "model", m);
-          }
-      }
-      
-  }
+            if (isCreate) {
+                return new ModelAndView("1_setup/DepartmentAdd", "model", m);
+            } else {
+                return new ModelAndView("1_setup/DepartmentEdit", "model", m);
+            }
+        }
+
+    }
 	
 }

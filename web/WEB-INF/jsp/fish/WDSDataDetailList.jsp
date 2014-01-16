@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -44,9 +45,11 @@
 					      				${map.value.storage}
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td class="right" width="100px">&nbsp;
 					      			<c:if test="${map.value.qty ne null}">
-					      				${map.value.qty}
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.qty}"></fmt:formatNumber>
 					      			</c:if>
 					      		</td>
 						</c:forEach>

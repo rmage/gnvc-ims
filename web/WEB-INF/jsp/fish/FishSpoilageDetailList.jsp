@@ -5,18 +5,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>TS Details</title>
+        <title>WS Details</title>
     </head>
     <body>
         <table width="100%" border="0">
    			<thead>
 			    <tr>
 					<td class="style1">No.</td>
-                    <td class="style1">BS No.</td>
+                    <td class="style1">Batch No.</td>
+                    <td class="style1">Catcher No.</td>
 			        <td class="style1">Fish Type</td>
 			        <td class="style1">Fish Name</td>
-			        <td class="style1">Storage</td>
-			        <td class="style1">Quantity</td>
+			        <td class="style1">Raw Weight</td>
+			        <td class="style1">Cooked Weight</td>
+			        <td class="style1">Total Processed</td>
+			        <td class="style1">Reason</td>
 			    </tr>
 			</thead>
             <tbody id="main">
@@ -26,8 +29,13 @@
 						    <tr class="ganjil">
 								<td align="right">&nbsp;${mapCounter.count}</td>
 								<td align="center">&nbsp;
-					      			<c:if test="${map.value.bsNo ne null}">
-					      				${map.value.bsNo}
+					      			<c:if test="${map.value.batchNo ne null}">
+					      				${map.value.batchNo}
+					      			</c:if>
+					      		</td>
+					      		<td align="center">&nbsp;
+					      			<c:if test="${map.value.catcherNo ne null}">
+					      				${map.value.catcherNo}
 					      			</c:if>
 					      		</td>
 								<td align="center">&nbsp;
@@ -40,16 +48,30 @@
 					      				${map.value.fishName}
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
-					      			<c:if test="${map.value.storage ne null}">
-					      				${map.value.storage}
-					      			</c:if>
-					      		</td>
-					      		<td class="right" width="150px">&nbsp;
-					      			<c:if test="${map.value.qty ne null}">
+					      		<td class="right">&nbsp;
+					      			<c:if test="${map.value.rawWeight ne null}">
 					      				<fmt:formatNumber type="number" 
 					      					maxFractionDigits="2" minFractionDigits="2"
-					      					value="${map.value.qty}"></fmt:formatNumber>
+					      					value="${map.value.rawWeight}"></fmt:formatNumber>
+					      			</c:if>
+					      		</td>
+					      		<td class="right">&nbsp;
+					      			<c:if test="${map.value.cookedWeight ne null}">
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.cookedWeight}"></fmt:formatNumber>
+					      			</c:if>
+					      		</td>
+					      		<td class="right">&nbsp;
+					      			<c:if test="${map.value.totalProcessed ne null}">
+					      				<fmt:formatNumber type="number" 
+					      					maxFractionDigits="2" minFractionDigits="2"
+					      					value="${map.value.totalProcessed}"></fmt:formatNumber>
+					      			</c:if>
+					      		</td>
+					      		<td align="center">&nbsp;
+					      			<c:if test="${map.value.reason ne null}">
+					      				${map.value.reason}
 					      			</c:if>
 					      		</td>
 						</c:forEach>

@@ -141,15 +141,12 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
 	 * Returns all rows from the product_category table that match the criteria ''.
 	 */
 	@Transactional
-	public List<ProductCategory> findAll() throws ProductCategoryDaoException
-	{
-		try {
-			return jdbcTemplate.query("SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " ORDER BY id", this);
-		}
-		catch (Exception e) {
-			throw new ProductCategoryDaoException("Query failed", e);
-		}
-		
+	public List<ProductCategory> findAll() throws ProductCategoryDaoException {
+            try {
+                return jdbcTemplate.query("SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY id", this);
+            } catch (Exception e) {
+                throw new ProductCategoryDaoException("Query failed", e);
+            }
 	}
 
 	/** 
@@ -171,15 +168,12 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
 	 * Returns all rows from the product_category table that match the criteria 'category_code = :categoryCode'.
 	 */
 	@Transactional
-	public List<ProductCategory> findWhereCategoryCodeEquals(String categoryCode) throws ProductCategoryDaoException
-	{
-		try {
-			return jdbcTemplate.query("SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE category_code = ? ORDER BY category_code", this,categoryCode);
-		}
-		catch (Exception e) {
-			throw new ProductCategoryDaoException("Query failed", e);
-		}
-		
+	public List<ProductCategory> findWhereCategoryCodeEquals(String categoryCode) throws ProductCategoryDaoException {
+            try {
+                return jdbcTemplate.query("SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE category_code = ? AND is_active = 'Y' ORDER BY category_code", this,categoryCode);
+            } catch (Exception e) {
+                throw new ProductCategoryDaoException("Query failed", e);
+            }
 	}
 
 	/** 
@@ -296,7 +290,7 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
 	}
 
 	public List<ProductCategory> findProductCategoryPaging(ProductCategory p, int page) throws ProductCategoryDaoException {
-		try {
+            try {
         	int i = page;
         	Map map = new HashMap();
         	map.put("i", i);
@@ -310,37 +304,25 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
         	String categoryName = p.getCategoryName();
         	
         	if(categoryCode == null || categoryName == null){
-        		categoryCode ="%";
-        		categoryName ="%";
-        		
-        		sb.append("declare @Page int, @PageSize int "
-        				+"set @Page = '"+i+"'; "
-        				+"set @PageSize = 10; "
-        				+"with PagedResult "
-        				+"as (select ROW_NUMBER() over (order by id asc) as id,category_code, category_name, is_active from product_category" +
-        						" where category_code like '%"+categoryCode+"%' and category_name like '%"+categoryName+"%') "
-        				    +"select * from PagedResult where id between "
-        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-        				     +"else @Page end and @PageSize * @Page ");
-        		
-        	}else
-        	{
-        		sb.append("declare @Page int, @PageSize int "
-        				+"set @Page = '"+i+"'; "
-        				+"set @PageSize = 10; "
-        				+"with PagedResult "
-        				+"as (select ROW_NUMBER() over (order by id asc) as id,category_code, category_name, is_active from product_category" +
-        						" where category_code like '%"+categoryCode+"%' and category_name like '%"+categoryName+"%') "
-        				    +"select * from PagedResult where id between "
-        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-        				     +"else @Page end and @PageSize * @Page ");
+                    categoryCode ="%";
+                    categoryName ="%";
         	}
+                
+                sb.append("declare @Page int, @PageSize int "
+                    +"set @Page = '"+i+"'; "
+                    +"set @PageSize = 10; "
+                    +"with PagedResult "
+                    +"as (select id, category_code, category_name, is_active, ROW_NUMBER() over (order by id asc) as ids from product_category" +
+                                    " where category_code like '%"+categoryCode+"%' and category_name like '%"+categoryName+"%' and is_active = 'Y') "
+                        +"select * from PagedResult where ids between "
+                    +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                         +"else @Page end and @PageSize * @Page ");
         	
         	return jdbcTemplate.query(sb.toString(),new ProductCategoryListMap(),map);	
         
         } catch (Exception e) {
             throw new ProductCategoryDaoException("Query failed", e);
         }
-	}
+    }
 
 }

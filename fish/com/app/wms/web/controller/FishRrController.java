@@ -49,7 +49,21 @@ public class FishRrController extends MultiActionController {
             }
             
             FishRrDao dao = DaoFactory.createFishRrDao();
-            List<FishRr> rrDataList = dao.findAllAndPaging(paging, offset);
+            List<FishRr> rrDataList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String rrNo = request.getParameter("rrNo");
+            	Date rrDate = df.parse(request.getParameter("rrDate"));
+            	rrDataList = dao.searchAndPaging(rrNo, rrDate, paging, offset);
+            	String querySearch = "&search=true&rrNo="+rrNo+"&rrDate="+df.format(rrDate);
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryRrNo", rrNo);
+            	modelMap.put("queryRrDate", rrDate);
+            }
+            else {
+                rrDataList = dao.findAllAndPaging(paging, offset);
+            }
+            
             modelMap.put("rrDataList", rrDataList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
@@ -150,7 +164,8 @@ public class FishRrController extends MultiActionController {
         				fishBalance.setCreatedBy(user.getUserId());
         				fishBalance.setIsActive("Y");
         				fishBalance.setIsDelete("N");
-        				fishBalanceDao.insert(fishBalance);
+        				int balanceId = fishBalanceDao.insert(fishBalance);
+        				fishBalance = fishBalanceDao.findByPrimaryKey(balanceId);
         			}
         			
         			//insert balance history
@@ -190,7 +205,7 @@ public class FishRrController extends MultiActionController {
 		Map tableMap = new HashMap();
 		for (FishRrDetail fishRrDetail : rrDetailList) {
 			Map<String, Object> returnMap = new HashMap<String, Object>();
-			returnMap.put("rrNo", fishRrDetail.getReceivingReport().getRrNo());
+			returnMap.put("wsNo", fishRrDetail.getWeightSlip().getWsNo());
 			returnMap.put("fishType", fishRrDetail.getFish().getCode());
 			returnMap.put("fishName", fishRrDetail.getFish().getFishType().getDescription());
 			returnMap.put("goodWeight", fishRrDetail.getTotalWeight());

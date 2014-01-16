@@ -88,7 +88,7 @@
                                                 </a>
                                         </td>
                                         <td class="style1">
-                                            <a href="#" class="no-decoration" onclick="csbShowDetail('GR', '<c:out value="${gr.grnumber}"></c:out>', 'RR Detail')">
+                                            <a href="#" class="no-decoration" onclick="csbShowDetail('GR', '<c:out value="${gr.grnumber}" />', 'RR Detail')">
                                                 ${gr.grnumber}
                                              </a>
                                         </td>

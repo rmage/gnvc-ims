@@ -1,5 +1,6 @@
 package com.app.wms.web.controller.json;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.FishBalanceDao;
+import com.app.wms.engine.db.dao.FishRrDao;
 import com.app.wms.engine.db.dao.FishSupplierDao;
+import com.app.wms.engine.db.dao.FishTsDao;
 import com.app.wms.engine.db.dao.FishVesselDao;
 import com.app.wms.engine.db.dao.FishWdsDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
@@ -32,6 +35,7 @@ import com.app.wms.engine.db.factory.DaoFactory;
 public class FishJsonController extends MultiActionController {
 	
 	private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	private DecimalFormat decf = new DecimalFormat("###,###.00");
 	
 	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
@@ -44,7 +48,7 @@ public class FishJsonController extends MultiActionController {
 		
 		String query = request.getParameter("query");
 		FishVesselDao dao = DaoFactory.createFishVesselDao();
-		List<FishVessel> fishVesselList = dao.findByVesselName(query);
+		List<FishVessel> fishVesselList = dao.findByBatchNumber(query);
 		
 		JSONArray jsonArray = new JSONArray();		
 		for (FishVessel fishVessel : fishVesselList) {
@@ -134,9 +138,9 @@ public class FishJsonController extends MultiActionController {
 			dataObject.put("fishId", fishBalance.getFishId());
 			dataObject.put("storageId", fishBalance.getStorageId());
 			dataObject.put("storageName", 
-					fishBalance.getStorageId() == 0 ? "-" : fishBalance.getStorage().getCode());
+					fishBalance.getStorageId() == 0 ? "FRESH" : fishBalance.getStorage().getCode());
 			dataObject.put("fishCode", fishBalance.getFish().getCode());
-			dataObject.put("balance", fishBalance.getBalance());
+			dataObject.put("balance", decf.format(fishBalance.getBalance()));
 			dataObject.put("fishDesc", fishBalance.getFish().getFishType().getDescription() +
 					" " + fishBalance.getFish().getFishWeightType().getDescription());
 			
@@ -166,10 +170,13 @@ public class FishJsonController extends MultiActionController {
 			dataObject.put("id", fishWsDetail.getId());
 			dataObject.put("wsId", fishWsDetail.getWsId());
 			dataObject.put("fishId", fishWsDetail.getFishId());
+			dataObject.put("fishName", 
+					fishWsDetail.getFish().getFishType().getDescription() + " " +
+					fishWsDetail.getFish().getFishWeightType().getDescription());
 			dataObject.put("storageId", fishWsDetail.getWeightSlip().getStorageId());
 			dataObject.put("wsNo", fishWsDetail.getWeightSlip().getWsNo());
 			dataObject.put("fishType", fishWsDetail.getFish().getCode());
-			dataObject.put("totalWeight", fishWsDetail.getTotalWeight());
+			dataObject.put("totalWeight", decf.format(fishWsDetail.getTotalWeight()));
 			
 			jsonArray.put(dataObject);
 		}
@@ -228,8 +235,8 @@ public class FishJsonController extends MultiActionController {
 			dataObject.put("description", fishWdsDetail.getDescription());
 			dataObject.put("storageId", fishWdsDetail.getStorageId());
 			dataObject.put("storageName", fishWdsDetail.getStorageId() == 0 ? 
-					"-" : fishWdsDetail.getStorage().getCode());
-			dataObject.put("qty", fishWdsDetail.getQuantity());
+					"FRESH" : fishWdsDetail.getStorage().getCode());
+			dataObject.put("qty", decf.format(fishWdsDetail.getQuantity()));
 			dataObject.put("uomCode", fishWdsDetail.getUomCode());
 			
 			jsonArray.put(dataObject);
@@ -237,6 +244,74 @@ public class FishJsonController extends MultiActionController {
 		
 		JSONObject jsonPage = new JSONObject();
 		jsonPage.put("wdsDetails", jsonArray);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+	
+	public ModelAndView checkWsNo(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String wsNo = request.getParameter("query");
+		FishWsDao dao = DaoFactory.createFishWsDao();
+		boolean result = dao.checkIsWsNoExist(wsNo);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+	
+	public ModelAndView checkRrNo(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String rrNo = request.getParameter("query");
+		FishRrDao dao = DaoFactory.createFishRrDao();
+		boolean result = dao.checkIsRrNoExist(rrNo);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+	
+	public ModelAndView checkWdsNo(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String wdsNo = request.getParameter("query");
+		FishWdsDao dao = DaoFactory.createFishWdsDao();
+		boolean result = dao.checkIsWdsNoExist(wdsNo);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+	
+	public ModelAndView checkTsNo(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String tsNo = request.getParameter("query");
+		FishTsDao dao = DaoFactory.createFishTsDao();
+		boolean result = dao.checkIsTsNoExist(tsNo);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
 		
 		String data = jsonPage.toString();
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();

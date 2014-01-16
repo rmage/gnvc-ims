@@ -12,7 +12,7 @@
             $(document).ready(function(){
             	
             	$('#dateShift').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });
             	
             	$('#batchNo').click(function() {
@@ -84,11 +84,11 @@
     							"<input id='catcherNo"+rowCount+"' type='hidden' name='catcherNo"+rowCount+"' value='"+catcherNo+"' />"+"</td>" +
         					"<td id='fishType"+rowCount+"' class='style1'>"+fishType+"</td>" +
         						"<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+fishId+"' />"+"</td>" +
-        					"<td class='center'>"+cookedWeight+"</td>" +
+        					"<td class='right'>"+addCommas(cookedWeight)+"</td>" +
         						"<input id='cookedWeight"+rowCount+"' type='hidden' name='cookedWeight"+rowCount+"' value='"+cookedWeight+"' /></td>" +
-        					"<td class='center'>"+rawWeight+"</td>" +
+        					"<td class='right'>"+addCommas(rawWeight)+"</td>" +
         						"<input id='rawWeight"+rowCount+"' type='hidden' name='rawWeight"+rowCount+"' value='"+rawWeight+"' /></td>" +
-        					"<td class='center'>"+totalProcessed+"</td>" +
+        					"<td class='right'>"+addCommas(totalProcessed)+"</td>" +
         						"<input id='totalProcecssed"+rowCount+"' type='hidden' name='totalProcessed"+rowCount+"' value='"+totalProcessed+"' /></td>" +
         					"<td class='center'>"+reason+"</td>" +
         						"<input id='reason"+rowCount+"' type='hidden' name='reason"+rowCount+"' value='"+reason+"' /></td>" +
@@ -98,6 +98,18 @@
                 	$('#dialog-spoilage').dialog('close');
                 });
             });
+            
+            function addCommas(nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+            }
         </script>
     </head>
     <body>

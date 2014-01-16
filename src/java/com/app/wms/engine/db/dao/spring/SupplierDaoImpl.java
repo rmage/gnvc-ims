@@ -186,15 +186,13 @@ public class SupplierDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 * Returns all rows from the supplier table that match the criteria 'supplier_code = :supplierCode'.
 	 */
 	@Transactional
-	public List<Supplier> findWhereSupplierCodeEquals(String supplierCode) throws SupplierDaoException
-	{
-		try {
-			return jdbcTemplate.query("SELECT id, supplier_code, supplier_name, supplier_address, telephone, fax, email, contact_person, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE supplier_code = ? ORDER BY supplier_code", this,supplierCode);
-		}
-		catch (Exception e) {
-			throw new SupplierDaoException("Query failed", e);
-		}
-		
+	public List<Supplier> findWhereSupplierCodeEquals(String supplierCode) throws SupplierDaoException {
+            try {
+                return jdbcTemplate.query("SELECT id, supplier_code, supplier_name, supplier_address, telephone, fax, email, contact_person, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE supplier_code = ? AND is_active = 'Y' ORDER BY supplier_code", this,supplierCode);
+            }
+            catch (Exception e) {
+                throw new SupplierDaoException("Query failed", e);
+            }
 	}
 
 	/** 

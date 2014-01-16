@@ -59,6 +59,7 @@
                                 <td class="style1">PRS Date</td>  
                                 <td class="style1">Charge to Department</td> 
                                 <td class="style1">Date Needed</td>
+                                <td class="style1">Status Approved</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -82,13 +83,25 @@
                                                 </a>
                                         </td>
                                         <td class="style1">
-                                            <a href="#" class="no-decoration" onclick="csbShowDetail('PRS', '<c:out value="${po.prsnumber}"></c:out>', 'Purchase Requisition Detail')">
+                                            <a href="#" class="no-decoration" onclick="csbShowDetail('PRS', '<c:out value="${po.prsnumber}" />', 'Purchase Requisition Detail')">
                                                 <c:out value="${po.prsnumber}"/>
                                             </a>
                                         </td>
                                         <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.prsdate}" /></td>
                                         <td class="style1"><c:out value="${po.departmentName}"/></td>
                                         <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.requestdate}" /></td>
+                                        <td class="left" width="15%">
+                                            <input class="mark" type="button" code="${po.prsnumber}" name="button" value="Y" />
+											   			&nbsp;
+											<input class="markb" type="button" code="${po.prsnumber}" name="button" value="N" />
+											   			
+	                                        <c:choose>
+											   <c:when test="${po.isApproved == 'Y'}">&nbsp;<img src="resources/images/checkmark.gif" width="16" height="16" alt="View" /></c:when>
+											   <c:otherwise>
+											   		&nbsp;<img src="resources/images/Forbidden.png" width="16" height="16" alt="View" />
+											   </c:otherwise>
+											</c:choose>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
@@ -118,6 +131,51 @@
                             </td>
                         </tfoot>
                     </table>
+                    <div id="ab_dialog" style="display: none">
+                    	<span id="ab_dialog_doc"></span>: Are you sure?
+                	 </div>
+                	 
+                        <script>
+                            $('.mark').click(function(){
+                                var code = $(this).attr('code');
+                                $('#ab_dialog_doc').html($(this).attr('code'));
+                                $('#ab_dialog').dialog({
+                                    buttons: {
+                                        "Close": function() {
+                                            $(this).dialog("close");
+                                        },
+                                        "Ok": function() {
+                                            window.location.href = 'PurchaseRequisition.htm?action=approvedPRS&prsNo=' + code;
+                                        }
+                                    },
+                                    modal: true,
+                                    width: 500,
+                                    height: 150,
+                                    'title': 'PRS Approved'
+                                });
+                            });
+                        </script>
+                        
+                        <script>
+                            $('.markb').click(function(){
+                                var code = $(this).attr('code');
+                                $('#ab_dialog_doc').html($(this).attr('code'));
+                                $('#ab_dialog').dialog({
+                                    buttons: {
+                                        "Close": function() {
+                                            $(this).dialog("close");
+                                        },
+                                        "Ok": function() {
+                                            window.location.href = 'PurchaseRequisition.htm?action=cancelPRS&prsNo=' + code;
+                                        }
+                                    },
+                                    modal: true,
+                                    width: 500,
+                                    height: 150,
+                                    'title': 'PRS Cancel'
+                                });
+                            });
+                        </script>
 
                 </div>
             </div>

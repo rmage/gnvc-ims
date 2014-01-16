@@ -19,16 +19,16 @@ import java.util.Map;
 
 public class UserRoleController extends MultiActionController
 {
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
+    /**
+     * Method 'findByPrimaryKey'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
 
-	 public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
      try {
             
             HashMap m = null;
@@ -102,77 +102,85 @@ public class UserRoleController extends MultiActionController
 		return new ModelAndView("1_setup/role/RoleAdd", "model", m);
 	}
 
-	/**
-	 * Method 'save'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		boolean isCreate = true;
-		String strError = "";
-		Date now = new Date();
-		String mode = request.getParameter("mode");
-		UserRole dto = null;
-		try{
-			if (mode.equalsIgnoreCase("create")) {
-	              isCreate = true;
-	        } else {
-	              isCreate = false;
-	        }
-		  	
-			UserRoleDao dao = DaoFactory.createUserRoleDao();
-			if(isCreate){
-				dto = new UserRole();
-			}else{
-				Integer id = Integer.parseInt(request.getParameter("id"));
-				dto = dao.findByPrimaryKey(id);
-			}
-			
-			String code = request.getParameter("code");
-			String name = request.getParameter("name");
-			String departmentCode = request.getParameter("departmentCode");
-			
-			if(isCreate){
-				dto.setRoleCode(code);
-				dto.setRoleName(name);
-				dto.setDepartmentCode(departmentCode);
-			}
-			
-			dto.setRoleCode(code);
-			dto.setRoleName(name);
-			dto.setDepartmentCode(departmentCode);
-			
-			if (strError.length() > 0) {
-	              throw new Exception(strError);
-	        }
-			
-			if(isCreate){
-				dao.insert(dto);
-			}else{
-				dao.update(dto.createPk(), dto);
-			}
-			
-			return new ModelAndView( "1_setup/role/RoleView", "dto", dto );
-		}
-	    catch (Exception e){
-	    	e.printStackTrace();
-	    	String errorMsg = e.getMessage();
-	    	HashMap m = new HashMap();
-	    	m.put("mode", mode);
-	    	m.put("msg", errorMsg);
-	    	
-	    	if(isCreate){
-	    		return new ModelAndView( "1_setup/role/RoleAdd", "model", m );
-	    	}else{
-	    		return new ModelAndView( "1_setup/role/RoleEdit", "model", m );
-	    	}
-	    	
-	    }
+    /**
+     * Method 'save'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        boolean isCreate = true;
+        String strError = "";
+        Date now = new Date();
+        String mode = request.getParameter("mode");
+        UserRole dto = null;
+        try{
+            if (mode.equalsIgnoreCase("create")) {
+                isCreate = true;
+            } else {
+                isCreate = false;
+            }
 
-	}
-		
+            UserRoleDao dao = DaoFactory.createUserRoleDao();
+            if(isCreate){
+                dto = new UserRole();
+            }else{
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
+            }
+
+            String code = request.getParameter("code");
+            String name = request.getParameter("name");
+            String departmentCode = request.getParameter("departmentCode");
+
+            if(isCreate){
+                dto.setRoleCode(code);
+                dto.setRoleName(name);
+                dto.setDepartmentCode(departmentCode);
+            }
+
+            dto.setRoleCode(code);
+            dto.setRoleName(name);
+            dto.setDepartmentCode(departmentCode);
+
+            if (strError.length() > 0) {
+                throw new Exception(strError);
+            }
+
+            if(isCreate){
+                UserRolePk urp = dao.insert(dto);
+                dto.setId(urp.getId());
+            } else{
+                dao.update(dto.createPk(), dto);
+            }
+
+            return new ModelAndView( "1_setup/role/RoleView", "dto", dto );
+        } catch (Exception e){
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            HashMap m = new HashMap();
+            m.put("mode", mode);
+            m.put("msg", errorMsg);
+
+            if(isCreate){
+                return new ModelAndView( "1_setup/role/RoleAdd", "model", m );
+            } else{
+                return new ModelAndView( "1_setup/role/RoleEdit", "model", m );
+            }
+        }
+    }
+
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        
+        UserRoleDao userRoleDao = DaoFactory.createUserRoleDao();
+        UserRole ur = userRoleDao.findByPrimaryKey(Integer.parseInt(request.getParameter("id")));
+        if(ur != null) {
+            userRoleDao.delete(ur.createPk());
+        }
+        
+        return findByPrimaryKey(request, response);
+    }
 }

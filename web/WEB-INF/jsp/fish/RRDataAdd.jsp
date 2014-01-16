@@ -12,13 +12,22 @@
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function(){
+            	$('.numeric').on('input', function() {
+        			this.value = this.value.replace(/[^0-9.]/g,'');	
+        		});
             	
             	$('#dateShift').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });
             	
+            	$('#btnSearch').click(function() {
+        			var wsNo = $('#queryWsNo').val();
+        			var wsDate = $('#queryWsDate').val();
+        			location.href = "FishRr.htm?search=true&wsNo="+wsNo+"&wsDate="+wsDate;
+        		});	
+            	
             	$('#rrDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });
             	
             	$('#batchNo').click(function() {
@@ -83,7 +92,7 @@
 	                    colNames:['Id.','WS No.','WS Type','Supplier Name'], 
 	                    colModel:[ 
 								   {name:'wsId',index:'wsId',width:75,key:true},
-								   {name:'wsNo',index:'wsNo',width:75,},
+								   {name:'wsNo',index:'wsNo',width:75},
 	                               {name:'wsType',index:'wsType',width:75}, 
 	                               {name:'supplierName',index:'supplierName',width:200}], 
 	                    sortname: 'wsId',
@@ -103,18 +112,9 @@
             			url: 'FishJson.htm?action=findWsDetailData&wsDetailIds='+wsIdList,
             			dataType: 'json',
             			success: function(data) {
-            				var wsNoMax = 0;
-            				var wsNoMin = 99999;
+            				var wsNumbers = new Array();
             				$.each(data.wsDetails, function(k,v){
             					var rowCount = $('#main tr').length;
-            					var wsNo = parseInt(v.wsNo, 10);
-            					if(wsNo > wsNoMax) {
-            						wsNoMax = wsNo;
-            					}
-            					
-            					if(wsNo < wsNoMin) {
-            						wsNoMin = wsNo;
-            					}
             					
             					$("<tr class='ganjil'>" + 
             					"<td class='style1'>"+rowCount+"</td>" +
@@ -124,19 +124,22 @@
             					"<td id='fishType"+rowCount+"' class='style1'>"+v.fishType+"</td>" +
             						"<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+v.fishId+"'>"+"</td>" +
             						"<input id='fishName"+rowCount+"' type='hidden' name='fishName"+rowCount+"' value='"+v.fishName+"'>"+"</td>" +
-            					"<td class='center'>"+v.totalWeight+"</td>" +
-            						"<input id='totalWeight"+rowCount+"' type='hidden' name='totalWeight"+rowCount+"' value='"+v.totalWeight+"'>"+"</td>" +
-            					"<td id='goodWeightHTML"+rowCount+"' class='center'>"+v.totalWeight+"</td>" +
-            						"<input id='goodWeight"+rowCount+"' type='hidden' name='goodWeight"+rowCount+"' value='"+v.totalWeight+"'>"+"</td>" +
-            					"<td id='spoilageWeightHTML"+rowCount+"' class='center'>0</td>" +
+            					"<td class='right'>"+v.totalWeight+"</td>" +
+            						"<input id='totalWeight"+rowCount+"' type='hidden' name='totalWeight"+rowCount+"' value='"+v.totalWeight.replace(/\,/g,'')+"'>"+"</td>" +
+            					"<td class='right' id='goodWeightHTML"+rowCount+"' class='center'>"+v.totalWeight+"</td>" +
+            						"<input id='goodWeight"+rowCount+"' type='hidden' name='goodWeight"+rowCount+"' value='"+v.totalWeight.replace(/\,/g,'')+"'>"+"</td>" +
+            					"<td class='right' id='spoilageWeightHTML"+rowCount+"' class='center'>0</td>" +
             						"<input id='spoilageWeight"+rowCount+"' type='hidden' name='spoilageWeight"+rowCount+"' value='0'>"+"</td>" +
             					"<td id='"+rowCount+"' class='center' onClick='check(this)'>Check</td>" +
             					"</tr>").appendTo("#main tbody");
             					
             					$('#totalData').val(rowCount);
+            					if($.inArray(v.wsNo, wsNumbers) == -1) {
+            						wsNumbers.push(v.wsNo);
+            					}
             				});
-            				
-            				$('#wsNo').val(wsNoMin + "-" + wsNoMax);
+
+            				$('#wsNo').val(wsNumbers.join(","));
             			}
             		});
             	});
@@ -163,8 +166,8 @@
                             "Ok" : function () {
                             	$('#spoilageWeight'+id).val(spoilWeight);
                             	$('#goodWeight'+id).val(goodWeight);
-                            	$('#spoilageWeightHTML'+id).html(spoilWeight);
-                            	$('#goodWeightHTML'+id).html(goodWeight);
+                            	$('#spoilageWeightHTML'+id).html(addCommas(spoilWeight));
+                            	$('#goodWeightHTML'+id).html(addCommas(goodWeight));
                             	
                             	//ajax post
                             	var serializedData = $('#spoilageForm').serialize();
@@ -249,6 +252,18 @@
             	$('#dCookedWeight').val(spoilWeight);
             	$('#dReason').val("");
             }
+            
+            function addCommas(nStr) {
+                    nStr += '';
+                    x = nStr.split('.');
+                    x1 = x[0];
+                    x2 = x.length > 1 ? '.' + x[1] : '';
+                    var rgx = /(\d+)(\d{3})/;
+                    while (rgx.test(x1)) {
+                            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    }
+                    return x1 + x2;
+            }
         </script>
     </head>
     <body>
@@ -278,7 +293,7 @@
                                    <td class="style1">RR Number</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" id="rrNo" name="rrNo" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="rrNo" name="rrNo" value="" size="30" class="validate[required] text-input numeric"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -442,17 +457,17 @@
 						<tr>
 							<td width="30%">Raw Weight</td>
 							<td>:</td>
-							<td><input type="text" id="dRawWeight" name="rawWeight" value="" size="30" class="validate[required] text-input"/> Kg</td>
+							<td><input type="text" id="dRawWeight" name="rawWeight" value="" size="30" class="validate[required] text-input numeric"/> Kg</td>
 						</tr>
 						<tr>
 							<td width="30%">Cooked Weight</td>
 							<td>:</td>
-							<td><input type="text" id="dCookedWeight" name="cookedWeight" value="" size="30" class="validate[required] text-input"/> Kg</td>
+							<td><input type="text" id="dCookedWeight" name="cookedWeight" value="" size="30" class="validate[required] text-input numeric"/> Kg</td>
 						</tr>
 						<tr>
 							<td width="30%">Total Processed</td>
 							<td>:</td>
-							<td><input type="text" id="dTotalProcessed" name="totalProcessed" value="0" size="30" class="validate[required] text-input"/> Kg</td>
+							<td><input type="text" id="dTotalProcessed" name="totalProcessed" value="0" size="30" class="validate[required] text-input numeric"/> Kg</td>
 						</tr>
 						<tr>
 							<td width="30%">Reason</td>

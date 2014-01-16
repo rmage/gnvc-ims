@@ -35,6 +35,7 @@ public class FishWdsController extends MultiActionController {
 			Integer page = 1;
             Integer paging = 10;
             Integer offset = 1;
+            
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
                 offset = (page - 1) * paging + 1;
@@ -44,8 +45,22 @@ public class FishWdsController extends MultiActionController {
             }
             
             FishWdsDao dao = DaoFactory.createFishWdsDao();
-            List<FishWds> wdsDataList = dao.findAllAndPaging(paging, offset);
-            modelMap.put("wdsDataList", wdsDataList);
+            List<FishWds> fishWdsList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String wdsNo = request.getParameter("wdsNo");
+            	Date wdsDate = df.parse(request.getParameter("wdsDate"));
+            	fishWdsList = dao.searchAndPaging(wdsNo, wdsDate, paging, offset);
+            	String querySearch = "&search=true&wdsNo="+wdsNo+"&wdsDate="+df.format(wdsDate);
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryWdsNo", wdsNo);
+            	modelMap.put("queryWdsDate", wdsDate);
+            }
+            else {
+                fishWdsList = dao.findAllAndPaging(paging, offset);
+            }
+            
+            modelMap.put("wdsDataList", fishWdsList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
             modelMap.put("paging", paging);
