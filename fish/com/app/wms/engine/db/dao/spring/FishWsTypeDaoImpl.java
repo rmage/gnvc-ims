@@ -152,4 +152,12 @@ public class FishWsTypeDaoImpl extends AbstractDAO
 		List<FishWSType> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+code+"%");
 		return resultList;
     }
+
+    public boolean checkWsTypeIsExist(String wsType) {
+        String query = "SELECT * FROM " + getTableName() + 
+                " WHERE code = ? AND is_active = 'Y'";
+        
+        List<FishWSType> resultList = jdbcTemplate.query(query, this, wsType);
+        return resultList.isEmpty() ? false : true;
+    }
 }

@@ -6,4 +6,5 @@ import java.util.List;
 public interface FishDao extends GeneralDao<Fish> {
     public List<Fish> findAllAndPaging(int limit, int offset);
     public List<Fish> searchAndPaging(String fishCode, int limit, int offset);
+    public boolean checkFishCodeIsExist(String code);
 }

@@ -151,4 +151,12 @@ public class FishStorageDaoImpl extends AbstractDAO
 		List<FishStorage> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+code+"%");
 		return resultList;
     }
+
+    public boolean checkStorageCodeIsExist(String code) {
+        String query = "SELECT * FROM " + getTableName() + 
+                " WHERE code = ? AND is_active = 'Y'";
+        
+        List<FishStorage> resultList = jdbcTemplate.query(query, this, code);
+        return resultList.isEmpty() ? false : true;
+    }
 }

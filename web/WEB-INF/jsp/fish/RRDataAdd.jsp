@@ -627,7 +627,7 @@
             Please to fill mandatory data
         </div> 
         
-        <div id="dialog-not-unique" title="incomplete" style="display:none;z-index:1;">
+        <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
             "RR No." is not unique
         </div>         
                                         

@@ -172,4 +172,12 @@ public class FishDaoImpl extends AbstractDAO
 	public String getTableName() {
 		return "inventory..fish";
 	}
+
+    public boolean checkFishCodeIsExist(String code) {
+        String query = "SELECT * FROM " + getTableName() + 
+                " WHERE code = ? AND is_active = 'Y'";
+        
+        List<Fish> resultList = jdbcTemplate.query(query, this, code);
+        return resultList.isEmpty() ? false : true;
+    }
 }
