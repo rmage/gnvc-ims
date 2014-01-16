@@ -5,6 +5,18 @@
     <head>
         <title>IMS - Fish Cold Storage List</title>
         <%@include file="../metaheader.jsp" %>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#btnSearch').click(function() {
+        			var name = $('#queryName').val();
+        			location.href = "FishSupplier.htm?search=true&name="+name;
+        		});
+                
+                $('#btnCleanFilter').click(function() {
+                   location.href = "FishSupplier.htm"; 
+                });
+            });
+        </script>
     </head>
     <body>
         <%
@@ -12,6 +24,10 @@
             if (request.getSession().getAttribute("FishSupplierSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishSupplierSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryName = m.get("queryName") == null ? "" : (String) m.get("queryName");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -25,18 +41,11 @@
                             <tbody>
                                 <tr>
                                     <td width="20%">
-                                        Fish Supplier Code
-                                    </td>
-                                    <td>
-                                        <input type="text" name="fishSupplierCode" value=""/>
-                                    </td>
-                                    <td>
                                         Fish Supplier Name
                                     </td>
                                     <td>
-                                        <input type="text" name="FishSupplierName" value="" />
-                                    </td>
-                                    <td colspan="2">
+                                        <input type="text" id="queryName" name="FishSupplierName" 
+                                               size="30" value="<%=queryName%>" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -46,11 +55,14 @@
                             <tfoot>
                                 <td colspan="4">
                                     <span class="style1">
-                                        <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+                                        <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
                                      <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
+                                    <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+	                                </label>
                                 </td>
                                 <td></td>
                             </tfoot>
@@ -81,21 +93,19 @@
                                         </td>
                                        
                                         <c:url value="FishSupplier.htm" var="urlEdit">
-                                            <c:param name="csId" value="${fishSupplier.id}"/>
+                                            <c:param name="id" value="${fishSupplier.id}"/>
                                             <c:param name="page" value="${model.page}" />
-                                            <c:param name="mode" value="edit"/>
+                                            <c:param name="action" value="edit"/>
                                         </c:url>
                                        
                                         <c:url value="FishSupplier.htm" var="urlDelete">
-                                            <c:param name="csId" value="${fishSupplier.id}"/>
+                                            <c:param name="id" value="${fishSupplier.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
                                         <td class="center" width="5%">
-                                        <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                        --%>    
+                                                <img src="resources/images/edit.gif" width="16" height="16" /></a> 
                                             <a href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
@@ -112,13 +122,13 @@
                                 <td colspan="5">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="FishSupplier.htm?page=<c:out value="${model.page-1}" />">
+                                            <a href="FishSupplier.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
                                                 &lt;
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishSupplier.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="FishSupplier.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>

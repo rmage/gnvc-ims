@@ -9,4 +9,6 @@ public interface FishVesselDao extends GeneralDao<FishVessel> {
 
 	public List<FishVessel> findByBatchNumber(String batchNumber) throws DaoException;
 	public List<FishVessel> findByVesselName(String vesselName) throws DaoException;
+    public List<FishVessel> findAllAndPaging(int limit, int offset);
+    public List<FishVessel> searchAndPaging(String batchNo, int limit, int offset);
 }

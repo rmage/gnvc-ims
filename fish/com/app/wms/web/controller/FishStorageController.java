@@ -1,19 +1,16 @@
 package com.app.wms.web.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-
 import com.app.wms.engine.db.dao.FishStorageDao;
 import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class FishStorageController extends MultiActionController 
 {
@@ -27,23 +24,32 @@ public class FishStorageController extends MultiActionController
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		
 		try {
-			Integer page = null;
-            Integer paging = null;
+			Integer page = 1;
+            Integer paging = 10;
+            Integer offset = 1;
+            
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
+                offset = (page - 1) * paging + 1;
             }
             if (request.getParameter("paging") != null) {
                 paging = Integer.parseInt(request.getParameter("paging"));
             }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
             
             FishStorageDao dao = DaoFactory.createFishStorageDao();
-            List<FishStorage> fishStorageList = dao.findAll();
+            List<FishStorage> fishStorageList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String storageCode = request.getParameter("storageCode");
+            	fishStorageList = dao.searchAndPaging(storageCode, paging, offset);
+            	String querySearch = "&search=true&storageCode="+storageCode;
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryStorageCode", storageCode);
+            }
+            else {
+                fishStorageList = dao.findAllAndPaging(paging, offset);
+            }
+            
             modelMap.put("fishStorages", fishStorageList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
@@ -57,8 +63,25 @@ public class FishStorageController extends MultiActionController
 	}
 	
 	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response)throws Exception {
-		return null;
+		int id = Integer.valueOf(request.getParameter("id"));
+        FishStorageDao dao = DaoFactory.createFishStorageDao();
+        dao.delete(id);
+        
+        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("1_setup/FishStorageList", "model", modelMap);
 	}
+    
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishStorageDao dao = DaoFactory.createFishStorageDao();
+        FishStorage dto = dao.findByPrimaryKey(id);
+        
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+        modelMap.put("dto", dto);
+        modelMap.put("mode", "edit");
+        
+        return new ModelAndView("1_setup/FishStorageEdit", "model", modelMap);
+    }
 	
 	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
@@ -70,9 +93,12 @@ public class FishStorageController extends MultiActionController
 		return new ModelAndView("1_setup/FishStorageAdd", "model", modelMap);
 	}
 	
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
+            throws Exception {
+        
 		LoginUser user = (LoginUser) request.getSession().getAttribute("user");
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
+        String mode = request.getParameter("mode");
         
         if (user == null) {
             String msg = "You haven't login or your session has been expired! Please do login again";
@@ -92,15 +118,25 @@ public class FishStorageController extends MultiActionController
         	FishStorage dto = new FishStorage();
         	dto.setCode(code);
         	dto.setDescription(description);
-        	dto.setCreatedDate(createdDate);
-        	dto.setCreatedBy(createdBy);
         	dto.setIsActive(isActive);
         	dto.setIsDelete(isDelete);
-        	
-        	FishStorageDao dao = DaoFactory.createFishStorageDao();
-        	int id = dao.insert(dto);
-        	
-        	dto.setId(id);
+            
+            FishStorageDao dao = DaoFactory.createFishStorageDao();
+            
+            if(mode.equalsIgnoreCase("edit")) {
+                int id = Integer.valueOf(request.getParameter("id"));
+                dto.setUpdatedDate(new Date());
+                dto.setUpdatedBy(user.getUserId());
+                dao.update(id, dto);
+            }
+            else {
+                dto.setCreatedDate(createdDate);
+                dto.setCreatedBy(createdBy);
+                
+                int id = dao.insert(dto);
+                dto.setId(id);
+            }
+            
         	return new ModelAndView("1_setup/FishStorageView", "dto", dto);
         }
 	}

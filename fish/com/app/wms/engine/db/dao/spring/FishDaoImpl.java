@@ -106,6 +106,38 @@ public class FishDaoImpl extends AbstractDAO
 		
 		return resultList;
 	}
+    
+    public List<Fish> searchAndPaging(String fishCode, int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"	FROM "+getTableName()+" " +
+                "   WHERE is_active = 'Y' AND code LIKE ? " +
+				") AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<Fish> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+fishCode+"%");
+		return resultList;
+    }
+    
+    public List<Fish> findAllAndPaging(int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"	FROM "+getTableName()+" " +
+                "   WHERE is_active = 'Y' " +
+				") AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<Fish> resultList = jdbcTemplate.query(query, this, limit, offset);
+		return resultList;
+    }
 	
 	@Override
 	public Fish mapRow(ResultSet rs, int row) throws SQLException {
@@ -140,4 +172,12 @@ public class FishDaoImpl extends AbstractDAO
 	public String getTableName() {
 		return "inventory..fish";
 	}
+
+    public boolean checkFishCodeIsExist(String code) {
+        String query = "SELECT * FROM " + getTableName() + 
+                " WHERE code = ? AND is_active = 'Y'";
+        
+        List<Fish> resultList = jdbcTemplate.query(query, this, code);
+        return resultList.isEmpty() ? false : true;
+    }
 }

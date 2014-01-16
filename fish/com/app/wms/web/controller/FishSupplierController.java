@@ -26,24 +26,33 @@ public class FishSupplierController extends MultiActionController {
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		
 		try {
-			Integer page = null;
-            Integer paging = null;
+			Integer page = 1;
+            Integer paging = 10;
+            Integer offset = 1;
+            
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
+                offset = (page - 1) * paging + 1;
             }
             if (request.getParameter("paging") != null) {
                 paging = Integer.parseInt(request.getParameter("paging"));
             }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
             
             FishSupplierDao dao = DaoFactory.createFishSupplierDao();
-            List<FishSupplier> fishSuppliers = dao.findAll();
-            modelMap.put("fishSuppliers", fishSuppliers);
+            List<FishSupplier> supplierList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String name = request.getParameter("name");
+            	supplierList = dao.searchAndPaging(name, paging, offset);
+            	String querySearch = "&search=true&name="+name;
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryName", name);
+            }
+            else {
+                supplierList = dao.findAllAndPaging(paging, offset);
+            }
+            
+            modelMap.put("fishSuppliers", supplierList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
             modelMap.put("paging", paging);
@@ -88,17 +97,47 @@ public class FishSupplierController extends MultiActionController {
         	dto.setFax(fax);
         	dto.setEmail(email);
         	dto.setContactPerson(cp);
-        	dto.setCreatedDate(new Date());
-        	dto.setCreatedBy(userId);
         	dto.setIsActive("Y");
         	dto.setIsDelete("N");
         	
         	FishSupplierDao dao = DaoFactory.createFishSupplierDao();
-        	int id = dao.insert(dto);
-        	dto.setId(id);
+            if(mode.equalsIgnoreCase("edit")) {
+                int id = Integer.valueOf(request.getParameter("id"));
+                dto.setUpdatedDate(new Date());
+                dto.setUpdatedBy(user.getUserId());
+                dao.update(id, dto);
+            }
+            else {
+                dto.setCreatedDate(new Date());
+                dto.setCreatedBy(userId);
+                int id = dao.insert(dto);
+                dto.setId(id);   
+            }
         	
         	modelMap.put("dto", dto);
         	return new ModelAndView("1_setup/FishSupplierView", modelMap);
         }
 	}
+    
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response)throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishSupplierDao dao = DaoFactory.createFishSupplierDao();
+        dao.delete(id);
+        
+		HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("1_setup/FishList", "model", modelMap);
+	}
+    
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.parseInt(request.getParameter("id"));
+        FishSupplierDao dao = DaoFactory.createFishSupplierDao();
+        FishSupplier dto = dao.findByPrimaryKey(id);
+        
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		
+		modelMap.put("mode", "edit");
+        modelMap.put("dto", dto);
+        
+        return new ModelAndView("1_setup/FishSupplierEdit", "model", modelMap);
+    }
 }

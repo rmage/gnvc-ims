@@ -15,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.FishBalanceDao;
+import com.app.wms.engine.db.dao.FishDao;
 import com.app.wms.engine.db.dao.FishRrDao;
+import com.app.wms.engine.db.dao.FishStorageDao;
 import com.app.wms.engine.db.dao.FishSupplierDao;
 import com.app.wms.engine.db.dao.FishTsDao;
 import com.app.wms.engine.db.dao.FishVesselDao;
@@ -23,6 +25,7 @@ import com.app.wms.engine.db.dao.FishWdsDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
 import com.app.wms.engine.db.dao.FishWsDao;
 import com.app.wms.engine.db.dao.FishWsDetailDao;
+import com.app.wms.engine.db.dao.FishWsTypeDao;
 import com.app.wms.engine.db.dto.FishBalance;
 import com.app.wms.engine.db.dto.FishSupplier;
 import com.app.wms.engine.db.dto.FishVessel;
@@ -309,6 +312,57 @@ public class FishJsonController extends MultiActionController {
 		String tsNo = request.getParameter("query");
 		FishTsDao dao = DaoFactory.createFishTsDao();
 		boolean result = dao.checkIsTsNoExist(tsNo);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+    
+    public ModelAndView checkFishCode(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String code = request.getParameter("query");
+		FishDao dao = DaoFactory.createFishDao();
+		boolean result = dao.checkFishCodeIsExist(code);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+    
+    public ModelAndView checkWsCode(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String code = request.getParameter("query");
+		FishWsTypeDao dao = DaoFactory.createFishWsTypeDao();
+		boolean result = dao.checkWsTypeIsExist(code);
+		
+		JSONObject jsonPage = new JSONObject();
+		jsonPage.put("result", result);
+		
+		String data = jsonPage.toString();
+		HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		modelMap.put("data", data);
+		
+		return new ModelAndView("fish/FishJsonView", "model", modelMap);
+	}
+    
+    public ModelAndView checkStorageCode(HttpServletRequest request, HttpServletResponse response) 
+			throws Exception {
+		
+		String code = request.getParameter("query");
+		FishStorageDao dao = DaoFactory.createFishStorageDao();
+		boolean result = dao.checkStorageCodeIsExist(code);
 		
 		JSONObject jsonPage = new JSONObject();
 		jsonPage.put("result", result);

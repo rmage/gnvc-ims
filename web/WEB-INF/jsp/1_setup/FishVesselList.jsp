@@ -7,6 +7,15 @@
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
         	$(document).ready(function() {
+                $('#btnSearch').click(function() {
+        			var fishCode = $('#queryBatchNo').val();
+        			location.href = "FishVessel.htm?search=true&batchNo="+fishCode;
+        		});
+                
+                $('#btnCleanFilter').click(function() {
+                   location.href = "FishVessel.htm"; 
+                });
+                
         		$('#btnAdd').click(function() {
 					$("#dialog").dialog({ 
 						width: 450, 
@@ -49,6 +58,10 @@
             if (request.getSession().getAttribute("FishVesselSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishVesselSearch");
             }
+            
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
+            String queryBatchNo = m.get("queryBatchNo") == null ? "" : (String) m.get("queryBatchNo");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -62,32 +75,26 @@
                             <tbody>
                                 <tr>
                                     <td width="20%">
-                                        Vessel Code
+                                        Batch No.
                                     </td>
                                     <td>
-                                        <input type="text" name="vesselCode" value=""/>
-                                    </td>
-                                    <td>
-                                        Vessel Name
-                                    </td>
-                                    <td>
-                                        <input type="text" name="vesselName" value="" />
-                                    </td>
-                                    <td colspan="2">
+                                        <input type="text" id="queryBatchNo" name="batchNo" value="<%=queryBatchNo%>"/>
                                     </td>
                                 </tr>
                                 <tr>
-                                   
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="4">
                                     <span class="style1">
-                                        <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+                                        <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
                                      <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
+                                    <label>
+	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+	                                </label>
                                 </td>
                                 <td></td>
                             </tfoot>
@@ -115,21 +122,19 @@
                                         </td>
                                        
                                         <c:url value="FishVessel.htm" var="urlEdit">
-                                            <c:param name="fishTypeId" value="${vessel.id}"/>
+                                            <c:param name="id" value="${vessel.id}"/>
                                             <c:param name="page" value="${model.page}" />
-                                            <c:param name="mode" value="edit"/>
+                                            <c:param name="action" value="edit"/>
                                         </c:url>
                                        
                                         <c:url value="FishVessel.htm" var="urlDelete">
-                                            <c:param name="fishTypeId" value="${vessel.id}"/>
+                                            <c:param name="id" value="${vessel.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
                                         <td class="center" width="5%">
-                                        <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                        --%>    
+                                                <img src="resources/images/edit.gif" width="16" height="16" /></a> 
                                             <a href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
@@ -143,13 +148,13 @@
 	                           <td colspan="5">
 	                               <span class="style1">
 	                                   <c:if test="${model.page !=null && model.page > 1}">
-	                                       <a href="FishVessel.htm?page=<c:out value="${model.page-1}" />">
+	                                       <a href="FishVessel.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
 	                                           &lt;
 	                                       </a>
 	                                   </c:if>
 	                                   &nbsp;page: <c:out value="${model.page}" />&nbsp;
 										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishVessel.htm?page=<c:out value="${model.page+1}" />">
+						    				<a href="FishVessel.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
 											&gt;
 						    				</a>
 										</c:if>

@@ -14,4 +14,6 @@ public interface FishSupplierDao {
 	public List<FishSupplier> findAll() throws DaoException;
 	public List<FishSupplier> findAllActive() throws DaoException;
 	public List<FishSupplier> findBySupplierName(String supplierName) throws DaoException;
+    public List<FishSupplier> findAllAndPaging(int limit, int offset);
+    public List<FishSupplier> searchAndPaging(String supplierName, int limit, int offset);
 }

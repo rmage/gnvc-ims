@@ -28,24 +28,33 @@ public class FishVesselController extends MultiActionController {
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		
 		try {
-			Integer page = null;
-            Integer paging = null;
+			Integer page = 1;
+            Integer paging = 10;
+            Integer offset = 1;
+            
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
+                offset = (page - 1) * paging + 1;
             }
             if (request.getParameter("paging") != null) {
                 paging = Integer.parseInt(request.getParameter("paging"));
             }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
             
             FishVesselDao dao = DaoFactory.createFishVesselDao();
-            List<FishVessel> fishVessels = dao.findAll();
-            modelMap.put("fishVessels", fishVessels);
+            List<FishVessel> vesselList = null;
+            
+            if(request.getParameter("search") != null) {
+            	String batchNo = request.getParameter("batchNo");
+            	vesselList = dao.searchAndPaging(batchNo, paging, offset);
+            	String querySearch = "&search=true&batchNo="+batchNo;
+            	modelMap.put("querySearch", querySearch);
+            	modelMap.put("queryBatchNo", batchNo);
+            }
+            else {
+                vesselList = dao.findAllAndPaging(paging, offset);
+            }
+            
+            modelMap.put("fishVessels", vesselList);
             modelMap.put("totalRows", 2000);
             modelMap.put("page", page);
             modelMap.put("paging", paging);
@@ -90,17 +99,48 @@ public class FishVesselController extends MultiActionController {
         	dto.setCode(code);
         	dto.setName(name);
         	dto.setBatchNo(batchNo);
-        	dto.setCreatedDate(new Date());
-        	dto.setCreatedBy(userId);
         	dto.setIsActive("Y");
         	dto.setIsDelete("N");
         	
         	FishVesselDao dao = DaoFactory.createFishVesselDao();
-        	int id = dao.insert(dto);
-        	dto.setId(id);
+            if(mode.equalsIgnoreCase("edit")) {
+                int id = Integer.valueOf(request.getParameter("id"));
+                dto.setId(id);
+                dto.setUpdatedDate(new Date());
+                dto.setUpdatedBy(user.getUserId());
+                dao.update(id, dto);
+            }
+            else {
+                dto.setCreatedDate(new Date());
+                dto.setCreatedBy(userId);
+                int id = dao.insert(dto);
+                dto.setId(id);   
+            }
         	
         	modelMap.put("dto", dto);
         	return new ModelAndView("1_setup/FishVesselView", modelMap);
         }
 	}
+    
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response)throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishVesselDao dao = DaoFactory.createFishVesselDao();
+        dao.delete(id);
+        
+		HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("1_setup/FishVesselList", "model", modelMap);
+	}
+    
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.parseInt(request.getParameter("id"));
+        FishVesselDao dao = DaoFactory.createFishVesselDao();
+        FishVessel dto = dao.findByPrimaryKey(id);
+        
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+		
+		modelMap.put("mode", "edit");
+        modelMap.put("dto", dto);
+        
+        return new ModelAndView("1_setup/FishVesselEdit", "model", modelMap);
+    }
 }

@@ -1,3 +1,4 @@
+<%@taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql"%>
 <%@page import="com.app.wms.engine.db.dto.FishStorage"%>
 <%@page import="com.app.wms.engine.db.dto.FishType"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -10,7 +11,35 @@
         <script language="JavaScript">
             $(document).ready(function(){
                 
-                $('#addForm').validationEngine('attach');        
+                $('#addForm').validationEngine('attach');
+                
+                $('#code').focus().on("blur",function() {
+        			var code = $('#code').val();
+        			$.ajax({
+        				url:"FishJson.htm?action=checkStorageCode&query="+code,
+        				dataType: 'json',
+        				success: function(data) {
+        					if(data.result) {
+        						$("#dialog-not-unique").dialog({
+                                    open: function () {
+                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+                                    },
+                                    title: 'Warning',
+                                    resizable: false,
+                                    height: 120,
+                                    modal: true,
+                                    buttons: {
+                                        "Ok" : function () {
+                                            $(this).dialog("close");
+                                            $('#code').focus();
+                                        }
+                                    }
+                                });
+        					}
+        				}
+        			});
+        		});
                 
             });
         </script>
@@ -40,7 +69,7 @@
                                    <td class="style1">Code</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" name="code" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="code" name="code" value="" size="30" class="validate[required] text-input"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -157,7 +186,11 @@
         
         <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
             Please to fill mandatory data
-        </div>            
+        </div>
+
+        <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
+            "Storage Code" is not unique
+        </div>
                                         
     </body>
 </html>

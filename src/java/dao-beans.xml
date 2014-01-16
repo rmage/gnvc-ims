@@ -6,8 +6,7 @@
 	   http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
 	   http://www.springframework.org/schema/tx 
 	   http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
-
-    <!-- XXX : FYA | Database Connection Setting -->
+    
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 	<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
         <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/inventory" />
@@ -933,6 +932,15 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishTsDetailDao" class="com.app.wms.engine.db.dao.spring.FishTsDetailDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishBalanceHistoryDao" class="com.app.wms.engine.db.dao.spring.FishBalanceHistoryDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishBadStockDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishBadStockDetailDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDetailDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
 </beans>
