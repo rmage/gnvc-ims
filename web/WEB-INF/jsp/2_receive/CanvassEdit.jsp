@@ -1,4 +1,7 @@
 <%@page import="java.util.Date"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.text.DecimalFormatSymbols"%>
 <%@page import="com.app.wms.engine.db.dto.Canvassing"%>
 <%@page import="com.app.wms.engine.db.dto.CanvassingDetail"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -35,6 +38,13 @@
 		    	    {  return false; }
 		    	    return true;
 
+		       	}
+		       	
+		       	function changeUnitPrices(){
+		       		v = $("#unitprices").val();
+		       		w = formatCurrency(v);
+		       		x = numberWithCommas(w);
+		       		$("#unitprices").val(x);
 		       	}
 
 		       	function changeFormatMoney(){
@@ -80,6 +90,11 @@
             String canvassername = dto.getCanvassername();
             String remarks = dto.getRemarks();
             java.util.List<CanvassingDetail> cd = (java.util.List<CanvassingDetail>)m.get("cd");
+            
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+            dfs.setCurrencySymbol("");
+            ((DecimalFormat) formatter).setDecimalFormatSymbols(dfs);
         
         %>
         <div class="container">
@@ -112,7 +127,7 @@
                                     <td class="style1">Remarks</td>
                                 	<td class="style1">
                                     	<label>
-                                           <textarea style="width: 374px; height: 51px;" id="remarks" name="remarks" value="<%=remarks%>" readonly></textarea>
+                                           <textarea style="width: 374px; height: 51px;" name="remarks" value="<%=remarks%>" readonly></textarea>
                                         </label>
                                     </td>
                                 </tr>
@@ -156,15 +171,15 @@
 								    <tr>
 										<td class="style1">No.</td>
 	                                    <td class="style1">Item</td>
-	                                    <td class="style1">UoM</td>
+	                                    <td class="style1">Unit</td>
 	                                    <td class="style1">Qty</td>
 	                                    <td class="style1">Unit Price</td>
 	                                    <td class="style1">Warranty</td>
 										<td class="style1">Term of Payment</td>
 										<td class="style1">Term of Delivery</td>
 										<td class="style1">Discount</td>
-										<td class="style1">PPH</td>
-										<td class="style1">PPN</td>
+										<td class="style1">PPH %</td>
+										<td class="style1">PPN %</td>
 	                                    <td class="style1">Supplier</td>
 	                                    <td class="style1">Action</td>
 								    </tr>
@@ -187,7 +202,7 @@
 									<td class="style1"><%= valueSearch.getProductname() %></td>
 									<td class="style1"><%= valueSearch.getPrsDetail().getUomName() %></td>
 									<td class="style1"><%= valueSearch.getPrsDetail().getQty() %></td>
-									<td class="style1" id="unitprices"><%=valueSearch.getPriceunit() %></td>
+									<td class="style1" id="unitprices"><%= formatter.format(valueSearch.getPriceunit())%></td>
 									<input type="hidden" value="<%=valueSearch.getPriceunit() %>" name="unitprice1" id="unitprice1"/>
 									<%if(valueSearch.getWarranty() != null ){ %>
 										<td class="style1" id="warrantys"><%= warrantyFormat.format(valueSearch.getWarranty()) %></td>
@@ -305,8 +320,8 @@
                 
             });
 
-            $("#btnSave").click(function () {  
-
+            $("#btnSave").click(function () { 
+            	
                 //if invalid do nothing
                 if(!$("#addForm").validationEngine('validate')){
                     $("#dialog-incomplete").dialog({
@@ -338,20 +353,21 @@
 	                    },
 	                    zindex: 1, title: 'Confirm' 
 	                });
-
+	                
             	});
 
             $('.check').live("click", function() {
 
   				// clear values
-                $("#unitprice").val("0");
+                //$("#unitprice").val("0");
 
                 // setup values
                 $('#supplier').val($(this).attr('supplier'));
                 $('#productCode').val($(this).attr('productcode'));                        
                 $('#productName').val($(this).attr('productname')); 
                 $('#UoM').val($(this).attr('uom'));      
-                $('#qty1').val($(this).attr('qty'));                     
+                $('#qty1').val($(this).attr('qty'));
+                $('#unitprice').val($('#unitprice1').val());                     
                 
                 var productCode = $(this).attr('rowcount');
                 var qty = $(this).attr('qty');
@@ -359,17 +375,22 @@
                        buttons: {
                            "Cancel": function() {     
 
-				                   $("#unitprice").val("0");
+				                   //$("#unitprice").val("0");
                                    $( this ).dialog( "close" );                                        
                            },
                            "Update": function() { 
 
-                        	   /*
-							   if( $("#unitprice").val() == "0" ){
-									alert("data empty : 'please to entry unit price' ");
+                        	   
+							   if( $("#unitprice").val() == "0.00" ){
+									alert("data mandatory : 'please to entry unit price' ");
 									return false;
 							   }
-							   */				
+							   
+							   if( $("#warranty").val() == "" ){
+									alert("data mandatory : 'please to entry warranty' ");
+									return false;
+							   }
+							   				
                             	   $("#"+productCode+"-unitprice2").html($('#unitprice').val());
                             	   $("#"+productCode+"-supplier2").html($('#supplier').val());
 
@@ -503,6 +524,7 @@
                                      />
                          </td>
                      </tr>
+                     
                  </table>                                 
             </form>
         	</div>

@@ -126,31 +126,25 @@ public class DepartmentDaoImpl extends AbstractDAO implements ParameterizedRowMa
 	 * Returns all rows from the department table that match the criteria 'id = :id'.
 	 */
 	@Transactional
-	public Department findByPrimaryKey(int id) throws DepartmentDaoException
-	{
-		try {
-			List<Department> list = jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE id = ?", this,id);
-			return list.size() == 0 ? null : list.get(0);
-		}
-		catch (Exception e) {
-			throw new DepartmentDaoException("Query failed", e);
-		}
-		
+	public Department findByPrimaryKey(int id) throws DepartmentDaoException {
+            try {
+                List<Department> list = jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE id = ?", this,id);
+                return list.size() == 0 ? null : list.get(0);
+            } catch (Exception e) {
+                throw new DepartmentDaoException("Query failed", e);
+            }
 	}
 
 	/** 
 	 * Returns all rows from the department table that match the criteria ''.
 	 */
 	@Transactional
-	public List<Department> findAll() throws DepartmentDaoException
-	{
-		try {
-			return jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active='Y' ORDER BY id ", this);
-		}
-		catch (Exception e) {
-			throw new DepartmentDaoException("Query failed", e);
-		}
-		
+	public List<Department> findAll() throws DepartmentDaoException {
+            try {
+                return jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active='Y' ORDER BY id ", this);
+            } catch (Exception e) {
+                throw new DepartmentDaoException("Query failed", e);
+            }
 	}
 
 	/** 
@@ -175,7 +169,7 @@ public class DepartmentDaoImpl extends AbstractDAO implements ParameterizedRowMa
 	public List<Department> findWhereDepartmentCodeEquals(String departmentCode) throws DepartmentDaoException
 	{
 		try {
-			return jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE department_code = ? ORDER BY department_code", this,departmentCode);
+			return jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE department_code = ? and is_active = 'Y' ORDER BY department_code", this,departmentCode);
 		}
 		catch (Exception e) {
 			throw new DepartmentDaoException("Query failed", e);

@@ -10,6 +10,7 @@
             UserRole  dto = (UserRole) request.getAttribute("dto");    
             String roleCode = (String)dto.getRoleCode();
             String roleName = (String)dto.getRoleName();
+            String departmentCode = (String)dto.getDepartmentCode();
         %>
         <div class="container">
             <%@include file="../../header.jsp" %>
@@ -28,9 +29,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="style1">Name</td>
+                                <td class="style1">Role Name</td>
                                 <td class="style1">
                                     <%=roleName%>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="style1">Department Code</td>
+                                <td class="style1">
+                                    <%=departmentCode%>
                                 </td>
                             </tr>
                             <%-- 

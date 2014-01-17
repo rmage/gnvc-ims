@@ -23,21 +23,16 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 
 public class ApprovalRangeController extends MultiActionController {
-	
-
-
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-           
+    /**
+     * Method 'findByPrimaryKey'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {   
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -50,17 +45,14 @@ public class ApprovalRangeController extends MultiActionController {
                 return new ModelAndView("1_setup/AppRangeList", "model", m);
             }
 
-        }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView( "Error", "th", e );
+        }		
+    }
 	
-	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
-
+    private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try{
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -94,25 +86,22 @@ public class ApprovalRangeController extends MultiActionController {
 
             return m;
 
-		}catch (Exception e){
-			throw e;
-		}
-		
-	}
+        } catch (Exception e){
+            throw e;
+        }		
+    }
 	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-		try {
-		 ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();	
-		 ApprovalRange dto = new ApprovalRange();
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
+            ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();	
+            ApprovalRange dto = new ApprovalRange();
 
-         String mode = request.getParameter("mode");
-         if (mode != null && mode.equals("edit")) {
+            String mode = request.getParameter("mode");
+            if (mode != null && mode.equals("edit")) {
         	 Integer id = Integer.parseInt(request.getParameter("id"));
-             dto = dao.findByPrimaryKey(id);
-            
-         }
-         if (dto.getUsername() == null) {
-        	 
+                dto = dao.findByPrimaryKey(id);
+            }
+            if (dto.getUsername() == null) {	 
         	 dto.setUsername("");
         	 dto.setRoleCode("");
              dto.setIsActive("Y");

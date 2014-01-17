@@ -9,9 +9,8 @@
     </head>
     <body>
         <%
-        java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-        Currency dto = (Currency) m.get("dto");
-       
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            Currency dto = (Currency) m.get("dto");       
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -40,13 +39,12 @@
                             </tbody>
                             <tfoot>
                                 <td colspan="4">
-                                    <span class="style1">
+                                     <span class="style1">
                                         <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
                                         <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     	</label>
-
-                                    </span>
+                                    </span> 
                                 </td>
                             </tfoot>
                         </table>
@@ -80,16 +78,15 @@
                                         <c:url value="Currency.htm" var="urlDelete">
                                         	<c:param name="id" value="${curr.id}"/>
                                         	<c:param name="page" value="${model.page}" />
-					    					<c:param name="action" value="inactivate" />
+                                                <c:param name="action" value="inactivate" />
                                         </c:url>
                                         <td class="mid" width="5%">
-                                        <%-- 
-                                        <a href='<c:out value="${urlEdit}"/>'><img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                        --%>
-                                        <a href='<c:out value="${urlDelete}"/>'><img src="resources/images/delete.gif" width="16" height="16" /></a></td>
+                                            <a href='<c:out value="${urlEdit}"/>'><img src="resources/images/edit.gif" width="16" height="16" /></a>
+                                            <a href='<c:out value="${urlDelete}"/>'><img src="resources/images/delete.gif" width="16" height="16" /></a>
+                                        </td>
                                         <td align="left"><c:out value="${curr.currencyCode}"/></td>
                                         <td align="left"><c:out value="${curr.currencyName}"/></td>
-                                        <td align="left"><input type="text" readonly class="shorttext" name="symbol"  value="${curr.currencySymbol}" size="2" /></td>
+                                        <td align="left">${curr.currencySymbol}</td>
                                         <td class="center"><c:out value="${curr.isActive}"/></td>
                                     </tr>
                                 </c:forEach>
@@ -103,12 +100,12 @@
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-										    <a href="Currency.htm?page=<c:out value="${model.page+1}" />">
-											&gt;
-										    </a>
-										</c:if>
-				    				</span>
+                                        <c:if test="${model.page < model.totalRows/model.paging}">
+                                            <a href="Currency.htm?page=<c:out value="${model.page+1}" />">
+                                                &gt;
+                                            </a>
+                                        </c:if>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>

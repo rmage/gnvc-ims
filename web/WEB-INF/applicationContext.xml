@@ -27,7 +27,7 @@
     <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
     
     <context:component-scan base-package="com.app"/>
-    <!-- TODO : Database Connection | first deployment for hibernate -->
+    <!-- XXX : FYA | Database Connection Setting -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
         <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/inventory" />

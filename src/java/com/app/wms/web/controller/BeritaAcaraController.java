@@ -18,11 +18,6 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 
 public class BeritaAcaraController extends MultiActionController {
-	
-
-	
-
-
 	/**
 	 * Method 'findByPrimaryKey'
 	 * 

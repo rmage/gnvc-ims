@@ -1,33 +1,22 @@
 package com.app.wms.web.controller;
 
-import com.app.wms.engine.db.dao.*;
 import com.app.wms.web.helper.StringHelper;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.*;
-import java.math.*;
 import java.util.List;
 import com.app.web.engine.search.UserSearch;
 import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dao.UserRoleDao;
-import com.app.wms.engine.db.dao.WhDao;
-import com.app.wms.engine.db.dao.spring.CorpUserDao;
 import com.app.wms.engine.db.dto.*;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.*;
-import com.app.wms.engine.util.*;
-import com.app.wms.hbm.bean.CorpUser;
 import com.app.wms.web.util.AppConstant;
 import com.app.wms.web.util.EncryptionUtility;
-import com.app.wms.web.util.Utility;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserController extends MultiActionController {
     
@@ -199,18 +188,16 @@ public class UserController extends MultiActionController {
 	    String userId = lu.getUserId();
 
 	    if (isCreate) {
-	    	
-	    	if (ppassword.trim().isEmpty()) {
-	    		strError += "Password Cannot be Empty!" + AppConstant.EOL;
-    	    } else if (StringHelper.trim(ppassword).length() < 3) {
-    		strError += "Password Must be 3 character or more!" + AppConstant.EOL;
-    	    } else if (!ppasswordVer.equals(ppassword)) {
-    		strError += "Password and Verification do not match!" + AppConstant.EOL;
-    	    }
-		    dto.setPassword(ppassword);
-			dto.setCreatedBy(userId);
-			dto.setCreatedDate(now);
-			
+                if (ppassword.trim().isEmpty()) {
+                    strError += "Password Cannot be Empty!" + AppConstant.EOL;
+                } else if (StringHelper.trim(ppassword).length() < 3) {
+                    strError += "Password Must be 3 character or more!" + AppConstant.EOL;
+                } else if (!ppasswordVer.equals(ppassword)) {
+                    strError += "Password and Verification do not match!" + AppConstant.EOL;
+                }
+                dto.setPassword(ppassword);
+                dto.setCreatedBy(userId);
+                dto.setCreatedDate(now);
 	    }
 
 	    dto.setCode("");
@@ -229,11 +216,8 @@ public class UserController extends MultiActionController {
 	    }
 
 	    if (isCreate) {
-	    	
 	    	dao.insert(dto);
-                
 	    } else {
-	    	
 	    	String oldPwd = request.getParameter("oldPwd");
 	    	System.out.println("oldPwd ="+EncryptionUtility.getEncrypted(oldPwd.trim()));
 	        String newPwd = request.getParameter("newPwd");
@@ -295,21 +279,21 @@ public class UserController extends MultiActionController {
     }
 
     public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-		String userId = new String(lu.getUserId());
-	
-		String puserId = request.getParameter("userId");
-	
-		UserDao dao = DaoFactory.createUserDao();
-		User dto = dao.findByPrimaryKey(puserId);
-		if (dto != null && dto.getPassword().equalsIgnoreCase(request.getParameter("password").trim())) {
-		    dto.setIsActive(AppConstant.STATUS_FALSE);
-		    dto.setUpdatedBy(userId);
-		    dto.setUpdatedDate(new Date());
-		    dao.updateInactivate(dto.createPk(), dto);
-		}
-		HashMap m = this.searchAndPaging(request, response);
-		return new ModelAndView("1_setup/UserList", "model", m);
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        String userId = new String(lu.getUserId());
+
+        String puserId = request.getParameter("userId");
+
+        UserDao dao = DaoFactory.createUserDao();
+        User dto = dao.findByPrimaryKey(puserId);
+        if (dto != null && dto.getPassword().equalsIgnoreCase(request.getParameter("password").trim())) {
+            dto.setIsActive(AppConstant.STATUS_FALSE);
+            dto.setUpdatedBy(userId);
+            dto.setUpdatedDate(new Date());
+            dao.updateInactivate(dto.createPk(), dto);
+        }
+        HashMap m = this.searchAndPaging(request, response);
+        return new ModelAndView("1_setup/UserList", "model", m);
     }
     
 }

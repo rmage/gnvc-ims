@@ -91,13 +91,6 @@
                         	"<td class=\"style1\">"+v.productname+"</td>"+
                         	"<td class=\"style1\">"+v.uom+"</td>"+	                                                                                                                                                 
                         	"<td class=\"style1\">"+v.qty+"</td>"+ 
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-unitprice2\"></span> <input type=\"hidden\" name=\"unitprice1\" id=\""+rowCount+"-unitprice1\" /></td> "+ 
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-warranty2\"></span> <input type=\"hidden\" name=\"warranty1\" id=\""+rowCount+"-unitprice1\" /></td> "+
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-termpayment2\"></span> <input type=\"hidden\" name=\"termpayment1\" id=\""+rowCount+"-unitprice1\" /></td> "+
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-termdelivery2\"></span> <input type=\"hidden\" name=\"termdelivery1\" id=\""+rowCount+"-unitprice1\" /></td> "+
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-dicount2\"></span> <input type=\"hidden\" name=\"discount1\" id=\""+rowCount+"-unitprice1\" /></td> "+
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-pph2\"></span> <input type=\"hidden\" name=\"pph1\" id=\""+rowCount+"-unitprice1\" /></td> "+
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-ppn2\"></span> <input type=\"hidden\" name=\"ppn1\" id=\""+rowCount+"-unitprice1\" /></td> "+
                         	"<td class=\"style1\"><span id=\""+rowCount+"-supplier2\"></span> <input type=\"hidden\" name=\"supplier1\" id=\""+rowCount+"-supplier1\" /></td> "                             
                             +"<td class=\"style1\"><a class=\"check\" productCode=\""+v.productcode+"\" "
                             +"productName=\""+v.productname+"\" "
@@ -106,7 +99,7 @@
 						    "</tr>").appendTo("#main tbody")
                             });
                             },
-                              url: 'prsdetailjson.htm?param='+localRowData.prsnumber
+                              url: 'prscanvasserdetailjson.htm?param='+localRowData.prsnumber
                             });
                             } 
                         },
@@ -194,13 +187,6 @@
 	                                    <td class="style1">Item</td>
 	                                    <td class="style1">UoM</td>
 	                                    <td class="style1">Qty</td>
-	                                    <td class="style1">Unit Price</td>
-	                                    <td class="style1">Warranty</td>
-										<td class="style1">Term of Payment</td>
-										<td class="style1">Term of Delivery</td>
-										<td class="style1">Discount</td>
-										<td class="style1">pph</td>
-										<td class="style1">pph</td>
 	                                    <td class="style1">Supplier</td>
 	                                    <td class="style1">Action</td>
 								    </tr>
@@ -255,41 +241,53 @@
                 });
             });
 
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
+            $("#btnSave").click(function () { 
+            	
+              var rowCount = $('#main tr').length-1;
+              console.log("rowCount= "+rowCount--);
+            	
+          	  if($("#"+rowCount+"-supplier2").val()== ""){
+			     alert("please to entry supplier");
+			  }else{
+               
+	          	    //if invalid do nothing
+	                if(!$("#addForm").validationEngine('validate')){
+	                    $("#dialog-incomplete").dialog({
+	                            open: function () {
+	                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+	                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+	                            },
+	                            title: 'Incomplete Form',
+	                            resizable: false,
+	                            height: 120,
+	                            modal: true,
+	                            buttons: {
+	                                "Ok" : function () {
+	                                    $(this).dialog("close");
+	                                }
+	                            }
+	                        });
+	                    return false;
+	                 }
                 
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
-                        },
-                        "Save": function() {
-                            $("form#addForm").submit();
-                        }
-                    },
-                    zindex: 1, title: 'Confirm' });
+	                   $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
+	                    buttons: {
+	                        "Cancel": function() {                                       
+	                            $( this ).dialog( "close" );                                        
+	                        },
+	                        "Save": function() {
+	                            $("form#addForm").submit();
+	                        }
+	                    },
+	                    zindex: 1, title: 'Confirm' });
+	                   
+	                   
+            }
+          	  
+             
 
             });
-
+            
             $('.check').live("click", function() {
 
   				// clear values
@@ -303,7 +301,7 @@
                 
                 var productCode = $(this).attr('rowcount');
                 var qty = $(this).attr('qty');
-                $("#dialog3").dialog({ width: 440, height: 600, position: "center", modal: true, 
+                $("#dialog3").dialog({ width: 440, height: 300, position: "center", modal: true, 
                        buttons: {
                            "Cancel": function() {     
 
@@ -332,9 +330,10 @@
                                
                            }
                        },
-                    zindex: 9999, title: 'Set Item Price' });                     
+                    zindex: 9999, title: 'Set Supplier' });                     
             }); 
 
+           
         </script>
         
         <div id="dialog2" title="PRS Search" style="display:none;z-index:1;">
@@ -374,39 +373,6 @@
                                  </select>
                             	</label>
                           </td>
-                     </tr>
-                     <tr>
-                         <td><label>Unit/Price</label></td>
-                         <td> <input type="text" name="unitprice" id="unitprice" value="0"
-                                     onblur="changeFormatMoney()"
-                                     onkeypress="return isNumberKey(event)"  
-                                     disabled/>
-                               <label class="requiredfield" title="This Field Is Required!">*</label>
-                         </td>
-                     </tr>
-                     <tr>
-                         <td><label>Warranty Period</label></td>
-                         <td> <input type="text" name="warranty" id="warranty" readonly /></td>
-                     </tr>
-                     <tr>
-                         <td><label>Term of Payment</label></td>
-                         <td> <input type="text" name="termPayment" id="termPayment" size="30" readonly /></td>
-                     </tr>
-                     <tr>
-                         <td><label>Term of Delivery</label></td>
-                         <td> <input type="text" name="termDelivery" id="termDelivery" size="30" readonly /></td>
-                     </tr>
-                     <tr>
-                         <td><label>Discount</label></td>
-                         <td> <input type="text" name="discount" id="discount" size="30" readonly /></td>
-                     </tr>
-                     <tr>
-                         <td><label>PPH</label></td>
-                         <td> <input type="text" name="pph" id="pph" size="30" readonly /></td>
-                     </tr>
-                     <tr>
-                         <td><label>PPN</label></td>
-                         <td> <input type="text" name="ppn" id="ppn" size="30" readonly /></td>
                      </tr>
                  </table>                                 
             </form>

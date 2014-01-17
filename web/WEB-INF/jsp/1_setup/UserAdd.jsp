@@ -158,12 +158,12 @@
                                 </tr>
                                 <tr>
                                 	<td class="style1">&nbsp;</td>
-                                    <td class="style1">Role Code</td>
+                                    <td class="style1">Role</td>
                                     <td class="style1">
                                         <select name="roleCode" id="roleCode">
                                             <c:forEach items="${model.roles}" var="role">
                                                 <option value="<c:out value="${role.roleCode}" />" <c:if test="${role.roleCode == model.dto.roleCode}">selected</c:if>>
-                                                    <c:out value="${role.roleCode}" />
+                                                    <c:out value="${role.roleName}" />
                                                 </option>
                                             </c:forEach>
                                         </select>

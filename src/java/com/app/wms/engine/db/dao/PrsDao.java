@@ -94,4 +94,9 @@ public interface PrsDao
 	public List<Prs> findWherePrsNumberNotInPO() throws PrsDaoException;
 	
 	public void update(Prs dto) throws PrsDaoException;
+        
+        /* FYA : 07 January 2014 */
+        public List<Prs> findByDepartment(String deptId);
+        
+        public List<Prs> findAllNotInCanvas();
 }

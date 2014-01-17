@@ -8,7 +8,7 @@
     </head>
     <body>
         <%
-        	com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch(); 
+            com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch(); 
             if (request.getSession().getAttribute("ProductSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("ProductSearch");
             }
@@ -64,6 +64,7 @@
                                 <td class="style1">Action</td>
                                 <td class="style1">Product Code</td>
                                 <td class="style1">Product Name</td>
+                                <td class="style1">Category</td>
                                 <td class="style1">Is Active</td>
                             </tr>
                         </thead>
@@ -89,21 +90,20 @@
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
                                         <td class="center" width="5%">
-                                        <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                        --%>    
                                             <a href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
                                         <td class="style1"><c:out value="${prod.productCode}"/></td>
                                         <td class="style1"><c:out value="${prod.productName}"/></td>
+                                        <td class="style1"><c:out value="${prod.productCategory}"/></td>
                                         <td class="center"><c:out value="${prod.isActive}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
                           <tr>
-                                <td colspan="5">
+                                <td colspan="6">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
                                             <a href="Product.htm?page=<c:out value="${model.page-1}" />">

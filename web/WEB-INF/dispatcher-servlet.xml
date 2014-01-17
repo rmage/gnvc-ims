@@ -1139,4 +1139,9 @@
     <bean name="/FishBs.htm" class="com.app.wms.web.controller.FishBadStockController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    
+    <!-- FYA : 07 January 2014 -->
+    <bean name="/Bap.htm" class="com.app.wms.web.controller.BeritaAcaraController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

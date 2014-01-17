@@ -18,18 +18,16 @@ import java.util.Map;
 
 public class ProductController extends MultiActionController 
 {
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-           
+    /**
+     * Method 'findByPrimaryKey'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -37,22 +35,18 @@ public class ProductController extends MultiActionController
                 m.put("mode", "edit");
                 return new ModelAndView("1_setup/ProductEdit", "model", m);
             } else {
-
                 m = this.searchAndPaging(request, response);
                 return new ModelAndView("1_setup/ProductList", "model", m);
             }
-
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView( "Error", "th", e );
         }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-	
-	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
 
+    }
+	
+    private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -78,6 +72,13 @@ public class ProductController extends MultiActionController
             
             ProductDao dao = DaoFactory.createProductDao();
             List<Product> listSearchPage = dao.findProductPaging(p,page);
+            
+            ProductCategoryDao productCategoryDao = DaoFactory.createProductCategoryDao();
+            for(Product x : listSearchPage) {
+                List<ProductCategory> pc = productCategoryDao.findWhereCategoryCodeEquals(x.getProductCategory());
+                x.setProductCategory(pc.isEmpty() ? "- product category not found -" : pc.get(0).getCategoryName());
+            }
+            
             int total = 2000; 
             m.put("product", listSearchPage);
             m.put("totalRows", total);
@@ -85,100 +86,98 @@ public class ProductController extends MultiActionController
             m.put("paging", paging);
 
             return m;
-
-		}catch (Exception e){
-			throw e;
-		}
-		
-	}
-	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-		try {
-		 //String productCode = request.getParameter("productCode");
-		 String productId = request.getParameter("productId");
-         System.out.println("productId="+productId);
-		 ProductDao dao = DaoFactory.createProductDao();
-         Product dto = new Product();
-
-         String mode = request.getParameter("mode");
-         if (mode != null && mode.equals("edit")) {
-             dto = dao.findByPrimaryKey(productId);
-            
-         }
-         if (dto.getProductCode() == null) {
-        	 
-             dto.setProductCode("");
-             dto.setProductName("");
-             dto.setProductAlias("");
-             dto.setBarCode("");
-             dto.setProductCategory("");
-             dto.setBrandName("");
-             dto.setProductType("");
-             dto.setProductColor("");
-             dto.setProductDescription("");
-             dto.setVolumeWeight("");
-             dto.setUnitWeight("");
-             dto.setUnitPiece(1);
-             dto.setVolumeMatrix("");
-             dto.setUnitHeight("");
-             dto.setUnitLength("");
-             dto.setUnitWidth("");
-             dto.setUnitBox(0);
-             dto.setUnitCartoon(0);
-             dto.setUnitPallete(0);
-             dto.setIsActive("Y");
-             dto.setIsDelete("N");
-         }
-         
-         if (dto.getProductCategory() != null || dto.getProductCode() != null || dto.getProductName() != null) {
-        	 System.out.println("dto ="+dto);
-             dto.setProductCode(dto.getProductCode());
-             dto.setProductName(dto.getProductName());
-             dto.setProductAlias(dto.getProductAlias());
-             dto.setBarCode(dto.getBarCode());
-             dto.setProductCategory(dto.getProductCategory());
-             dto.setBrandName(dto.getBrandName());
-             dto.setProductType(dto.getProductType());
-             dto.setProductColor(dto.getProductColor());
-             dto.setProductDescription(dto.getProductDescription());
-             dto.setVolumeWeight(dto.getVolumeWeight());
-             dto.setUnitWeight(dto.getUnitWeight());
-             dto.setUnitPiece(dto.getUnitPiece());
-             dto.setVolumeMatrix(dto.getVolumeMatrix());
-             dto.setUnitMatrix(dto.getUnitMatrix());
-             dto.setUnitHeight(dto.getUnitHeight());
-             dto.setUnitLength(dto.getUnitLength());
-             dto.setUnitWidth(dto.getUnitWidth());
-             dto.setUnitBox(dto.getUnitBox());
-             dto.setUnitCartoon(dto.getUnitCartoon());
-             dto.setUnitPallete(dto.getUnitPallete());
-             dto.setIsActive(dto.getIsActive());
-             dto.setIsDelete(dto.getIsDelete());
-         }
-         //edit
-         HashMap m = new HashMap();
-         ProductCategoryDao daoCategory = DaoFactory.createProductCategoryDao();
-         UomDao daoUoM = DaoFactory.createUomDao();
-         WarehouseDao daoWh = DaoFactory.createWarehouseDao();
-         SupplierDao daoSupp = DaoFactory.createSupplierDao();
- 		 
- 		 List<ProductCategory> dropListCategory = daoCategory.findAll();
- 		 List<Uom> dropListUOM = daoUoM.findAll();
- 		 List<Warehouse> dropListWh = daoWh.findAll();
- 		 List<Supplier> dropListSupplier = daoSupp.findAll();
- 		 
- 		 m.put("dropListCategory", dropListCategory);
-		 m.put("dropListUOM", dropListUOM);
-		 m.put("dropListWarehouse", dropListWh);
-		 m.put("dropListSupplier", dropListSupplier);
-         m.put("dto", dto);
-         
-         return m;
-         
-		} catch (Exception e) {
+        } catch (Exception e){
             throw e;
         }
-	}
+    }
+	
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
+            //String productCode = request.getParameter("productCode");
+            String productId = request.getParameter("productId");
+            System.out.println("productId="+productId);
+            ProductDao dao = DaoFactory.createProductDao();
+            Product dto = new Product();
+
+            String mode = request.getParameter("mode");
+            if (mode != null && mode.equals("edit")) {
+                dto = dao.findByPrimaryKey(productId);
+
+            }
+            if (dto.getProductCode() == null) {
+
+                dto.setProductCode("");
+                dto.setProductName("");
+                dto.setProductAlias("");
+                dto.setBarCode("");
+                dto.setProductCategory("");
+                dto.setBrandName("");
+                dto.setProductType("");
+                dto.setProductColor("");
+                dto.setProductDescription("");
+                dto.setVolumeWeight("");
+                dto.setUnitWeight("");
+                dto.setUnitPiece(1);
+                dto.setVolumeMatrix("");
+                dto.setUnitHeight("");
+                dto.setUnitLength("");
+                dto.setUnitWidth("");
+                dto.setUnitBox(0);
+                dto.setUnitCartoon(0);
+                dto.setUnitPallete(0);
+                dto.setIsActive("Y");
+                dto.setIsDelete("N");
+            }
+
+            if (dto.getProductCategory() != null || dto.getProductCode() != null || dto.getProductName() != null) {
+                System.out.println("dto ="+dto);
+                dto.setProductCode(dto.getProductCode());
+                dto.setProductName(dto.getProductName());
+                dto.setProductAlias(dto.getProductAlias());
+                dto.setBarCode(dto.getBarCode());
+                dto.setProductCategory(dto.getProductCategory());
+                dto.setBrandName(dto.getBrandName());
+                dto.setProductType(dto.getProductType());
+                dto.setProductColor(dto.getProductColor());
+                dto.setProductDescription(dto.getProductDescription());
+                dto.setVolumeWeight(dto.getVolumeWeight());
+                dto.setUnitWeight(dto.getUnitWeight());
+                dto.setUnitPiece(dto.getUnitPiece());
+                dto.setVolumeMatrix(dto.getVolumeMatrix());
+                dto.setUnitMatrix(dto.getUnitMatrix());
+                dto.setUnitHeight(dto.getUnitHeight());
+                dto.setUnitLength(dto.getUnitLength());
+                dto.setUnitWidth(dto.getUnitWidth());
+                dto.setUnitBox(dto.getUnitBox());
+                dto.setUnitCartoon(dto.getUnitCartoon());
+                dto.setUnitPallete(dto.getUnitPallete());
+                dto.setIsActive(dto.getIsActive());
+                dto.setIsDelete(dto.getIsDelete());
+            }
+            //edit
+            HashMap m = new HashMap();
+            ProductCategoryDao daoCategory = DaoFactory.createProductCategoryDao();
+            UomDao daoUoM = DaoFactory.createUomDao();
+            WarehouseDao daoWh = DaoFactory.createWarehouseDao();
+            SupplierDao daoSupp = DaoFactory.createSupplierDao();
+
+            List<ProductCategory> dropListCategory = daoCategory.findAll();
+            List<Uom> dropListUOM = daoUoM.findAll();
+//            List<Warehouse> dropListWh = daoWh.findAll();
+//            List<Supplier> dropListSupplier = daoSupp.findAll();
+
+            m.put("dropListCategory", dropListCategory);
+            m.put("dropListUOM", dropListUOM);
+//            m.put("dropListWarehouse", dropListWh);
+//            m.put("dropListSupplier", dropListSupplier);
+            m.put("dto", dto);
+
+            return m;
+         
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 	
 	/**
 	 * Method 'findAll'
@@ -204,10 +203,9 @@ public class ProductController extends MultiActionController
 		
 	}
 	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
-		HashMap m = new HashMap();
-		String productId = request.getParameter("productId");
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HashMap m = new HashMap();
+        String productId = request.getParameter("productId");
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         
         String createdBy = "";
@@ -215,14 +213,15 @@ public class ProductController extends MultiActionController
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	createdBy = (String)lu.getUserId();
+        } else {
+            createdBy = (String)lu.getUserId();
         }
        
         ProductDao dao = DaoFactory.createProductDao();
         Product dto = dao.findByPrimaryKey(productId);
         if (dto != null) {
             dto.setIsActive(AppConstant.STATUS_FALSE);
+            dto.setIsDelete("N");
             dto.setUpdatedBy(createdBy);
             dto.setUpdatedDate(new java.util.Date());
             dao.update(dto.createPk(), dto);
@@ -290,152 +289,146 @@ public class ProductController extends MultiActionController
 		
 	}
 	
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		Map map = new HashMap();
-		map = this.getModelByPrimaryKey(request);
-		map.put("mode", "create");		
-		
-		ProductDao dao = DaoFactory.createProductDao();
-		
-		return new ModelAndView( "1_setup/ProductAdd", "model", map);
-	}
+    /**
+     * Method 'create'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map map = new HashMap();
+        map = this.getModelByPrimaryKey(request);
+        map.put("mode", "create");		
+
+//        ProductDao dao = DaoFactory.createProductDao();
+
+        return new ModelAndView( "1_setup/ProductAdd", "model", map);
+    }
 
 	
-	/**
-	 * Method 'save'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
+    /**
+     * Method 'save'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        boolean isCreate = true;
+        String strError = "";
+        Date now = new Date();
+        java.lang.String mode = request.getParameter("mode");
+        Product dto = null;
+        StockInventory dtos = new StockInventory();
+        try {
+            if (mode.equalsIgnoreCase("create")) {
+                isCreate = true;
+            } else {
+                isCreate = false;
+            }
 
-      boolean isCreate = true;
-      String strError = "";
-      Date now = new Date();
-      java.lang.String mode = request.getParameter("mode");
-      Product dto = null;
-      StockInventory dtos = new StockInventory();
-      try {
-          if (mode.equalsIgnoreCase("create")) {
-              isCreate = true;
-          } else {
-              isCreate = false;
-          }
+            String productId = request.getParameter("productId");
+            ProductDao dao = DaoFactory.createProductDao();
+            StockInventoryDao daoinv = DaoFactory.createStockInventoryDao();
+            if (isCreate) {
+                    dto = new Product();
+            } else {
+                dto = dao.findByPrimaryKey(productId);
+            }
 
-          String productId = request.getParameter("productId");
-          ProductDao dao = DaoFactory.createProductDao();
-          StockInventoryDao daoinv = DaoFactory.createStockInventoryDao();
-          if (isCreate) {
-        	  dto = new Product();
-          } else {
-              dto = dao.findByPrimaryKey(productId);
-          }
-          
-          LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-          String userId = "";
-          if (lu == null) {
-        	  HashMap m = new HashMap();
-              String msg = "You haven't login or your session has been expired! Please do login again";
-              m.put("msg", msg);
-              return new ModelAndView("login", "model", m);
-          }else{
-        	  userId = (String)lu.getUserId();
-          }
-         
-          //String whCode = request.getParameter("warehouse");
-          String productCode = request.getParameter("productCode");
-          List<Product> tmp = dao.findWhereProductCodeEquals(productCode);
-          if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getProductCode().equals(productCode))) {
-	  		  strError += "Item code already exists. Please try a different values" + AppConstant.EOL;
-	  	  }
-          
-          String productName = request.getParameter("productName");
-          String barcode = request.getParameter("barcode");
-          String productCategory = request.getParameter("category");
-          //String brand = request.getParameter("brand");
-          //String productColor = request.getParameter("color");
-          //String productDescription = request.getParameter("description");
-          String pisActive = request.getParameter("isActive");
-          String uom = request.getParameter("uom");
-          //String supplier = request.getParameter("supplierName");
-          //String buyer = request.getParameter("buyer");
-          String packstyle = request.getParameter("packstyle");
-          String packsize = request.getParameter("packsize");
-          String lid = request.getParameter("lid");
-          String nwdwpw = request.getParameter("nwdwpw");
-          String cancode = request.getParameter("cancode");
-          
-          if (isCreate) {
-              dto.setCreatedBy(userId);
-              dto.setCreatedDate(now);
-          }
-          
-          dto.setProductCode(productCode);
-          dto.setWhCode("");
-          
-          /* auto insert to table stock inventory*/
-          dtos.setProductId(productId);
-          dtos.setProductCode(productCode);
-          dtos.setWhCode("");
-          dtos.setBalance(BigDecimal.ZERO);
-          /**************************************/
-          
-          dto.setProductName(productName);
-          String productAlias = productCode.concat(" - ").concat(productName);
-          dto.setProductAlias(productAlias);
-          dto.setBarCode(barcode);
-          dto.setProductCategory(productCategory);
-          dto.setBrandName("");
-          dto.setProductColor("");
-          dto.setProductDescription("");
-          dto.setIsActive(pisActive);
-          dto.setIsDelete("N");
-          dto.setUom(uom);
-          dto.setSupplier("");
-          dto.setBuyer("");
-          dto.setPackstyle(packstyle);
-          dto.setPacksize(packsize);
-          dto.setLid(lid);
-          dto.setNwdwpw(nwdwpw);
-          dto.setCanCode(cancode);
-          dto.setUserId(userId);
-          dto.setUpdatedBy(userId);
-          dto.setUpdatedDate(new java.util.Date());
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            String userId = "";
+            if (lu == null) {
+                HashMap m = new HashMap();
+                String msg = "You haven't login or your session has been expired! Please do login again";
+                m.put("msg", msg);
+                return new ModelAndView("login", "model", m);
+            } else{
+                userId = (String)lu.getUserId();
+            }
 
-          if (strError.length() > 0) {
-              throw new Exception(strError);
-          }
+            //String whCode = request.getParameter("warehouse");
+            String productCode = request.getParameter("productCode");
+            List<Product> tmp = dao.findWhereProductCodeEquals(productCode);
+            if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getProductCode().equals(productCode))) {
+                strError += "Item code already exists. Please try a different values" + AppConstant.EOL;
+            }
 
-          if (isCreate) {
-              dao.insert(dto);
-              daoinv.insert(dtos);
-          } 
-          
-          else {
-        	  dto.setIsActive(pisActive);
-              dto.setUpdatedBy(userId);
-              dto.setUpdatedDate(new java.util.Date());
-              dao.update(dto.createPk(), dto);
-              
-              daoinv.updateFromProduct(dtos.createPk(), dtos);
-          }
-		 
+            String productName = request.getParameter("productName");
+            String barcode = request.getParameter("barcode");
+            String productCategory = request.getParameter("category");
+            //String brand = request.getParameter("brand");
+            //String productColor = request.getParameter("color");
+            //String productDescription = request.getParameter("description");
+            String pisActive = request.getParameter("isActive");
+            String uom = request.getParameter("uom");
+            //String supplier = request.getParameter("supplierName");
+            //String buyer = request.getParameter("buyer");
+            String packstyle = request.getParameter("packstyle");
+            String packsize = request.getParameter("packsize");
+            String lid = request.getParameter("lid");
+            String nwdwpw = request.getParameter("nwdwpw");
+            String cancode = request.getParameter("cancode");
+
+            if (isCreate) {
+                dto.setCreatedBy(userId);
+                dto.setCreatedDate(now);
+            }
+
+            dto.setProductCode(productCode);
+            dto.setWhCode("");
+
+            /* auto insert to table stock inventory */
+            dtos.setProductId(productId);
+            dtos.setProductCode(productCode);
+            dtos.setWhCode("");
+            dtos.setBalance(BigDecimal.ZERO);
+            /**************************************/
+
+            dto.setProductName(productName);
+            String productAlias = productCode.concat(" - ").concat(productName);
+            dto.setProductAlias(productAlias);
+            dto.setBarCode(barcode);
+            dto.setProductCategory(productCategory);
+            dto.setBrandName("");
+            dto.setProductColor("");
+            dto.setProductDescription("");
+            dto.setIsActive(pisActive);
+            dto.setIsDelete("N");
+            dto.setUom(uom);
+            dto.setSupplier("");
+            dto.setBuyer("");
+            dto.setPackstyle(packstyle);
+            dto.setPacksize(packsize);
+            dto.setLid(lid);
+            dto.setNwdwpw(nwdwpw);
+            dto.setCanCode(cancode);
+            dto.setUserId(userId);
+            dto.setUpdatedBy(userId);
+            dto.setUpdatedDate(new java.util.Date());
+
+            if (strError.length() > 0) {
+                throw new Exception(strError);
+            }
+
+            if (isCreate) {
+                dao.insert(dto);
+                daoinv.insert(dtos);
+            }  else {
+                dto.setIsActive(pisActive);
+                dto.setUpdatedBy(userId);
+                dto.setUpdatedDate(new java.util.Date());
+                dao.update(dto.createPk(), dto);
+
+                daoinv.updateFromProduct(dtos.createPk(), dtos);
+            }
+
           return new ModelAndView("1_setup/ProductView", "dto", dto);
-
       } catch (Exception e) {
-    	  e.printStackTrace();
+          e.printStackTrace();
           String errorMsg = e.getMessage();
           HashMap m = this.getModelByPrimaryKey(request);
           m.put("mode", mode);
@@ -446,8 +439,7 @@ public class ProductController extends MultiActionController
           } else {
               return new ModelAndView("1_setup/ProductEdit", "model", m);
           }
-      }
-      
+      } 
   }
 	
 	
