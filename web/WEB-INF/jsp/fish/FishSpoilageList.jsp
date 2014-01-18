@@ -170,7 +170,15 @@
                                             <c:param name="format" value="pdf" />
                                             <c:param name="action" value="getFishSpoilageReport"/>
                                         </c:url>
-                                        <td class="center" width="5%">
+                                        
+                                        <c:url value="GenerateReport.htm" var="urlReportCSV">
+                                            <c:param name="action" value="index"/>
+                                            <c:param name="item" value="FSpoilagereport" />
+                                            <c:param name="type" value="csv" />
+                                            <c:param name="params" value="${spoilageData.vesselId}:${spoilageData.dateShift}:${spoilageData.timeShift}"/>
+                                        </c:url>
+                                        
+                                        <td class="center" width="10%">
                                         <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>

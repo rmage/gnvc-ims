@@ -3,9 +3,14 @@ package com.report.test;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import net.sf.jett.jdbc.ResultSetRow;
 
 import com.report.test.ReportFactory.Report;
 
@@ -29,6 +34,9 @@ public class ReportFactory {
 	
 	public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
 	public static final Map<Report, ReportModel> reportMap = new HashMap<Report, ReportModel>();
+
+	public static final Map<Report, ArrayList<String>> REPORT_COLUMN = new HashMap<Report, ArrayList<String>>();
+	public static final HashSet<String> IGNORED_COLUMN = new HashSet<String>();
 	
 	static {
 		reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
@@ -106,6 +114,8 @@ public class ReportFactory {
 		reportMap.put(Report.FGBadStockReport, reportTemplateMap.get("badStockCard"));
 		reportMap.put(Report.FGTunaVayaReport, reportTemplateMap.get("viandTunaInv"));
 		reportMap.put(Report.Accounting, reportTemplateMap.get("stockCardReport"));
+
+		IGNORED_COLUMN.add("index");
 	}	
 	
 	public static void main(String [] str){
@@ -128,7 +138,26 @@ public class ReportFactory {
 	}
 	
 	public static byte[] getReportCSV(Report reportType, List data, Map map) throws Exception{
-		return reportMap.get(reportType).getReportCSV(data, map);
+//		return reportMap.get(reportType).getReportCSV(data, map);
+    	String csv = "";
+    	List<ResultSetRow> m = (List<ResultSetRow>) data;
+    	if(m == null) m = (List<ResultSetRow>) map.get("data");
+    	List<String> column = REPORT_COLUMN.get(reportType);
+    	if(column ==  null){
+    		if(!m.isEmpty())	
+    			column = new ArrayList<String>(m.get(0).keySet());
+    	}
+		for(String c:column){
+			if(!IGNORED_COLUMN.contains(c))	csv += c+",";
+		}
+		csv += "\r\n";
+    	for(ResultSetRow r:m){
+    		for(String c:column){
+    			if(!IGNORED_COLUMN.contains(c))	csv += r.get(c)+",";
+    		}
+    		csv += "\r\n";
+    	}
+    	return csv.getBytes();
 	}
 
 	public static byte[] getReportHTML(Report reportType, List data, HashMap<String, Object> map) {

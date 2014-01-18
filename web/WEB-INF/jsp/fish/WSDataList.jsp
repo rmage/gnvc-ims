@@ -158,6 +158,13 @@
                                             <c:param name="action" value="getWsReportById"/>
                                         </c:url>
                                         
+                                        <c:url value="GenerateReport.htm" var="urlReportCSV">
+                                            <c:param name="action" value="index"/>
+                                            <c:param name="item" value="FWSNC" />
+                                            <c:param name="type" value="csv" />
+                                            <c:param name="params" value="${wsData.id}"/>
+                                        </c:url>
+                                        
                                         <td class="center" width="10%">
                                         <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
@@ -168,7 +175,9 @@
                                             <a href='<c:out value="${urlReportPDF}"/>'>
                                             	<img src="resources/images/print.jpg" width="16" height="16" alt="pdf" /></a>&nbsp;&nbsp;
                                             <a href='<c:out value="${urlReportXLS}"/>'>
-                                            	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>
+                                            	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>&nbsp;&nbsp;
+                                            <a href='<c:out value="${urlReportCSV}"/>'>
+                                            	<img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>
                                         </td>
                                         <td class="center"><a id="${wsData.id}" onclick="showDetails(this)"><c:out value="${wsData.wsNo}"/></a></td>
                                         <td class="center"><c:out value="${wsData.wsType.code}"/></td>

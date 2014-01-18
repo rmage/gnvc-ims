@@ -1,7 +1,6 @@
 package net.sf.jett.jdbc;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * A <code>ResultSetRow</code> contains data from one row of a
@@ -15,11 +14,11 @@ import java.util.Map;
  * @author Randy Gettman
  * @since 0.6.0
  */
-public class ResultSetRow extends HashMap<String, Object>
-{   
+public class ResultSetRow extends LinkedHashMap<String, Object>{   
 //   private Map<String, Object> myValues;
+   private static final long serialVersionUID = 7699390106122529953L;
 
-   /**
+/**
     * Constructs an empty <code>ResultSetRow</code>.
     */
    public ResultSetRow()
@@ -34,7 +33,8 @@ public class ResultSetRow extends HashMap<String, Object>
     */
    public void set(String property, Object value)
    {
-	   put(property.toLowerCase(), value);
+//	   myValues.put(property.toLowerCase(), value);
+	   super.put(property.toLowerCase(), value);
    }
 
    /**
@@ -45,6 +45,7 @@ public class ResultSetRow extends HashMap<String, Object>
     */
    public Object get(String property)
    {
-      return get(property.toLowerCase());
+//      return myValues.get(property.toLowerCase());
+	   return super.get(property.toLowerCase());
    }
 }

@@ -26,6 +26,57 @@ public class GenerateReportController extends MultiActionController {
 	public static final Map<Report, PostProcess> PostProcess = new HashMap<Report, PostProcess>();
 	
 	static {
+		ListMap.put(Report.FWS, 
+            "SELECT f.code AS kode, wdsd.description AS nama_barang, " +
+            "'FISH' AS tipe, wdsd.qty, wdsd.uom_code AS satuan " +
+            "FROM inventory..fish_wds_detail wdsd " +
+            "LEFT JOIN inventory..fish f ON f.id = wdsd.fish_id " +
+            "LEFT JOIN inventory..fish_storage fs ON fs.id = wdsd.storage_id " +
+            "WHERE wds_id=?");
+		ListMap.put(Report.FWSABF, null);
+		ListMap.put(Report.FWSBR, null);
+		ListMap.put(Report.FWSHR, null);
+		ListMap.put(Report.FWSL, null);
+		ListMap.put(Report.FWSNC, 
+            "SELECT f.code, SUM(wsd.total_weight) AS total_weight " +
+            "FROM inventory..fish_ws_detail wsd " +
+            "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id " +
+            "WHERE wsd.ws_id = ? " +
+            "GROUP BY f.code");
+		ListMap.put(Report.FRR, 
+            "SELECT MAX(ft.description) AS description, f.code, " +
+            "SUM(frd.good_weight) AS qty, 'Kg' AS unit " +
+            "FROM inventory..fish_rr_detail frd " +
+            "LEFT JOIN inventory..fish f ON f.id = frd.fish_id " +
+            "LEFT JOIN inventory..fish_type ft ON ft.id = f.fish_type_id " +
+            "WHERE frd.rr_id = ? " +
+            "GROUP BY f.code");
+		ListMap.put(Report.FTS, 
+            "SELECT tsd.description, f.code, " +
+            "tsd.qty, tsd.uom_code AS unit " +
+            "FROM inventory..fish_ts_detail tsd " +
+            "LEFT JOIN inventory..fish f ON f.id = tsd.fish_id " +
+            "LEFT JOIN inventory..fish_storage fs ON fs.id = tsd.storage_id " +
+            "WHERE ts_id=?");
+		
+		ListMap.put(Report.FSummaryWSSlip, 
+			"select ws.ws_no, s.name as supplier_name, v.name as boat_name, fs.raw_weight as spoilage, " +
+			"v.batch_no, ws.date_shift, ws.time_shift, f.code as type, wsd.total_weight as data " +
+			"from inventory..fish_ws ws " +
+			"left join inventory..fish_ws_detail wsd on wsd.ws_id = ws.id " +
+			"left join inventory..fish f on wsd.fish_id = f.id " +
+			"left join inventory..fish_vessel v on ws.vessel_id = v.id " +
+			"left join inventory..fish_supplier s on s.id = v.supplier_id " +
+			"left join inventory..fish_spoilage fs on v.id = fs.vessel_id " +
+			"where ws.vessel_id = ? AND ws.ws_type_id IN (?)");
+		ListMap.put(Report.FSpoilagereport, 
+			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
+			"FROM inventory..fish_spoilage fs " +
+			"LEFT JOIN inventory..fish f ON fs.fish_id = f.id " +
+			"LEFT JOIN inventory..fish_vessel fv ON fv.id = fs.vessel_id " +
+			"LEFT JOIN inventory..supplier s ON fv.supplier_id = s.id " +
+			"WHERE fv.id = ? AND fs.date_shift = ? AND fs.time_shift = ?");
+		
 		ListMap.put(Report.FMDailyProductionReport, null);
 		ListMap.put(Report.FGBOR, null);
 		ListMap.put(Report.FGTunaVayaReport, null);
@@ -62,13 +113,6 @@ public class GenerateReportController extends MultiActionController {
 			"WHERE fb.created_date >= ? AND fb.created_date <= ? " +
 			"GROUP BY fv.name"
 		});
-		ListMap.put(Report.FSpoilagereport, 
-			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
-			"FROM inventory..fish_spoilage fs " +
-			"LEFT JOIN inventory..fish f ON fs.fish_id = f.id " +
-			"LEFT JOIN inventory..fish_vessel fv ON fv.id = fs.vessel_id " +
-			"LEFT JOIN inventory..supplier s ON fv.supplier_id = s.id " +
-			"WHERE fv.id = ? AND fs.date_shift = ?");
 		
 		ListMap.put(Report.IMRR, 
 			"select * " +
@@ -76,17 +120,6 @@ public class GenerateReportController extends MultiActionController {
 			"LEFT JOIN goodreceive_detail grd ON gr.grnumber = grd.grnumber " +
 			"LEFT JOIN product p ON p.product_code = grd.productcode " +
 			"LEFT JOIN department d ON d.department_code = gr.department");
-		
-		ListMap.put(Report.FSummaryWSSlip, 
-			"select ws.ws_no, s.name as supplier_name, v.name as boat_name, fs.raw_weight as spoilage, " +
-			"v.batch_no, ws.date_shift, ws.time_shift, f.code as type, wsd.total_weight as data " +
-			"from inventory..fish_ws ws " +
-			"left join inventory..fish_ws_detail wsd on wsd.ws_id = ws.id " +
-			"left join inventory..fish f on wsd.fish_id = f.id " +
-			"left join inventory..fish_vessel v on ws.vessel_id = v.id " +
-			"left join inventory..fish_supplier s on s.id = v.supplier_id " +
-			"left join inventory..fish_spoilage fs on v.id = fs.vessel_id " +
-			"where ws.vessel_id = ? AND ws.ws_type_id IN (?)");
 		
 		ListMap.put(Report.FGEDS, 
 			"SELECT * " +
