@@ -16,7 +16,12 @@
         		$('#btnSearch').click(function() {
         			var batchNo = $('#queryBatchNo').val();
         			var dateShift = $('#queryDateShift').val();
-        			location.href = "FishSpoilageData.htm?search=true&batchNo="+batchNo+"&dateShift="+dateShift;
+                    if(dateShift != '') {
+                        location.href = "FishSpoilageData.htm?search=true&batchNo="+batchNo+"&dateShift="+dateShift;
+                    }
+                    else {
+                        location.href = "FishSpoilageData.htm?search=true&batchNo="+batchNo;
+                    }
         		});
         		
         		$('#queryDateShift').datepicker({                        
@@ -70,7 +75,7 @@
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
             String queryBatchNo = m.get("queryBatchNo") == null ? "" : (String) m.get("queryBatchNo");
-            Date queryDateShift = m.get("queryDateShift") == null ? new Date() : (Date) m.get("queryDateShift");
+            String queryDateShift = m.get("queryDateShift") == null ? "" : (String) m.get("queryDateShift");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -93,7 +98,7 @@
                                         Date Shift
                                     </td>
                                     <td>
-                                        <input type="text" id="queryDateShift" name="dateShift" value="<%=df.format(queryDateShift)%>"/>
+                                        <input type="text" id="queryDateShift" name="dateShift" value="<%=queryDateShift%>"/>
                                     </td>
                                 </tr>
                             </tbody>

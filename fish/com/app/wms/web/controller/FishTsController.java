@@ -53,12 +53,20 @@ private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             
             if(request.getParameter("search") != null) {
             	String tsNo = request.getParameter("tsNo");
-            	Date tsDate = df.parse(request.getParameter("tsDate"));
-            	fishTsList = dao.searchAndPaging(tsNo, tsDate, paging, offset);
-            	String querySearch = "&search=true&tsNo="+tsNo+"&tsDate="+df.format(tsDate);
-            	modelMap.put("querySearch", querySearch);
-            	modelMap.put("queryTsNo", tsNo);
-            	modelMap.put("queryTsDate", tsDate);
+                if(request.getParameter("tsDate") != null) {
+                    Date tsDate = df.parse(request.getParameter("tsDate"));
+                    fishTsList = dao.searchAndPaging(tsNo, tsDate, paging, offset);
+                    String querySearch = "&search=true&tsNo="+tsNo+"&tsDate="+df.format(tsDate);
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryTsNo", tsNo);
+                    modelMap.put("queryTsDate", df.format(tsDate));   
+                }
+                else {
+                    fishTsList = dao.searchAndPagingWithoutDate(tsNo, paging, offset);
+                    String querySearch = "&search=true&tsNo="+tsNo;
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryTsNo", tsNo);
+                }
             }
             else {
                 fishTsList = dao.findAllAndPaging(paging, offset);

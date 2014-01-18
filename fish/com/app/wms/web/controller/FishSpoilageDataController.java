@@ -49,12 +49,20 @@ public class FishSpoilageDataController extends MultiActionController {
             
             if(request.getParameter("search") != null) {
             	String batchNo = request.getParameter("batchNo");
-            	Date dateShift = df.parse(request.getParameter("dateShift"));
-            	spoilageList = dao.searchDistinctAndPaging(batchNo, dateShift, paging, offset);
-            	String querySearch = "&search=true&batchNo="+batchNo+"&dateShift="+df.format(dateShift);
-            	modelMap.put("querySearch", querySearch);
-            	modelMap.put("queryBatchNo", batchNo);
-            	modelMap.put("queryDateShift", dateShift);
+                if(request.getParameter("dateShift") != null) {
+                    Date dateShift = df.parse(request.getParameter("dateShift"));
+                    spoilageList = dao.searchDistinctAndPaging(batchNo, dateShift, paging, offset);
+                    String querySearch = "&search=true&batchNo="+batchNo+"&dateShift="+df.format(dateShift);
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryBatchNo", batchNo);
+                    modelMap.put("queryDateShift", df.format(dateShift));   
+                }
+                else {
+                    spoilageList = dao.searchDistinctAndPagingWithoutDate(batchNo, paging, offset);
+                    String querySearch = "&search=true&batchNo="+batchNo;
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryBatchNo", batchNo);
+                }
             }
             else {
                 spoilageList = dao.findAllDistinctAndPaging(paging, offset);

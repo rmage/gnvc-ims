@@ -187,7 +187,6 @@ public class FishTsDaoImpl extends AbstractDAO implements
 
 	@Override
 	public List<FishTs> searchAndPaging(String tsNo, Date tsDate, int limit, int offset) {
-		
 		String query = "DECLARE @LIMIT int, @OFFSET int " +
 				"SET @LIMIT = ? " +
 				"SET @OFFSET = ? " +
@@ -201,5 +200,20 @@ public class FishTsDaoImpl extends AbstractDAO implements
 		List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+tsNo+"%", tsDate);
 		return resultList;
 	}
+
+    public List<FishTs> searchAndPagingWithoutDate(String tsNo, int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"FROM inventory..fish_ts WHERE ts_no LIKE ?) " +
+				"AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+tsNo+"%");
+		return resultList;
+    }
 
 }

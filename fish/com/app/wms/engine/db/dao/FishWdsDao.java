@@ -10,5 +10,6 @@ public interface FishWdsDao extends GeneralDao<FishWds> {
 	public List<FishWds> findAllByWdsNo(String wdsNo);
 	public List<FishWds> findAllAndPaging(int limit, int offset);
 	public List<FishWds> searchAndPaging(String wdsNo, Date wdsDate, int limit, int offset);
+    public List<FishWds> searchAndPagingWithoutDate(String wdsNo, int limit, int offset);
 	public Boolean checkIsWdsNoExist(String wdsNo);
 }

@@ -53,12 +53,20 @@ public class FishRrController extends MultiActionController {
             
             if(request.getParameter("search") != null) {
             	String rrNo = request.getParameter("rrNo");
-            	Date rrDate = df.parse(request.getParameter("rrDate"));
-            	rrDataList = dao.searchAndPaging(rrNo, rrDate, paging, offset);
-            	String querySearch = "&search=true&rrNo="+rrNo+"&rrDate="+df.format(rrDate);
-            	modelMap.put("querySearch", querySearch);
-            	modelMap.put("queryRrNo", rrNo);
-            	modelMap.put("queryRrDate", rrDate);
+                if(request.getParameter("rrDate") != null) {
+                    Date rrDate = df.parse(request.getParameter("rrDate"));
+                    rrDataList = dao.searchAndPaging(rrNo, rrDate, paging, offset);
+                    String querySearch = "&search=true&rrNo="+rrNo+"&rrDate="+df.format(rrDate);
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryRrNo", rrNo);
+                    modelMap.put("queryRrDate", df.format(rrDate));
+                }
+                else {
+                    rrDataList = dao.searchAndPagingWithoutDate(rrNo, paging, offset);
+                    String querySearch = "&search=true&rrNo="+rrNo;
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryRrNo", rrNo);
+                }
             }
             else {
                 rrDataList = dao.findAllAndPaging(paging, offset);

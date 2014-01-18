@@ -11,13 +11,19 @@
         <script type="text/javascript">
         	$(document).ready(function() {
         		$('#queryWsDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });	
         		
         		$('#btnSearch').click(function() {
         			var wsNo = $('#queryWsNo').val();
         			var wsDate = $('#queryWsDate').val();
-        			location.href = "FishWs.htm?search=true&wsNo="+wsNo+"&wsDate="+wsDate;
+                    
+                    if(wsDate != '') {
+                        location.href = "FishWs.htm?search=true&wsNo="+wsNo+"&wsDate="+wsDate;   
+                    }
+                    else {
+                        location.href = "FishWs.htm?search=true&wsNo="+wsNo;
+                    }
         		});	
         		
         		$('#btnCleanFilter').click(function() {
@@ -56,7 +62,7 @@
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
             String queryWsNo = m.get("queryWsNo") == null ? "" : (String) m.get("queryWsNo");
-            Date queryWsDate = m.get("queryWsDate") == null ? new Date() : (Date) m.get("queryWsDate");
+            String queryWsDate = m.get("queryWsDate") == null ? "" : (String) m.get("queryWsDate");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -79,7 +85,7 @@
                                         Date
                                     </td>
                                     <td>
-                                        <input type="text" id="queryWsDate" name="wsDate" value="<%= df.format(queryWsDate)%>" />
+                                        <input type="text" id="queryWsDate" name="wsDate" value="<%=queryWsDate%>" />
                                     </td>
                                     <td colspan="2">
                                     </td>

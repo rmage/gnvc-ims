@@ -18,5 +18,6 @@ public interface FishSpoilageDao {
 	public List<FishSpoilage> findAllDistinct();
 	public List<FishSpoilage> findAllDistinctAndPaging(int limit, int offset);
 	public List<FishSpoilage> searchDistinctAndPaging(String batchNo, Date dateShift, int limit, int offset);
+    public List<FishSpoilage> searchDistinctAndPagingWithoutDate(String batchNo, int limit, int offset);
 	public List<FishSpoilage> findAllForReport(int vesselId, Date dateShift, String timeShift);
 }

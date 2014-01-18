@@ -186,4 +186,19 @@ public class FishBadStockDaoImpl extends AbstractDAO implements
 		return resultList;
 	}
 
+    public List<FishBadStock> searchAndPagingWithoutDate(String bsNo, int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int " +
+				"SET @LIMIT = ? " +
+				"SET @OFFSET = ? " +
+				"SELECT * FROM ( " +
+				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
+				"FROM inventory..fish_bad_stock WHERE bs_no LIKE ?) " +
+				"AS RowConstrainedResult " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"ORDER BY RowNum";
+		
+		List<FishBadStock> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+bsNo+"%");
+		return resultList;
+    }
+
 }

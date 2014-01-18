@@ -20,7 +20,12 @@
         		$('#btnSearch').click(function() {
         			var tsNo = $('#queryTsNo').val();
         			var tsDate = $('#queryTsDate').val();
-        			location.href = "FishTs.htm?search=true&tsNo="+tsNo+"&tsDate="+tsDate;
+                    if(tsDate != '') {
+                        location.href = "FishTs.htm?search=true&tsNo="+tsNo+"&tsDate="+tsDate;  
+                    }
+                    else {
+                        location.href = "FishTs.htm?search=true&tsNo="+tsNo;
+                    }
         		});	
         		
 				$('#btnAdd').click(function() {
@@ -71,7 +76,7 @@
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
             String queryTsNo = m.get("queryTsNo") == null ? "" : (String) m.get("queryTsNo");
-            Date queryTsDate = m.get("queryTsDate") == null ? new Date() : (Date) m.get("queryTsDate");
+            String queryTsDate = m.get("queryTsDate") == null ? "" : (String) m.get("queryTsDate");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -94,7 +99,7 @@
                                         Date
                                     </td>
                                     <td>
-                                        <input type="text" id="queryTsDate" name="tsDate" value="<%= df.format(queryTsDate)%>" />
+                                        <input type="text" id="queryTsDate" name="tsDate" value="<%=queryTsDate%>" />
                                     </td>
                                     <td colspan="2">
                                     </td>

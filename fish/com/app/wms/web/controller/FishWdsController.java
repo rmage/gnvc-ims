@@ -49,12 +49,20 @@ public class FishWdsController extends MultiActionController {
             
             if(request.getParameter("search") != null) {
             	String wdsNo = request.getParameter("wdsNo");
-            	Date wdsDate = df.parse(request.getParameter("wdsDate"));
-            	fishWdsList = dao.searchAndPaging(wdsNo, wdsDate, paging, offset);
-            	String querySearch = "&search=true&wdsNo="+wdsNo+"&wdsDate="+df.format(wdsDate);
-            	modelMap.put("querySearch", querySearch);
-            	modelMap.put("queryWdsNo", wdsNo);
-            	modelMap.put("queryWdsDate", wdsDate);
+                if(request.getParameter("wdsDate") != null) {
+                    Date wdsDate = df.parse(request.getParameter("wdsDate"));
+                    fishWdsList = dao.searchAndPaging(wdsNo, wdsDate, paging, offset);
+                    String querySearch = "&search=true&wdsNo="+wdsNo+"&wdsDate="+df.format(wdsDate);
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryWdsNo", wdsNo);
+                    modelMap.put("queryWdsDate", df.format(wdsDate));   
+                }
+                else {
+                    fishWdsList = dao.searchAndPagingWithoutDate(wdsNo, paging, offset);
+                    String querySearch = "&search=true&wdsNo="+wdsNo;
+                    modelMap.put("querySearch", querySearch);
+                    modelMap.put("queryWdsNo", wdsNo);
+                }
             }
             else {
                 fishWdsList = dao.findAllAndPaging(paging, offset);

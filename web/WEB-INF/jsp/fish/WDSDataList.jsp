@@ -15,13 +15,19 @@
         		});
         		
         		$('#queryWdsDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                    dateFormat: "dd/mm/yy"
                 });	
         		
         		$('#btnSearch').click(function() {
-        			var rrNo = $('#queryWdsNo').val();
-        			var rrDate = $('#queryWdsDate').val();
-        			location.href = "FishWds.htm?search=true&wdsNo="+rrNo+"&wdsDate="+rrDate;
+        			var wdsNo = $('#queryWdsNo').val();
+        			var wdsDate = $('#queryWdsDate').val();
+                    
+                    if(wdsDate != '') {
+                        location.href = "FishWds.htm?search=true&wdsNo="+wdsNo+"&wdsDate="+wdsDate;    
+                    }
+                    else {
+                        location.href = "FishWds.htm?search=true&wdsNo="+wdsNo;
+                    }
         		});	
         		
 				$('#btnAdd').click(function() {
@@ -72,7 +78,7 @@
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
             String queryWdsNo = m.get("queryWdsNo") == null ? "" : (String) m.get("queryWdsNo");
-            Date queryWdsDate = m.get("queryWdsDate") == null ? new Date() : (Date) m.get("queryWdsDate");
+            String queryWdsDate = m.get("queryWdsDate") == null ? "" : (String) m.get("queryWdsDate");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -95,7 +101,7 @@
                                         Date
                                     </td>
                                     <td>
-                                        <input type="text" id="queryWdsDate" name="wdsDate" value="<%= df.format(queryWdsDate)%>" />
+                                        <input type="text" id="queryWdsDate" name="wdsDate" value="<%=queryWdsDate%>" />
                                     </td>
                                     <td colspan="2">
                                     </td>
