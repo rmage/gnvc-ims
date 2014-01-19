@@ -12,7 +12,7 @@
             <script language="JavaScript">
                     $(document).ready(function(){
                                            
-                      $('#pickingAddForm').validationEngine('attach');     
+                      $('#grAddForm').validationEngine('attach');     
                       
                         $('#expirydate').datepicker({                        
                             dateFormat: "dd/mm/yy"                        
@@ -20,8 +20,8 @@
                         
                         
                         $("#list2").jqGrid({ url:'purchaseorderjson.htm', datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-                                colNames:['PO Number','Delivery Date', 'Created By'], 
-                                colModel:[ {name:'ponumber',index:'ponumber'}, {name:'deliverydate',index:'deliverydate'}, {name:'createdby',index:'createdby'}
+                                colNames:['PO Number','Delivery Date','Supplier','Created By'], 
+                                colModel:[ {name:'ponumber',index:'ponumber'}, {name:'deliverydate',index:'deliverydate'}, {name:'supplier',index:'supplier'},{name:'createdby',index:'createdby'}
                                      ], 
                                 sortname: 'ponumber',
                                 rowNum:10, rowList:[10,20,30], 
@@ -35,46 +35,106 @@
                                             
                                             // fill
                                             var localRowData = $(this).getRowData(ids); 
-                                            $("#purchaseNo").val(localRowData.ponumber);                                                                           
+                                            $("#purchaseNo").val(localRowData.ponumber);  
+                                            $("#supplier").val(localRowData.supplier);
+                                            
                                             $("#dialog2").dialog('close');                                            
                                             $.ajax({
-                                                dataType: 'json',
-                                                success: function(data) {
-                                                     $.each(data.poDetails, function(k,v){                                                         
-                                                        var rowCount = $('#main tr').length-1;
-                                                        
-                                                        $("<tr class=\"myhover\">"+
-										"<td class=\"style1\">"+rowCount+"</td>"+
-	                                    "<td class=\"style1\">"+v.productCode+" </td>"+
-	                                    "<input type=\"hidden\" name=\"productCode1\" value=\""+v.productCode+"\">"+
-	                                    "<td class=\"style1\">"+v.productName+"</td>"+
-	                                    "<td class=\"style1\">"+v.producttype+"<input type=\"hidden\" name=\"producttype\" value=\""+v.producttype+"\"></td>"+
-	                                    "<td class=\"style1\">"+v.qty+"</td>"+	                                   
-                                             "<td class=\"style1\"><span id=\""+rowCount+"-qtyreal\"></span> <input type=\"hidden\" name=\"status\" id=\""+rowCount+"-status1\" /> "+
-//                                             "<input type=\"hidden\" name=\"lotid\" id=\""+v.productCode+"-lotid\" />"+
-                                             "</td>"+
-                                             "<td class=\"style1\"><span id=\""+rowCount+"-qtygood\"></span> <input type=\"hidden\" name=\"qtyreal\" id=\""+rowCount+"-qtyreal1\" /></td>"+
-                                             "<td class=\"style1\"><span id=\""+rowCount+"-qtydmg\"></span> <input type=\"hidden\" name=\"remark\" id=\""+rowCount+"-remark1\" /> </td>"+
-                                             "<td class=\"style1\"> <span id=\""+rowCount+"-qtyplus\"></span> <input type=\"hidden\" name=\"expirydate\" id=\""+rowCount+"-expirydate1\" /> </td>"+
-                                             "<td class=\"style1\"><span id=\""+rowCount+"-qtyminus\"></span></td>"+
-                                             "<input type=\"hidden\" value=\"0\" name=\"qtygood\" id=\""+rowCount+"-qtygood1\" />"+
-                                             "<input type=\"hidden\" value=\"0\" name=\"qtydmg\" id=\""+rowCount+"-qtydmg1\" />"+
-                                              "<td class=\"style1\"><a class=\"check\" productCode=\""+v.productCode+"\" "+
-                                                    "productName=\""+v.productName+"\" rowCount=\""+rowCount+"\" qty=\""+v.qty+"\" href=\"javascript:void(0)\">Check</a></td>"+
-								    "</tr>").appendTo("#main tbody")
-                                                    });
-                                                },
-                                                url: 'purchaseorderdetailjson.htm?param='+localRowData.ponumber
-                                            });
-                                        } 
-                                },
-                                pager: '#pager2', sortname: 'id', viewrecords: true, sortorder: "desc"}); 
-                            jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
+                                              dataType: 'json',
+                                              success: function(data) {
+                                              $.each(data.poDetails, function(k,v){                                                         
+                                              var rowCount = $('#main tr').length-1;
+		                                        $("<tr class=\"myhover\">"+
+												"<td class=\"style1\">"+rowCount+"</td>"+
+			                                    "<td class=\"style1\">"+v.productCode+" </td>"+
+			                                    "<input type=\"hidden\" name=\"productCode1\" value=\""+v.productCode+"\">"+
+			                                    "<td class=\"style1\">"+v.productName+"</td>"+
+			                                    "<td class=\"style1\">"+v.qty+"</td>"+	                                   
+	                                            "<td class=\"style1\"><span id=\""+rowCount+"-qtyreal\"></span> <input type=\"hidden\" name=\"status\" id=\""+rowCount+"-status1\" /> "+
+	//                                             "<input type=\"hidden\" name=\"lotid\" id=\""+v.productCode+"-lotid\" />"+
+	                                            "</td>"+
+	                                            "<td class=\"style1\"><span id=\""+rowCount+"-qtygood\"></span> <input type=\"hidden\" name=\"qtyreal\" id=\""+rowCount+"-qtyreal1\" /></td>"+
+	                                            "<td class=\"style1\"><span id=\""+rowCount+"-qtydmg\"></span> <input type=\"hidden\" name=\"remark\" id=\""+rowCount+"-remark1\" /> </td>"+
+	                                            "<td class=\"style1\"> <span id=\""+rowCount+"-qtyplus\"></span> <input type=\"hidden\" name=\"expirydate\" id=\""+rowCount+"-expirydate1\" /> </td>"+
+	                                            "<td class=\"style1\"><span id=\""+rowCount+"-qtyminus\"></span></td>"+
+	                                            "<input type=\"hidden\" value=\"0\" name=\"qtygood\" id=\""+rowCount+"-qtygood1\" />"+
+	                                            "<input type=\"hidden\" value=\"0\" name=\"qtydmg\" id=\""+rowCount+"-qtydmg1\" />"+
+	                                            "<td class=\"style1\"><a class=\"check\" productCode=\""+v.productCode+"\" "+
+	                                            "productName=\""+v.productName+"\" rowCount=\""+rowCount+"\" qty=\""+v.qty+"\" href=\"javascript:void(0)\">Check</a></td>"+
+									    		"</tr>").appendTo("#main tbody")});
+                                            	},
+                                                	url: 'purchaseorderdetailjson.htm?param='+localRowData.ponumber
+                                            	});
+                                        	} 
+                                		},
+                                		pager: '#pager2', sortname: 'id', viewrecords: true, sortorder: "desc"}); 
+                            			jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
                         
-                      
-                    });
+                    					});
+            </script>
+            
+            
+            <script>
+            function formatCurrency(n) {
+            	n = isNaN(n) || n === '' || n === null ? 0.00 : n;
+    			return parseFloat(n).toFixed(2);
+    		}
+    		
+    		function numberWithCommas(n) {
+    			var parts=n.toString().split(".");
+    			return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+    		}
+        
+	       	function isNumberKey(evt)
+	       	{
+	    	   var charCode = (evt.which) ? evt.which : evt.keyCode;
 
+	    	   if(charCode==8 || charCode==13|| charCode==99|| charCode==118 || charCode==46)
+	    	     {    return true;  }
+	    	    if (charCode > 31 && (charCode < 48 || charCode > 57))
+	    	    {  return false; }
+	    	    return true;
 
+	       	}
+
+	       	
+	       	function changeQtyRealDecimal(){
+		       	a = $("#qtyreal").val();
+		       	b = formatCurrency(a);
+		       	c = numberWithCommas(b);
+
+		       	$("#qtyreal").val(c);
+		       	
+	       	}
+	       	
+	       	function changeQtyGoodDecimal(){
+		       	a = $("#qtygood").val();
+		       	b = formatCurrency(a);
+		       	c = numberWithCommas(b);
+
+		       	$("#qtygood").val(c);
+		       	$("#qtyreal").val($("#qtygood").val());
+	       	}
+	       	
+	       	function changeQtyDamageDecimal(){
+		       	a = $("#qtydmg").val();
+		       	b = formatCurrency(a);
+		       	c = numberWithCommas(b);
+
+		       	$("#qtydmg").val(c);
+		       	d = eval ($("#qtygood").val());
+		       	e = eval ($("#qtydmg").val());
+		       	f = d + e;
+		       	
+		       	$("#qtyreal").val(f);
+		       	
+		       	g = $("#qtyreal").val();
+		       	h = formatCurrency(g);
+		       	i = numberWithCommas(h);
+
+		       	$("#qtyreal").val(i);
+	       	}
+            
             </script>
         </head>
     </head>
@@ -99,26 +159,34 @@
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="goodReceiveAdd.htm" method="post" id="pickingAddForm">
+                    <form action="goodReceiveAdd.htm" method="post" id="grAddForm">
                         <input type="hidden" name="action" value="savePicking" />
 
                         <table class="collapse tblForm row-select">
                             <caption>Receiving Report - RR</caption>
-                            <tbody class="tbl-nohover">                               
-                               
-                               <%-- <tr class="detail_genap">
+                            <tbody class="tbl-nohover">    
+                            
+                              <tr class="detail_genap">
                                     <td>&nbsp;</td>
-                                    <td>GR Number</td>
+                                    <td width="20%">RR No.</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="grNumber1" id="grNumber1" value="<%= m.get("grNumber") %>" size="30" readonly/>
-                                            <input type="hidden" name="grNumber" id="grNumber" value="<%= m.get("grNumber") %>" />
+                                            <input type="text" name="rrNo" id="rrNo" value="" size="30" class="validate[required] text-input" />     
+                                        </label>
+                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                    </td>
+                                    <td>RR Date</td>
+                                    <td class="style1">
+                                        <label>
+                                            <input type="text" id="grreceivedate" name="grreceivedate" 
+                                                   
+                                                   value="<%= new SimpleDateFormat("dd/MM/yyyy").format(new Date()) %>"
+                                                   readonly
+                                                   size="30"/>
                                         </label>
                                     </td>
-                                    <td>&nbsp;</td>
-                                   
-                               </tr> --%>
-                                
+                               </tr>                           
+                               
                                <tr class="detail_genap">
                                     <td>&nbsp;</td>
                                      <td width="20%">Purchase Order No</td>
@@ -130,45 +198,23 @@
                                              <img width="16" height="16" src="resources/images/search.png" alt="Search Product" />
                                         </label>
                                     </td>
-                                    <td>Ws No</td>
+                                    <td>Supplier</td>
                                     <td class="style1">
-                                        <label>
-                                            <input type="text" name="wsNo" id="wsNo" value="" size="30" />     
+                                    	<label>
+                                            <input type="text" name="supplier" id="supplier" value="" size="30" />     
                                         </label>
                                     </td>
-                               </tr>
+                                </tr>
                                     
-                               <tr class="detail_genap">
-                                    <td>&nbsp;</td>
-                                    <td>Receiving Date</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" id="grreceivedate" name="grreceivedate" 
-                                                   
-                                                   value="<%= new SimpleDateFormat("dd/MM/yyyy").format(new Date()) %>"
-                                                   readonly
-                                                   size="30"/>
-                                            
-                                        </label>
-                                    </td>
-                                    <td>Batch No</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" id="lotid1" name="lotid1" value="<%= m.get("lotid") %>" size="30" readonly/>
-                                            <input type="hidden" id="lotid" name="lotid1" value="<%= m.get("lotid") %>" />
-                                        </label>
-                                    </td>
-                               </tr>
-                               
                                 <tr class="detail_genap">
                                     <td>&nbsp;</td>
-                                    <td width="20%">Department Name</td>
+                                    <td width="20%">Department</td>
                                     <td class="style1">
                                         <label>
 	                                        <select name="departmentName">
 	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListDepartment}">
-	                                        		  <option value="${droplist.departmentName}" ${(droplist.departmentName eq requestScope.model.departmentName)? "selected": ""}>
-	                                        		  	${droplist.departmentName}
+	                                        		  <option value="${droplist.departmentCode}" ${(droplist.departmentCode eq requestScope.model.departmentCode)? "selected": ""}>
+	                                        		  	${droplist.departmentCode} - ${droplist.departmentName}
 	                                        		  </option> 
 	                                        	</c:forEach>
 	                                        </select>
@@ -180,8 +226,8 @@
                                         <label>
 	                                        <select name="warehouse">
 	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListWarehouse}">
-	                                        		  <option value="${droplist.whName}" ${(droplist.whName eq requestScope.model.whName)? "selected": ""}>
-	                                        		  	${droplist.whName}
+	                                        		  <option value="${droplist.whCode}" ${(droplist.whCode eq requestScope.model.whCode)? "selected": ""}>
+	                                        		  	${droplist.whCode} - ${droplist.whName}
 	                                        		  </option> 
 	                                        	</c:forEach>
 	                                        </select>
@@ -192,16 +238,16 @@
                                 
                                <tr class="detail_genap">
                                     <td>&nbsp;</td>
-                                    <td width="20%">Received & Checked By</td>
+                                    <td width="20%">Received By</td>
+                                    <td class="style1">
+                                        <label>
+                                            <input type="text" name="receivedBy" id="receivedBy" value="" size="30" />     
+                                        </label>
+                                    </td>
+                                    <td>Checked By</td>
                                     <td class="style1">
                                         <label>
                                             <input type="text" name="checkedBy" id="checkedBy" value="" size="30" />     
-                                        </label>
-                                    </td>
-                                    <td>Accounting Entry</td>
-                                    <td class="style1">
-                                        <label>
-                                        	<textarea style="width: 374px; height: 71px;" id="accEntry" name="accEntry"></textarea>
                                         </label>
                                     </td>
                                </tr>
@@ -221,63 +267,32 @@
                                     </td>
                                </tr>
                                
-                               <tr class="detail_genap">
-                                    <td>&nbsp;</td>
-                                    <td width="20%">Unit Cost</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" name="unitCost" id="unitCost" value="" size="30" class="intValidate" />     
-                                        </label>
-                                    </td>
-                                    <td>Amount</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" name="amount" id="amount" value="" size="30" class="intValidate" />     
-                                        </label>
-                                    </td>
-                               </tr>
 			    		</tbody>
                   </table>
 
 						<table class="collapse tblForm row-select"  id="main">
-							<caption>Product - List</caption>
+							<caption>Item - List</caption>
 								<thead>
 								    <tr>
 										<td class="style1">No.</td>
-	                                    <td class="style1">Product Code </td>
-	                                    <td class="style1">Product Name</td>
-	                                    <td class="style1">Product Type</td> <!-- requested 28 jan 2013 -->
+	                                    <td class="style1">Item Code </td>
+	                                    <td class="style1">Item Name</td>
 	                                    <td class="style1">Qty</td>
-	                                                                                
-                                             <td class="style1">Qty Real</td>
-                                             <td class="style1">Qty Good</td>
-                                             <td class="style1">Qty Damaged</td>
-                                             <td class="style1">+</td>
-                                             <td class="style1">-</td>
-                                              <td class="style1">Action</td>
+                                        <td class="style1">Qty Received</td>
+                                        <td class="style1">Qty Good</td>
+                                        <td class="style1">Qty Damaged</td>
+                                        <td class="style1">+</td>
+                                        <td class="style1">-</td>
+                                        <td class="style1">Action</td>
 								    </tr>
 								</thead>
-
-                       
-                                            <tbody>									                                                                                                                                                     
-                                                                         <%-- <tr>
-										<td class="style1">1.</td>
-	                                    <td class="style1">001</td>
-	                                    <td class="style1">Lipstik Merah Delima</td>
-	                                    <td class="style1">20</td>
-	                                   
-                                            <td class="style1">Good</td>
-                                             <td class="style1">20</td>
-                                             <td class="style1">0</td>
-                                             <td class="style1">0</td>
-                                              <td class="style1"><a class="check" href="javascript:void(0)">Check</a></td>
-								    </tr>
-                                                                         --%>                                                                          
-                                            </tbody>
+                                <tbody>									                                                                                                                                                     
+                                                                                                
+                                </tbody>
 								
 	                            <tfoot><br/>
 	                                <tr>
-	                                    <td colspan="10"></td>
+	                                    <td colspan="9"></td>
 	                                    <td></td>
 	                                </tr>
 	                            </tfoot>
@@ -412,13 +427,13 @@
                                    $( this ).dialog( "close" );
                                }
                            },
-                        zindex: 9999, title: 'Set Product Status' });                     
+                        zindex: 9999, title: 'Set Item Status' });                     
                 });        
                 
                 $("#btnSavePurchase").click(function () {
                 
                     //if invalid do nothing
-                    if(!$("#pickingAddForm").validationEngine('validate')){
+                    if(!$("#grAddForm").validationEngine('validate')){
                             $("#dialog-incomplete").dialog({
                                 open: function () {
                                     $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
@@ -443,7 +458,7 @@
                                     $( this ).dialog( "close" );                                        
                             },
                             "Save": function() {                               
-                                $("form#pickingAddForm").submit();
+                                $("form#grAddForm").submit();
                     }           
                         },
                         zindex: 9999, title: 'Confirm' });
@@ -466,36 +481,36 @@
                          <td> <input type="text" name="qtypo" id="qtypo" readonly /></td>
                      </tr>
                      <tr>
-                         <td><label>Qty Real</label></td>
-                         <td> <input type="text" name="qtyreal2" id="qtyreal" value="0"
-                                     class="intValidate"
+                         <td><label>Qty Received</label></td>
+                         <td> <input type="text" name="qtyreal2" id="qtyreal" value="0.00"
+                                     onblur="changeQtyRealDecimal()"
+                                     onkeypress="return isNumberKey(event)"
+                                     readonly
+                                     /></td>
+                     </tr>
+                     <tr><td></td><td>----------------------------------</td></tr>
+                     <tr>
+                         <td><label>Qty Good</label></td>
+                         <td> <input type="text" name="qtygood2" id="qtygood" value="0.00" 
+                                     onblur="changeQtyGoodDecimal()"
+                                     onkeypress="return isNumberKey(event)" 
                                      /></td>
                      </tr>
                      <tr>
-                         <td><label>Qty Good</label></td>
-                         <td> <input type="text" name="qtygood2" id="qtygood" value="0" 
-                                     class="intValidate" /></td>
-                     </tr>
-                     <tr>
                          <td><label>Qty Damaged</label></td>
-                         <td> <input type="text" name="qtydmg2" id="qtydmg" value="0" 
-                                     class="intValidate" /></td>
+                         <td> <input type="text" name="qtydmg2" id="qtydmg" value="0.00" 
+                                     onblur="changeQtyDamageDecimal()"
+                                     onkeypress="return isNumberKey(event)"
+                                     /></td>
                      </tr>
                      <tr>
                          <td><label>Expiry Date</label></td>
                          <td> <input type="text" name="expirydate" id="expirydate" value="" /></td>
                      </tr>
-<!--                     <tr>
-                         <td><label>Status</label></td>
-                         <td> <input type="radio" name="status" value="Good" checked />&nbsp; Good &nbsp; &nbsp; &nbsp; 
-                             <input type="radio" name="status" value="Damaged" />&nbsp; Damaged </td>
-                     </tr>-->
                      <tr>
                          <td><label>Remark</label></td>
                          <td> <textarea type="text" name="remark" id="remark" value="" style="width: 178px; height: 80px;"></textarea></td>
                      </tr>    
-<!--                      <td><label>Lot Id</label></td>
-                         <td> <input type="text" value="" id="lotid" name="lotid" /></td>-->
                  </table>                                 
             </form>
         </div>
@@ -511,7 +526,7 @@
             Save Data?
         </div>
         <div id="dialog-incomplete" title="Product Search" style="display:none;z-index:1;">
-            Tolong Lengkapi Semua Data
+            Please to fill mandatory data
         </div>
         
     </body>

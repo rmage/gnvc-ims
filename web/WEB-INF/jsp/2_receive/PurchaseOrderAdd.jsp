@@ -32,73 +32,290 @@
 
 		       	}
 
-		       	function calSetPrice(){
-		    	   if (document.getElementById("isVat").value=='Y'){
-	                    document.getElementById("percentVat").value= 10;
-
-	                    a = eval( $("#qtypo").val() );
-						b = eval( $("#unitprice").val() );
-						c = a*b*10/100; 
-                        d = a*b-c;
-
-                        e = formatCurrency(d);
-                        f = numberWithCommas (e);
-                        
-						$("#amount").val(f);
-	                    
-	                } else {
-	                    document.getElementById("percentVat").value= 0;
-
-	                    a = eval( $("#qtypo").val() );
-						b = eval( $("#unitprice").val() );
-						c = a*b
-
-						d = formatCurrency(c);
-						e = numberWithCommas(d);
+		       	var t, a, d, hsd,p1, p2, i;//t=total,a=amount,d=discount,hsd=hargasetelahdiscount,hsdp1=hargasetelahdiscountdanppn,p1=ppn,p2=pph
+		       	function calSetTotal(){
+					if(document.getElementById("currency").value != ""){
 						
-						$("#amount").val(e);
-	                   
-	                }
-		      
-			   	}
+						   i = 0;
+						   //format unitprice and amount to decimal point eg: 2,000,000.00
+						   
+						   aa = formatCurrency($("#unitprice").val());
+						   bb = numberWithCommas (aa);
+						  // $("#unitprices").val(bb);
 
-				 function calSetAmount(){
-					 if (document.getElementById("isVat").value=='Y'){
-						 
-		                    
-		                    a = eval( $("#qtypo").val() );
-							b = eval( $("#unitprice").val() );
-							c = a*b*10/100; 
-	                        d = a*b-c;
-
-	                        e = formatCurrency(d);
-	                        f = numberWithCommas(e);
-	                        
-							$("#amount").val(f);
-
-							g = formatCurrency($("#unitprice").val());
-							h = numberWithCommas(g);
-							$("#unitprice").val(h);
-							
-		                } else {
-		                   
-		                    a = eval( $("#qtypo").val() );
-							b = eval( $("#unitprice").val() );
-							c = a*b
-
-	                        d = formatCurrency(c);
-	                        e = numberWithCommas(d);
-							
-							$("#amount").val(e);
-
-							f = formatCurrency($("#unitprice").val());
-							g = numberWithCommas (f);
-							$("#unitprice").val(g);
-
-		                }		
+						   cc = formatCurrency($("#amount").val());
+						   dd = numberWithCommas (cc);
+						  // $("#amounts").val(dd);
+						   ee = dd;
+						   //
+						   
+						   if($("#discount").val() > i){
+							   
+							   adisc = eval ( $("#amounts").val() );
+							   bdisc = eval ( $("#discount").val() );
+							   cdisc = adisc * bdisc/100 ;
+							   ddisc = adisc - cdisc ;
 	
-				 }	 
-			   
+							   edisc = formatCurrency(ddisc);
+		                       fdisc = numberWithCommas (edisc);
+
+							   d = cdisc;
+							   a = fdisc;
+
+							   console.log("potongan discount = "+d);
+							   console.log("harga setelah discount = "+a);
+
+							   $("#adisc").val(a);
+							   t = a;
+							   hsd = a;
+							   
+						   }else{
+
+							   gnodisc = eval ( $("#amounts").val() );
+							   hnodisc = formatCurrency(gnodisc);
+		                       inodisc = numberWithCommas (hnodisc);
+
+							   $("#disc").val(i);
+							   a = inodisc;
+							   console.log("harga tanpa discount = "+a);
+							   t = a;
+						   }
+
+						
+						   if($("#ppn").val() > i && $("#discount").val() > i){
+
+							   x = a.replace(",", "");
+							   y = x.replace(",","");
+							   appn = eval(y);
+							   bppn = eval( $("#ppn").val() );
+							   cppn = eval ( $("#amounts").val() );
+
+							   dppn = cppn * bppn/100 ;
+							   eppn = appn + dppn;
+
+							   fppn = formatCurrency(eppn);
+							   gppn = numberWithCommas(fppn);
+
+							   $("#pn").val(gppn);
+
+							   p1 = dppn;
+							   a = gppn;
+
+							   console.log("dikenakan ppn = "+p1);
+							   console.log("harga setelah discount + ppn = "+a);
+
+							   $("#appn1").val(a);
+							   
+							   t = a;
+							  
+						   }else if ($("#ppn").val() > i && $("#discount").val() == i){
+							   
+							   x = a.replace(",", "");
+							   y = x.replace(",","");
+							   appn = eval(y);
+							   bppn = eval( $("#ppn").val() );
+							   cppn = eval ( $("#amounts").val() );
+
+							   dppn = cppn * bppn/100 ;
+							   eppn = cppn + dppn;
+							   
+							   fppn = formatCurrency(eppn);
+							   gppn = numberWithCommas(fppn);
+
+							   $("#pn").val(gppn);
+							   
+							   p1 = dppn;
+							   w  = cppn + p1;
+							   a  = gppn;
+							   
+							   console.log("dikenakan ppn = "+p1);
+                               console.log("harga setelah ppn = "+a);
+
+							   $("#appn1").val(a);
+							   
+							   t = a;
+							   
+						   }
+
+						   if($("#pph").val() > i && $("#ppn").val() > i && $("#discount").val() > i){
+
+							   x = hsd.replace(",", "");
+							   y = x.replace(",","");
+							   apph = eval(y);
+							   bpph = eval( $("#pph").val() );
+							   cpph = eval ( $("#amounts").val() );
+							   
+							   z1 = $("#appn1").val();
+							   x2 = z1.replace(",", "");
+							   y2 = x2.replace(",","");
+							   z2 = eval (y2);//z2 = harga setelah discount dan ppn
+							   
+							   console.log("z2 ="+z2);
+							   
+							   dpph = apph * bpph/100 ;
+							   epph = z2 - dpph;
+							   
+							   fpph = formatCurrency(epph);
+							   gpph = numberWithCommas(fpph);
+
+							   $("#ph").val(gpph);
+
+							   p2 = dpph;
+							   a = gpph;
+
+							   console.log("dikenakan pph = "+p2);
+							   console.log("harga setelah discount + ppn + pph = "+a);
+
+							   $("#apph1").val(a);
+							   
+							   t = a;
+
+						   }else if ($("#pph").val() > i && $("#ppn").val() > i && $("#discount").val() == i){
+							
+							   am = eval ( $("#amounts").val() ); 
+							   x = a.replace(",", "");
+							   y = x.replace(",","");
+							   appn = eval(y);
+							   bppn = eval( $("#ppn").val() );
+							   cppn = eval ( $("#amounts").val() );
+
+							   dppn = cppn * bppn/100 ;
+							   eppn = cppn + dppn;
+							   
+							   fppn = formatCurrency(eppn);
+							   gppn = numberWithCommas(fppn);
+
+							   $("#pn").val(gppn);
+							   
+							   p1 = dppn;
+							   w  = cppn + p1;
+							   a  = gppn;
+							   
+							   console.log("dikenakan ppn = "+p1);
+                               console.log("harga setelah ppn = "+a);
+
+							   $("#appn1").val(a);
+							   
+							   x = a.replace(",", "");
+							   y = x.replace(",","");
+							   appn = eval(y);
+							   bppn = eval( $("#pph").val() );
+							   cppn = eval ( $("#amounts").val() );
+
+							   dppn = cppn * bppn/100 ;
+							   eppn = appn - dppn;
+
+							   fppn = formatCurrency(eppn);
+							   gppn = numberWithCommas(fppn);
+
+							   $("#ph").val(gppn);
+
+							   p2 = dppn;
+							   a = gppn;
+
+							   console.log("dikenakan pph = "+p2);
+							   console.log("harga setelah ppn + pph = "+a);
+
+							   $("#apph1").val(a);
+							   
+							   t = a;
+							   
+						   }else if ($("#pph").val() > i && $("#ppn").val() == i && $("#discount").val() == i){
+							   
+							   amount = eval ( $("#amounts").val() );
+							   apph = eval( $("#pph").val() );
+							   bpph = amount * apph/100;
+							   
+							   p2 = bpph;
+							   afterpph = amount - p2;
+							   
+							   fppn = formatCurrency(afterpph);
+							   gppn = numberWithCommas(fppn);
+							   
+							   a = gppn;
+							   
+							   console.log("dikenakan pph = "+p2);
+							   console.log("harga setelah pph = "+a);
+							   
+							   $("#apph1").val(a);
+							   
+							   t = a ;
+							   
+						   }
+							else if ($("#pph").val() > i && $("#ppn").val() == i && $("#discount").val() > i){
+								
+							   fc = formatCurrency(d);
+							   nwc= numberWithCommas(fc);
+						   	   $("#disc").val(nwc);
+							  
+						   	   adisc = $("#adisc").val();
+							   xdd = adisc.replace(",", "");
+							   ydd = xdd.replace(",","");
+							   add = ydd;
+							   
+							   console.log("harga setelah discount sebelum pph = "+ydd);
+
+							   apph = eval( $("#pph").val() );
+							   bpph = ydd * apph/100;
+							   
+							   p2 = bpph;
+							   afterpph = add - p2;
+							   
+							   fppn = formatCurrency(afterpph);
+							   gppn = numberWithCommas(fppn);
+							   
+							   a = gppn;
+							   
+							   console.log("dikenakan pph = "+p2);
+							   console.log("harga setelah discount + pph = "+a);
+							   
+							   $("#apph1").val(a);
+							   
+							   t = a ;
+							   
+						   }
+						    
+						   	console.log("discount ="+d);
+						   	//format discount to decimal point
+							fc = formatCurrency(d);
+							nwc= numberWithCommas(fc);
+						   	$("#disc").val(nwc);
+							//
+						   	
+						   	console.log("ppn ="+p1);
+						   	//format ppn to decimal point
+						   	fc2 = formatCurrency(p1);
+						    nwc2= numberWithCommas(fc2);
+						    $("#ppn1").val(nwc2);
+
+						    console.log("pph ="+p2);
+						   	//format pph to decimal point
+						   	fc3 = formatCurrency(p2);
+						    nwc3= numberWithCommas(fc3);
+						    $("#pph1").val(nwc3);
+							
+						   	$("#totals").val(t);
+						   	
+						    console.log("!!! total (t)="+t);
+						    
+						    /*
+						     already testing for this condition
+							    if(discount >0), ok
+								if(discount >0 && ppn>0),ok
+								if(discount == 0 && ppn>0),ok
+								if(discount >0 && ppn == 0),ok
+								if(discount >0 && ppn>0 && pph>0),ok
+								if(discount == 0 && ppn>0 && pph>0),ok
+						    */
+						    
+					}else{
+						//this is just copying fuction above, else if no currency selected
+						
+						
+					}		
+			    }   	
+
+				
     		</script>
     		
             <script language="JavaScript">
@@ -107,10 +324,10 @@
                     $('#purchaseAddForm').validationEngine('attach');        
                     
 	                    $("#list3").jqGrid({ url:'prsjson.htm', datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-	                        colNames:['PRS Number','PRS Date', 'Delivery Date', 'Department Name','Supplier Name', 'Remarks', 'Created By'], 
+	                        colNames:['PRS Number','PRS Date', 'Date Needed', 'Department','Supplier Name', 'Remarks', 'Created By'], 
 	                        colModel:[ {formoptions:{colpos:1,rowpos:1},name:'prsnumber',index:'prsnumber',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}}, 
 	       	                           {formoptions:{colpos:1,rowpos:1},name:'prsdate',index:'prsdate',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}}, 
-	       	                           {formoptions:{colpos:1,rowpos:1},name:'deliverydate',index:'deliverydate',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}}, 
+	       	                           {formoptions:{colpos:1,rowpos:1},name:'requestdate',index:'requestdate',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}}, 
 	                                   {formoptions:{colpos:1,rowpos:1},name:'departmentname',index:'departmentname',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}},
 	                                   {formoptions:{colpos:1,rowpos:1},name:'suppliername',index:'suppliername',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}},
 	                                   {formoptions:{colpos:1,rowpos:1},name:'remarks',index:'remarks',width:100, editable:true, editoptions:{readonly:false, size:30}, editrules:{required:true}, searchoptions:{sopt:['eq','ne','bw','ew','bn','en','cn','nc','in','ni']}},
@@ -130,7 +347,7 @@
 	                                var localRowData = $(this).getRowData(ids); 
 	                                $("#prsnumber").val(localRowData.prsnumber);
 	                                $("#prsdate").val(localRowData.prsdate);
-	                                $("#deliverydate").val(localRowData.deliverydate);
+	                                $("#requestdate").val(localRowData.requestdate);
 	                                $("#departmentname").val(localRowData.departmentname);
 	                                $("#suppliername").val(localRowData.suppliername);
 	                                $("#remarks").val(localRowData.remarks);
@@ -140,6 +357,26 @@
                                 success: function(data) {
                                 $.each(data.prsDetails, function(k,v){                                                         
                                 var rowCount = $('#main tr').length-1;
+                                var vunitprice, vamount;
+                                
+                                function formatCurrency(n) {
+                                	n = isNaN(n) || n === '' || n === null ? 0.00 : n;
+                        			return parseFloat(n).toFixed(2);
+                        		}
+                        		
+                        		function numberWithCommas(n) {
+                        			var parts=n.toString().split(".");
+                        			return parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (parts[1] ? "." + parts[1] : "");
+                        		}
+                                
+                        		x = formatCurrency(v.unitprice);
+                        		y = numberWithCommas (x);
+                        		vunitprice = y;
+                        		
+                        		xx = formatCurrency(v.amount);
+                        		yy = numberWithCommas (xx);	
+                        		vamount = yy;
+                                
                                 $("<tr class=\"myhover\">"+
 								"<td class=\"style1\">"+rowCount+"</td>"+
                             	"<input type=\"hidden\" name=\"productCode1\" value=\""+v.productcode+"\">"+
@@ -148,18 +385,31 @@
                             	"<td class=\"style1\">"+v.productname+"</td>"+
                             	"<td class=\"style1\">"+v.uom+"</td>"+	                                                                                                                                                 
                             	"<td class=\"style1\">"+v.qty+"</td>"+ 
-                            	"<td class=\"style1\"><span id=\""+rowCount+"-currency2\"></span> <input type=\"hidden\" name=\"currency1\" id=\""+rowCount+"-currency1\" /></td> "+                                                                                                              
-                            	"<td class=\"style1\"><span id=\""+rowCount+"-unitprice2\"></span> <input type=\"hidden\" name=\"unitprice1\" id=\""+rowCount+"-unitprice1\" /></td> "+                                
-                            	"<td class=\"style1\"><span id=\""+rowCount+"-amount2\"></span> <input type=\"hidden\" name=\"amount1\" id=\""+rowCount+"-amount1\" /></td> "+
-                            	"<td class=\"style1\"><span id=\""+rowCount+"-ppn2\"></span> <input type=\"hidden\" name=\"ppn1\" id=\""+rowCount+"-ppn1\" /> <input type=\"hidden\" name=\"remarks21\" id=\""+rowCount+"-remarks21\" /></td> "
+                            	"<td class=\"style1\">"+v.warranty+"<input type=\"hidden\" name=\"warranty\" value=\""+v.warranty+"\" id=\"warranty\"></td> "+
+                            	"<td class=\"style1\">"+v.termpayment+"<input type=\"hidden\" name=\"termpayment\" value=\""+v.termpayment+"\" id=\"termpayment\"></td> "+
+                            	"<td class=\"style1\">"+v.termdelivery+"<input type=\"hidden\" name=\"termdelivery\" value=\""+v.termdelivery+"\" id=\"termdelivery\"></td> "+
+                            	"<td class=\"style1\"><span id=\""+rowCount+"-currency2\"></span> <input type=\"hidden\" name=\"currency1\" id=\""+rowCount+"-currency1\" /></td> "+
+                            	
+                            	"<td class=\"style1\">"+vunitprice+"<input type=\"hidden\" name=\"unitprice\" value=\""+v.unitprice+"\" id=\"unitprice\"></td> "+
+                            	//"<td class=\"style1\">"+vunitprice+"<span id=\""+rowCount+"-unitprice2\"></span> <input type=\"hidden\" name=\"unitprice\" value=\""+v.unitprice+"\" id=\""+rowCount+"-unitprice\" /></td> "+
+                            	
+                            	"<td class=\"style1\">"+vamount+"<input type=\"hidden\" name=\"amount\" value=\""+v.amount+"\" id=\"amount\"></td> "+
+                            	//"<td class=\"style1\">"+vamount+"<span id=\""+rowCount+"-amount2\"></span> <input type=\"hidden\" name=\"amount\" value=\""+v.amount+"\" id=\""+rowCount+"-amount\" /></td> "+
+                            	
+                            	
+                            	"<td class=\"style1\">"+v.discount+"<input type=\"hidden\" name=\"discount\" value=\""+v.discount+"\" id=\"discount\"></td> "+
+                            	"<td class=\"style1\">"+v.pph+"<input type=\"hidden\" name=\"pph\" value=\""+v.pph+"\" id=\"pph\"></td> "+
+                            	"<td class=\"style1\">"+v.ppn+"<input type=\"hidden\" name=\"ppn\" value=\""+v.ppn+"\" id=\"ppn\"></td> "+
+                            	"<td class=\"style1\"><span id=\""+rowCount+"-total2\"></span><input type=\"hidden\" name=\"total1\" id=\""+rowCount+"-total1\" /></td> "+
+                            	" <input type=\"hidden\" name=\"remarks21\" id=\""+rowCount+"-remarks21\" /></td> "
                                 +"<td class=\"style1\"><a class=\"check\" productCode=\""+v.productcode+"\" "
                                 +"productName=\""+v.productname+"\" "
                                 +"uom=\""+v.uom
-                                +"\" rowCount=\""+rowCount+"\" qty=\""+v.qty+"\" href=\"javascript:void(0)\">Entry</a></td>"+
+                                +"\" rowCount=\""+rowCount+"\" qty=\""+v.qty+"\" unitprice=\""+v.unitprice+"\" amount=\""+v.amount+"\" href=\"javascript:void(0)\">Entry</a></td>"+
 							    "</tr>").appendTo("#main tbody")
                                 });
                                 },
-                                  url: 'prsdetailjson.htm?param='+localRowData.prsnumber
+                                  url: 'prsdetailjson.htm?param='+localRowData.prsnumber+'&supplier='+localRowData.suppliername
                                 });
 	                            } 
 	                        },
@@ -307,7 +557,7 @@
   		    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MM yyyy");
   		    com.app.wms.engine.db.dto.map.LoginUser l = (com.app.wms.engine.db.dto.map.LoginUser) request.getSession().getAttribute("user");
   		    boolean isReadOnly = true;
-  		    java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
+  		    java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         %>
 
 
@@ -364,29 +614,9 @@
                                     </td>
                                </tr>
                                
-                               <tr class="detail_genap">
+                                <tr class="detail_genap">
                                     <td>&nbsp;</td>
-                                    <td>Estimation Delivery Date</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" id="deliverydate" name="deliverydate" value="" size="30"
-                                              readonly />
-                                        </label>
-                                    </td>
-                                     <td>&nbsp;</td>
-                                    <td width="20%">Supplier Name</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" id="suppliername" name="suppliername" value="" size="30"
-                                              readonly />
-                                        </label>
-                                    </td>
-                                    
-                               </tr>
-                                    
-                               <tr class="detail_genap">
-                                    <td>&nbsp;</td>
-                                    <td>Department Name</td>
+                                    <td>Department</td>
                                     <td class="style1">
                                         <label>
                                             <input type="text" id="departmentname" name="departmentname" value="" size="30"
@@ -394,24 +624,27 @@
                                         </label>
                                     </td>
                                      <td>&nbsp;</td>
-                                    <td width="20%">Remarks PRS</td>
-                                    <td class="style1">
-                                    	<label>
-                                           <textarea style="width: 374px; height: 51px;" id="remarks" name="remarks" readonly></textarea>
+                                    <td width="20%">Date Needed</td>
+                                     <td class="style1">
+                                        <label>
+                                            <input type="text" id="requestdate" name="requestdate" value="" size="30"
+                                              readonly />
+                                              <input type="hidden" id="suppliername" name="suppliername" value="" size="30"/>
                                         </label>
                                     </td>
+                                    
                                </tr>
                                
 			    		</tbody>                           
                   </table>
 
 				  <table class="collapse tblForm row-select"  id="main">
-							<caption>Product - List</caption>
+							<caption>Item - List</caption>
 								<thead>
 								    <tr>
 										<td class="style1">No.</td>
-	                                    <td class="style1">Product </td>
-	                                    <td class="style1">UoM</td>
+	                                    <td class="style1">Item</td>
+	                                    <td class="style1">Unit</td>
 	                                    <td class="style1">Qty</td>
 	                                    <td class="style1">Warranty</td>
 	                                    <td class="style1">Term of Payment</td>
@@ -419,10 +652,10 @@
 	                                    <td class="style1">Currency</td>
 	                                    <td class="style1">Unit Price</td>
 	                                    <td class="style1">Amount</td>
-	                                    <td class="style1">Discount</td>
+	                                    <td class="style1">Disc %</td>
 	                                    <td class="style1">PPH %</td>
 	                                    <td class="style1">PPN %</td>
-	                                    <td class="style1">Supplier</td>
+	                                    <td class="style1">Total</td>
 	                                    <td class="style1">Action</td>
 								    </tr>
 								</thead>
@@ -512,15 +745,33 @@
       			$('.check').live("click", function() {
 
       				// clear values
-                    $("#unitprice").val("0");
-	                $("#amount").val("0");
+      				$("#unitprices").val("0.00");
+      				$("#amounts").val("0.00");
+      				
+                    $("#disc").val("0.00");
+                    $("#adisc").val("0.00");
+                    
+                    $("#ppn1").val("0.00");
+                    $("#appn1").val("0.00");
+                    
+                    $("#pph1").val("0.00");
+                    $("#apph1").val("0.00");
+	                $("#totals").val("0.00");
                     $('#remarks2').val(''); 
 
                     // setup values
                     $('#productCode').val($(this).attr('productCode'));                        
                     $('#productName').val($(this).attr('productName')); 
                     $('#UoM').val($(this).attr('uom'));      
-                    $('#qtypo').val($(this).attr('qty'));                     
+                    $('#qtypo').val($(this).attr('qty'));   
+                    $('#warrantys').val($('#warranty').val());  
+                    $('#termpayments').val($('#termpayment').val());  
+                    $('#termdeliverys').val($('#termdelivery').val());  
+                    $('#unitprices').val($(this).attr('unitprice')); 
+                    $('#amounts').val($(this).attr('amount'));  
+                    $('#discounts').val($('#discount').val());  
+                    $('#pphs').val($('#pph').val());  
+                    $('#ppns').val($('#ppn').val());  
                     
                     var productCode = $(this).attr('rowcount');
                     var qty = $(this).attr('qty');
@@ -528,32 +779,32 @@
                            buttons: {
                                "Cancel": function() {     
 
-					                   $("#unitprice").val("0");
-					                   $("#amount").val("0");    			                              
+					                  // $("#unitprice").val("0");
+					                   //$("#amount").val("0");    			                              
                                        $( this ).dialog( "close" );                                        
                                },
                                "Save": function() { 
-
+								   /*
 								   if( $("#unitprice").val() == "0" ||  $("#amount").val() == "0" ){
 										alert("data empty : 'please to entry unit price' ");
 										return false;
 								   }
+									*/
+									
+                            	   if( $("#currency").val() == ""){
+										alert("data mandatory : 'please to entry the currency");
+										return false;
+								   }
 
+									   $("#"+productCode+"-total2").html($('#totals').val());
 								   	   $("#"+productCode+"-currency2").html($('#currency').val());
-	                            	   $("#"+productCode+"-unitprice2").html($('#unitprice').val());
-	                            	   $("#"+productCode+"-amount2").html($('#amount').val());
-	                            	   $("#"+productCode+"-ppn2").html($('#percentVat').val());
 	                                   $("#"+productCode+"-remarks21").html($('#remarks2').val());
 
+	                                   $("#"+productCode+"-total2").val($('#totals').val());
 	                                   $("#"+productCode+"-currency2").val($('#currency').val());
-	                                   $("#"+productCode+"-unitprice2").val($('#unitprice').val());
-	                            	   $("#"+productCode+"-amount2").val($('#amount').val());
-	                            	   $("#"+productCode+"-ppn2").val($('#percentVat').val());
 
+	                            	   $("#"+productCode+"-total1").val($('#totals').val());
 	                            	   $("#"+productCode+"-currency1").val($('#currency').val());
-	                                   $("#"+productCode+"-unitprice1").val($('#unitprice').val());
-	                            	   $("#"+productCode+"-amount1").val($('#amount').val());
-	                            	   $("#"+productCode+"-ppn1").val($('#percentVat').val());
 	                                   $("#"+productCode+"-remarks21").val($('#remarks2').val());
 
 	                                   $( this ).dialog( "close" );
@@ -565,39 +816,45 @@
                 }); 
                 
                  
-                $("#btnSavePurchase").click(function () {                         
-
-                    //if invalid do nothing
-                    if(!$("#purchaseAddForm").validationEngine('validate')){
-                        $("#dialog-incomplete").dialog({
-                                open: function () {
-                                    $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                    $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                                },
-                                title: 'Incomplete Form',
-                                resizable: false,
-                                height: 120,
-                                modal: true,
-                                buttons: {
-                                    "Ok" : function () {
-                                        $(this).dialog("close");
-                                    }
-                                }
-                            });
-                        return false;
-                     }
-                    
-                    $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                        buttons: {
-                            "Cancel": function() {                                       
-                                $( this ).dialog( "close" );                                        
-                            },
-                            "Save": function() {
-                                $("form#purchaseAddForm").submit();
-                            }
-                        },
-                        zindex: 1, title: 'Confirm' });
-
+                $("#btnSavePurchase").click(function () {  
+                	
+                	var rowCount = $('#main tr').length-1;
+                    console.log("rowCount= "+rowCount--);
+					
+					if($("#"+rowCount+"-currency2").val()== "" && $("#"+rowCount+"-total2").val()== ""){
+						alert("please to entry currency and total");
+					}else{
+		                    //if invalid do nothing
+		                    if(!$("#purchaseAddForm").validationEngine('validate')){
+		                        $("#dialog-incomplete").dialog({
+		                                open: function () {
+		                                    $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+		                                    $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+		                                },
+		                                title: 'Incomplete Form',
+		                                resizable: false,
+		                                height: 120,
+		                                modal: true,
+		                                buttons: {
+		                                    "Ok" : function () {
+		                                        $(this).dialog("close");
+		                                    }
+		                                }
+		                            });
+		                        return false;
+		                     }
+		                    $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
+		                        buttons: {
+		                            "Cancel": function() {                                       
+		                                $( this ).dialog( "close" );                                        
+		                            },
+		                            "Save": function() {
+		                                $("form#purchaseAddForm").submit();
+		                            }
+		                        },
+		                        zindex: 1, title: 'Confirm' });
+					
+					}
                 });
     
         </script>
@@ -613,7 +870,7 @@
         </div>
         
         <div id="dialog-incomplete" title="Product Search" style="display:none;z-index:1;">
-            Tolong Lengkapi Semua Data
+            Please to fill mandatory data
         </div>
         
         <div id="dialog-upload" title="Product Search" style="display:none;z-index:1;">
@@ -681,15 +938,15 @@
             </div>
     		</div>
     		
-    	    <div id="dialog3" title="Product Search" style="display:none;z-index:1;">
+    	    <div id="dialog3" title="Item Entry" style="display:none;z-index:1;">
              <form>
                  <table>
                      <tr>
-                         <td> <label>Product Code</label></td>
+                         <td> <label>Item Code</label></td>
                          <td><input type="text" name="productCode" id="productCode" readonly /> </td>
                      </tr>
                      <tr>
-                         <td><label>Product Name</label></td>
+                         <td><label>Item Name</label></td>
                          <td><input type="text" name="productName" id="productName" size="30" readonly /></td>
                      </tr>
                      <tr>
@@ -697,49 +954,114 @@
                          <td> <input type="text" name="uom" id="UoM" readonly /></td>
                      </tr>
                      <tr>
-                         <td><label>Product Qty</label></td>
+                         <td><label>Item Qty</label></td>
                          <td> <input type="text" name="qtypo" id="qtypo" readonly /></td>
+                         <td> <input type="hidden" name="warrantys" id="warrantys"/></td>
+                         <td> <input type="hidden" name="termpayments" id="termpayments" /></td>
+                         <td> <input type="hidden" name="termdeliverys" id="termdeliverys" /></td>
                      </tr>
                      <tr>
                      	  <td>Currency</td>
                           <td class="style1">
                               <label>
-                               <select name="currencyCode" id="currency">
-                               	<c:forEach var="droplist" items="${requestScope.model.dropListCurrency}">
-                               		  <option value="${droplist.currencyCode}" ${(droplist.currencyCode eq requestScope.model.currencyCode)? "selected": ""}>
-                               		  	 ${droplist.currencyCode} - ${droplist.currencySymbol}
-                               		  </option> 
-                               	</c:forEach>
+                               <select name="currencyCode" id="currency" onchange="calSetTotal(this.value)" >
+									<option value=""></option>
+									<c:if test="${requestScope.model.dropListCurrency!=null}">
+	                               	<c:forEach items="${requestScope.model.dropListCurrency}" var="droplist" >
+	                               		  <option value="${droplist.currencyCode}" ${(droplist.currencyCode eq requestScope.model.currencyCode)? "selected": ""}>
+	                               		  	 ${droplist.currencyCode} - ${droplist.currencySymbol}
+	                               		  </option> 
+	                               	</c:forEach>
+	                               	</c:if>
                                </select>
-                          	</label>
+                          	 </label>
+                          	 <label class="requiredfield" title="This Field Is Required!">*</label>
                           </td>
                      </tr>      
                      <tr>
                          <td><label>Unit Price</label></td>
-                         <td> <input type="text" name="unitprice" id="unitprice" value="0"
-                                     onblur="calSetAmount()"
-                                     onkeypress="return isNumberKey(event)"  
+                         <td>= <input type="text" name="unitprices" id="unitprices" value="0"
+                                    
                                      />
-                               <label class="requiredfield" title="This Field Is Required!">*</label>
                          </td>
                      </tr>
                      <tr>
-				    	<td>Include Tax</td>
-				    	<td>
-                            <select name="isVat" id="isVat" onchange="calSetPrice(this.value)" >
-                                <option value="N">N</option>
-                                <option value="Y">Y</option>
-                            </select>
-				    	</td>
-					</tr>
-					<tr>
-					    <td>Percent VAT</td>
-					    <td>
-						<input type="text" readonly name="percentVat" id="percentVat" value="0" size="5" />%</td>
-					</tr>
+                         <td></td>
+                         <td><label> ------------------------------------ </label></td>
+                     </tr>
                      <tr>
                          <td><label>Amount</label></td>
-                         <td> <input type="text" name="amount" id="amount" value="0" readonly /></td>
+                         <td>= <input type="text" name="amounts" id="amounts" value="0" 
+                         		
+                         		/>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>Discount</td>
+                         <td> 
+	                         	<input type="hidden" name="discounts" id="discounts" value="0"/>
+	                            = <input type="text" name="disc" id="disc" value="0" 
+	                           
+	                            />
+                         </td>
+                     </tr>
+                     <tr>
+                         <td></td>
+                         <td><label> ------------------------------------ (-)</label></td>
+                     </tr>
+                     <tr>
+                         <td></td>
+                         <td> 
+	                            = <input type="text" name="adisc" id="adisc" value="0" readonly/>
+                         </td>
+                     </tr>
+                     <tr>
+                         <td>PPN</td>
+                         <td> 
+	                         	<input type="hidden" name="ppns" id="ppns" value="0"/>
+	                            = <input type="text" name="ppn1" id="ppn1" value="0" 
+	                           
+	                            />
+                         </td>
+                     </tr>
+                     <tr>
+                         <td></td>
+                         <td><label> ------------------------------------ (+)</label></td>
+                     </tr>
+                     <tr>
+                         <td></td>
+                         <td> 
+	                            = <input type="text" name="appn1" id="appn1" value="0" readonly/>
+                         </td>
+                     </tr>
+                     
+                     <tr>
+                         <td>PPH</td>
+                         <td> 
+	                         	<input type="hidden" name="pphs" id="pphs" value="0"/>
+	                            = <input type="text" name="pph1" id="pph1" value="0" 
+	                           
+	                            />
+                         </td>
+                     </tr>
+                     <tr>
+                         <td></td>
+                         <td><label> ------------------------------------ (-)</label></td>
+                     </tr>
+                     <tr>
+                         <td></td>
+                         <td> 
+	                            = <input type="text" name="apph1" id="apph1" value="0" readonly/>
+                         </td>
+                     </tr>
+                     
+                     <tr>
+                         <td></td>
+                         <td><label> ------------------------------------ </label></td>
+                     </tr>
+                     <tr>
+                         <td><label>Total</label></td>
+                         <td>= <input type="text" name="totals" id="totals" value="0" readonly /></td>
                      </tr>
                      <tr>
                          <td><label>Remarks</label></td>

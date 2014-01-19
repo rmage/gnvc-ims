@@ -49,6 +49,21 @@
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="style1">Department</td>
+                                    <td class="style1">
+                                        <label>
+	                                        <select name="departmentCode">
+	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListDepartment}">
+	                                        		  <option value="${droplist.departmentCode}" ${(droplist.departmentCode eq requestScope.model.departmentCode)? "selected": ""}>
+	                                        		  	${droplist.departmentCode} - ${droplist.departmentName}
+	                                        		  </option> 
+	                                        	</c:forEach>
+	                                        </select>
+                                    	</label>
+                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                    </td>
+                                </tr>
 								<%-- 
                                 <tr>
                                     <td class="style1">Role Level</td>

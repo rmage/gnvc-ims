@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dto.Currency;
+import com.app.wms.engine.db.dto.CurrencyPk;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
@@ -113,85 +114,82 @@ public class CurrencyController extends MultiActionController {
 		return new ModelAndView("1_setup/CurrencyAdd", "model", m);
 	}
 
-	/**
-	 * Method 'save'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		boolean isCreate = true;
-		String strError = "";
-		Date now = new Date();
-		String mode = request.getParameter("mode");
-		Currency dto = null;
-		try{
-			if (mode.equalsIgnoreCase("create")) {
-	              isCreate = true;
-	        } else {
-	              isCreate = false;
-	        }
-		  	
-			CurrencyDao dao = DaoFactory.createCurrencyDao();
-			if(isCreate){
-				dto = new Currency();
-			}else{
-				Integer id = Integer.parseInt(request.getParameter("id"));
-				dto = dao.findByPrimaryKey(id);
-			}
-			
-			String code = request.getParameter("code");
-			String name = request.getParameter("name");
-			String symbol = request.getParameter("symbol");
-			List <Currency> tmp = dao.findWhereCurrencyCodeEquals(code);
-			
-			if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getCurrencyCode().equals(code))) {
-		  		  strError += "Currency code already exists. Please try a different values" + AppConstant.EOL;
-		  	}
-			
-			if(isCreate){
-				dto.setCurrencyCode(code);
-				dto.setCurrencyName(name);
-				dto.setCurrencySymbol(symbol);
-				dto.setIsActive(request.getParameter("isActive"));
-			}
-			
-			dto.setCurrencyCode(code);
-			dto.setCurrencyName(name);
-			dto.setCurrencySymbol(symbol);
-			dto.setIsActive(request.getParameter("isActive"));
-			
-			if (strError.length() > 0) {
-	              throw new Exception(strError);
-	        }
-			
-			if(isCreate){
-				dao.insert(dto);
-			}else{
-				dao.update(dto.createPk(), dto);
-			}
-			
-			return new ModelAndView( "1_setup/CurrencyView", "dto", dto );
-		}
-	    catch (Exception e){
-	    	e.printStackTrace();
-	    	String errorMsg = e.getMessage();
-	    	HashMap m = new HashMap();
-	    	m.put("mode", mode);
-	    	m.put("msg", errorMsg);
-	    	
-	    	if(isCreate){
-	    		return new ModelAndView( "1_setup/CurrencyAdd", "model", m );
-	    	}else{
-	    		return new ModelAndView( "1_setup/CurrencyEdit", "model", m );
-	    	}
-	    	
-	    }
+    /**
+     * Method 'save'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        boolean isCreate = true;
+        String strError = "";
+        Date now = new Date();
+        String mode = request.getParameter("mode");
+        Currency dto = null;
+        try{
+            if (mode.equalsIgnoreCase("create")) {
+                isCreate = true;
+            } else {
+                isCreate = false;
+            }
 
-	}
+            CurrencyDao dao = DaoFactory.createCurrencyDao();
+            if(isCreate){
+                dto = new Currency();
+            } else{
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
+            }
+
+            String code = request.getParameter("code");
+            String name = request.getParameter("name");
+            String symbol = request.getParameter("symbol");
+            List <Currency> tmp = dao.findWhereCurrencyCodeEquals(code);
+
+            if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getCurrencyCode().equals(code))) {
+                strError += "Currency code already exists. Please try a different values" + AppConstant.EOL;
+            }
+
+            if(isCreate){
+                dto.setCurrencyCode(code);
+                dto.setCurrencyName(name);
+                dto.setCurrencySymbol(symbol);
+                dto.setIsActive(request.getParameter("isActive"));
+            }
+
+            dto.setCurrencyCode(code);
+            dto.setCurrencyName(name);
+            dto.setCurrencySymbol(symbol);
+            dto.setIsActive(request.getParameter("isActive"));
+
+            if (strError.length() > 0) {
+                throw new Exception(strError);
+            }
+
+            if(isCreate) {
+                CurrencyPk cp = dao.insert(dto);
+                dto.setId(cp.getId());
+            } else {
+                dao.update(dto.createPk(), dto);
+            }
+
+            return new ModelAndView( "1_setup/CurrencyView", "dto", dto );
+        } catch (Exception e){
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            HashMap m = new HashMap();
+            m.put("mode", mode);
+            m.put("msg", errorMsg);
+
+            if(isCreate){
+                return new ModelAndView( "1_setup/CurrencyAdd", "model", m );
+            } else{
+                return new ModelAndView( "1_setup/CurrencyEdit", "model", m );
+            }
+        }
+    }
 	
 	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
 

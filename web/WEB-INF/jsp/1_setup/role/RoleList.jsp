@@ -59,6 +59,7 @@
                                 <td class="style1">Action</td>
                                 <td class="style1">Role Code</td>
                                 <td class="style1">Role Name</td>
+                                <td class="style1">Department</td>
                                 <%-- <td class="style1">Role Level</td>--%>
                             </tr>
                         </thead>
@@ -86,6 +87,7 @@
                                         <td class="mid" width="5%"><a href='<c:out value="${urlEdit}"/>'><img src="resources/images/edit.gif" width="16" height="16" /></a><a href='<c:out value="${urlDelete}"/>'><img src="resources/images/delete.gif" width="16" height="16" /></a></td>
                                         <td align="left"><c:out value="${userRole.roleCode}"/></td>
                                         <td align="left"><c:out value="${userRole.roleName}"/></td>
+                                        <td align="left"><c:out value="${userRole.departmentCode}"/></td>
                                         <%-- <td align="center"><c:out value="${userRole.roleLevel}"/></td>--%>
                                     </tr>
                                 </c:forEach>

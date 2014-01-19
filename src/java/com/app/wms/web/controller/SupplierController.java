@@ -13,24 +13,23 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dto.Supplier;
+import com.app.wms.engine.db.dto.SupplierPk;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 
 public class SupplierController  extends MultiActionController {
 
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-           
+    /**
+     * Method 'findByPrimaryKey'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {   
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -38,18 +37,14 @@ public class SupplierController  extends MultiActionController {
                 m.put("mode", "edit");
                 return new ModelAndView("1_setup/SupplierEdit", "model", m);
             } else {
-
                 m = this.searchAndPaging(request, response);
                 return new ModelAndView("1_setup/SupplierList", "model", m);
             }
-
-        }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView( "Error", "th", e );
+        }		
+    }
 	
 	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try{
@@ -93,41 +88,39 @@ public class SupplierController  extends MultiActionController {
 		
 	}
 	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-		try {
-		 SupplierDao dao = DaoFactory.createSupplierDao();
-         Supplier dto = new Supplier();
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
+            SupplierDao dao = DaoFactory.createSupplierDao();
+            Supplier dto = new Supplier();
 
-         String mode = request.getParameter("mode");
-         if (mode != null && mode.equals("edit")) {
-        	 Integer id = Integer.parseInt(request.getParameter("id"));
-             dto = dao.findByPrimaryKey(id);
-            
-         }
-         if (dto.getSupplierCode() == null) {
-        	 
-        	 dto.setSupplierCode("");
-        	 dto.setSupplierName("");
-             dto.setIsActive("Y");
-             dto.setIsDelete("N");
-         }
+            String mode = request.getParameter("mode");
+            if (mode != null && mode.equals("edit")) {
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
+            }
+            if (dto.getSupplierCode() == null) {	 
+                dto.setSupplierCode("");
+                dto.setSupplierName("");
+                dto.setIsActive("Y");
+                dto.setIsDelete("N");
+            }
          
-         if (dto.getSupplierCode() != null || dto.getSupplierName() != null) {
-        	 dto.setSupplierCode(dto.getSupplierCode());
-        	 dto.setSupplierName(dto.getSupplierName());
-             dto.setIsActive(dto.getIsActive());
-             dto.setIsDelete(dto.getIsDelete());
-         }
-         //edit
-         HashMap m = new HashMap();
-         m.put("dto", dto);
+            if (dto.getSupplierCode() != null || dto.getSupplierName() != null) {
+                dto.setSupplierCode(dto.getSupplierCode());
+                dto.setSupplierName(dto.getSupplierName());
+                dto.setIsActive(dto.getIsActive());
+                dto.setIsDelete(dto.getIsDelete());
+            }
+            //edit
+            HashMap m = new HashMap();
+            m.put("dto", dto);
          
-         return m;
+            return m;
          
-		} catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
-	}
+    }
 	
 	/**
 	 * Method 'findAll'
@@ -188,16 +181,15 @@ public class SupplierController  extends MultiActionController {
 	 * @throws Exception
 	 * @return ModelAndView
 	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		Map map = new HashMap();
-		map = this.getModelByPrimaryKey(request);
-		map.put("mode", "create");		
-		
-		SupplierDao dao = DaoFactory.createSupplierDao();
-		
-		return new ModelAndView( "1_setup/SupplierAdd", "model", map);
-	}
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map map = new HashMap();
+        map = this.getModelByPrimaryKey(request);
+        map.put("mode", "create");		
+
+//        SupplierDao dao = DaoFactory.createSupplierDao();
+
+        return new ModelAndView( "1_setup/SupplierAdd", "model", map);
+    }
 
 	
 	/**
@@ -208,106 +200,103 @@ public class SupplierController  extends MultiActionController {
 	 * @throws Exception
 	 * @return ModelAndView
 	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-      boolean isCreate = true;
-      String strError = "";
-      Date now = new Date();
-      java.lang.String mode = request.getParameter("mode");
-      Supplier dto = null;
-      try {
-          if (mode.equalsIgnoreCase("create")) {
-              isCreate = true;
-          } else {
-              isCreate = false;
-          }
+        boolean isCreate = true;
+        String strError = "";
+        Date now = new Date();
+        java.lang.String mode = request.getParameter("mode");
+        Supplier dto = null;
+        try {
+            if (mode.equalsIgnoreCase("create")) {
+                isCreate = true;
+            } else {
+                isCreate = false;
+            }
 
-          SupplierDao dao = DaoFactory.createSupplierDao();
-          if (isCreate) {
-        	  dto = new Supplier();
-          } else {
-        	  Integer id = Integer.parseInt(request.getParameter("id"));
-              dto = dao.findByPrimaryKey(id);
-          }
-          
-          String supplierCode = request.getParameter("supplierCode");
-          int lengthSupplierCode = supplierCode.length();
-          int i = 3;
-          if(lengthSupplierCode < i)
-        	 strError += "Must entry 3 character for supplier code" + AppConstant.EOL;
-        	 
-          String supplierName = request.getParameter("supplierName");
-          String supplierAddress = request.getParameter("supplierAddress");
-          List<Supplier> tmp = dao.findWhereSupplierCodeEquals(supplierCode);
-          
-          if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getSupplierCode().equals(supplierCode))) {
-	  		  strError += "Supplier code already exists. Please try a different values" + AppConstant.EOL;
-	  	  }
-          
-          LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-          String userId = "";
-          if (lu == null) {
-  			HashMap m = new HashMap();
-              String msg = "You haven't login or your session has been expired! Please do login again";
-              m.put("msg", msg);
-              return new ModelAndView("login", "model", m);
-          }else{
-        	  userId = (String)lu.getUserId();
-          }
-          String telephone = request.getParameter("telephone");
-          String fax = request.getParameter("fax");
-          String email = request.getParameter("email");
-          String contactPerson = request.getParameter("contactPerson");
+            SupplierDao dao = DaoFactory.createSupplierDao();
+            if (isCreate) {
+                dto = new Supplier();
+            } else {
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
+            }
 
-          if (isCreate) {
-              dto.setCreatedBy(userId);
-              dto.setCreatedDate(now);
-          }
-          
-          dto.setSupplierCode(supplierCode);
-          dto.setSupplierName(supplierName);
-          dto.setSupplierAddress(supplierAddress);
-          dto.setTelephone(telephone);
-          dto.setFax(fax);
-          dto.setEmail(email);
-          dto.setContactPerson(contactPerson);
-          dto.setIsActive(request.getParameter("isActive"));
-          dto.setIsDelete("N");
-          dto.setUpdatedBy(userId);
-          dto.setUpdatedDate(new java.util.Date());
+            String supplierCode = request.getParameter("supplierCode");
+            int lengthSupplierCode = supplierCode.length();
+            int i = 3;
+            if(lengthSupplierCode < i)
+                strError += "Must entry more than equals 3 character for supplier code" + AppConstant.EOL;
 
-          if (strError.length() > 0) {
-              throw new Exception(strError);
-          }
+            String supplierName = request.getParameter("supplierName");
+            String supplierAddress = request.getParameter("supplierAddress");
+            List<Supplier> tmp = dao.findWhereSupplierCodeEquals(supplierCode);
 
-          if (isCreate) {
-              dao.insert(dto);
-          } 
-          
-          else {
-              dto.setUpdatedBy(userId);
-              dto.setUpdatedDate(new java.util.Date());
-              dao.update(dto.createPk(), dto);
-          }
-		 
-          return new ModelAndView("1_setup/SupplierView", "dto", dto);
+            if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getSupplierCode().equals(supplierCode))) {
+                strError += "Supplier code already exists. Please try a different values" + AppConstant.EOL;
+            }
 
-      } catch (Exception e) {
-    	  e.printStackTrace();
-          String errorMsg = e.getMessage();
-          HashMap m = this.getModelByPrimaryKey(request);
-          m.put("mode", mode);
-          m.put("msg", errorMsg);
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            String userId = "";
+            if (lu == null) {
+                HashMap m = new HashMap();
+                String msg = "You haven't login or your session has been expired! Please do login again";
+                m.put("msg", msg);
+                return new ModelAndView("login", "model", m);
+            } else{
+                userId = (String)lu.getUserId();
+            }
+            String telephone = request.getParameter("telephone");
+            String fax = request.getParameter("fax");
+            String email = request.getParameter("email");
+            String contactPerson = request.getParameter("contactPerson");
 
-          if (isCreate) {
-              return new ModelAndView("1_setup/SupplierAdd", "model", m);
-          } else {
-              return new ModelAndView("1_setup/SupplierEdit", "model", m);
-          }
-      }
+            if (isCreate) {
+                dto.setCreatedBy(userId);
+                dto.setCreatedDate(now);
+            }
+
+            dto.setSupplierCode(supplierCode);
+            dto.setSupplierName(supplierName);
+            dto.setSupplierAddress(supplierAddress);
+            dto.setTelephone(telephone);
+            dto.setFax(fax);
+            dto.setEmail(email);
+            dto.setContactPerson(contactPerson);
+            dto.setIsActive(request.getParameter("isActive"));
+            dto.setIsDelete("N");
+            dto.setUpdatedBy(userId);
+            dto.setUpdatedDate(new java.util.Date());
+
+            if (strError.length() > 0) {
+                throw new Exception(strError);
+            }
+
+            if (isCreate) {
+                SupplierPk sp = dao.insert(dto);
+                dto.setId(sp.getId());
+            } else {
+                dto.setUpdatedBy(userId);
+                dto.setUpdatedDate(new java.util.Date());
+                dao.update(dto.createPk(), dto);
+            }
+
+            return new ModelAndView("1_setup/SupplierView", "dto", dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            HashMap m = this.getModelByPrimaryKey(request);
+            m.put("mode", mode);
+            m.put("msg", errorMsg);
+
+            if (isCreate) {
+                return new ModelAndView("1_setup/SupplierAdd", "model", m);
+            } else {
+                return new ModelAndView("1_setup/SupplierEdit", "model", m);
+            }
+        }
       
-  }
+    }
 	
 
 	

@@ -88,61 +88,60 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 		return dto.createPk();
 	}
 
-	/** 
-	 * Updates a single row in the product table.
-	 */
-	public void update(ProductPk pk, Product dto) throws ProductDaoException
-	{
-		SqlUpdate su = new SqlUpdate( dataSource, "UPDATE " + getTableName() + 
-		" SET bar_code = ?, product_code = ?, product_name = ?, product_alias = ?, product_category = ?, " +
-		" brand_name = ?, product_type = ?, product_color = ?, product_description = ?, volume_weight = ?, " +
-		" unit_weight = ?, volume_matrix = ?, unit_matrix = ?, unit_length = ?, unit_width = ?, " +
-		" unit_height = ?, unit_piece = ?, unit_box = ?, unit_cartoon = ?, unit_pallete = ?, " +
-		" user_id = ?, corp_id = ?, wh_code = ?, is_active = ?, is_delete = ?, " +
-		" created_by = ?, created_date = ?, updated_by = ?, updated_date = ?, uom_name = ?, " +
-		" supplier_name = ?, buyer = ?, packstyle = ?, packsize = ?, lid = ?, nwdwpw = ?  WHERE product_id = ?");
-		//su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
-		su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
-		su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
-		su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.CHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.CHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.TIMESTAMP) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.TIMESTAMP) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		
-		su.compile();
-		su.update( new Object[] { dto.getBarCode(),dto.getProductCode(),dto.getProductName(),dto.getProductAlias(),dto.getProductCategory(),dto.getBrandName(),dto.getProductType(),dto.getProductColor(),dto.getProductDescription(),dto.getVolumeWeight(),dto.getUnitWeight(),dto.getVolumeMatrix(),dto.getUnitMatrix(),dto.getUnitLength(),dto.getUnitWidth(),dto.getUnitHeight(),dto.getUnitPiece(),dto.getUnitBox(),dto.getUnitCartoon(),dto.getUnitPallete(),dto.getUserId(),dto.getCorpId(),dto.getWhCode(),dto.getIsActive(),dto.getIsDelete(),dto.getCreatedBy(),dto.getCreatedDate(),dto.getUpdatedBy(),dto.getUpdatedDate(),dto.getUom(), dto.getSupplier(), dto.getBuyer(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), pk.getProductId()} );
-	}
+    /** 
+     * Updates a single row in the product table.
+     */
+    public void update(ProductPk pk, Product dto) throws ProductDaoException {
+        SqlUpdate su = new SqlUpdate( dataSource, "UPDATE " + getTableName() + 
+        " SET bar_code = ?, product_code = ?, product_name = ?, product_alias = ?, product_category = ?, " +
+        " brand_name = ?, product_type = ?, product_color = ?, product_description = ?, volume_weight = ?, " +
+        " unit_weight = ?, volume_matrix = ?, unit_matrix = ?, unit_length = ?, unit_width = ?, " +
+        " unit_height = ?, unit_piece = ?, unit_box = ?, unit_cartoon = ?, unit_pallete = ?, " +
+        " user_id = ?, corp_id = ?, wh_code = ?, is_active = ?, is_delete = ?, " +
+        " created_by = ?, created_date = ?, updated_by = ?, updated_date = ?, uom_name = ?, " +
+        " supplier_name = ?, buyer = ?, packstyle = ?, packsize = ?, lid = ?, nwdwpw = ?  WHERE product_id = ?");
+        //su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
+        su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
+        su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
+        su.declareParameter( new SqlParameter( java.sql.Types.INTEGER) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.CHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.CHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.TIMESTAMP) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.TIMESTAMP) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+        su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
+
+        su.compile();
+        su.update( new Object[] { dto.getBarCode(),dto.getProductCode(),dto.getProductName(),dto.getProductAlias(),dto.getProductCategory(),dto.getBrandName(),dto.getProductType(),dto.getProductColor(),dto.getProductDescription(),dto.getVolumeWeight(),dto.getUnitWeight(),dto.getVolumeMatrix(),dto.getUnitMatrix(),dto.getUnitLength(),dto.getUnitWidth(),dto.getUnitHeight(),dto.getUnitPiece(),dto.getUnitBox(),dto.getUnitCartoon(),dto.getUnitPallete(),dto.getUserId(),dto.getCorpId(),dto.getWhCode(),dto.getIsActive(),dto.getIsDelete(),dto.getCreatedBy(),dto.getCreatedDate(),dto.getUpdatedBy(),dto.getUpdatedDate(),dto.getUom(), dto.getSupplier(), dto.getBuyer(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), pk.getProductId()} );
+    }
 
 	/** 
 	 * Deletes a single row in the product table.
@@ -819,40 +818,25 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         	StringBuffer sb = new StringBuffer();
         	
         	if(p == null){
-        		p = new Product();
+                    p = new Product();
         	}
         	
         	if(productCode == null || productName == null){
-        		productCode = "%";
-        		productName = "%";
-        		
-        		sb.append("declare @Page int, @PageSize int "
-        				+"set @Page = '"+i+"'; "
-        				+"set @PageSize = 10; "
-        				+"with PagedResult "
-        				+"as (select ROW_NUMBER() over (order by product_code desc) as id, product_id, product_code, product_name, is_active from product" +
-        						" where product_code like '%"+productCode+"%' and product_name like '%"+productName+"%' ) "
-        				    +"select * from PagedResult where id between "
-        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-        				     +"else @Page end and @PageSize * @Page ");
-        		
-        	}else{
-        		
-        		sb.append("declare @Page int, @PageSize int "
-        				+"set @Page = '"+i+"'; "
-        				+"set @PageSize = 10; "
-        				+"with PagedResult "
-        				+"as (select ROW_NUMBER() over (order by product_code desc) as id, product_id, product_code, product_name, is_active from product" +
-        						" where product_code like '%"+productCode+"%' and product_name like '%"+productName+"%' ) "
-        				    +"select * from PagedResult where id between "
-        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-        				     +"else @Page end and @PageSize * @Page ");
-        		
+                    productCode = "%";
+                    productName = "%";        		
         	}
+                
+                sb.append("declare @Page int, @PageSize int "
+                    +"set @Page = '"+i+"'; "
+                    +"set @PageSize = 10; "
+                    +"with PagedResult "
+                    +"as (select ROW_NUMBER() over (order by product_code desc) as id, product_id, product_code, product_name, is_active, product_category from product" +
+                        " where product_code like '%"+productCode+"%' and product_name like '%"+productName+"%' AND is_active = 'Y' ) "
+                        +"select * from PagedResult where id between "
+                    +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                         +"else @Page end and @PageSize * @Page ");
         	
-        	
-        	
-        	return jdbcTemplate.query(sb.toString(),new ProductListMap(),map);	
+            return jdbcTemplate.query(sb.toString(),new ProductListMap(),map);	
         
         } catch (Exception e) {
             throw new ProductDaoException("Query failed", e);

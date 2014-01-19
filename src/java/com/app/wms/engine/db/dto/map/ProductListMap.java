@@ -19,6 +19,7 @@ public class ProductListMap implements ParameterizedRowMapper <Product>{
 		p.setProductCode(rs.getString(3));
 		p.setProductName(rs.getString(4));
 		p.setIsActive(rs.getString(5));
+                p.setProductCategory(rs.getString("product_category"));
 		
 		return p;
 	}

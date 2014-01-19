@@ -8,9 +8,9 @@
     </head>
     <body>
         <%
-    		    java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-    		    com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
-    		    String mode = (String) m.get("mode");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
+            String mode = (String) m.get("mode");
         %>
        <div class="container">
             <%@include file="../header.jsp" %>
@@ -115,20 +115,7 @@
                                 </tr>
                                 <tr>
                                     <td class="style1">Supplier Name</td>
-                                    <td class="style1">
-                                        <label>
-	                                        <select name="supplierName">
-	                                            <option></option>
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListSupplier}">
-	                                        		  <option value="<c:out value='${droplist.supplierName}' />"
-	                                        		    <c:if test="${param.selecValue == item }"> selected</c:if> >
-	                                        		  	 <c:out value="${droplist.supplierName}" />
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                        </select>
-                                    	</label>
-                                        </label>
-                                    </td>
+                                    <td class="style1"></td>
                                     <td class="style1">Buyer</td>
                                     <td class="style1">
                                     	<label>

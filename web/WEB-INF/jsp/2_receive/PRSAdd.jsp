@@ -1,4 +1,6 @@
 <%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -56,7 +58,10 @@
                         var isiArray = $("#productcode").val()+" "+$("#tipebarang").val();
                         if($.inArray(isiArray, queryArr) == -1){
                             queryArr.push(isiArray);
-                        } 
+                        } else {
+                        	 alert('Already Have Item');
+                             return false;
+                        }
 						
                         if(productname == '' || jumlah == '') {
                             alert('Please to fill items data needed');
@@ -114,6 +119,12 @@
 
 			       	$("#jumlah").val(c);
 			       	
+			       	d = $("#stockonhand").val();
+			       	e = formatCurrency(d);
+			       	f = numberWithCommas(e);
+
+			       	$("#stockonhand").val(f);
+			       	
 		       	}
 		       	
             </script>                                       
@@ -149,7 +160,7 @@
                                         <label>
 	                                        <select name="departmentName">
 	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListDepartment}">
-	                                        		  <option value="${droplist.departmentCode} - ${droplist.departmentName}" ${(droplist.departmentName eq requestScope.model.departmentName)? "selected": ""}>
+	                                        		  <option value="${droplist.departmentCode}" ${(droplist.departmentName eq requestScope.model.departmentName)? "selected": ""}>
 	                                        		  	${droplist.departmentCode} - ${droplist.departmentName}
 	                                        		  </option> 
 	                                        	</c:forEach>
@@ -182,7 +193,7 @@
                                     <td width="20%">Remarks</td>
                                     <td class="style1">
                                     	<label>
-                                           <textarea style="width: 374px; height: 71px;" id="remarks" name="remarks" ></textarea>
+                                           <textarea style="width: 374px; height: 51px;" id="remarks" name="remarks" ></textarea>
                                         </label>
                                     </td>
                                     
@@ -203,14 +214,16 @@
                                     
                                     <td width="10%">Item Code</td>
                                     <td class="style1" width="20%">
-                                        <input type="text" name="productcode" value="" size="30"  id="productcode" /> 
+                                        <input type="text" name="productcode" value="" size="30"  
+                                        	
+                                        	id="productcode" /> 
                                         <img width="16" height="16" src="resources/images/search.png" alt="Search Items" />
                                     </td>
                                     <td width="10%">Stock On Hand</td>
                                     <td class="style1" width="20%">
                                         <label>
                                             <input type="text" size="30" value="" name="stockonhand" 
-                                                   class="intValidate"
+                                                  onblur="changeStockOnHandDecimal()"
                                                    id="stockonhand" />
                                         </label>
                                     </td>
@@ -345,7 +358,7 @@
                 
                 
                 $("#productcode").click(function () {
-                        $("#dialog").dialog({ width: 900, height: 275, position: "center", modal: true, zindex: 1, title: 'Select Product' });
+                        $("#dialog").dialog({ width: 900, height: 275, position: "center", modal: true, zindex: 1, title: 'Select Item' });
                 });
                  
                 $("#btnSavePurchase").click(function () {                         

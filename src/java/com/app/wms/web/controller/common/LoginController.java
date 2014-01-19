@@ -78,8 +78,8 @@ public class LoginController implements Controller {
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) throws Exception {
     	Map m = new HashMap();
     	try{
-    		String date = new Date().toString();
-        	request.getSession().setAttribute("date", date);
+            String date = new Date().toString();
+            request.getSession().setAttribute("date", date);
             logger.debug("login on LoginController called");
             String username = request.getParameter("username");
             String password = request.getParameter("password");
@@ -138,9 +138,10 @@ public class LoginController implements Controller {
     public Connection openConnection(){
 		Connection connect = null;
 		try{
-			Class.forName("net.sourceforge.jtds.jdbc.Driver");
-			connect = DriverManager.getConnection("jdbc:jtds:sqlserver://localhost:1433/inventory","sa","sa");
-			return connect;
+                    //  XXX : FYA | Database Connection Setting
+                    Class.forName("net.sourceforge.jtds.jdbc.Driver");
+                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://localhost:1433/inventory","sa","sa");
+                    return connect;
 		}
 		catch(SQLException se){
 			System.out.println("Connection Failed! Error @ : " +se.getMessage());

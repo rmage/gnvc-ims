@@ -15,7 +15,7 @@
     </head>
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
             String mode = (String) m.get("mode");
         %>
@@ -83,11 +83,11 @@
                                     <td class="style1">
                                     	<label>
 	                                        <select id="category" name="category">
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
-	                                        		  <option value="${droplist.categoryName}" ${(droplist.categoryName eq requestScope.model.categoryName)? "selected": ""}>
-	                                        		  	${droplist.categoryName}
-	                                        		  </option> 
-	                                        	</c:forEach>
+                                                    <c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
+                                                        <option value="${droplist.categoryCode}" ${(droplist.categoryName eq requestScope.model.categoryName)? "selected": ""}>
+                                                          ${droplist.categoryName}
+                                                        </option> 
+                                                    </c:forEach>
 	                                        </select>
                                     	</label>
                                     	<label class="requiredfield" title="This Field Is Required!">*</label>
@@ -150,11 +150,11 @@
                                     </td>
                                     <td class="style1">Pack Size</td>
                                     <td class="style1">
-                                         <select name="packsize">
-	    										<option value=""></option>  
-	    										<option value="603">603</option> 
-	    										<option value="307">307</option>    
-	 									</select>
+                                        <select name="packsize">
+                                           <option value=""></option>  
+                                           <option value="603">603</option> 
+                                           <option value="307">307</option>    
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>

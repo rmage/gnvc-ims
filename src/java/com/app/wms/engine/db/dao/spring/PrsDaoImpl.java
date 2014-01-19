@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -152,15 +153,12 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 	 * Returns all rows from the prs table that match the criteria ''.
 	 */
 	@Transactional
-	public List<Prs> findAll() throws PrsDaoException
-	{
-		try {
-			return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " ORDER BY id", this);
-		}
-		catch (Exception e) {
-			throw new PrsDaoException("Query failed", e);
-		}
-		
+	public List<Prs> findAll() throws PrsDaoException {
+            try {
+                return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " ORDER BY id", this);
+            } catch (Exception e) {
+                throw new PrsDaoException("Query failed", e);
+            }
 	}
 
 	/** 
@@ -309,11 +307,10 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 
 	@Override
 	public List<Prs> findPrsPaging(Prs p, int page) throws PrsDaoException {
-		try{
-			DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            try{
+                DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         	String prsNo = p.getPrsnumber();
         	String prsDate = df.format(p.getPrsdate());
-        	
         	
         	int i = page;
         	Map map = new HashMap();
@@ -322,23 +319,23 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
         	StringBuffer sb = new StringBuffer();
         	
     		sb.append("declare @Page int, @PageSize int "
-    				+"set @Page = '"+i+"'; "
-    				+"set @PageSize = 10; "
-    				+"with PagedResult "
-    				+"as (select ROW_NUMBER() over (order by id asc) as id, prsnumber, " +
-    						" prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved " +
-    						" from prs" +
-    						" where prsnumber like '%"+prsNo+"%' and prsdate='"+prsDate+"' ) "
-    				    +"select * from PagedResult where id between "
-    				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-    				     +"else @Page end and @PageSize * @Page ");
+                    +"set @Page = '"+i+"'; "
+                    +"set @PageSize = 10; "
+                    +"with PagedResult "
+                    +"as (select ROW_NUMBER() over (order by id asc) as id, prsnumber, " +
+                        " prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved " +
+                        " from prs" +
+                        " where prsnumber like '%"+prsNo+"%' and prsdate='"+prsDate+"' ) "
+                        +"select * from PagedResult where id between "
+                    +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                         +"else @Page end and @PageSize * @Page ");
    
-        	return jdbcTemplate.query(sb.toString(),new PrsListMap(),map);	
+                return jdbcTemplate.query(sb.toString(),new PrsListMap(),map);	
         
-		}catch(Exception e){
-			e.printStackTrace();
-			throw new PrsDaoException("Query failed", e);
-		}
+            } catch(Exception e){
+                    e.printStackTrace();
+                    throw new PrsDaoException("Query failed", e);
+            }
 	}
 	
 	@Override
@@ -386,5 +383,25 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 		su.compile();
 		su.update( new Object[] { dto.getIsApproved(),  dto.getApprovedBy(), dto.getApprovedDate(), dto.getPrsnumber()} );
 	}
+        
+        /* FYA : 07 January 2014 */
+        public List<Prs> findByDepartment(String deptId) {
+            try {
+                return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " WHERE department_name = ? ORDER BY id desc", this, deptId);
+            } catch(DataAccessException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        
+        public List<Prs> findAllNotInCanvas() {
+            try {
+                return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() 
+                    + " WHERE prsnumber NOT IN(SELECT prsnumber FROM canvasserassignment) ORDER BY department_name, prsdate, id", this);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
 
 }

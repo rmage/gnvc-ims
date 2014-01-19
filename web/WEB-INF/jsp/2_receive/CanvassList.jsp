@@ -18,7 +18,7 @@
                 <div class="box">
                     <form action="Canvassing.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search Canvassing</caption>
+                            <caption>Canvassing - List</caption>
                             <tbody>
                                 <tr>
                                 	<td width="20%">
@@ -99,7 +99,7 @@
                                                 </a>
                                                 </c:if>
                                                 
-                                                <c:if test="${can.priceunit < 1}">
+                                                <c:if test="${can.priceunit == null || can.priceunit < 1}">
                                                 <c:url  value="Canvassing.htm"  var="urlPrintForm">
                                                     <c:param name="suppliercode" value="${can.supplierCode}"/>
                                                     <c:param name="prsnumber" value="${can.prsnumber}"/>
@@ -111,15 +111,25 @@
                                                         <img src="resources/images/detail.png" width="16" height="16" alt="View" />
                                                 </a>
                                                 </c:if>
+                                                
+                                                <c:url  value="GenerateReport.htm"  var="urlPrintForm1">
+                                                    <c:param name="action" value="index"/>
+                                                    <c:param name="item" value="PCanvassingForm"/>
+                                                    <c:param name="type" value="xls"/>
+                                                    <c:param name="params" value="${can.supplierCode}:${can.prsnumber}"/>
+                                                </c:url>
+                                                <a href='<c:out value="${urlPrintForm1}"/>'>
+                                                        <img src="resources/images/copy.png" width="16" height="16" alt="View" />
+                                                </a>
                                         </td>
                                         <td class="style1">
-                                            <a href="#" class="no-decoration" onclick="csbShowDetail('CAN', '<c:out value="${can.prsnumber}"></c:out>', 'Canvassing Detail')">
+                                            <a href="#" class="no-decoration" onclick="csbShowDetail('CAN', '<c:out value="${can.prsnumber}" />', 'Canvassing Detail')">
                                                 <c:out value="${can.prsnumber}"/>
                                             </a>
                                         </td>
                                         <td class="style1"><c:out value="${can.productcode}"/></td>
                                         <td class="style1"><c:out value="${can.productname}"/></td>
-                                        <td class="style1"><c:out value="${can.priceunit}"/></td>
+                                        <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${can.priceunit}" /></td>
                                         <td class="style1"><c:out value="${can.supplierCode}"/></td>
                                         <td class="center" width="5%">
 	                                        <c:if test="${can.isSelected == 'Y' && can.priceunit > 0}">

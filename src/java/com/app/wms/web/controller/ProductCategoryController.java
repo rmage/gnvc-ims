@@ -36,7 +36,6 @@ public class ProductCategoryController extends MultiActionController {
                 m.put("mode", "edit");
                 return new ModelAndView("1_setup/ProductCategoryEdit", "model", m);
             } else {
-
                 m = this.searchAndPaging(request, response);
                 return new ModelAndView("1_setup/ProductCategoryList", "model", m);
             }
@@ -50,8 +49,7 @@ public class ProductCategoryController extends MultiActionController {
     }
     
     private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
-
+        try{
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -357,8 +355,8 @@ public class ProductCategoryController extends MultiActionController {
             
             List<ProductCategory> tmp = dao.findWhereCategoryCodeEquals(categoryCode);
             if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getCategoryCode().equals(categoryCode))) {
-		  		  strError += "ProductCategory code already exists. Please try a different values" + AppConstant.EOL;
-		  	}
+                strError += "ProductCategory code already exists. Please try a different values" + AppConstant.EOL;
+            }
             
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             String userId = "";
@@ -378,7 +376,7 @@ public class ProductCategoryController extends MultiActionController {
 
             dto.setCategoryCode(categoryCode);
             dto.setCategoryName(categoryName);
-            dto.setIsActive(request.getParameter("isActive"));
+            dto.setIsActive("Y");
             dto.setIsDelete("N");
             
             if (strError.length() > 0) {
@@ -386,7 +384,8 @@ public class ProductCategoryController extends MultiActionController {
             }
             
             if (isCreate) {
-                dao.insert(dto);
+                ProductCategoryPk cpk = dao.insert(dto);
+                dto.setId(cpk.getId());
             } else {
                dto.setUpdatedBy(userId);
                dto.setUpdatedDate(now);
@@ -414,19 +413,20 @@ public class ProductCategoryController extends MultiActionController {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String pcreatedBy = "";
         if (lu == null) {
-			HashMap m = new HashMap();
+            HashMap m = new HashMap();
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	pcreatedBy = lu.getUserId();
+        } else{
+            pcreatedBy = lu.getUserId();
         }
 
         ProductCategoryDao dao = DaoFactory.createProductCategoryDao();
         ProductCategory dto = dao.findByPrimaryKey(id);
 
         if (dto != null) {
-        	dto.setIsActive(AppConstant.STATUS_FALSE);
+            dto.setIsActive(AppConstant.STATUS_FALSE);
+            dto.setIsDelete("Y");
             dto.setUpdatedBy(pcreatedBy);
             dto.setUpdatedDate(new java.util.Date());
             dao.update(dto.createPk(), dto);

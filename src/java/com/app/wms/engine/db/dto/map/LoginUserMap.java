@@ -28,6 +28,7 @@ public class LoginUserMap implements ParameterizedRowMapper<LoginUser>
            dto.setRoleName(rs.getString("ROLE_NAME"));
            dto.setRoleLevel(rs.getInt("ROLE_LEVEL"));
            //dto.setWhCode(rs.getString("WH_CODE"));
+           dto.setDepartmentCode(rs.getString("department_code"));
            
            return dto;
        }
