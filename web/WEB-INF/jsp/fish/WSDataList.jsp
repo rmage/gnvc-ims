@@ -160,7 +160,7 @@
                                         
                                         <c:url value="GenerateReport.htm" var="urlReportCSV">
                                             <c:param name="action" value="index"/>
-                                            <c:param name="item" value="FWSNC" />
+                                            <c:param name="item" value="FWeightSlip" />
                                             <c:param name="type" value="csv" />
                                             <c:param name="params" value="${wsData.id}"/>
                                         </c:url>

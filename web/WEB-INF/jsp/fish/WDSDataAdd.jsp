@@ -147,6 +147,7 @@
                                     buttons: {
                                         "Ok" : function () {
                                             $(this).dialog("close");
+                                            $('#wdsNo').focus();
                                         }
                                     }
                                 });
@@ -431,7 +432,7 @@
             Please to fill mandatory data
         </div>         
         
-        <div id="dialog-not-unique" title="incomplete" style="display:none;z-index:1;">
+        <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
             "WDS No." is not unique
         </div>                        
     </body>

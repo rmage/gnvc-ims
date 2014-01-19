@@ -17,7 +17,7 @@ import com.report.test.ReportFactory.Report;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class ReportFactory {
 	public static enum Report {
-	    FWSHR, FWSBR, FWSABF, FWSNC,
+	    FWSHR, FWSBR, FWSABF, FWSNC, FWeightSlip,
 	    FWSNR, FWSL, FSummaryWSSlip,
 	    FSpoilagereport, FRR, FWS, 
 	    FDR, FTS, FFrozenFishStock,
@@ -60,6 +60,7 @@ public class ReportFactory {
 		reportTemplateMap.put("summaryWeightSlip", new ReportModel("summaryWeightSlip"));
 		reportTemplateMap.put("transferSlip", new ReportModel("transferSlip", false));
 		reportTemplateMap.put("spoilageReport", new ReportModel("spoilageReport", false));
+        reportTemplateMap.put("weightslip", new ReportModel("weightslip", false));
 		reportTemplateMap.put("wsabf", new ReportModel("wsabf", false));
 		reportTemplateMap.put("wsbr", new ReportModel("wsbr", false));
 		reportTemplateMap.put("wshr", new ReportModel("wshr", false));
@@ -72,6 +73,7 @@ public class ReportFactory {
 		reportTemplateMap.put("withdrawalSlip", new ReportModel("withdrawalSlip", false));
 		reportTemplateMap.put("badStockCard", new ReportModel("badStockCard", false));		
 		
+        reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
 		reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
 		reportMap.put(Report.FWSBR, reportTemplateMap.get("wsbr"));
 		reportMap.put(Report.FWSABF, reportTemplateMap.get("wsabf"));

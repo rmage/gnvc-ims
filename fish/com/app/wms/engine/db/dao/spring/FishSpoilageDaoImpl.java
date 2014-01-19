@@ -239,14 +239,14 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"	SUM(sp.raw_weight) as raw_weight, SUM(sp.total_processed) as total_processed, " +
 				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
-				"	ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
+				"	MAX(vs.batch_no) as batch_no, ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
 				"	from inventory..fish_spoilage sp " +
+                "   LEFT JOIN inventory..fish_vessel vs ON vs.id = sp.vessel_id " +
+                "   WHERE vs.batch_no LIKE ? AND sp.date_shift = ? " +
 				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
 				") " +
-				"SELECT *, vs.batch_no FROM Results_CTE cte " +
-				"LEFT JOIN inventory..fish_vessel vs ON vs.id = cte.vessel_id " +
-				"WHERE vs.batch_no LIKE ? AND cte.date_shift = ? " +
-				"AND RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"SELECT * FROM Results_CTE cte " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
 		
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+batchNo+"%", dateShift);
@@ -265,14 +265,14 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"	SUM(sp.raw_weight) as raw_weight, SUM(sp.total_processed) as total_processed, " +
 				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
-				"	ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
+				"	MAX(vs.batch_no) as batch_no, ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
 				"	from inventory..fish_spoilage sp " +
+                "   LEFT JOIN inventory..fish_vessel vs ON vs.id = sp.vessel_id " +
+                "   WHERE vs.batch_no LIKE ? " +
 				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
 				") " +
-				"SELECT *, vs.batch_no FROM Results_CTE cte " +
-				"LEFT JOIN inventory..fish_vessel vs ON vs.id = cte.vessel_id " +
-				"WHERE vs.batch_no LIKE ? " +
-				"AND RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
+				"SELECT * FROM Results_CTE cte " +
+				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
 		
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+batchNo+"%");

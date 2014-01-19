@@ -179,9 +179,13 @@ public class FishTsDaoImpl extends AbstractDAO implements
 
 	@Override
 	public Boolean checkIsTsNoExist(String tsNo) {
-		String query = "SELECT * FROM " + getTableName() + " WHERE ts_no=?";
-		List<FishTs> resultList = jdbcTemplate.query(query, this, tsNo);
-		
+		String query = "SELECT * FROM inventory..fish_ts ts "
+                + "WHERE ts.ts_no = ? "
+                + "UNION ALL "
+                + "SELECT 0, * FROM inventory..fish_bad_stock fbs "
+                + "WHERE fbs.bs_no = ?";
+        
+		List<FishTs> resultList = jdbcTemplate.query(query, this, tsNo, tsNo);
 		return resultList.size() == 0 ? false : true;
 	}
 
