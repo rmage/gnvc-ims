@@ -37,7 +37,8 @@ public class GenerateReportController extends MultiActionController {
 		ListMap.put(Report.FWSBR, null);
 		ListMap.put(Report.FWSHR, null);
 		ListMap.put(Report.FWSL, null);
-		ListMap.put(Report.FWSNC, 
+        ListMap.put(Report.FWSNC, null);
+		ListMap.put(Report.FWeightSlip, 
             "SELECT f.code, SUM(wsd.total_weight) AS total_weight " +
             "FROM inventory..fish_ws_detail wsd " +
             "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id " +
@@ -74,7 +75,7 @@ public class GenerateReportController extends MultiActionController {
 			"FROM inventory..fish_spoilage fs " +
 			"LEFT JOIN inventory..fish f ON fs.fish_id = f.id " +
 			"LEFT JOIN inventory..fish_vessel fv ON fv.id = fs.vessel_id " +
-			"LEFT JOIN inventory..supplier s ON fv.supplier_id = s.id " +
+			"LEFT JOIN inventory..fish_supplier s ON fv.supplier_id = s.id " +
 			"WHERE fv.id = ? AND fs.date_shift = ? AND fs.time_shift = ?");
 		
 		ListMap.put(Report.FMDailyProductionReport, null);

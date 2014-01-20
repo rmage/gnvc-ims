@@ -31,6 +31,34 @@
 						zindex: 9999, 
 						title: 'Select Batch Number' });
                 });
+                
+                $('#tsNo').focus().on("blur",function() {
+        			var tsNo = $('#tsNo').val();
+        			$.ajax({
+        				url:"FishJson.htm?action=checkTsNo&query="+tsNo,
+        				dataType: 'json',
+        				success: function(data) {
+        					if(data.result) {
+        						$("#dialog-not-unique").dialog({
+                                    open: function () {
+                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+                                    },
+                                    title: 'Warning',
+                                    resizable: false,
+                                    height: 120,
+                                    modal: true,
+                                    buttons: {
+                                        "Ok" : function () {
+                                            $(this).dialog("close");
+                                            $('#tsNo').focus();
+                                        }
+                                    }
+                                });
+        					}
+        				}
+        			});
+        		})
 				
 				$('#ajaxSearchBtn').click(function() {
 					var query = $('#query').val();
@@ -220,7 +248,7 @@
                                    <td class="style1">TS No.</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" id="autofocus" name="bsNo" value="" size="30" class="validate[required] text-input numeric"/>
+                                            <input type="text" id="tsNo" name="bsNo" value="" size="30" class="validate[required] text-input numeric"/>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -453,7 +481,10 @@
         
         <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
             Please to fill mandatory data
-        </div>         
+        </div>
+        <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
+            "TS No." is not unique
+        </div> 
                                         
     </body>
 </html>

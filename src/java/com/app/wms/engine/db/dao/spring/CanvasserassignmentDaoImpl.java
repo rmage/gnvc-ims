@@ -262,58 +262,40 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 		return findByPrimaryKey( pk.getId() );
 	}
 	
-	public List<Canvasserassignment> findCanvasserAssignPaging (Canvasserassignment c, int page) throws CanvasserassignmentDaoException {
-		 try {
-	        	String prsnumber = c.getPrsnumber();
-	        	String canvassername = c.getCanvassername();
-	        	
-	        	int i = page;
-	        	Map map = new HashMap();
-	        	map.put("i", i);
-	        
-	        	StringBuffer sb = new StringBuffer();
-	        	
-	        	if(c == null){
-	        		c = new Canvasserassignment();
-	        	}
-	        	
-	        	if(prsnumber == null || canvassername == null){
-	        		prsnumber = "%";
-	        		canvassername = "%";
-	        		
-	        		sb.append("declare @Page int, @PageSize int "
-	        				+"set @Page = '"+i+"'; "
-	        				+"set @PageSize = 10; "
-	        				+"with PagedResult "
-	        				+"as (select ROW_NUMBER() over (order by id asc) as id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date from canvasserassignment" +
-	        						" where prsnumber like '%"+prsnumber+"%' and canvassername like '%"+canvassername+"%' ) "
-	        				    +"select * from PagedResult where id between "
-	        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-	        				     +"else @Page end and @PageSize * @Page ");
-	        		
-	        	}else{
-	        		
-	        		sb.append("declare @Page int, @PageSize int "
-	        				+"set @Page = '"+i+"'; "
-	        				+"set @PageSize = 10; "
-	        				+"with PagedResult "
-	        				+"as (select ROW_NUMBER() over (order by id asc) as id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date from canvasserassignment" +
-	        						" where prsnumber like '%"+prsnumber+"%' and canvassername like '%"+canvassername+"%' ) "
-	        				    +"select * from PagedResult where id between "
-	        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-	        				     +"else @Page end and @PageSize * @Page ");
-	        		
-	        	}
-	        	
-	        	
-	        	
-	        	return jdbcTemplate.query(sb.toString(),this);	
-	        
-	        } catch (Exception e) {
-	            throw new CanvasserassignmentDaoException("Query failed", e);
-	        }
+    public List<Canvasserassignment> findCanvasserAssignPaging (Canvasserassignment c, int page) throws CanvasserassignmentDaoException {
+        try {
+               String prsnumber = c.getPrsnumber();
+               String canvassername = c.getCanvassername();
 
-		
-	}
+               int i = page;
+               Map map = new HashMap();
+               map.put("i", i);
+
+               StringBuffer sb = new StringBuffer();
+
+               if(c == null){
+                       c = new Canvasserassignment();
+               }
+
+               if(prsnumber == null || canvassername == null){
+                    prsnumber = "%";
+                    canvassername = "%";
+               }
+               
+               sb.append("declare @Page int, @PageSize int "
+                    +"set @Page = '"+i+"'; "
+                    +"set @PageSize = 10; "
+                    +"with PagedResult "
+                    +"as (select ROW_NUMBER() over (order by ca.id desc) as id, ca.prsnumber, ca.canvassername, ca.created_by, ca.created_date, ca.updated_by, ca.updated_date from canvasserassignment ca " +
+                        "left join \"user\" u on u.user_id = canvassername where ca.prsnumber like '%"+prsnumber+"%' and u.name like '%"+canvassername+"%' ) "
+                    +"select * from PagedResult where id between "
+                    +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                    +"else @Page end and @PageSize * @Page ");
+
+               return jdbcTemplate.query(sb.toString(),this);	
+       } catch (Exception e) {
+           throw new CanvasserassignmentDaoException("Query failed", e);
+       }		
+    }
 
 }

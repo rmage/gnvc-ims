@@ -384,24 +384,46 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 		su.update( new Object[] { dto.getIsApproved(),  dto.getApprovedBy(), dto.getApprovedDate(), dto.getPrsnumber()} );
 	}
         
-        /* FYA : 07 January 2014 */
-        public List<Prs> findByDepartment(String deptId) {
-            try {
-                return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " WHERE department_name = ? ORDER BY id desc", this, deptId);
-            } catch(DataAccessException e) {
-                e.printStackTrace();
-                return null;
-            }
+    /* FYA : 07 January 2014 */
+    public List<Prs> findByDepartment(String deptId) {
+        try {
+            return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " WHERE department_name = ? ORDER BY id desc", this, deptId);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return null;
         }
+    }
+
+    public List<Prs> findAllNotInCanvas() {
+        try {
+            return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() 
+                + " WHERE prsnumber NOT IN(SELECT prsnumber FROM canvasserassignment) ORDER BY department_name, prsdate, id", this);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
         
-        public List<Prs> findAllNotInCanvas() {
-            try {
-                return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() 
-                    + " WHERE prsnumber NOT IN(SELECT prsnumber FROM canvasserassignment) ORDER BY department_name, prsdate, id", this);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-                return null;
-            }
+    public List<Prs> fyaFindByCanvaser(String userId) {
+        try {
+            return jdbcTemplate.query("select p.* from prs p " +
+                "left join canvasserassignment ca on ca.prsnumber = p.prsnumber where p.prsnumber not in (select prsnumber from po) " +
+                "and ca.canvassername = ? order by p.prsnumber desc", this, userId);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return null;
         }
+    }
+    
+    public List<Prs> fyaFindByCanvaser(String prsNo, String userId) {
+        try {
+            return jdbcTemplate.query("select p.* from prs p " +
+                "left join canvasserassignment ca on ca.prsnumber = p.prsnumber where p.prsnumber not in (select prsnumber from po) " +
+                "and ca.canvassername = ? and p.prsnumber like '%" + prsNo + "%' order by p.prsnumber desc", this, userId);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

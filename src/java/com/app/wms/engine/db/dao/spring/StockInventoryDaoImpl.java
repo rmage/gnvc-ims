@@ -89,7 +89,7 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
 	
 	{
 		
-		SqlUpdate su = new SqlUpdate( dataSource, "UPDATE " + getTableName() + " SET product_code = ?, wh_code = ? WHERE product_id = ?");
+		SqlUpdate su = new SqlUpdate( dataSource, "UPDATE " + getTableName() + " SET product_code = ?, wh_code = ? WHERE product_code = (select product_code from product where product_id = ?)");
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );

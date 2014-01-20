@@ -1061,7 +1061,7 @@
                      </tr>
                      <tr>
                          <td><label>Total</label></td>
-                         <td>= <input type="text" name="totals" id="totals" value="0" readonly /></td>
+                         <td>= <input type="text" name="totals" id="totals" value="0" /></td>
                      </tr>
                      <tr>
                          <td><label>Remarks</label></td>

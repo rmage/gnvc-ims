@@ -7,16 +7,13 @@
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
-        <%
-        	
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="ApprovalRange.htm" method="post">
+                    <!--<form action="ApprovalRange.htm" method="post">
                         <table class="collapse tblForm row-select">
                             <caption>Search Approval Range</caption>
                             <tbody>
@@ -52,14 +49,14 @@
                                 <td></td>
                             </tfoot>
                         </table>
-                    </form>
+                    </form>-->
                     <table class="collapse tblForm row-select">
                         <caption>Approval Range - Search Result</caption>
                         <thead>
                             <tr>
                                 <td class="style1">No</td>
                                 <td class="style1">Action</td>
-                                <td class="style1">User Name</td>
+                                <!--<td class="style1">User Name</td>-->
                                 <td class="style1">Role Code</td>
                                 <td class="style1">From Amount</td>
                                 <td class="style1">To Amount</td>
@@ -80,18 +77,18 @@
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="mode" value="edit"/>
                                         </c:url>
-                                        <c:url value="ApprovalRange.htm" var="urlDelete">
+                                        <%--<c:url value="ApprovalRange.htm" var="urlDelete">
                                             <c:param name="id" value="${app.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
-                                        </c:url>
+                                        </c:url>--%>
                                         <td class="center" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                            <a href='<c:out value="${urlDelete}"/>'>
-                                                <img src="resources/images/delete.gif" width="16" height="16" /></a>
+                                            <%--<a href='<c:out value="${urlDelete}"/>'>
+                                                <img src="resources/images/delete.gif" width="16" height="16" /></a>--%>
                                         </td>
-                                        <td class="style1"><c:out value="${app.username}"/></td>
+                                        <!--<td class="style1"><c:out value="${app.username}"/></td>-->
                                         <td class="style1"><c:out value="${app.roleCode}"/></td>
                                         <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${app.fromAmount}" /></td>
                                         <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${app.toAmount}" /></td>

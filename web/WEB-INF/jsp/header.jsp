@@ -7,7 +7,7 @@
 </head>
 
 <%
-	com.app.wms.engine.db.dto.map.LoginUser lu = (com.app.wms.engine.db.dto.map.LoginUser) request.getSession().getAttribute("user");
+    com.app.wms.engine.db.dto.map.LoginUser lu = (com.app.wms.engine.db.dto.map.LoginUser) request.getSession().getAttribute("user");
     java.lang.String urlDB = (java.lang.String) request.getSession().getAttribute("urlDB");
     java.lang.String serverIP = request.getLocalAddr();
     java.lang.String clientIP = request.getRemoteAddr();
@@ -17,7 +17,6 @@
     if (serverIP != null && (serverIP.equals("192.168.1.1") || serverIP.equals("127.0.0.1"))) {
         namaApp = "<b>Development</b>";
     }
-            
 %>
 
 <body onLoad="show_clock()">
@@ -33,7 +32,6 @@
                     User Name: <%= lu != null ? lu.getUsername() : "-"%>
                     | User Group: <%= lu != null ? lu.getRoleName() : "-"%>
                     | Last Login: <%out.println(date);%>
-                 
                     <%} %>
                  </font>
                  <span id="LiveClockIE"> </span>

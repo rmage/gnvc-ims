@@ -8,7 +8,7 @@
     </head>
     <body>
         <%
-	        ApprovalRange dto = (ApprovalRange) request.getAttribute("dto");
+            ApprovalRange dto = (ApprovalRange) request.getAttribute("dto");
             String roleCode = dto.getRoleCode();
             String userName = dto.getUsername();
             BigDecimal fromAmount = dto.getFromAmount();
@@ -32,12 +32,12 @@
                                 	<%=roleCode %>
                                 </td>
                             </tr>
-                            <tr>
+                                <!--<tr>
                                 <td class="style1">User Name</td>
                                 <td class="style1">
                                 	<%=userName %>
                                 </td>
-                            </tr>
+                            </tr>-->
                             
                             <tr>
                                 <td class="style1">From Amount</td>

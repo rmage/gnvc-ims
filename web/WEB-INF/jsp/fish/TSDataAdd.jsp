@@ -118,6 +118,7 @@
                                     buttons: {
                                         "Ok" : function () {
                                             $(this).dialog("close");
+                                            $('#tsNo').focus();
                                         }
                                     }
                                 });

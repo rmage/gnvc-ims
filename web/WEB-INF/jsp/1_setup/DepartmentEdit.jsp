@@ -9,12 +9,12 @@
     
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             Department dto = (Department) m.get("dto");
-     		String mode = (String) m.get("mode");
-     		String departmentCode = (String) dto.getDepartmentCode();
-     		String departmentName = (String) dto.getDepartmentName();
-     		String id = Integer.toString(dto.getId());
+            String mode = (String) m.get("mode");
+            String departmentCode = (String) dto.getDepartmentCode();
+            String departmentName = (String) dto.getDepartmentName();
+            String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -55,13 +55,12 @@
                                     <td class="style1">
                                         <label>
                                             <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-										</label>
-										<label>
-										    <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-					                    </label>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
+                                        </label>
                                    </td>
                                	</tr>
-								
                             </tbody>
                             <tfoot>
                                 <td colspan="2">
@@ -69,7 +68,6 @@
                                         <label>
                                             <input type="submit" name="btnSave" id="btnSave" value="Save" />
                                         </label>
-
                                     </span>
                                     <input type="button" class="style1" name="button" id="btnBack" value="Back" />
                                 </td>

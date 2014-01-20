@@ -143,10 +143,10 @@
 								<td>
 									<label>    
 		                            	<select name="timeShift">
-		                            		<option value="07:00-15:00">07:00 - 15:00</option>
-		                            		<option value="15:00-23:00">15:00 - 23:00</option>
-		                            		<option value="23:00-07:00">23:00 - 07:00</option>
-		                            	</select>                                                           
+                                        		<option value="07-15">07:00 - 15:00</option>
+                                        		<option value="15-23">15:00 - 23:00</option>
+                                        		<option value="23-07">23:00 - 07:00</option>
+                                        </select>                                                         
 		                            </label>
 								</td>
 							</tr>

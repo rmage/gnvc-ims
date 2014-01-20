@@ -62,6 +62,7 @@
 	                                        </select>
                                     	</label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <script>$('select[name="departmentCode"]').val('${model.dto.departmentCode}');</script>
                                     </td>
                                 </tr>
 								<%-- 

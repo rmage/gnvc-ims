@@ -125,5 +125,8 @@ public interface PoDao
 	public Po findByPrimaryKey(PoPk pk) throws PoDaoException;
 	
 	public List<Po> findWherePoNumberNotInGR() throws PoDaoException;
+        
+    /* FYA : 07 January 2014 */
+    public List<Po> fyaGetByDepartment(String[][] criteria) throws PoDaoException;
 
 }

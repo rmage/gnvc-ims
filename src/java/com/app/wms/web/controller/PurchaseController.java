@@ -1,7 +1,6 @@
 package com.app.wms.web.controller;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,16 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-
-import com.app.web.engine.search.PurchaseSearch;
-import com.app.web.engine.search.WarehouseSearch;
 import com.app.wms.engine.db.dao.ApprovalRangeDao;
 import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.DepartmentDao;
+import com.app.wms.engine.db.dao.PoDao;
 import com.app.wms.engine.db.dao.PoDetailDao;
-import com.app.wms.engine.db.dao.ProductCategoryDao;
-import com.app.wms.engine.db.dao.PurchaseDao;
 import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dao.WhDao;
 import com.app.wms.engine.db.dao.spring.PODao;
@@ -26,10 +20,7 @@ import com.app.wms.engine.db.dto.ApprovalRange;
 import com.app.wms.engine.db.dto.Currency;
 import com.app.wms.engine.db.dto.Department;
 import com.app.wms.engine.db.dto.PoDetail;
-import com.app.wms.engine.db.dto.ProductCategory;
-import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.Supplier;
-import com.app.wms.engine.db.dto.Uom;
 import com.app.wms.engine.db.dto.Wh;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -37,16 +28,11 @@ import com.app.wms.hbm.bean.Po;
 import com.app.wms.hbm.bean.Vgrdetailproduct;
 import com.app.wms.web.util.AppConstant;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 
 public class PurchaseController extends ReportManagerController {
 
@@ -74,8 +60,8 @@ public class PurchaseController extends ReportManagerController {
                 return new ModelAndView("2_receive/PurchaseOrderEdit", "model", m);
             } else {
 
-                String purchaseNo = request.getParameter("purchaseNo");
-                String estimationDeliveryDate = request.getParameter("estimationDeliveryDate");
+//                String purchaseNo = request.getParameter("purchaseNo");
+//                String estimationDeliveryDate = request.getParameter("estimationDeliveryDate");
                 
                 m = this.searchAndPaging(request, response);
                 return new ModelAndView("2_receive/PurchaseOrderList", "model", m);
@@ -89,7 +75,7 @@ public class PurchaseController extends ReportManagerController {
     }
     private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
        try {
-        	LoginUser lu =  (LoginUser) request.getSession().getAttribute("user");
+            LoginUser lu =  (LoginUser) request.getSession().getAttribute("user");
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -111,20 +97,61 @@ public class PurchaseController extends ReportManagerController {
 
             String roleCode = lu.getRoleCode();
             
-            PoDetail pd = new PoDetail();
-            pd.setPonumber(request.getParameter("purchaseNo"));
+//            PoDetail pd = new PoDetail();
+//            pd.setPonumber(request.getParameter("purchaseNo"));
+//            
+//            PoDetailDao dao = DaoFactory.createPoDetailDao();
+//            List<PoDetail> listSearchPage = dao.findPoDetailPaging(pd,page);
+//            
+//            ApprovalRangeDao daoAppRange = DaoFactory.createApprovalRangeDao();
+//            List<ApprovalRange> listAppRange = daoAppRange.findAll();
             
-            PoDetailDao dao = DaoFactory.createPoDetailDao();
-            List<PoDetail> listSearchPage = dao.findPoDetailPaging(pd,page);
+            ApprovalRangeDao approvalRangeDao = DaoFactory.createApprovalRangeDao();
+            List<ApprovalRange> ars = approvalRangeDao.findAll();
             
-            ApprovalRangeDao daoAppRange = DaoFactory.createApprovalRangeDao();
-            List<ApprovalRange> listAppRange = daoAppRange.findAll();
-
+            /*
+             *  FYA | Note List Purchase Order
+             *      ` PO Created By --> Total PO Detail
+             *      ` PO Supplier Name -->  DB : Code >> APP : Name
+             *      ` PO Corp Id --> Approval Auth
+             */
+            
+            String[][] c = {{"rownum", page.toString()}};
+            PoDao poDaoR = DaoFactory.createPoDao();
+            PoDetailDao poDetailDao = DaoFactory.createPoDetailDao();
+            SupplierDao supplierDao = DaoFactory.createSupplierDao();
+            List<com.app.wms.engine.db.dto.Po> ps = poDaoR.fyaGetByDepartment(c);
+            for(com.app.wms.engine.db.dto.Po x : ps) {
+                x.setCreatedby("0");
+                x.setCorpid("N");
+                
+                /* get total */
+                List<PoDetail> pds = poDetailDao.findWherePonumberEquals(x.getPonumber());
+                for(PoDetail xx : pds) {
+                    x.setCreatedby(String.valueOf(new BigDecimal(x.getCreatedby()).add(xx.getTotal())));
+                }
+                
+                /* get approval auth */
+                if(x.getStatus().equals("N")) {
+                    for(ApprovalRange xx : ars) {
+                        if(xx.getToAmount().compareTo(new BigDecimal(x.getCreatedby())) > 0) {
+                            String xr = xx.getRoleCode(); log.info(xr.substring(xr.length() - 4, xr.length() - 1));
+                            String ur = lu.getRoleCode(); log.info(ur.substring(ur.length() - 4, ur.length() - 1));
+                            if(xr.substring(xr.length() - 4, xr.length() - 1).equals(ur.substring(ur.length() - 4, ur.length() - 1)))
+                                x.setCorpid("Y");
+                            break;
+                        }
+                    }
+                }
+                
+                x.setSupplierName(supplierDao.findWhereSupplierCodeEquals(x.getSupplierName()).get(0).getSupplierName());
+            }
+                
             int total = 2000;
             
-            m.put("app", listAppRange);
+//            m.put("app", listAppRange);
             m.put("roleCode", roleCode);
-            m.put("pos", listSearchPage);
+            m.put("pos", ps);
             m.put("totalRows", total);
             m.put("page", page);
             m.put("paging", paging);
