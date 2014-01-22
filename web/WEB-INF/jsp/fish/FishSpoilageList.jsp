@@ -128,8 +128,8 @@
                                 <td class="center">Batch No</td>
                                 <td class="center">Date Shift</td>
                                 <td class="center">Time Shift</td>
-                                <td class="center">Total Cooked Weight</td>
                                 <td class="center">Total Raw Weight</td>
+                                <td class="center">Total Spoilage Weight</td>
                                 <td class="center">Total Processed Weight</td>
                             </tr>
                         </thead>
@@ -199,10 +199,10 @@
                                         <td class="center"><c:out value="${spoilageData.timeShift}"/></td>
                                         <td class="right"><fmt:formatNumber type="number" 
 					      					maxFractionDigits="2" minFractionDigits="2"
-					      					value="${spoilageData.cookedWeight}"></fmt:formatNumber></td>
+					      					value="${spoilageData.rawWeight}"></fmt:formatNumber></td>
                                         <td class="right"><fmt:formatNumber type="number" 
 					      					maxFractionDigits="2" minFractionDigits="2"
-					      					value="${spoilageData.rawWeight}"></fmt:formatNumber></td>
+					      					value="${spoilageData.cookedWeight}"></fmt:formatNumber></td>
                                         <td class="right"><fmt:formatNumber type="number" 
 					      					maxFractionDigits="2" minFractionDigits="2"
 					      					value="${spoilageData.totalProcessed}"></fmt:formatNumber></td>
