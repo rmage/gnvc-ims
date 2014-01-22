@@ -23,6 +23,7 @@
                 });
         		
         		$('#addItem').click(function() {
+                    $('#dialogMode').val('add');
         			$("#dialog-add-item").dialog({ 
     					width: 500, 
     					height: 200, 
@@ -37,18 +38,29 @@
         			var fishType = $('#fishType option:selected').html();
         			var fishId = $('#fishType').val();
         			var totalWeight = $('#totalWeight').val();
+                    var dialogMode = $('#dialogMode').val();
+                    
+                    if(dialogMode == 'add') {
+                        var rowCount = $('#main tr').length - 1;
+                        $("<tr class='ganjil'>" + 
+                                "<td class='style1'>"+rowCount+"</td>" +
+                                "<td id='fishType"+rowCount+"' class='center'>"+fishType+"</td>" +
+                                    "<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+fishId+"' /></td>" +
+                                "<td id='totalWeightHTML"+rowCount+"' class='center'>"+addCommas(totalWeight)+"</td>" +
+                                    "<input id='totalWeight"+rowCount+"' type='hidden' name='totalWeight"+rowCount+"' value='"+totalWeight+"' /></td>" +
+                                "<td id='"+rowCount+"' class='center' onClick='editItem(this)'>Edit</td>" +
+                                "</tr>").appendTo("#main tbody");
+
+                        $('#totalData').val(rowCount);    
+                    }
+                    else if(dialogMode == 'edit') {
+                        var editId = $('#editId').val();
+                        $('#fishId'+editId).val(fishId);
+                        $('#fishType'+editId).html(fishType);
+                        $('#totalWeight'+editId).val(totalWeight);
+                        $('#totalWeightHTML'+editId).html(addCommas(totalWeight));
+                    }
         			
-        			var rowCount = $('#main tr').length - 1;
-        			
-        			$("<tr class='ganjil'>" + 
-        					"<td class='style1'>"+rowCount+"</td>" +
-        					"<td id='fishType"+rowCount+"' class='center'>"+fishType+"</td>" +
-        						"<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+fishId+"' /></td>" +
-        					"<td id='totalWeightHTML"+rowCount+"' class='center'>"+totalWeight+"</td>" +
-        						"<input id='totalWeight"+rowCount+"' type='hidden' name='totalWeight"+rowCount+"' value='"+totalWeight+"' /></td>" +
-        					"</tr>").appendTo("#main tbody");
-                	
-                	$('#totalData').val(rowCount);
                     $('#totalWeight').val(0);
                 	$('#dialog-add-item').dialog('close');
         		});
@@ -110,6 +122,37 @@
 					jQuery("#list").jqGrid('navGrid','#pager',{edit:false,add:false,del:false});
 				});
         	});
+            
+            function editItem(selectedRow) {
+                var id = selectedRow.getAttribute('id');
+                var totalWeight = $('#totalWeight'+id).val();
+                var fishId = $('#fishId'+id).val();
+                
+                $('#editId').val(id);
+                $('#fishType').val(fishId);
+                $('#totalWeight').val(totalWeight);
+                $('#dialogMode').val('edit');
+                $("#dialog-add-item").dialog({ 
+                    width: 500, 
+                    height: 200, 
+                    position: "center", 
+                    modal: true, 
+                    zindex: 9999, 
+                    title: 'Edit Item' 
+                });
+            }
+            
+            function addCommas(nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                }
+                return x1 + x2;
+            }
         </script>
     </head>
 
@@ -248,6 +291,7 @@
                         			<td class="center">No.</td>
                         			<td class="center">Fish Type</td>
                         			<td class="center">Total Weight</td>
+                                    <td class="center">Action</td>
                         		</tr>
                         	</thead>
                             <tbody class="tbl-nohover">
@@ -270,6 +314,8 @@
             </div>
             
             <div id="dialog-add-item">
+                <input type="hidden" id="dialogMode" value="" />
+                <input type="hidden" id="editId" value="" />
 	            <table class="collapse tblForm row-select">
 		            <tbody class="tbl-nohover">
 		            	 <tr class="detail_genap">

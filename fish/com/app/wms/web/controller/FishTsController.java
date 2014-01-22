@@ -149,34 +149,6 @@ private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         		
         		FishTsDetailDao tsDetailDao = DaoFactory.createFishTsDetailDao();
         		tsDetailDao.insert(tsDetail);
-        		
-        		//Cut fish balance in DB
-        		FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
-        		FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(
-        				vesselId, tsDetail.getStorageId(), tsDetail.getFishId());
-        		
-        		Double newBalance = fishBalance.getBalance() - tsDetail.getQuantity();
-        		fishBalance.setBalance(newBalance);
-        		fishBalanceDao.update(fishBalance.getId(), fishBalance);
-        		
-        		//insert balance history
-    			Double currentBalance = fishBalance.getBalance();
-    			FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
-    			fishBalanceHistory.setDocNo(tsNo);
-    			fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
-    			fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
-    			fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0 ?
-    					"FRESH" : fishBalance.getStorage().getCode());
-    			fishBalanceHistory.setQtyIn(Double.valueOf("0"));
-    			fishBalanceHistory.setQtyOut(tsDetail.getQuantity());
-    			fishBalanceHistory.setBalance(currentBalance);
-    			fishBalanceHistory.setCreatedDate(new Date());
-    			fishBalanceHistory.setCreatedBy(user.getUserId());
-    			fishBalanceHistory.setIsActive("Y");
-    			fishBalanceHistory.setIsDelete("N");
-    			
-    			FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
-    			balanceHistoryDao.insert(fishBalanceHistory);
         	}
         	
         	modelMap = this.searchAndPaging(request, response);

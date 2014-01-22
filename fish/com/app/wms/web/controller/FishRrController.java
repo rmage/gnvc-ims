@@ -216,7 +216,7 @@ public class FishRrController extends MultiActionController {
 			returnMap.put("wsNo", fishRrDetail.getWeightSlip().getWsNo());
 			returnMap.put("fishType", fishRrDetail.getFish().getCode());
 			returnMap.put("fishName", fishRrDetail.getFish().getFishType().getDescription());
-			returnMap.put("goodWeight", fishRrDetail.getTotalWeight());
+			returnMap.put("goodWeight", fishRrDetail.getGoodWeight());
 			returnMap.put("spoilageWeight", fishRrDetail.getSpoilageWeight());
 			returnMap.put("totalWeight", fishRrDetail.getTotalWeight());
 			returnMap.put("storage", 

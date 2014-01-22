@@ -148,9 +148,8 @@
                 
                 $('#dBtnSave').click(function() {
                 	var id = $('#rowId').val();
-                	var spoilWeight = $('#dRawWeight').val();
-                	var totalWeight = $('#totalWeight'+id).val();
-                	var goodWeight = totalWeight - spoilWeight;
+                	var spoilWeight = $('#dCookedWeight').val();
+                	var totalProcessed = $('#dTotalProcessed').val();
                 	
                 	$("#dialog-spoilage-confirm").dialog({ 
     					width: 300, 
@@ -165,9 +164,9 @@
                             },
                             "Ok" : function () {
                             	$('#spoilageWeight'+id).val(spoilWeight);
-                            	$('#goodWeight'+id).val(goodWeight);
+                            	$('#goodWeight'+id).val(totalProcessed);
                             	$('#spoilageWeightHTML'+id).html(addCommas(spoilWeight));
-                            	$('#goodWeightHTML'+id).html(addCommas(goodWeight));
+                            	$('#goodWeightHTML'+id).html(addCommas(totalProcessed));
                             	
                             	//ajax post
                             	var serializedData = $('#spoilageForm').serialize();
@@ -225,6 +224,12 @@
         				}
         			});
         		});
+                
+                $('#dCookedWeight').keyup(function(){
+                    var spoilageWeight = $('#dCookedWeight').val();
+                    var rawWeight = $('#dRawWeight').val();
+                    $('#dTotalProcessed').val(rawWeight - spoilageWeight);
+                });
             });
             
             function check(selectedRow) {
@@ -241,6 +246,7 @@
             	var batchNo = $('#batchNo').val();
             	var fishType = $('#fishType'+id).html();
             	var fishId = $('#fishId'+id).val();
+                var totalWeight = $('#totalWeight'+id).val();
             	var spoilWeight = $('#spoilageWeight'+id).val();
             	var fishName = $('#fishName'+id).val();
             	
@@ -249,8 +255,9 @@
             	$('#dFishType').val(fishType);
             	$('#dFishName').val(fishName);
             	$('#dFishId').val(fishId);
-            	$('#dRawWeight').val(spoilWeight);
+            	$('#dRawWeight').val(totalWeight);
             	$('#dCookedWeight').val(spoilWeight);
+                $('#dTotalProcessed').val(totalWeight - spoilWeight);
             	$('#dReason').val("");
             }
             
@@ -461,7 +468,7 @@
 							<td><input type="text" id="dRawWeight" name="rawWeight" value="" size="30" class="validate[required] text-input numeric"/> Kg</td>
 						</tr>
 						<tr>
-							<td width="30%">Cooked Weight</td>
+							<td width="30%">Spoilage Weight</td>
 							<td>:</td>
 							<td><input type="text" id="dCookedWeight" name="cookedWeight" value="" size="30" class="validate[required] text-input numeric"/> Kg</td>
 						</tr>

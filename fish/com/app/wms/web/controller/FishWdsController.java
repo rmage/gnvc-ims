@@ -1,5 +1,7 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.FishBalanceDao;
+import com.app.wms.engine.db.dao.FishBalanceHistoryDao;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.FishWdsDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
+import com.app.wms.engine.db.dto.FishBalance;
+import com.app.wms.engine.db.dto.FishBalanceHistory;
 import com.app.wms.engine.db.dto.FishWds;
 import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
@@ -139,6 +143,34 @@ public class FishWdsController extends MultiActionController {
         		
         		FishWdsDetailDao wdsDetailDao = DaoFactory.createFishWdsDetailDao();
         		wdsDetailDao.insert(wdsDetail);
+                
+                //Cut fish balance in DB
+        		FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
+        		FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(
+        				vesselId, wdsDetail.getStorageId(), wdsDetail.getFishId());
+        		
+        		Double newBalance = fishBalance.getBalance() - wdsDetail.getQuantity();
+        		fishBalance.setBalance(newBalance);
+        		fishBalanceDao.update(fishBalance.getId(), fishBalance);
+        		
+        		//insert balance history
+    			Double currentBalance = fishBalance.getBalance();
+    			FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
+    			fishBalanceHistory.setDocNo(wdsNo);
+    			fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
+    			fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
+    			fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0 ?
+    					"FRESH" : fishBalance.getStorage().getCode());
+    			fishBalanceHistory.setQtyIn(Double.valueOf("0"));
+    			fishBalanceHistory.setQtyOut(wdsDetail.getQuantity());
+    			fishBalanceHistory.setBalance(currentBalance);
+    			fishBalanceHistory.setCreatedDate(new Date());
+    			fishBalanceHistory.setCreatedBy(user.getUserId());
+    			fishBalanceHistory.setIsActive("Y");
+    			fishBalanceHistory.setIsDelete("N");
+    			
+    			FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
+    			balanceHistoryDao.insert(fishBalanceHistory);
         	}
         }
         

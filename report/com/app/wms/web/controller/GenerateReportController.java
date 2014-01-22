@@ -185,15 +185,21 @@ public class GenerateReportController extends MultiActionController {
 			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
 		);
 					
-		ListMap.put(Report.PPoIssuedPerItem, 
-			"SELECT * " +
+		ListMap.put(Report.PPoIssuedPerItem,
+			"SELECT prs.prsnumber, pod.productcode, cvd.productname, " +
+			"SUM(pod.qty) as qty, dep.department_code, pod.currencyCode, pod.unitprice, " +
+			"SUM(pod.amount) as amount, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks " +
 			"FROM inventory..po po " +
 			"LEFT JOIN inventory..po_detail pod ON pod.ponumber = po.ponumber " +
 			"LEFT JOIN inventory..prs ON prs.prsnumber = po.prsnumber " +
-			"LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prsd.prsnumber " +
-			"LEFT JOIN inventory..canvassing_detail cvd ON cvd.prsnumber = cvd.prsnumber " +
-			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
+			"LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prs.prsnumber " +
+			"LEFT JOIN inventory..canvassing cv ON cv.prsnumber = prs.prsnumber " +
+			"LEFT JOIN inventory..canvassing_detail cvd ON cvd.prsnumber = prs.prsnumber " +
+			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name " +
+			"GROUP BY prs.prsnumber, pod.productcode, cvd.productname, dep.department_code, " +
+			"pod.currencyCode, pod.unitprice, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks"
 		);
+
 		
 		ListMap.put(Report.PPoForm, 
 			"SELECT * " +

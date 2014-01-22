@@ -97,6 +97,18 @@
                 	$('#totalData').val(rowCount);
                 	$('#dialog-spoilage').dialog('close');
                 });
+                
+                $('#cookedWeight').keyup(function(){
+                    var spoilageWeight = $('#cookedWeight').val();
+                    var rawWeight = $('#rawWeight').val();
+                    $('#totalProcessed').val(rawWeight - spoilageWeight);
+                });
+                
+                $('#rawWeight').keyup(function(){
+                    var spoilageWeight = $('#cookedWeight').val();
+                    var rawWeight = $('#rawWeight').val();
+                    $('#totalProcessed').val(rawWeight - spoilageWeight);
+                });
             });
             
             function addCommas(nStr) {
@@ -172,7 +184,7 @@
 	                    		<td class="style1">No.</td>
 	                    		<td class="center">Catcher No.</td>
 	                    		<td class="center">Fish Type</td>
-	                    		<td class="center">Cooked Weight</td>
+	                    		<td class="center">Spoilage Weight</td>
 	                    		<td class="center">Raw Weight</td>
 	                    		<td class="center">Total Processed</td>
 	                    		<td class="center">Reason</td>
@@ -240,17 +252,21 @@
 						<tr>
 							<td width="30%">Raw Weight</td>
 							<td>:</td>
-							<td><input type="text" id="rawWeight" name="rawWeight" value="0" size="30" class="validate[required] text-input"/> Kg</td>
+							<td><input type="text" id="rawWeight" name="rawWeight" 
+                                       value="0" size="30" class="validate[required] text-input"/> Kg</td>
 						</tr>
 						<tr>
-							<td width="30%">Cooked Weight</td>
+							<td width="30%">Spoilage Weight</td>
 							<td>:</td>
-							<td><input type="text" id="cookedWeight" name="cookedWeight" value="0" size="30" class="validate[required] text-input"/> Kg</td>
+							<td><input type="text" id="cookedWeight" name="cookedWeight" 
+                                       value="0" size="30" class="validate[required] text-input"/> Kg</td>
 						</tr>
 						<tr>
 							<td width="30%">Total Processed</td>
 							<td>:</td>
-							<td><input type="text" id="totalProcessed" name="totalProcessed" value="0" size="30" class="validate[required] text-input"/> Kg</td>
+							<td><input type="text" id="totalProcessed" name="totalProcessed" 
+                                       value="0" size="30" class="validate[required] text-input"
+                                       readonly="readonly"/> Kg</td>
 						</tr>
 						<tr>
 							<td width="30%">Reason</td>
