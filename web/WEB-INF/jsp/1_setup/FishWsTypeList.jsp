@@ -71,11 +71,11 @@
                         <caption>Fish Ws Type - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="style1">No</td>
-                                <td class="style1">Action</td>
-                                <td class="style1">Code</td>
-                                <td class="style1">Description</td>
-                                <td class="style1">Is Active</td>
+                                <td class="left">No</td>
+                                <td class="left">Action</td>
+                                <td class="left">Code</td>
+                                <td class="left">Description</td>
+                                <td class="left">Is Active</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -83,7 +83,7 @@
                                 <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
                                 <c:forEach items="${model.fishWsTypes}" var="wsType">
                                     <tr class="ganjil">
-                                        <td class="center" width="1%">
+                                        <td class="left" width="1%">
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
@@ -99,15 +99,15 @@
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
-                                        <td class="center" width="5%">
+                                        <td class="left" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>
                                             <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
-                                        <td class="style1"><c:out value="${wsType.code}"/></td>
-                                        <td class="style1"><c:out value="${wsType.description}"/></td>
-                                        <td class="center"><c:out value="${wsType.isActive}"/></td>
+                                        <td class="left"><c:out value="${wsType.code}"/></td>
+                                        <td class="left"><c:out value="${wsType.description}"/></td>
+                                        <td class="left"><c:out value="${wsType.isActive}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>

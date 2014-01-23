@@ -91,14 +91,14 @@
                         <caption>Fish Supplier - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="center">No</td>
-                                <td class="center">Action</td>
-                                <td class="center">Code</td>
-                                <td class="center">Name</td>
-                                <td class="center">Telp.</td>
-                                <td class="center">Fax</td>
-                                <td class="center">Email</td>
-                                <td class="center">CP</td>
+                                <td class="left">No</td>
+                                <td class="left">Action</td>
+                                <td class="left">Code</td>
+                                <td class="left">Name</td>
+                                <td class="left">Telp.</td>
+                                <td class="left">Fax</td>
+                                <td class="left">Email</td>
+                                <td class="left">CP</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -106,7 +106,7 @@
                                 <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
                                 <c:forEach items="${model.fishSuppliers}" var="fishSupplier">
                                     <tr class="ganjil">
-                                        <td class="center" width="1%">
+                                        <td class="left" width="1%">
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
@@ -122,23 +122,23 @@
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
-                                        <td class="center" width="5%">
+                                        <td class="left" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a> 
                                             <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
-                                        <td class="style1"><c:out value="${fishSupplier.code}"/></td>
-                                        <td class="style1"><c:out value="${fishSupplier.name}"/></td>
-                                        <td class="center"><c:out value="${fishSupplier.telephone}"/></td>
-                                        <td class="center"><c:out value="${fishSupplier.fax}"/></td>
-                                        <td class="center"><c:out value="${fishSupplier.email}"/></td>
-                                        <td class="center"><c:out value="${fishSupplier.contactPerson}"/></td>
+                                        <td class="left"><c:out value="${fishSupplier.code}"/></td>
+                                        <td class="left"><c:out value="${fishSupplier.name}"/></td>
+                                        <td class="left"><c:out value="${fishSupplier.telephone}"/></td>
+                                        <td class="left"><c:out value="${fishSupplier.fax}"/></td>
+                                        <td class="left"><c:out value="${fishSupplier.email}"/></td>
+                                        <td class="left"><c:out value="${fishSupplier.contactPerson}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
                           <tr>
-                                <td colspan="5">
+                                <td colspan="8">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
                                             <a href="FishSupplier.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
@@ -157,7 +157,7 @@
                         </tbody>
                         <tfoot>
 
-                            <td colspan="6">
+                            <td colspan="8">
                                 <span class="style1">
                                    
                                 </span>

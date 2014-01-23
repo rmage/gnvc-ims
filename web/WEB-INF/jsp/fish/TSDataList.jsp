@@ -46,7 +46,7 @@
 			});
         	
         	function showDetails(selectedRow) {
-        		var title = 'WDS Details';
+        		var title = 'TS Details: ' + selectedRow.innerHTML;
         		var wsId = selectedRow.getAttribute('id');
 				$('#dtl-panel').fadeIn(500, function() {
 					$.ajax({
@@ -128,14 +128,14 @@
                         <caption>Fish Transfer Slip - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="center">No</td>
-                                <td class="center">Action</td>
-                                <td class="center">TS NO</td>
-                                <td class="center">WDS No</td>
-                                <td class="center">Issued By</td>
-                                <td class="center">Noted By</td>
-                                <td class="center">Approved By</td>
-                                <td class="center">Date Created</td>
+                                <td class="left">No</td>
+                                <td class="left">Action</td>
+                                <td class="left">TS NO</td>
+                                <td class="left">WDS No</td>
+                                <td class="left">Issued By</td>
+                                <td class="left">Noted By</td>
+                                <td class="left">Approved By</td>
+                                <td class="left">Date Created</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -143,7 +143,7 @@
                                 <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
                                 <c:forEach items="${model.tsDataList}" var="tsData">
                                     <tr class="ganjil">
-                                        <td class="center" width="1%">
+                                        <td class="left" width="1%">
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
@@ -179,7 +179,7 @@
                                             <c:param name="params" value="${tsData.id}"/>
                                         </c:url>
                                         
-                                        <td class="center" width="10%">
+                                        <td class="left" width="10%">
                                         <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>
@@ -194,12 +194,12 @@
                                             <a href='<c:out value="${urlReportCSV}"/>'>
                                             	<img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>
                                         </td>
-                                        <td class="center"><a id="${tsData.id}" onclick="showDetails(this)"><c:out value="${tsData.tsNo}"/></a></td>
-                                        <td class="center"><c:out value="${tsData.withdrawalSlip.wdsNo}"/></td>
-                                        <td class="center"><c:out value="${tsData.issuedBy}"/></td>
-                                        <td class="center"><c:out value="${tsData.notedBy}"/></td>
-                                        <td class="center"><c:out value="${tsData.approvedBy}"/></td>
-                                        <td class="center"><c:out value="${tsData.createdDate}"/></td>
+                                        <td class="left"><a id="${tsData.id}" onclick="showDetails(this)"><c:out value="${tsData.tsNo}"/></a></td>
+                                        <td class="left"><c:out value="${tsData.withdrawalSlip.wdsNo}"/></td>
+                                        <td class="left"><c:out value="${tsData.issuedBy}"/></td>
+                                        <td class="left"><c:out value="${tsData.notedBy}"/></td>
+                                        <td class="left"><c:out value="${tsData.approvedBy}"/></td>
+                                        <td class="left"><c:out value="${tsData.createdDate}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>

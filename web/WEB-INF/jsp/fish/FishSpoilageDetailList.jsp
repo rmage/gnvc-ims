@@ -10,40 +10,40 @@
     <body>
         <table width="100%" border="0">
    			<thead>
-			    <tr>
-					<td class="style1">No.</td>
-                    <td class="style1">Batch No.</td>
-                    <td class="style1">Catcher No.</td>
-			        <td class="style1">Fish Type</td>
-			        <td class="style1">Fish Name</td>
-			        <td class="style1">Raw Weight</td>
-			        <td class="style1">Cooked Weight</td>
-			        <td class="style1">Total Processed</td>
-			        <td class="style1">Reason</td>
+			    <tr class="panel-head">
+					<td class="left">No.</td>
+                    <td class="left">Batch No.</td>
+                    <td class="left">Catcher No.</td>
+			        <td class="left">Fish Type</td>
+			        <td class="left">Fish Name</td>
+			        <td class="left">Raw Weight</td>
+			        <td class="left">Cooked Weight</td>
+			        <td class="left">Total Processed</td>
+			        <td class="left">Reason</td>
 			    </tr>
 			</thead>
             <tbody id="main">
             	<c:if test="${requestScope.model.tableMap!=null}">
 		                <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
 						<c:forEach var="map" items="${requestScope.model.tableMap}" varStatus="mapCounter">
-						    <tr class="ganjil">
-								<td align="right">&nbsp;${mapCounter.count}</td>
-								<td align="center">&nbsp;
+						    <tr class="${mapCounter.count%2 == 1 ? 'panel-row-odd' : ''}">
+								<td align="left">&nbsp;${mapCounter.count}</td>
+								<td align="left">&nbsp;
 					      			<c:if test="${map.value.batchNo ne null}">
 					      				${map.value.batchNo}
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td align="left">&nbsp;
 					      			<c:if test="${map.value.catcherNo ne null}">
 					      				${map.value.catcherNo}
 					      			</c:if>
 					      		</td>
-								<td align="center">&nbsp;
+								<td align="left">&nbsp;
 					      			<c:if test="${map.value.fishType ne null}">
 					      				${map.value.fishType}
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td align="left">&nbsp;
 					      			<c:if test="${map.value.fishName ne null}">
 					      				${map.value.fishName}
 					      			</c:if>
@@ -69,7 +69,7 @@
 					      					value="${map.value.totalProcessed}"></fmt:formatNumber>
 					      			</c:if>
 					      		</td>
-					      		<td align="center">&nbsp;
+					      		<td align="left">&nbsp;
 					      			<c:if test="${map.value.reason ne null}">
 					      				${map.value.reason}
 					      			</c:if>

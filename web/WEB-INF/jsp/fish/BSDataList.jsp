@@ -47,7 +47,7 @@
 			});
         	
         	function showDetails(selectedRow) {
-        		var title = 'Bad Stock Details';
+        		var title = 'Bad Stock Details: ' + selectedRow.innerHTML;
         		var wsId = selectedRow.getAttribute('id');
 				$('#dtl-panel').fadeIn(500, function() {
 					$.ajax({
@@ -129,12 +129,12 @@
                         <caption>Fish Bad Stock Slip - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="center">No</td>
-                                <td class="center">Action</td>
-                                <td class="center">BS NO</td>
-                                <td class="center">Received By</td>
-                                <td class="center">Approved By</td>
-                                <td class="center">Date Created</td>
+                                <td class="left">No</td>
+                                <td class="left">Action</td>
+                                <td class="left">BS NO</td>
+                                <td class="left">Received By</td>
+                                <td class="left">Approved By</td>
+                                <td class="left">Date Created</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -142,7 +142,7 @@
                                 <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
                                 <c:forEach items="${model.bsDataList}" var="bsData">
                                     <tr class="ganjil">
-                                        <td class="center" width="1%">
+                                        <td class="left" width="1%">
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
@@ -171,7 +171,7 @@
                                             <c:param name="action" value="getBsReportById"/>
                                         </c:url>
                                         
-                                        <td class="center" width="5%">
+                                        <td class="left" width="5%">
                                         <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>
@@ -184,10 +184,10 @@
                                             <a href='<c:out value="${urlReportXLS}"/>'>
                                             	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>
                                         </td>
-                                        <td class="center"><a id="${bsData.id}" onclick="showDetails(this)"><c:out value="${bsData.bsNo}"/></a></td>
-                                        <td class="center"><c:out value="${bsData.receivedBy}"/></td>
-                                        <td class="center"><c:out value="${bsData.approvedBy}"/></td>
-                                        <td class="center"><c:out value="${bsData.createdDate}"/></td>
+                                        <td class="left"><a id="${bsData.id}" onclick="showDetails(this)"><c:out value="${bsData.bsNo}"/></a></td>
+                                        <td class="left"><c:out value="${bsData.receivedBy}"/></td>
+                                        <td class="left"><c:out value="${bsData.approvedBy}"/></td>
+                                        <td class="left"><c:out value="${bsData.createdDate}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>

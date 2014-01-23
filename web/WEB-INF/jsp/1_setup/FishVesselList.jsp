@@ -104,11 +104,12 @@
                         <caption>Fish Vessel - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="style1">No</td>
-                                <td class="style1">Action</td>
-                                <td class="style1">Vessel Code</td>
-                                <td class="style1">Vessel Name</td>
-                                <td class="style1">Batch No.</td>
+                                <td class="left">No</td>
+                                <td class="left">Action</td>
+                                <td class="left">Vessel Code</td>
+                                <td class="left">Vessel Name</td>
+                                <td class="left">Batch No.</td>
+                                <td class="left">Supplier Name</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -116,7 +117,7 @@
                                 <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
                                 <c:forEach items="${model.fishVessels}" var="vessel">
                                     <tr class="ganjil">
-                                        <td class="center" width="1%">
+                                        <td class="left" width="1%">
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
@@ -132,20 +133,21 @@
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
-                                        <td class="center" width="5%">
+                                        <td class="left" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a> 
                                             <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
-                                        <td class="style1"><c:out value="${vessel.code}"/></td>
-                                        <td class="style1"><c:out value="${vessel.name}"/></td>
-                                        <td class="center"><c:out value="${vessel.batchNo}"/></td>
+                                        <td class="left"><c:out value="${vessel.code}"/></td>
+                                        <td class="left"><c:out value="${vessel.name}"/></td>
+                                        <td class="left"><c:out value="${vessel.batchNo}"/></td>
+                                        <td class="left"><c:out value="${vessel.supplier.name}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
                           <tr>
-	                           <td colspan="5">
+	                           <td colspan="6">
 	                               <span class="style1">
 	                                   <c:if test="${model.page !=null && model.page > 1}">
 	                                       <a href="FishVessel.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">

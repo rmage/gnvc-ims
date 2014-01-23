@@ -45,8 +45,8 @@
                 $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
 			});
         	
-        	function showDetails(vesselId, dateShift, timeShift) {
-        		var title = "Fish Spoilage Details:";
+        	function showDetails(selectedRow, vesselId, dateShift, timeShift) {
+        		var title = "Fish Spoilage Details: " + selectedRow.innerHTML;
 				$('#dtl-panel').fadeIn(500, function() {
 					$.ajax({
 	                    url: "FishSpoilageData.htm",
@@ -123,14 +123,14 @@
                         <caption>Fish Spoilage Data - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="center">No</td>
-                                <td class="center">Action</td>
-                                <td class="center">Batch No</td>
-                                <td class="center">Date Shift</td>
-                                <td class="center">Time Shift</td>
-                                <td class="center">Total Raw Weight</td>
-                                <td class="center">Total Spoilage Weight</td>
-                                <td class="center">Total Processed Weight</td>
+                                <td class="left">No</td>
+                                <td class="left">Action</td>
+                                <td class="left">Batch No</td>
+                                <td class="left">Date Shift</td>
+                                <td class="left">Time Shift</td>
+                                <td class="left">Total Raw Weight</td>
+                                <td class="left">Total Spoilage Weight</td>
+                                <td class="left">Total Processed Weight</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -138,7 +138,7 @@
                                 <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
                                 <c:forEach items="${model.spoilageDataList}" var="spoilageData">
                                     <tr class="ganjil">
-                                        <td class="center" width="1%">
+                                        <td class="left" width="1%">
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
@@ -178,7 +178,7 @@
                                             <c:param name="params" value="${spoilageData.vesselId}:${spoilageData.dateShift}:${spoilageData.timeShift}"/>
                                         </c:url>
                                         
-                                        <td class="center" width="10%">
+                                        <td class="left" width="10%">
                                         <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a>
@@ -193,10 +193,10 @@
                                             <a href='<c:out value="${urlReportCSV}"/>'>
                                             	<img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>
                                         </td>
-                                        <td class="center"><a onclick="showDetails('${spoilageData.vesselId}', 
+                                        <td class="left"><a onclick="showDetails(this, '${spoilageData.vesselId}', 
                                         	'${spoilageData.dateShift}', '${spoilageData.timeShift}')"><c:out value="${spoilageData.vessel.batchNo}"/></a></td>
-                                        <td class="center"><c:out value="${spoilageData.dateShift}"/></td>
-                                        <td class="center"><c:out value="${spoilageData.timeShift}"/></td>
+                                        <td class="left"><c:out value="${spoilageData.dateShift}"/></td>
+                                        <td class="left"><c:out value="${spoilageData.timeShift}"/></td>
                                         <td class="right"><fmt:formatNumber type="number" 
 					      					maxFractionDigits="2" minFractionDigits="2"
 					      					value="${spoilageData.rawWeight}"></fmt:formatNumber></td>

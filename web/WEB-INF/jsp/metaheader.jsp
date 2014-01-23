@@ -117,6 +117,13 @@
     })
 </script>
 
+<!-- style for ajax detail panel -->
+<style type="text/css">
+    .panel-head {background:#77d5f7}
+    .panel-head td {font-weight: bold}
+    .panel-row-odd {background: #EEEEEE}
+</style>
+
 <!-- Global Alert -->
 <div id="dialog-confirm1" title="Product Search" style="display:none;z-index:1;">
     Save Data?

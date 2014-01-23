@@ -313,7 +313,7 @@
                 </div>
             </div>
             
-            <div id="dialog-add-item">
+            <div id="dialog-add-item" style="display:none;z-index:1;">
                 <input type="hidden" id="dialogMode" value="" />
                 <input type="hidden" id="editId" value="" />
 	            <table class="collapse tblForm row-select">
