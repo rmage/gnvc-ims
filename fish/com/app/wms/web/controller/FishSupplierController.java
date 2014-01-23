@@ -125,7 +125,7 @@ public class FishSupplierController extends MultiActionController {
         dao.delete(id);
         
 		HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
-		return new ModelAndView("1_setup/FishList", "model", modelMap);
+		return new ModelAndView("1_setup/FishSupplierList", "model", modelMap);
 	}
     
     public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws Exception {

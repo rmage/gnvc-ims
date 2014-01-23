@@ -103,7 +103,7 @@
                                         <td class="center" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a> 
-                                            <a href='<c:out value="${urlDelete}"/>'>
+                                            <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
                                         <td class="center"><c:out value="${fish.code}"/></td>

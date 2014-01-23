@@ -15,6 +15,25 @@
                 $('#btnCleanFilter').click(function() {
                    location.href = "FishSupplier.htm"; 
                 });
+                
+                $('#urlDelete').click(function(event) {
+                    event.preventDefault();
+                    var url = $(this).attr('href');
+                    $("#dialog-confirm").dialog({ 
+                        width: 300, 
+                        height: 150, 
+                        position: "center", 
+                        modal: true, 
+                        buttons: {
+                            "Cancel": function() {                                       
+                                $( this ).dialog( "close" );                                        
+                            },
+                            "Ok": function() {
+                                location.href = url;
+                            }
+                        },
+                    title: 'Confirm' });
+                });
             });
         </script>
     </head>
@@ -106,7 +125,7 @@
                                         <td class="center" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a> 
-                                            <a href='<c:out value="${urlDelete}"/>'>
+                                            <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
                                         <td class="style1"><c:out value="${fishSupplier.code}"/></td>
@@ -148,6 +167,9 @@
                     </table>
 
                 </div>
+            </div>
+            <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
+                Delete this item?
             </div>
             <div class="span-24 last border-top">
                 <div class="box">

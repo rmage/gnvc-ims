@@ -135,7 +135,7 @@
                                         <td class="center" width="5%">
                                             <a href='<c:out value="${urlEdit}"/>'>
                                                 <img src="resources/images/edit.gif" width="16" height="16" /></a> 
-                                            <a href='<c:out value="${urlDelete}"/>'>
+                                            <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a>
                                         </td>
                                         <td class="style1"><c:out value="${vessel.code}"/></td>
@@ -183,7 +183,7 @@
 	                                                   name="ajaxSearchBtn" id="btnSave" value="Search" class="search" />
 	        	<table id="list"></table> 
 	            <div id="pager"></div> 
-	        </div> 
+	        </div>
             <div class="span-24 last border-top">
                 <div class="box">
                     &copy; 2013 SPFI

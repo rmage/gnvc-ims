@@ -93,10 +93,37 @@
      });   
 </script>
 
+<!-- delete confirmation -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.urlDelete').click(function(event) {
+            event.preventDefault();
+            var url = $(this).attr('href');
+            $("#delete-confirm").dialog({ 
+                width: 300, 
+                height: 150, 
+                position: "center", 
+                modal: true, 
+                buttons: {
+                    "Cancel": function() {                                       
+                        $( this ).dialog( "close" );                                        
+                    },
+                    "Ok": function() {
+                        location.href = url;
+                    }
+                },
+            title: 'Confirm' });
+        });
+    })
+</script>
+
 <!-- Global Alert -->
 <div id="dialog-confirm1" title="Product Search" style="display:none;z-index:1;">
     Save Data?
 </div>
 <div id="dialog-incomplete1" title="Product Search" style="display:none;z-index:1;">
     Tolong Lengkapi Semua Data
+</div>
+<div id="delete-confirm" title="confirm" style="display:none;z-index:1;">
+    Delete this item?
 </div>
