@@ -93,7 +93,7 @@ public class FishVesselDaoImpl extends AbstractDAO implements
 
 	@Override
 	public List<FishVessel> findAll() throws DaoException {
-		String query = "SELECT * FROM " + getTableName();
+		String query = "SELECT * FROM " + getTableName() + " ORDER BY supplier_id";
 		List<FishVessel> resultList = jdbcTemplate.query(query, this);
 		
 		return resultList;
@@ -101,7 +101,9 @@ public class FishVesselDaoImpl extends AbstractDAO implements
 
 	@Override
 	public List<FishVessel> findAllActive() throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y'";
+		String query = "SELECT * FROM " + getTableName() + 
+                " WHERE is_active='Y'" +
+                " ORDER BY supplier_id";
 		List<FishVessel> resultList = jdbcTemplate.query(query, this);
 		
 		return resultList;
@@ -109,7 +111,8 @@ public class FishVesselDaoImpl extends AbstractDAO implements
 
 	@Override
 	public List<FishVessel> findByBatchNumber(String batchNumber) throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE batch_no LIKE ?";
+		String query = "SELECT * FROM " + getTableName() + " WHERE batch_no LIKE ? " +
+                " ORDER BY supplier_id";
 		List<FishVessel> resultList = jdbcTemplate.query(query, this, "%"+batchNumber+"%");
 		
 		return resultList;
@@ -117,7 +120,8 @@ public class FishVesselDaoImpl extends AbstractDAO implements
 
 	@Override
 	public List<FishVessel> findByVesselName(String vesselName) throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE name LIKE ?";
+		String query = "SELECT * FROM " + getTableName() + " WHERE name LIKE ? " +
+                " ORDER BY supplier_id";
 		List<FishVessel> resultList = jdbcTemplate.query(query, this, "%"+vesselName+"%");
 		
 		return resultList;
@@ -163,7 +167,7 @@ public class FishVesselDaoImpl extends AbstractDAO implements
                 "   WHERE is_active = 'Y' " +
 				") AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
-				"ORDER BY RowNum";
+				"ORDER BY supplier_id";
 		
 		List<FishVessel> resultList = jdbcTemplate.query(query, this, limit, offset);
 		return resultList;
@@ -179,7 +183,7 @@ public class FishVesselDaoImpl extends AbstractDAO implements
                 "   WHERE is_active = 'Y' AND batch_no LIKE ? " +
 				") AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
-				"ORDER BY RowNum";
+				"ORDER BY supplier_id";
 		
 		List<FishVessel> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+batchNo+"%");
 		return resultList;
