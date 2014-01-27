@@ -59,7 +59,7 @@
                                 <td class="style1">PRS Date</td>  
                                 <td class="style1">Charge to Department</td> 
                                 <td class="style1">Date Needed</td>
-                                <td class="style1">Status Approved</td>
+                                <!--<td class="style1">Status Approved</td>-->
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -90,18 +90,16 @@
                                         <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.prsdate}" /></td>
                                         <td class="style1"><c:out value="${po.departmentName}"/></td>
                                         <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.requestdate}" /></td>
-                                        <td class="left" width="15%">
-                                            <input class="mark" type="button" code="${po.prsnumber}" name="button" value="Y" />
-											   			&nbsp;
-											<input class="markb" type="button" code="${po.prsnumber}" name="button" value="N" />
-											   			
-	                                        <c:choose>
-											   <c:when test="${po.isApproved == 'Y'}">&nbsp;<img src="resources/images/checkmark.gif" width="16" height="16" alt="View" /></c:when>
-											   <c:otherwise>
-											   		&nbsp;<img src="resources/images/Forbidden.png" width="16" height="16" alt="View" />
-											   </c:otherwise>
-											</c:choose>
-                                        </td>
+                                            <%--<td class="left" width="15%">
+                                            <input class="mark" type="button" code="${po.prsnumber}" name="button" value="Y" />&nbsp;
+                                            <input class="markb" type="button" code="${po.prsnumber}" name="button" value="N" />					   			
+                                            <c:choose>
+                                                <c:when test="${po.isApproved == 'Y'}">&nbsp;<img src="resources/images/checkmark.gif" width="16" height="16" alt="View" /></c:when>
+                                                <c:otherwise>
+                                                    &nbsp;<img src="resources/images/Forbidden.png" width="16" height="16" alt="View" />
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>--%>
                                     </tr>
                                 </c:forEach>
                             </c:if>

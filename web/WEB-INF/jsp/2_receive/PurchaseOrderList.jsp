@@ -9,8 +9,6 @@
     </head>
 
     <body>
-        <%
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <%@include file="../dynmenu.jsp" %>
@@ -72,39 +70,35 @@
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
                                         <td class="center" width="5%">
-                                                <c:url  value="Purchase.htm"  var="urlPrint">
-                                                    <c:param name="sonumber" value="${po.ponumber}"/>
-                                                    <c:param name="templateName" value="rptPurchaseOrderList"/>
-                                                    <c:param name="parametersKey" value="P_DOC_NO"/>
-                                                    <c:param name="action" value="doPrint" />
-                                                </c:url>
-                                                <a href='<c:out value="${urlPrint}"/>'>
-                                                        <img src="resources/images/print.jpg" width="16" height="16" alt="View" />
-                                                </a>
+                                            <c:url  value="Purchase.htm"  var="urlPrint">
+                                                <c:param name="sonumber" value="${po.ponumber}"/>
+                                                <c:param name="templateName" value="rptPurchaseOrderList"/>
+                                                <c:param name="parametersKey" value="P_DOC_NO"/>
+                                                <c:param name="action" value="doPrint" />
+                                            </c:url>
+                                            <a href='<c:out value="${urlPrint}"/>'>
+                                                <img src="resources/images/print.jpg" width="16" height="16" alt="View" />
+                                            </a>
                                         </td>
                                         <td class="style1">
                                             <a href="#" class="no-decoration" onclick="csbShowDetail('PO', '<c:out value="${po.ponumber}" />', 'Purchase Order Detail')">
                                                 <c:out value="${po.ponumber}"/>
                                             </a>
                                         </td>
-                                        <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.po.podate}" /></td>
-                                        <td class="style1"><c:out value="${po.po.supplierName}"/></td>
-                                        <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${po.total}" /></td>
+                                        <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.podate}" /></td>
+                                        <td class="style1"><c:out value="${po.supplierName}"/></td>
+                                        <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${po.createdby}" /></td>
                                         <td class="style1">
-                                        <c:choose>
-											   <c:when test="${po.po.status == 'N'}"><img src="resources/img/waiting.jpg" width="24" height="24" alt="View" /></c:when> <%--<!-- if condition -->--%>
-											   <c:when test="${po.po.status == 'X'}"><img src="resources/images/Forbidden.png" width="16" height="16" alt="View" /></c:when>
-											   <c:otherwise><img src="resources/images/checkmark.gif" width="16" height="16" alt="View" /></c:otherwise><%--<!-- else condition -->--%>
-										</c:choose>
-
-	                                    <c:forEach items="${model.app}" var="ar">
-	                                    	<c:set var="roleCode" value="${ar.roleCode}"/>
-		                                    	<c:if test="${fn:contains(roleCode, model.roleCode) && po.po.roleCode == model.roleCode && po.po.status == 'N'}">
-												   <input class="mark" type="button" code="${po.ponumber}" name="button" value="Approve" />
-		                                           &nbsp;
-		                                           <input class="markb" type="button" code="${po.ponumber}" name="button" value="Cancel" />
-												</c:if>
-	                                    </c:forEach>
+                                            <c:if test="${po.corpid == 'Y'}">
+                                                <input class="mark" type="button" code="${po.ponumber}" name="button" value="Approve" />
+                                                &nbsp;
+                                                <input class="markb" type="button" code="${po.ponumber}" name="button" value="Cancel" />
+                                            </c:if>
+                                            <c:choose>
+                                                <c:when test="${po.status == 'N'}"><img src="resources/images/ilocked.gif" width="16" height="="" alt="Wait" title="Waiting Approval" /></c:when>
+                                                <c:when test="${po.status == 'X'}"><img src="resources/images/forbidden.png" width="16" height="16" alt="Cancel" title="PO Cancel" /></c:when>
+                                                <c:otherwise><img src="resources/images/checkmark.gif" width="16" height="16" alt="Approved" title="PO Approved" /></c:otherwise>
+                                            </c:choose>
                                         </td>     
                                     </tr>
                                 </c:forEach>

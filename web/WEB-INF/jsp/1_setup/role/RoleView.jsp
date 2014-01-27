@@ -55,7 +55,7 @@
                                 <form action="UserRole.htm" >
                                     <input type="hidden" name="action" value="findByPrimaryKey" />
                                     <input type="hidden" name="mode" value="edit" />
-                                    <input type="hidden" name="roleCode" value="<%= dto.getRoleCode()%>" />
+                                    <input type="hidden" name="id" value="<%= dto.getId()%>" />
                                     <input type="submit" value="Edit"/>
                                     <input type="button" class="style1" name="button" id="btnBack" value="Back" />
                                 </form>

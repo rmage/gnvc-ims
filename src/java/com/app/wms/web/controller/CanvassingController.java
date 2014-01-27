@@ -104,52 +104,50 @@ public class CanvassingController extends ReportManagerController {
 		
 	}
 	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-		try {
-		 CanvassingDao dao = DaoFactory.createCanvassingDao();
-         Canvassing dto = new Canvassing();
-         CanvassingDetailDao daod = DaoFactory.createCanvassingDetailDao();
-         CanvassingDetail dtod = new CanvassingDetail();
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
+            CanvassingDao dao = DaoFactory.createCanvassingDao();
+            Canvassing dto = new Canvassing();
+            CanvassingDetailDao daod = DaoFactory.createCanvassingDetailDao();
+            CanvassingDetail dtod = new CanvassingDetail();
 
-         String mode = request.getParameter("mode");
-         String prsnumber = "";
-         String productcode = "";
+            String mode = request.getParameter("mode");
+            String prsnumber = "";
+            String productcode = "";
          
-         if (mode != null && mode.equals("edit")) {
-        	 if(request.getParameter("id") != null){
-        	   Integer id = Integer.parseInt(request.getParameter("id"));
-        	   dtod = daod.findByPrimaryKey(id);
-        	 }
-        	 prsnumber = request.getParameter("prsnumber");
-             dto = dao.findWherePrsnumber(prsnumber);
-             dtod = daod.findWherePrsnumber(prsnumber);
-            
-         }
+            if (mode != null && mode.equals("edit")) {
+                if(request.getParameter("id") != null){
+                    Integer id = Integer.parseInt(request.getParameter("id"));
+                    dtod = daod.findByPrimaryKey(id);
+                }
+                prsnumber = request.getParameter("prsnumber");
+                dto = dao.findWherePrsnumber(prsnumber);
+                dtod = daod.findWherePrsnumber(prsnumber);
+            }
 
-         List<CanvassingDetail> cd = new ArrayList <CanvassingDetail>();
-         if(request.getParameter("id")!=null){
-        	 productcode = request.getParameter("productcode");
-        	 cd = daod.findWhereCanvassingDetail(Integer.parseInt(request.getParameter("id")), prsnumber, productcode);
-         }
-         
-         SupplierDao daoSupp = DaoFactory.createSupplierDao();
- 		 List<Supplier> dropListSupplier = daoSupp.findAll();
-		    
- 		 System.out.println("dto ="+dto);
- 		 System.out.println("dtod ="+dtod);
- 		 
-         HashMap m = new HashMap();
-         m.put("dropListSupplier", dropListSupplier);
-         m.put("dto", dto);
-         m.put("dtod", dtod);
-         m.put("cd", cd);
-         
-         return m;
-         
-		} catch (Exception e) {
+            List<CanvassingDetail> cd = new ArrayList <CanvassingDetail>();
+            if(request.getParameter("id")!=null){
+                productcode = request.getParameter("productcode");
+                cd = daod.findWhereCanvassingDetail(Integer.parseInt(request.getParameter("id")), prsnumber, productcode);
+            }
+
+            SupplierDao daoSupp = DaoFactory.createSupplierDao();
+            List<Supplier> dropListSupplier = daoSupp.findAll();
+
+            System.out.println("dto ="+dto);
+            System.out.println("dtod ="+dtod);
+
+            HashMap m = new HashMap();
+            m.put("dropListSupplier", dropListSupplier);
+            m.put("dto", dto);
+            m.put("dtod", dtod);
+            m.put("cd", cd);
+
+            return m;
+        } catch (Exception e) {
             throw e;
         }
-	}
+    }
 	
 	/**
 	 * Method 'findAll'
@@ -175,24 +173,24 @@ public class CanvassingController extends ReportManagerController {
 		
 	}
 	
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		Map map = new HashMap();
-		map = this.getModelByPrimaryKey(request);
-		map.put("mode", "create");		
-		
-		CanvassingDao dao = DaoFactory.createCanvassingDao();
-		
-		return new ModelAndView( "2_receive/CanvassAdd", "model", map);
-	}
+    /**
+     * Method 'create'
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
+        Map map = new HashMap();
+        map = this.getModelByPrimaryKey(request);
+        map.put("mode", "create");		
+
+    //		CanvassingDao dao = DaoFactory.createCanvassingDao();
+
+        return new ModelAndView( "2_receive/CanvassAdd", "model", map);
+    }
 	
 	public ModelAndView canvassingForm(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{

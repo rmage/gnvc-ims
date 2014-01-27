@@ -403,32 +403,28 @@ public class CanvassingDetailDaoImpl extends AbstractDAO implements Parameterize
 		
 	}
 
-	public List<CanvassingDetail> findWhereCanvassingDetail(int id, String prsnumber, String productcode) throws CanvassingDetailDaoException {
-		try{
-			Map map = new HashMap();
-			map.put("id", id);
-        	map.put("prsnumber", prsnumber);
-        	map.put("productcode", productcode);
+    public List<CanvassingDetail> findWhereCanvassingDetail(int id, String prsnumber, String productcode) throws CanvassingDetailDaoException {
+        try {
+            Map map = new HashMap();
+            map.put("id", id);
+            map.put("prsnumber", prsnumber);
+            map.put("productcode", productcode);
         	
-        	StringBuffer sb = new StringBuffer();
+            StringBuffer sb = new StringBuffer();
+
+            sb.append(" select cd.id, cd.supplier_code, cd.prsnumber, cd.productcode, cd.productname, pd.uom_name, pd.qty," +
+                " cd.priceunit, cd.warranty, cd.termpayment, cd.termdelivery, cd.discount, cd.pph, cd.ppn, " +
+                " cd.is_selected FROM canvassing_detail cd " +
+                " inner join prs_detail pd on cd.prsnumber = pd.prsnumber " +
+                " where " +
+                " cd.id like '%"+id+"%' and cd.prsnumber like '%"+prsnumber+"%' and pd.prsnumber like '%"+prsnumber+"%' " +
+                " and cd.productcode like '%"+productcode+"%' and pd.productcode like '%"+productcode+"%' ");
         	
-        	sb.append(" select cd.id, cd.supplier_code, cd.prsnumber, cd.productcode, cd.productname, pd.uom_name, pd.qty," +
-        			  " cd.priceunit, cd.warranty, cd.termpayment, cd.termdelivery, cd.discount, cd.pph, cd.ppn, " +
-        			  " cd.is_selected FROM canvassing_detail cd " +
-        			  " inner join prs_detail pd on cd.prsnumber = pd.prsnumber " +
-        			  " where " +
-        			  " cd.id like '%"+id+"%' and cd.prsnumber like '%"+prsnumber+"%' and pd.prsnumber like '%"+prsnumber+"%' " +
-        			  " and cd.productcode like '%"+productcode+"%' and pd.productcode like '%"+productcode+"%' ");
-        	
-			return jdbcTemplate.query(sb.toString(), new CanvassingListMap(), map);
-			
-		} catch (Exception e) {
-			throw new CanvassingDetailDaoException ("Query failed", e);
-		}
-		
-		
-		
-	}
+            return jdbcTemplate.query(sb.toString(), new CanvassingListMap(), map);
+        } catch (Exception e) {
+            throw new CanvassingDetailDaoException ("Query failed", e);
+        }
+    }
 	
 	
 	public CanvassingDetail findWherePrsnumber(String prsnumber) throws CanvassingDetailDaoException

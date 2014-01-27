@@ -266,4 +266,32 @@ public class Utility {
     public static String generateRandomHash() {
         return RandomStringUtils.randomAlphanumeric(10).toLowerCase();
     }
+    
+    /* FYA : 07 January 2014 */
+    public Object[] fyaGenerateSQLCriteria(String[][] c) {
+        int i = 0;
+        String sql = " WHERE";
+        Object[] args = new Object[c.length + 1];
+        Object[] ret = new Object[2];
+        for(Object[] x : c) {
+            if(i != 0)
+                sql = sql + " AND";
+            
+            if(x[0].equals("rownum")) {
+                sql = sql + " " + x[0] + " BETWEEN ? AND ?";
+                args[i] = String.valueOf(((Integer.parseInt(x[1].toString()) - 1) * 10) + 1); i++;
+                args[i] = String.valueOf(Integer.parseInt(x[1].toString()) * 10);
+            } else {
+                sql = sql + " " + x[0] + " = ?";
+                args[i] = x[1];
+            }
+            
+            i++;
+        }
+        
+        ret[0] = sql;
+        ret[1] = args;
+        return ret;
+    }
+    
 }

@@ -1,11 +1,11 @@
 package com.app.wms.engine.db.dao.spring;
 
-import com.app.wms.engine.db.dao.CanvasserassignmentDao;
-import com.app.wms.engine.db.dto.Canvasserassignment;
-import com.app.wms.engine.db.dto.CanvasserassignmentPk;
+import com.app.wms.engine.db.dao.AssignCanvasserDao;
+import com.app.wms.engine.db.dto.AssignCanvasser;
+import com.app.wms.engine.db.dto.AssignCanvasserPk;
 import com.app.wms.engine.db.dto.Supplier;
 import com.app.wms.engine.db.dto.map.SupplierListMap;
-import com.app.wms.engine.db.exceptions.CanvasserassignmentDaoException;
+import com.app.wms.engine.db.exceptions.AssignCanvasserDaoException;
 import com.app.wms.engine.db.exceptions.SupplierDaoException;
 
 import java.util.Date;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
-public class CanvasserassignmentDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Canvasserassignment>, CanvasserassignmentDao
+public class AssignCanvasserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<AssignCanvasser>, AssignCanvasserDao
 {
 	protected SimpleJdbcTemplate jdbcTemplate;
 
@@ -43,9 +43,9 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Method 'insert'
 	 * 
 	 * @param dto
-	 * @return CanvasserassignmentPk
+	 * @return AssignCanvasserPk
 	 */
-	public CanvasserassignmentPk insert(Canvasserassignment dto)
+	public AssignCanvasserPk insert(AssignCanvasser dto)
 	{
 		SqlUpdate su = new SqlUpdate( dataSource, "INSERT INTO " + getTableName() + " ( prsnumber, canvassername, created_by, created_date, updated_by, updated_date ) VALUES ( ?, ?, ?, ?, ?, ? )");
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
@@ -56,7 +56,7 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 		su.declareParameter( new SqlParameter( java.sql.Types.TIMESTAMP) );
 		su.compile();
 		su.update( new Object[] { dto.getPrsnumber(),dto.getCanvassername(),dto.getCreatedBy(),dto.getCreatedDate(),dto.getUpdatedBy(),dto.getUpdatedDate()} );
-		CanvasserassignmentPk pk = new CanvasserassignmentPk();
+		AssignCanvasserPk pk = new AssignCanvasserPk();
 		pk.setId( jdbcTemplate.queryForInt("select @@IDENTITY") );
 		return pk;
 	}
@@ -64,7 +64,7 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	/** 
 	 * Updates a single row in the canvasserassignment table.
 	 */
-	public void update(CanvasserassignmentPk pk, Canvasserassignment dto) throws CanvasserassignmentDaoException
+	public void update(AssignCanvasserPk pk, AssignCanvasser dto) throws AssignCanvasserDaoException
 	{
 		SqlUpdate su = new SqlUpdate( dataSource, "UPDATE " + getTableName() + " SET prsnumber = ?, canvassername = ?, created_by = ?, created_date = ?, updated_by = ?, updated_date = ? WHERE id = ?");
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
@@ -82,7 +82,7 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Deletes a single row in the canvasserassignment table.
 	 */
 	@Transactional
-	public void delete(CanvasserassignmentPk pk) throws CanvasserassignmentDaoException
+	public void delete(AssignCanvasserPk pk) throws AssignCanvasserDaoException
 	{
 		jdbcTemplate.update("DELETE FROM " + getTableName() + " WHERE id = ?",pk.getId());
 	}
@@ -93,11 +93,11 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * @param rs
 	 * @param row
 	 * @throws SQLException
-	 * @return Canvasserassignment
+	 * @return AssignCanvasser
 	 */
-	public Canvasserassignment mapRow(ResultSet rs, int row) throws SQLException
+	public AssignCanvasser mapRow(ResultSet rs, int row) throws SQLException
 	{
-		Canvasserassignment dto = new Canvasserassignment();
+		AssignCanvasser dto = new AssignCanvasser();
 		dto.setId( rs.getInt( 1 ) );
 		dto.setPrsnumber( rs.getString( 2 ) );
 		dto.setCanvassername( rs.getString( 3 ) );
@@ -115,21 +115,21 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 */
 	public String getTableName()
 	{
-		return "inventory..canvasserassignment";
+		return "inventory..assign_canv";
 	}
 
 	/** 
 	 * Returns all rows from the canvasserassignment table that match the criteria 'id = :id'.
 	 */
 	@Transactional
-	public Canvasserassignment findByPrimaryKey(int id) throws CanvasserassignmentDaoException
+	public AssignCanvasser findByPrimaryKey(int id) throws AssignCanvasserDaoException
 	{
 		try {
-			List<Canvasserassignment> list = jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE id = ?", this,id);
+			List<AssignCanvasser> list = jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE id = ?", this,id);
 			return list.size() == 0 ? null : list.get(0);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -138,13 +138,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria ''.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findAll() throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findAll() throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " ORDER BY id", this);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -153,13 +153,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'id = :id'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWhereIdEquals(int id) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWhereIdEquals(int id) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE id = ? ORDER BY id", this,id);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -168,13 +168,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'prsnumber = :prsnumber'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWherePrsnumberEquals(String prsnumber) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWherePrsnumberEquals(String prsnumber) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE prsnumber = ? ORDER BY prsnumber", this,prsnumber);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -183,13 +183,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'canvassername = :canvassername'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWhereCanvassernameEquals(String canvassername) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWhereCanvassernameEquals(String canvassername) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE canvassername = ? ORDER BY canvassername", this,canvassername);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -198,13 +198,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'created_by = :createdBy'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWhereCreatedByEquals(String createdBy) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWhereCreatedByEquals(String createdBy) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE created_by = ? ORDER BY created_by", this,createdBy);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -213,13 +213,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'created_date = :createdDate'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWhereCreatedDateEquals(Date createdDate) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWhereCreatedDateEquals(Date createdDate) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE created_date = ? ORDER BY created_date", this,createdDate);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -228,13 +228,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'updated_by = :updatedBy'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWhereUpdatedByEquals(String updatedBy) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWhereUpdatedByEquals(String updatedBy) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE updated_by = ? ORDER BY updated_by", this,updatedBy);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -243,13 +243,13 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	 * Returns all rows from the canvasserassignment table that match the criteria 'updated_date = :updatedDate'.
 	 */
 	@Transactional
-	public List<Canvasserassignment> findWhereUpdatedDateEquals(Date updatedDate) throws CanvasserassignmentDaoException
+	public List<AssignCanvasser> findWhereUpdatedDateEquals(Date updatedDate) throws AssignCanvasserDaoException
 	{
 		try {
 			return jdbcTemplate.query("SELECT id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE updated_date = ? ORDER BY updated_date", this,updatedDate);
 		}
 		catch (Exception e) {
-			throw new CanvasserassignmentDaoException("Query failed", e);
+			throw new AssignCanvasserDaoException("Query failed", e);
 		}
 		
 	}
@@ -257,63 +257,45 @@ public class CanvasserassignmentDaoImpl extends AbstractDAO implements Parameter
 	/** 
 	 * Returns the rows from the canvasserassignment table that matches the specified primary-key value.
 	 */
-	public Canvasserassignment findByPrimaryKey(CanvasserassignmentPk pk) throws CanvasserassignmentDaoException
+	public AssignCanvasser findByPrimaryKey(AssignCanvasserPk pk) throws AssignCanvasserDaoException
 	{
 		return findByPrimaryKey( pk.getId() );
 	}
 	
-	public List<Canvasserassignment> findCanvasserAssignPaging (Canvasserassignment c, int page) throws CanvasserassignmentDaoException {
-		 try {
-	        	String prsnumber = c.getPrsnumber();
-	        	String canvassername = c.getCanvassername();
-	        	
-	        	int i = page;
-	        	Map map = new HashMap();
-	        	map.put("i", i);
-	        
-	        	StringBuffer sb = new StringBuffer();
-	        	
-	        	if(c == null){
-	        		c = new Canvasserassignment();
-	        	}
-	        	
-	        	if(prsnumber == null || canvassername == null){
-	        		prsnumber = "%";
-	        		canvassername = "%";
-	        		
-	        		sb.append("declare @Page int, @PageSize int "
-	        				+"set @Page = '"+i+"'; "
-	        				+"set @PageSize = 10; "
-	        				+"with PagedResult "
-	        				+"as (select ROW_NUMBER() over (order by id asc) as id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date from canvasserassignment" +
-	        						" where prsnumber like '%"+prsnumber+"%' and canvassername like '%"+canvassername+"%' ) "
-	        				    +"select * from PagedResult where id between "
-	        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-	        				     +"else @Page end and @PageSize * @Page ");
-	        		
-	        	}else{
-	        		
-	        		sb.append("declare @Page int, @PageSize int "
-	        				+"set @Page = '"+i+"'; "
-	        				+"set @PageSize = 10; "
-	        				+"with PagedResult "
-	        				+"as (select ROW_NUMBER() over (order by id asc) as id, prsnumber, canvassername, created_by, created_date, updated_by, updated_date from canvasserassignment" +
-	        						" where prsnumber like '%"+prsnumber+"%' and canvassername like '%"+canvassername+"%' ) "
-	        				    +"select * from PagedResult where id between "
-	        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-	        				     +"else @Page end and @PageSize * @Page ");
-	        		
-	        	}
-	        	
-	        	
-	        	
-	        	return jdbcTemplate.query(sb.toString(),this);	
-	        
-	        } catch (Exception e) {
-	            throw new CanvasserassignmentDaoException("Query failed", e);
-	        }
+    public List<AssignCanvasser> findCanvasserAssignPaging (AssignCanvasser c, int page) throws AssignCanvasserDaoException {
+        try {
+            String prsnumber = c.getPrsnumber();
+            String canvassername = c.getCanvassername();
 
-		
-	}
+            int i = page;
+            Map map = new HashMap();
+            map.put("i", i);
+
+            StringBuffer sb = new StringBuffer();
+
+            if(c == null){
+                c = new AssignCanvasser();
+            }
+
+            if(prsnumber == null || canvassername == null){
+                prsnumber = "%";
+                canvassername = "%";
+            }
+
+            sb.append("declare @Page int, @PageSize int "
+                 +"set @Page = '"+i+"'; "
+                 +"set @PageSize = 10; "
+                 +"with PagedResult "
+                 +"as (select ROW_NUMBER() over (order by ca.id desc) as id, ca.prsnumber, ca.canvassername, ca.created_by, ca.created_date, ca.updated_by, ca.updated_date from " + getTableName() + " ca " +
+                     "left join \"user\" u on u.user_id = canvassername where ca.prsnumber like '%"+prsnumber+"%' ) "
+                 +"select * from PagedResult where id between "
+                 +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                 +"else @Page end and @PageSize * @Page");
+
+            return jdbcTemplate.query(sb.toString(),this);	
+       } catch (Exception e) {
+           throw new AssignCanvasserDaoException("Query failed", e);
+       }		
+    }
 
 }

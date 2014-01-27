@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.Date;
 
-public class Canvasserassignment implements Serializable
+public class AssignCanvasser implements Serializable
 {
 	/** 
 	 * This attribute maps to the column id in the canvasserassignment table.
@@ -48,7 +48,7 @@ public class Canvasserassignment implements Serializable
 	 * Method 'Canvasserassignment'
 	 * 
 	 */
-	public Canvasserassignment()
+	public AssignCanvasser()
 	{
 	}
 
@@ -208,11 +208,11 @@ public class Canvasserassignment implements Serializable
 			return true;
 		}
 		
-		if (!(_other instanceof Canvasserassignment)) {
+		if (!(_other instanceof AssignCanvasser)) {
 			return false;
 		}
 		
-		final Canvasserassignment _cast = (Canvasserassignment) _other;
+		final AssignCanvasser _cast = (AssignCanvasser) _other;
 		if (id != _cast.id) {
 			return false;
 		}
@@ -283,11 +283,11 @@ public class Canvasserassignment implements Serializable
 	/**
 	 * Method 'createPk'
 	 * 
-	 * @return CanvasserassignmentPk
+	 * @return AssignCanvasserPk
 	 */
-	public CanvasserassignmentPk createPk()
+	public AssignCanvasserPk createPk()
 	{
-		return new CanvasserassignmentPk(id);
+		return new AssignCanvasserPk(id);
 	}
 
 	/**

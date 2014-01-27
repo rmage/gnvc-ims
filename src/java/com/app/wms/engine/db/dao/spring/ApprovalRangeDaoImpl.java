@@ -156,7 +156,7 @@ public class ApprovalRangeDaoImpl extends AbstractDAO implements ParameterizedRo
 	public List<ApprovalRange> findAll() throws ApprovalRangeDaoException
 	{
 		try {
-			return jdbcTemplate.query("SELECT id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY id", this);
+			return jdbcTemplate.query("SELECT id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY from_amount", this);
 		}
 		catch (Exception e) {
 			throw new ApprovalRangeDaoException("Query failed", e);
@@ -322,61 +322,41 @@ public class ApprovalRangeDaoImpl extends AbstractDAO implements ParameterizedRo
 		return findByPrimaryKey( pk.getId() );
 	}
 
-	@Override
-	public List<ApprovalRange> findApprovalRangePaging(ApprovalRange a, int page) throws ApprovalRangeDaoException {
-		// TODO Auto-generated method stub
-
+    @Override
+    public List<ApprovalRange> findApprovalRangePaging(ApprovalRange a, int page) throws ApprovalRangeDaoException {
         try {
-        	String userName = a.getUsername();
-        	String roleCode = a.getRoleCode();
-        	
-        	int i = page;
-        	Map map = new HashMap();
-        	map.put("i", i);
-        
-        	StringBuffer sb = new StringBuffer();
-        	
-        	if(a == null){
-        		a = new ApprovalRange();
-        	}
-        	
-        	if(userName == null || roleCode == null){
-        		userName = "%";
-        		roleCode = "%";
-        		
-        		sb.append("declare @Page int, @PageSize int "
-        				+"set @Page = '"+i+"'; "
-        				+"set @PageSize = 10; "
-        				+"with PagedResult "
-        				+"as (select ROW_NUMBER() over (order by id asc) as id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date from approval_range" +
-        						" where username like '%"+userName+"%' and role_code like '%"+roleCode+"%' ) "
-        				    +"select * from PagedResult where id between "
-        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-        				     +"else @Page end and @PageSize * @Page ");
-        		
-        	}else{
-        		
-        		sb.append("declare @Page int, @PageSize int "
-        				+"set @Page = '"+i+"'; "
-        				+"set @PageSize = 10; "
-        				+"with PagedResult "
-        				+"as (select ROW_NUMBER() over (order by id asc) as id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date from approval_range" +
-        						" where username like '%"+userName+"%' and role_code like '%"+roleCode+"%' ) "
-        				    +"select * from PagedResult where id between "
-        				+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
-        				     +"else @Page end and @PageSize * @Page ");
-        		
-        	}
-        	
-        	
-        	
-        	return jdbcTemplate.query(sb.toString(),this,map);	
-        
+            String userName = a.getUsername();
+            String roleCode = a.getRoleCode();
+
+            int i = page;
+            Map map = new HashMap();
+            map.put("i", i);
+
+            StringBuffer sb = new StringBuffer();
+
+            if(a == null){
+                a = new ApprovalRange();
+            }
+
+            if(userName == null || roleCode == null){
+                userName = "%";
+                roleCode = "%";
+            }
+            
+            sb.append("declare @Page int, @PageSize int "
+                +"set @Page = '"+i+"'; "
+                +"set @PageSize = 10; "
+                +"with PagedResult "
+                +"as (select id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date, ROW_NUMBER() over (order by id asc) as ids from approval_range ) "
+                +"select * from PagedResult where ids between "
+                +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                    +"else @Page end and @PageSize * @Page ");
+
+            return jdbcTemplate.query(sb.toString(),this,map);	
         } catch (Exception e) {
             throw new ApprovalRangeDaoException("Query failed", e);
         }
-
-	}
+    }
 
 	
 	public List<ApprovalRange> findApprovalRangeTotal(BigDecimal total) throws ApprovalRangeDaoException {

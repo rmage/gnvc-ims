@@ -7,7 +7,7 @@ import java.util.Date;
 /** 
  * This class represents the primary key of the canvasserassignment table.
  */
-public class CanvasserassignmentPk implements Serializable
+public class AssignCanvasserPk implements Serializable
 {
 	protected int id;
 
@@ -36,7 +36,7 @@ public class CanvasserassignmentPk implements Serializable
 	 * Method 'CanvasserassignmentPk'
 	 * 
 	 */
-	public CanvasserassignmentPk()
+	public AssignCanvasserPk()
 	{
 	}
 
@@ -45,7 +45,7 @@ public class CanvasserassignmentPk implements Serializable
 	 * 
 	 * @param id
 	 */
-	public CanvasserassignmentPk(final int id)
+	public AssignCanvasserPk(final int id)
 	{
 		this.id = id;
 	}
@@ -82,11 +82,11 @@ public class CanvasserassignmentPk implements Serializable
 			return true;
 		}
 		
-		if (!(_other instanceof CanvasserassignmentPk)) {
+		if (!(_other instanceof AssignCanvasserPk)) {
 			return false;
 		}
 		
-		final CanvasserassignmentPk _cast = (CanvasserassignmentPk) _other;
+		final AssignCanvasserPk _cast = (AssignCanvasserPk) _other;
 		if (id != _cast.id) {
 			return false;
 		}

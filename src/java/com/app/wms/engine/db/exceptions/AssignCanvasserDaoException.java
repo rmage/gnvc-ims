@@ -1,13 +1,13 @@
 package com.app.wms.engine.db.exceptions;
 
-public class CanvasserassignmentDaoException extends DaoException
+public class AssignCanvasserDaoException extends DaoException
 {
 	/**
 	 * Method 'CanvasserassignmentDaoException'
 	 * 
 	 * @param message
 	 */
-	public CanvasserassignmentDaoException(String message)
+	public AssignCanvasserDaoException(String message)
 	{
 		super(message);
 	}
@@ -18,7 +18,7 @@ public class CanvasserassignmentDaoException extends DaoException
 	 * @param message
 	 * @param cause
 	 */
-	public CanvasserassignmentDaoException(String message, Throwable cause)
+	public AssignCanvasserDaoException(String message, Throwable cause)
 	{
 		super(message, cause);
 	}
