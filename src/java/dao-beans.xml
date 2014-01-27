@@ -863,7 +863,7 @@
     <bean id="CanvassingDetailDao" class="com.app.wms.engine.db.dao.spring.CanvassingDetailDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="CanvasserassignmentDao" class="com.app.wms.engine.db.dao.spring.CanvasserassignmentDaoImpl" scope="prototype">
+    <bean id="AssignCanvasserDao" class="com.app.wms.engine.db.dao.spring.AssignCanvasserDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="ApprovalRangeDao" class="com.app.wms.engine.db.dao.spring.ApprovalRangeDaoImpl" scope="prototype">
@@ -941,6 +941,14 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishBadStockDetailDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDetailDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!-- FYA : 07 January 2014 -->
+    <bean id="AssignCanvasserDtlDao" class="com.app.wms.engine.db.dao.spring.AssignCanvasserDtlDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="AssignCanvassingDao" class="com.app.wms.engine.db.dao.spring.AssignCanvassingDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

@@ -56,14 +56,14 @@
     
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             ApprovalRange dto = (ApprovalRange) m.get("dto");
-     		String mode = (String) m.get("mode");
-     		String userName = (String) dto.getUsername();
-     		String roleCode =  (String) dto.getRoleCode();
-     		BigDecimal fromAmount = (BigDecimal) dto.getFromAmount();
-     		BigDecimal toAmount = (BigDecimal) dto.getToAmount();
-     		String id = Integer.toString(dto.getId());
+            String mode = (String) m.get("mode");
+            String userName = (String) dto.getUsername();
+            String roleCode =  (String) dto.getRoleCode();
+            BigDecimal fromAmount = (BigDecimal) dto.getFromAmount();
+            BigDecimal toAmount = (BigDecimal) dto.getToAmount();
+            String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -82,16 +82,16 @@
                             <caption>Approval Range - Detail</caption>
                             <tbody class="tbl-nohover">
                             	 <tr>
-                                    <td class="style1">Role Code</td>
+                                    <td class="style1">Role Code${model.dto.roleCode}</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="rolecode" value="<%=roleCode%>" maxlength="20" size="25" class="validate[required] text-input" />
+                                            <input type="text" name="rolecode" value="<%=roleCode%>" maxlength="20" size="25" class="validate[required] text-input" readonly />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                 </tr>
                             
-                            	<tr>
+                            	<!--<tr>
                                     <td class="style1">User Name</td>
                                     <td class="style1">
                                         <label>
@@ -99,16 +99,15 @@
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
-                                </tr>
+                                </tr>-->
                                
                                 <tr>
                                     <td class="style1">From Amount</td>
                                     <td class="style1">
                                         <label>
                                             <input type="text" id="fromamount" name="fromamount" maxlength="25" size="30" value="<%=fromAmount%>" class="validate[required] text-input"
-                                                   onblur="changeFormatFromAmount()"
-                                     			   onkeypress="return isNumberKey(event)" 
-                                            />
+                                                onblur="changeFormatFromAmount()"
+                                                onkeypress="return isNumberKey(event)" />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -119,9 +118,8 @@
                                     <td class="style1">
                                         <label>
                                             <input type="text" id="toamount" name="toamount" maxlength="25" size="30" value="<%=toAmount%>" class="validate[required] text-input"
-                                                   onblur="changeFormatToAmount()"
-                                     			   onkeypress="return isNumberKey(event)" 
-                                            />
+                                                onblur="changeFormatToAmount()"
+                                                onkeypress="return isNumberKey(event)" />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -131,10 +129,10 @@
                                     <td class="style1">
                                         <label>
                                             <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-										</label>
-										<label>
-										    <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-					                    </label>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
+                                        </label>
                                    </td>
                                	</tr>
 								

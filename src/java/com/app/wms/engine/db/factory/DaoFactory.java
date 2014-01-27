@@ -6,7 +6,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
 
-
 public class DaoFactory {
 
   public static BasicDataSource getReportDataSource() {
@@ -711,10 +710,10 @@ public class DaoFactory {
 			return (CanvassingDetailDao) bf.getBean( "CanvassingDetailDao" );
 		}
 		
-		public static CanvasserassignmentDao createCanvasserassignmentDao()
+		public static AssignCanvasserDao createAssignCanvasserDao()
 		{
 			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (CanvasserassignmentDao) bf.getBean( "CanvasserassignmentDao" );
+			return (AssignCanvasserDao) bf.getBean( "AssignCanvasserDao" );
 		}
 		
 		public static ApprovalRangeDao createApprovalRangeDao()
@@ -834,4 +833,16 @@ public class DaoFactory {
 			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
 			return (FishBadStockDetailDao) bf.getBean("FishBadStockDetailDao");
 		}
+
+    /* FYA : 07 January 2014 */
+    public static AssignCanvasserDtlDao createAssignCanvasserDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (AssignCanvasserDtlDao) bf.getBean("AssignCanvasserDtlDao");
+    }
+    
+    public static AssignCanvassingDao createAssignCanvassingDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (AssignCanvassingDao) bf.getBean("AssignCanvassingDao");
+    }
+    
 }

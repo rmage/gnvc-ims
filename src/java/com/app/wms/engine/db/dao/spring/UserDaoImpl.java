@@ -760,61 +760,61 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     	return u;
     }
 
-	@Override
-	public List<User> findUserPaging(UserSearch c, int page) throws UserDaoException {
-		try {
-			StringBuffer sb = new StringBuffer();
-        	int i = page;
-        	Map map = new HashMap();
-        	map.put("i", i);
-        	
-        	if(c == null){
-        		c = new UserSearch();
-        	}
-        	
-        	String userId = c.getCode();
-        	String name   = c.getName();
-        	
-        	if(userId == null || name == null){
-        		userId = "%";
-        		name   = "%";
-        		
-        		sb.append("declare @Page int, @PageSize int "  
-            			+"set @Page = '"+i+"'; "  
-            			+"set @PageSize = 10; "  
-            			+"with PagedResult "  
-            			+"as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%"+userId+"%' and name like '%"+name+"%'" 
-            			+"and role_code not in ('SYSADMIN')) " 
-            			+"select * from PagedResult where id between "  
-            			+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "  
-            			+"else @Page end and @PageSize * @Page");
-            	
-        	}
-        	else
-        	{
-        		sb.append("declare @Page int, @PageSize int "  
-            			+"set @Page = '"+i+"'; "  
-            			+"set @PageSize = 10; "  
-            			+"with PagedResult "  
-            			+"as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%"+userId+"%' and name like '%"+name+"%'" 
-            			+"and role_code not in ('SYS-ADMIN')) " 
-            			+"select * from PagedResult where id between "  
-            			+"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "  
-            			+"else @Page end and @PageSize * @Page");
-            	
-        	}
-        	
-        	return jdbcTemplate.query(sb.toString(),new UserListMap(),map);	
-        
+    @Override
+    public List<User> findUserPaging(UserSearch c, int page) throws UserDaoException {
+        try {
+                    StringBuffer sb = new StringBuffer();
+            int i = page;
+            Map map = new HashMap();
+            map.put("i", i);
+
+            if(c == null){
+                    c = new UserSearch();
+            }
+
+            String userId = c.getCode();
+            String name   = c.getName();
+
+            if(userId == null || name == null){
+                    userId = "%";
+                    name   = "%";
+
+                    sb.append("declare @Page int, @PageSize int "  
+                            +"set @Page = '"+i+"'; "  
+                            +"set @PageSize = 10; "  
+                            +"with PagedResult "  
+                            +"as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%"+userId+"%' and name like '%"+name+"%'" 
+                            +"and role_code not in ('SYSADMIN') and is_active = 'Y') " 
+                            +"select * from PagedResult where id between "  
+                            +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "  
+                            +"else @Page end and @PageSize * @Page");
+
+            }
+            else
+            {
+                    sb.append("declare @Page int, @PageSize int "  
+                            +"set @Page = '"+i+"'; "  
+                            +"set @PageSize = 10; "  
+                            +"with PagedResult "  
+                            +"as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%"+userId+"%' and name like '%"+name+"%'" 
+                            +"and role_code not in ('SYS-ADMIN')) and is_active = 'Y' "
+                            +"select * from PagedResult where id between "  
+                            +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "  
+                            +"else @Page end and @PageSize * @Page");
+
+            }
+
+            return jdbcTemplate.query(sb.toString(),new UserListMap(),map);	
+
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }
-       }
+   }
 	
 	public List<User> findRoleCanvasser() throws UserDaoException {
             try {
                return jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, "
-                    + "CREATED_DATE, UPDATED_BY, UPDATED_DATE, CORP_ID  FROM " + getTableName() + " WHERE ROLE_CODE = 'STAFF_PRC' ORDER BY USER_ID", this);
+                    + "CREATED_DATE, UPDATED_BY, UPDATED_DATE, CORP_ID  FROM " + getTableName() + " WHERE ROLE_CODE = 'PRC.ST' ORDER BY USER_ID", this);
            } catch (Exception e) {
                throw new UserDaoException("Query failed", e);
            }	

@@ -99,4 +99,8 @@ public interface PrsDao
         public List<Prs> findByDepartment(String deptId);
         
         public List<Prs> findAllNotInCanvas();
+        
+        public List<Prs> fyaFindByCanvaser(String userId);
+        
+        public List<Prs> fyaFindByCanvaser(String prsNo, String userId);
 }

@@ -4,8 +4,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.*;
-import java.math.*;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +13,6 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.*;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UserRoleController extends MultiActionController
 {
@@ -28,9 +25,8 @@ public class UserRoleController extends MultiActionController
      * @return ModelAndView
      */
 
-     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-     try {
-            
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -45,17 +41,15 @@ public class UserRoleController extends MultiActionController
                // m = this.searchAndPaging(request, response);
                 return new ModelAndView("1_setup/role/RoleList", "model", m);
             }
-
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView( "Error", "th", e );
         }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
 
     }
 	 
-	 private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-     try {
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
            
             UserRoleDao dao = DaoFactory.createUserRoleDao();

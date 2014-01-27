@@ -1144,4 +1144,13 @@
     <bean name="/Bap.htm" class="com.app.wms.web.controller.BeritaAcaraController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/SupplierAssignment.htm" class="com.app.wms.web.controller.SupplierAssignmentController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/CanvassingForm.htm" class="com.app.wms.web.controller.CanvassingFormController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/PriceAssignment.htm" class="com.app.wms.web.controller.PriceAssignmentController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

@@ -85,7 +85,6 @@ public class ApprovalRangeController extends MultiActionController {
             m.put("paging", paging);
 
             return m;
-
         } catch (Exception e){
             throw e;
         }		
@@ -98,32 +97,22 @@ public class ApprovalRangeController extends MultiActionController {
 
             String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
-        	 Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
             if (dto.getUsername() == null) {	 
-        	 dto.setUsername("");
-        	 dto.setRoleCode("");
-             dto.setIsActive("Y");
-             dto.setIsDelete("N");
-         }
+                dto.setUsername("");
+            }
          
-         if (dto.getUsername() != null || dto.getRoleCode() != null) {
-        	 dto.setUsername(dto.getUsername());
-        	 dto.setRoleCode(dto.getRoleCode());
-             dto.setIsActive(dto.getIsActive());
-             dto.setIsDelete(dto.getIsDelete());
-         }
-         //edit
-         HashMap m = new HashMap();
-         m.put("dto", dto);
-         
-         return m;
-         
-		} catch (Exception e) {
+            //edit
+            HashMap m = new HashMap();
+            m.put("dto", dto);
+
+            return m;
+        } catch (Exception e) {
             throw e;
         }
-	}
+    }
 	
 	
 	/**
@@ -204,8 +193,8 @@ public class ApprovalRangeController extends MultiActionController {
 	 * @throws Exception
 	 * @return ModelAndView
 	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
+    {
 
       boolean isCreate = true;
       String strError = "";
@@ -213,68 +202,68 @@ public class ApprovalRangeController extends MultiActionController {
       java.lang.String mode = request.getParameter("mode");
       ApprovalRange dto = null;
       try {
-          if (mode.equalsIgnoreCase("create")) {
-              isCreate = true;
-          } else {
-              isCreate = false;
-          }
+            if (mode.equalsIgnoreCase("create")) {
+                isCreate = true;
+            } else {
+                isCreate = false;
+            }
 
-          ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
-          if (isCreate) {
-        	  dto = new ApprovalRange();
-          } else {
-        	  Integer id = Integer.parseInt(request.getParameter("id"));
-              dto = dao.findByPrimaryKey(id);
-          }
-          
-          String userName = request.getParameter("username");
-          String roleCode = request.getParameter("rolecode");
-          List<ApprovalRange> tmp = dao.findWhereUsernameEquals(userName);
-          
-          if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getUsername().equals(userName))) {
-	  		  strError += "User Name already exists. Please try a different values" + AppConstant.EOL;
-	  	  }
-          
-          LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-          String userId = "";
-          if (lu == null) {
-  			HashMap m = new HashMap();
-              String msg = "You haven't login or your session has been expired! Please do login again";
-              m.put("msg", msg);
-              return new ModelAndView("login", "model", m);
-          }else{
-        	  userId = (String)lu.getUserId();
-          }
-          
-          if (isCreate) {
-              dto.setCreatedBy(userId);
-              dto.setCreatedDate(now);
-          }
-          
-          dto.setUsername(userName);
-          dto.setRoleCode(roleCode);
-          dto.setFromAmount(new BigDecimal (request.getParameter("fromamount").replaceAll(",", "")));
-          dto.setToAmount(new BigDecimal (request.getParameter("toamount").replaceAll(",", "")));
-          dto.setIsActive(request.getParameter("isActive"));
-          dto.setIsDelete("N");
-          dto.setUpdatedBy(userId);
-          dto.setUpdatedDate(new java.util.Date());
+            ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
+            if (isCreate) {
+                    dto = new ApprovalRange();
+            } else {
+                  Integer id = Integer.parseInt(request.getParameter("id"));
+                  dto = dao.findByPrimaryKey(id);
+            }
 
-          if (strError.length() > 0) {
-              throw new Exception(strError);
-          }
+//            String userName = request.getParameter("username");
+            String roleCode = request.getParameter("rolecode");
+//            List<ApprovalRange> tmp = dao.findWhereUsernameEquals(userName);
 
-          if (isCreate) {
-              dao.insert(dto);
-          } 
+//            if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getUsername().equals(userName))) {
+//                strError += "User Name already exists. Please try a different values" + AppConstant.EOL;
+//            }
           
-          else {
-              dto.setUpdatedBy(userId);
-              dto.setUpdatedDate(new java.util.Date());
-              dao.update(dto.createPk(), dto);
-          }
-		 
-          return new ModelAndView("1_setup/AppRangeView", "dto", dto);
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            String userId = "";
+            if (lu == null) {
+                HashMap m = new HashMap();
+                String msg = "You haven't login or your session has been expired! Please do login again";
+                m.put("msg", msg);
+                return new ModelAndView("login", "model", m);
+            }else{
+                    userId = (String)lu.getUserId();
+            }
+
+            if (isCreate) {
+                dto.setCreatedBy(userId);
+                dto.setCreatedDate(now);
+            }
+
+            dto.setUsername(null);
+            dto.setRoleCode(roleCode);
+            dto.setFromAmount(new BigDecimal (request.getParameter("fromamount").replaceAll(",", "")));
+            dto.setToAmount(new BigDecimal (request.getParameter("toamount").replaceAll(",", "")));
+            dto.setIsActive(request.getParameter("isActive"));
+            dto.setIsDelete("N");
+            dto.setUpdatedBy(userId);
+            dto.setUpdatedDate(new java.util.Date());
+
+            if (strError.length() > 0) {
+                throw new Exception(strError);
+            }
+
+            if (isCreate) {
+                dao.insert(dto);
+            } 
+
+            else {
+                dto.setUpdatedBy(userId);
+                dto.setUpdatedDate(new java.util.Date());
+                dao.update(dto.createPk(), dto);
+            }
+
+            return new ModelAndView("1_setup/AppRangeView", "dto", dto);
 
       } catch (Exception e) {
     	  e.printStackTrace();

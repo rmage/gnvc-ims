@@ -76,5 +76,8 @@ public interface PrsDetailDao
 	public List<PrsDetail> findWherePrsnumberEqualsDetail(String prsnumber) throws PrsDetailDaoException;
 	
 	public List<PrsDetail> findWherePrsnumberCanvassingSelected(String prsnumber, String suppliercode) throws PrsDetailDaoException;
+        
+        /* FYA : 07 January 2014 */
+        public PrsDetail findByPrsProduct(String prsNumber, String productCode);
 
 }
