@@ -80,23 +80,23 @@
                             $.ajax({
                             dataType: 'json',
                             success: function(data) {
-                            $.each(data.prsDetails, function(k,v){                                                         
-                            var rowCount = $('#main tr').length-1;
-                            $("<tr class=\"myhover\">"+
-							"<td class=\"style1\">"+rowCount+"</td>"+
-                        	"<input type=\"hidden\" name=\"productCode1\" value=\""+v.productcode+"\">"+
-                        	"<input type=\"hidden\" name=\"productName1\" value=\""+v.productname+"\">"+
-                        	"<input type=\"hidden\" name=\"qty\" value=\""+v.qty+"\">"+
-                        	"<input type=\"hidden\" name=\"uom\" value=\""+v.uom+"\">"+
-                        	"<td class=\"style1\">"+v.productname+"</td>"+
-                        	"<td class=\"style1\">"+v.uom+"</td>"+	                                                                                                                                                 
-                        	"<td class=\"style1\">"+v.qty+"</td>"+ 
-                        	"<td class=\"style1\"><span id=\""+rowCount+"-supplier2\"></span> <input type=\"hidden\" name=\"supplier1\" id=\""+rowCount+"-supplier1\" /></td> "                             
-                            +"<td class=\"style1\"><a class=\"check\" productCode=\""+v.productcode+"\" "
-                            +"productName=\""+v.productname+"\" "
-                            +"uom=\""+v.uom
-                            +"\" rowCount=\""+rowCount+"\" qty=\""+v.qty+"\" href=\"javascript:void(0)\">Entry</a></td>"+
-						    "</tr>").appendTo("#main tbody")
+                                $.each(data.prsDetails, function(k,v){                                                         
+                                var rowCount = $('#main tr').length-1;
+                                $("<tr class=\"myhover\">"+
+                                    "<td class=\"style1\">"+rowCount+"</td>"+
+                                    "<input type=\"hidden\" name=\"productCode1\" value=\""+v.productcode+"\">"+
+                                    "<input type=\"hidden\" name=\"productName1\" value=\""+v.productname+"\">"+
+                                    "<input type=\"hidden\" name=\"qty\" value=\""+v.qty+"\">"+
+                                    "<input type=\"hidden\" name=\"uom\" value=\""+v.uom+"\">"+
+                                    "<td class=\"style1\">"+v.productname+"</td>"+
+                                    "<td class=\"style1\">"+v.uom+"</td>"+	                                                                                                                                                 
+                                    "<td class=\"style1\">"+v.qty+"</td>"+ 
+                                    "<td class=\"style1\"><span id=\""+rowCount+"-supplier2\"></span> <input type=\"hidden\" name=\"supplier1\" id=\""+rowCount+"-supplier1\" /></td> "                             
+                                +"<td class=\"style1\"><a class=\"check\" productCode=\""+v.productcode+"\" "
+                                +"productName=\""+v.productname+"\" "
+                                +"uom=\""+v.uom
+                                +"\" rowCount=\""+rowCount+"\" qty=\""+v.qty+"\" href=\"javascript:void(0)\">Entry</a></td>"+
+                                "</tr>").appendTo("#main tbody")
                             });
                             },
                               url: 'prscanvasserdetailjson.htm?param='+localRowData.prsnumber
@@ -180,28 +180,23 @@
                         </table>
                         
                         <table class="collapse tblForm row-select"  id="main">
-							<caption>Canvassing - List</caption>
-								<thead>
-								    <tr>
-										<td class="style1">No.</td>
-	                                    <td class="style1">Item</td>
-	                                    <td class="style1">UoM</td>
-	                                    <td class="style1">Qty</td>
-	                                    <td class="style1">Supplier</td>
-	                                    <td class="style1">Action</td>
-								    </tr>
-								</thead>
-
-                       
-								<tbody>
-									  
-								</tbody>
-								
-	                            <tfoot><br/>
-	                                <tr>
-	                                    <td colspan="15"></td>	                                    
-	                                </tr>
-	                            </tfoot>
+                            <caption>Canvassing - List</caption>
+                            <thead>
+                                <tr>
+                                    <td class="style1">No.</td>
+                                    <td class="style1">Item</td>
+                                    <td class="style1">UoM</td>
+                                    <td class="style1">Qty</td>
+                                    <td class="style1">Supplier</td>
+                                    <td class="style1">Action</td>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tfoot><br/>
+                                <tr>
+                                    <td colspan="15"></td>	                                    
+                                </tr>
+                            </tfoot>
                         </table>
                         
                         <table class="collapse tblForm row-select ui-widget-content">
@@ -213,8 +208,8 @@
                                 <tr><td colspan="15">
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
-                                                   role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-                                                   name="btnSave" id="btnSave" value="Save" class="simpan" />
+                                                role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
+                                                name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" />
@@ -311,16 +306,16 @@
                            "Save": function() { 
 
                         	   /*
-							   if( $("#unitprice").val() == "0" ){
-									alert("data empty : 'please to entry unit price' ");
-									return false;
-							   }
-							   */				
+                                    if( $("#unitprice").val() == "0" ){
+                                                 alert("data empty : 'please to entry unit price' ");
+                                                 return false;
+                                    }
+                                    */				
                             	   $("#"+productCode+"-unitprice2").html($('#unitprice').val());
-                            	   $("#"+productCode+"-supplier2").html($('#supplier').val());
+                            	   $("#"+productCode+"-supplier2").html($('#supplier option:selected').html());
 
                                    $("#"+productCode+"-unitprice2").val($('#unitprice').val());
-                                   $("#"+productCode+"-supplier2").val($('#supplier').val());
+                                   $("#"+productCode+"-supplier2").val($('#supplier option:selected').html());
 
                                    $("#"+productCode+"-unitprice1").val($('#unitprice').val());
                                    $("#"+productCode+"-supplier1").val($('#supplier').val());

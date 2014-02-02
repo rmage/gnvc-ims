@@ -303,5 +303,11 @@ public class PrsDetailDaoImpl extends AbstractDAO implements ParameterizedRowMap
 		}
 		
 	}
+        
+    /* FYA : 07 January 2014 */
+    public PrsDetail findByPrsProduct(String prsNumber, String productCode) {
+        List<PrsDetail> pds = jdbcTemplate.query("SELECT id, prsnumber, productcode, productname, qty, uom_name FROM " + getTableName() + " WHERE prsnumber = ? AND productcode = ?", this, prsNumber, productCode);
+        return pds.isEmpty() ? null : pds.get(0);
+    }
 	
 }

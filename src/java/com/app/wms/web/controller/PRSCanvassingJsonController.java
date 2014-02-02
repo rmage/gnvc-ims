@@ -1,5 +1,6 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.DepartmentDao;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import com.app.wms.engine.db.dao.PrsDetailDao;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
 import com.app.wms.engine.db.exceptions.PrsDetailDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -28,67 +30,73 @@ import com.app.wms.engine.db.factory.DaoFactory;
 @RequestMapping( {"/prscanvasserjson.htm", "/prscanvasserdetailjson.htm"})
 public class PRSCanvassingJsonController extends BaseJsonController {
 	
-	@RequestMapping(value="/prscanvasserjson.htm", method = RequestMethod.GET)
+    @RequestMapping(value="/prscanvasserjson.htm", method = RequestMethod.GET)
     public ModelAndView prs(HttpServletRequest request, HttpServletResponse response) throws PrsDaoException {        
 		
-		LoginUser lu  = (LoginUser) request.getSession().getAttribute("user");
-		String prsnumber = request.getParameter("prsnumber");
-		String prsdt = request.getParameter("prsdate");
-		String poreferensi = request.getParameter("poreferensi");
-		String departmentname = request.getParameter("departmentname");
-		String createdby = request.getParameter("createdby");
-		String remarks = request.getParameter("remarks");
-		Date prsdate = new Date();
-		
-		List<Prs> prs = new ArrayList<Prs>();
-		Prs p = new Prs();
-		process(request);
-		PrsDao dao = DaoFactory.createPrsDao();
-		
-		if(prsnumber != null ){
-			
-			prs = dao.findWherePrsnumberEquals(prsnumber);
-			
-		}else if(prsdt != null && prsdt != ""){
-			try {
-				prsdate = new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("prsdate") + "");
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}else if(departmentname != null){
-			
-		}else if(createdby != null){
-			
-		}else if(remarks != null){
-			
-		}else if(prsnumber == null && prsdt == null && departmentname == null
-				 && createdby == null && remarks == null){
-			prs = dao.findWherePrsNumberCanvasserNotInPO();
-		}
-		
-		List result = new ArrayList();
-		for(Prs valueSearch : prs){
-			Map returnMap = new HashMap();
-			prsnumber = valueSearch.getPrsnumber();
-			prsdate = valueSearch.getPrsdate();
-			Date deliverydate = valueSearch.getDeliverydate();
-			poreferensi = valueSearch.getPoreferensi();
-			departmentname = valueSearch.getDepartmentName();
-			createdby = valueSearch.getCreatedby();
-			remarks = valueSearch.getRemarks();
-			returnMap.put("prsnumber", prsnumber);
-			returnMap.put("prsdate", prsdate);
-			returnMap.put("deliverydate", deliverydate);
-			returnMap.put("poreferensi", poreferensi);
-			returnMap.put("departmentname", departmentname);
-			returnMap.put("createdby", createdby);
-			returnMap.put("remarks", remarks);
-			result.add(returnMap);
-		}
-		
-		if(sord.equalsIgnoreCase("asc"))
-            Collections.reverse(prs);
+        LoginUser lu  = (LoginUser) request.getSession().getAttribute("user");
+        String prsnumber = request.getParameter("prsnumber");
+        String prsdt = request.getParameter("prsdate");
+        String poreferensi = request.getParameter("poreferensi");
+        String departmentname = request.getParameter("departmentname");
+        String createdby = request.getParameter("createdby");
+        String remarks = request.getParameter("remarks");
+        Date prsdate = new Date();
+
+        List<Prs> prs = new ArrayList<Prs>();
+        Prs p = new Prs();
+        process(request);
+        PrsDao dao = DaoFactory.createPrsDao();
+	List result = new ArrayList();
         
+        try {
+            if(prsnumber != null ){
+//                prs = dao.findWherePrsnumberEquals(prsnumber);
+                prs = dao.fyaFindByCanvaser(prsnumber, lu.getUserId());
+            }else if(prsdt != null && prsdt != ""){
+                    try {
+                            prsdate = new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("prsdate") + "");
+                    } catch (ParseException e) {
+                            e.printStackTrace();
+                    }
+            }else if(departmentname != null){
+
+            }else if(createdby != null){
+
+            }else if(remarks != null){
+
+            }else if(prsnumber == null && prsdt == null && departmentname == null
+                && createdby == null && remarks == null){
+                //prs = dao.findWherePrsNumberCanvasserNotInPO();
+                prs = dao.fyaFindByCanvaser(lu.getUserId());
+            }
+
+            DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+            for(Prs valueSearch : prs){
+                Map returnMap = new HashMap();
+                prsnumber = valueSearch.getPrsnumber();
+                prsdate = valueSearch.getPrsdate();
+                Date deliverydate = valueSearch.getDeliverydate();
+                poreferensi = valueSearch.getPoreferensi();
+    //			departmentname = valueSearch.getDepartmentName();
+                departmentname = departmentDao.findWhereDepartmentCodeEquals(valueSearch.getDepartmentName()).get(0).getDepartmentName();
+                createdby = valueSearch.getCreatedby();
+                remarks = valueSearch.getRemarks();
+                returnMap.put("prsnumber", prsnumber);
+                returnMap.put("prsdate", prsdate);
+                returnMap.put("deliverydate", deliverydate);
+                returnMap.put("poreferensi", poreferensi);
+                returnMap.put("departmentname", departmentname);
+                returnMap.put("createdby", createdby);
+                returnMap.put("remarks", remarks);
+                result.add(returnMap);
+            }
+
+            if(sord.equalsIgnoreCase("asc"))
+            Collections.reverse(prs);
+        } catch(DepartmentDaoException e) {
+            e.printStackTrace();
+        }
+		
         Map model = new HashMap();
         model.put(PAGE, page);
         model.put(TOTAL, getTotalPages(prs.size()));

@@ -3,12 +3,12 @@ package com.app.wms.engine.db.example;
 import java.math.*;
 import java.util.Date;
 import java.util.List;
-import com.app.wms.engine.db.dao.CanvasserassignmentDao;
-import com.app.wms.engine.db.dto.Canvasserassignment;
-import com.app.wms.engine.db.exceptions.CanvasserassignmentDaoException;
+import com.app.wms.engine.db.dao.AssignCanvasserDao;
+import com.app.wms.engine.db.dto.AssignCanvasser;
+import com.app.wms.engine.db.exceptions.AssignCanvasserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 
-public class CanvasserassignmentDaoExample
+public class AssignCanvasserDaoExample
 {
 	/**
 	 * Method 'main'
@@ -37,9 +37,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findAll() throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findAll();
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findAll();
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -53,9 +53,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWhereIdEquals(int id) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWhereIdEquals(id);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWhereIdEquals(id);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -69,9 +69,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWherePrsnumberEquals(String prsnumber) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWherePrsnumberEquals(prsnumber);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWherePrsnumberEquals(prsnumber);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -85,9 +85,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWhereCanvassernameEquals(String canvassername) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWhereCanvassernameEquals(canvassername);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWhereCanvassernameEquals(canvassername);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -101,9 +101,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWhereCreatedByEquals(String createdBy) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWhereCreatedByEquals(createdBy);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWhereCreatedByEquals(createdBy);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -117,9 +117,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWhereCreatedDateEquals(Date createdDate) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWhereCreatedDateEquals(createdDate);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWhereCreatedDateEquals(createdDate);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -133,9 +133,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWhereUpdatedByEquals(String updatedBy) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWhereUpdatedByEquals(updatedBy);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWhereUpdatedByEquals(updatedBy);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -149,9 +149,9 @@ public class CanvasserassignmentDaoExample
 	 */
 	public static void findWhereUpdatedDateEquals(Date updatedDate) throws Exception
 	{
-		CanvasserassignmentDao dao = DaoFactory.createCanvasserassignmentDao();
-		List<Canvasserassignment> _result = dao.findWhereUpdatedDateEquals(updatedDate);
-		for (Canvasserassignment dto : _result) {
+		AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+		List<AssignCanvasser> _result = dao.findWhereUpdatedDateEquals(updatedDate);
+		for (AssignCanvasser dto : _result) {
 			display(dto);
 		}
 		
@@ -162,7 +162,7 @@ public class CanvasserassignmentDaoExample
 	 * 
 	 * @param dto
 	 */
-	public static void display(Canvasserassignment dto)
+	public static void display(AssignCanvasser dto)
 	{
 		StringBuffer buf = new StringBuffer();
 		buf.append( dto.getId() );

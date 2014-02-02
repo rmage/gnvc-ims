@@ -18,10 +18,10 @@
                 <div class="box">
                     <form action="Canvassing.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Canvassing - List</caption>
+                            <caption>Canvassing - Search</caption>
                             <tbody>
                                 <tr>
-                                	<td width="20%">
+                                    <td width="20%">
                                         Prs Number
                                     </td>
                                     <td>
@@ -54,7 +54,7 @@
                         </table>
                     </form>
                     <table class="collapse tblForm row-select">
-                        <caption>Canvassing - Search Result</caption>
+                        <caption>Canvassing - List</caption>
                         <thead>
                             <tr>
                                 <td class="style1">No</td>

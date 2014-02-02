@@ -4,11 +4,14 @@ import com.app.wms.engine.db.dao.PoDao;
 import com.app.wms.engine.db.dto.Po;
 import com.app.wms.engine.db.dto.PoPk;
 import com.app.wms.engine.db.exceptions.PoDaoException;
+import com.app.wms.web.util.Utility;
 import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -431,5 +434,17 @@ public class PoDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Po>
 		}
 		
 	}
+        
+    /* FYA : 07 January 2014 */
+    public List<Po> fyaGetByDepartment(String[][] criteria) throws PoDaoException {
+        try {
+            Object[] o = new Utility().fyaGenerateSQLCriteria(criteria);
+            return jdbcTemplate.query("SELECT * FROM (SELECT *, ROW_NUMBER() OVER(ORDER BY id desc) AS rownum FROM po) AS qPo" 
+                + o[0], this, o[1]);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            throw new PoDaoException("Query failed", e);
+        }
+    }
 
 }

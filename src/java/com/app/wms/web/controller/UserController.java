@@ -287,10 +287,11 @@ public class UserController extends MultiActionController {
         UserDao dao = DaoFactory.createUserDao();
         User dto = dao.findByPrimaryKey(puserId);
         if (dto != null && dto.getPassword().equalsIgnoreCase(request.getParameter("password").trim())) {
-            dto.setIsActive(AppConstant.STATUS_FALSE);
-            dto.setUpdatedBy(userId);
-            dto.setUpdatedDate(new Date());
-            dao.updateInactivate(dto.createPk(), dto);
+//            dto.setIsActive(AppConstant.STATUS_FALSE);
+//            dto.setUpdatedBy(userId);
+//            dto.setUpdatedDate(new Date());
+//            dao.updateInactivate(dto.createPk(), dto);
+            dao.delete(dto.createPk());
         }
         HashMap m = this.searchAndPaging(request, response);
         return new ModelAndView("1_setup/UserList", "model", m);
