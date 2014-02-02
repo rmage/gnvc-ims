@@ -90,10 +90,17 @@ public class FishTsDetailDaoImpl extends AbstractDAO implements
 	@Override
 	public void delete(int id) throws DaoException {
 		String query = "UPDATE " + getTableName() + 
-				" SET is_active='N', is_active='Y' WHERE id=?";
+				" SET is_active='N', is_delete='Y' WHERE id=?";
 		
 		jdbcTemplate.update(query, id);
 	}
+    
+    public void deleteAllByTsId(int tsId) {
+        String query = "UPDATE " + getTableName() + 
+				" SET is_active='N', is_delete='Y' WHERE ts_id=?";
+		
+		jdbcTemplate.update(query, tsId);
+    }
 
 	@Override
 	public FishTsDetail findByPrimaryKey(int id) throws DaoException {

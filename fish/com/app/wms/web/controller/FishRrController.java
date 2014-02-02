@@ -202,6 +202,18 @@ public class FishRrController extends MultiActionController {
         }
 	}
 	
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishRrDao dao = DaoFactory.createFishRrDao();
+        dao.delete(id);
+        
+        FishRrDetailDao detailDao = DaoFactory.createFishRrDetailDao();
+        detailDao.deleteAllByRrId(id);
+        
+        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("fish/RRDataList", "model", modelMap);
+    }
+    
 	public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
 		

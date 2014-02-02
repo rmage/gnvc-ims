@@ -113,7 +113,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 
 	@Override
 	public List<FishSpoilage> findAll() throws DaoException {
-		String query = "SELECT * FROM " + getTableName();
+		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y'";
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this);
 		
 		return resultList;
@@ -129,7 +129,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 	@Override
 	public List<FishSpoilage> findByBatchNumber(String batchNumber)
 			throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE batch_no=?";
+		String query = "SELECT * FROM " + getTableName() + " WHERE batch_no=? AND is_active='Y' ";
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this, batchNumber);
 		
 		return resultList;
@@ -143,7 +143,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"SUM(sp.raw_weight) as raw_weight, SUM(sp.total_processed) as total_processed, " +
 				"MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete " +
-				"from inventory..fish_spoilage sp " +
+				"from inventory..fish_spoilage sp WHERE is_active='Y' " +
 				"GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift";
 		
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this);
@@ -154,7 +154,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 	public List<FishSpoilage> findAllForReport(int vesselId, Date dateShift, String timeShift) {
 		
 		String query = "SELECT * FROM " + getTableName() + 
-				" WHERE vessel_id=? AND date_shift=? AND time_shift=?";
+				" WHERE vessel_id=? AND date_shift=? AND time_shift=? AND is_active='Y'";
 		
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this, vesselId, dateShift, timeShift);
 		return resultList;
@@ -174,7 +174,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
 				"	ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
-				"	from inventory..fish_spoilage sp " +
+				"	from inventory..fish_spoilage sp WHERE is_active='Y' " +
 				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
 				") " +
 				"SELECT * FROM Results_CTE " +

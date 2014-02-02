@@ -122,10 +122,32 @@
                 
                 $('#btnRequestSet').click(function() {
                 	var id = $('#dId').val();
+                    var balance = $('#dBalanceQty').html().replace(/\,/g,'');
                 	var requestedQty = $('#dRequestedQty').val();
-                	$('#qtyHTML'+id).html(addCommas(requestedQty));
-                	$('#qty'+id).val(requestedQty);
-                	$('#dialog-request').dialog('close');
+                    
+                    if(requestedQty <= balance) {
+                        $('#qtyHTML'+id).html(addCommas(requestedQty));
+                        $('#qty'+id).val(requestedQty);
+                        $('#dialog-request').dialog('close');   
+                    }
+                    else {
+                        $("#dialog-insufficient").dialog({
+                            open: function () {
+                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+                            },
+                            title: 'Warning',
+                            resizable: false,
+                            height: 120,
+                            modal: true,
+                            buttons: {
+                                "Ok" : function () {
+                                    $(this).dialog("close");
+                                    $('#dRequestedQty').focus();
+                                }
+                            }
+                        });
+                    }
                 });
                 
                 $('#wdsNo').focus().on("blur",function() {
@@ -140,9 +162,9 @@
                                         $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
                                         $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
                                     },
-                                    title: 'Warning',
+                                    title: 'Insufficient Amount',
                                     resizable: false,
-                                    height: 120,
+                                    height: 150,
                                     modal: true,
                                     buttons: {
                                         "Ok" : function () {

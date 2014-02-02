@@ -190,4 +190,11 @@ public class FishWsDetailDaoImpl extends AbstractDAO implements
 		return "inventory..fish_ws_detail";
 	}
 
+    public void deleteAllByWsId(int wsId) {
+        String query = "UPDATE " + getTableName() + 
+				" SET is_active='N', is_delete='Y' WHERE ws_id=?";
+		
+		jdbcTemplate.update(query, wsId);
+    }
+
 }

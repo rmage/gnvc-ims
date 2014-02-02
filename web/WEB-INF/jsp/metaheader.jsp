@@ -134,3 +134,6 @@
 <div id="delete-confirm" title="confirm" style="display:none;z-index:1;">
     Delete this item?
 </div>
+<div id="dialog-insufficient" title="Insufficient Balance" style="display:none;z-index:1;">
+    Insufficient amount in your storage
+</div>

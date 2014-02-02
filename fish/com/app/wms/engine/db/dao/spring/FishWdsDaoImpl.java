@@ -130,7 +130,7 @@ public class FishWdsDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"	FROM "+getTableName()+" " +
+				"	FROM "+getTableName()+" WHERE is_active = 'Y' " +
 				") AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -186,7 +186,7 @@ public class FishWdsDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_wds WHERE wds_no LIKE ? AND wds_date = ?) " +
+				"FROM inventory..fish_wds WHERE wds_no LIKE ? AND wds_date = ? AND is_active = 'Y') " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -201,7 +201,7 @@ public class FishWdsDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_wds WHERE wds_no LIKE ?) " +
+				"FROM inventory..fish_wds WHERE wds_no LIKE ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";

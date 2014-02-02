@@ -188,6 +188,7 @@ public class FishSpoilageDataController extends MultiActionController {
 		Map tableMap = new HashMap();
 		for (FishSpoilage fishSpoilageDetail : spoilageDetailList) {
 			Map<String, Object> returnMap = new HashMap<String, Object>();
+            returnMap.put("id", fishSpoilageDetail.getId());
 			returnMap.put("batchNo", fishSpoilageDetail.getVessel().getBatchNo());
 			returnMap.put("catcherNo", fishSpoilageDetail.getCatcherNo());
 			returnMap.put("fishType", fishSpoilageDetail.getFish().getCode());
@@ -203,4 +204,13 @@ public class FishSpoilageDataController extends MultiActionController {
 		modelMap.put("tableMap", tableMap);
 		return new ModelAndView("fish/FishSpoilageDetailList", "model", modelMap);
 	}
+    
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishSpoilageDao dao = DaoFactory.createFishSpoilageDao();
+        dao.delete(id);
+        
+        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("fish/FishSpoilageList", "model", modelMap);
+    }
 }

@@ -116,7 +116,7 @@ public class FishWsDaoImpl extends AbstractDAO
 	@Override
 	public List<FishWs> findByVesselIdAndDateShift(int vesselId, Date dateShift) {
 		String query = "SELECT * FROM " + getTableName() + 
-				" WHERE vessel_id=? AND date_shift=?";
+				" WHERE vessel_id=? AND date_shift=? AND is_active = 'Y'";
 		
 		List<FishWs> resultList = jdbcTemplate.query(query, this, vesselId, dateShift);
 		return resultList;
@@ -137,7 +137,7 @@ public class FishWsDaoImpl extends AbstractDAO
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"	FROM "+getTableName()+" " +
+				"	FROM "+getTableName()+" WHERE is_active = 'Y'" +
 				") AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -202,7 +202,7 @@ public class FishWsDaoImpl extends AbstractDAO
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_ws WHERE ws_no LIKE ? AND date_shift = ?) " +
+				"FROM inventory..fish_ws WHERE ws_no LIKE ? AND date_shift = ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -217,7 +217,7 @@ public class FishWsDaoImpl extends AbstractDAO
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_ws WHERE ws_no LIKE ?) " +
+				"FROM inventory..fish_ws WHERE ws_no LIKE ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";

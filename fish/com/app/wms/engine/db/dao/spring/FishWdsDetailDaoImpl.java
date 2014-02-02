@@ -95,6 +95,13 @@ public class FishWdsDetailDaoImpl extends AbstractDAO implements
 		
 		jdbcTemplate.update(query, id);
 	}
+    
+    public void deleteAllByWdsId(int wdsId) {
+        String query = "UPDATE " + getTableName() + 
+				" SET is_active='N', is_delete='Y' WHERE wds_id=?";
+		
+		jdbcTemplate.update(query, wdsId);
+    }
 
 	@Override
 	public FishWdsDetail findByPrimaryKey(int id) throws DaoException {
@@ -168,5 +175,4 @@ public class FishWdsDetailDaoImpl extends AbstractDAO implements
 	public String getTableName() {
 		return "inventory..fish_wds_detail";
 	}
-
 }

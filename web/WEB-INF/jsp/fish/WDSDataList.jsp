@@ -83,7 +83,7 @@
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-            <div id="dtl-panel" class="div-dtl" style="width: 100%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
+            <div id="dtl-panel" class="div-dtl" style="width: 99%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishWds.htm" method="post">
@@ -157,7 +157,7 @@
                                         </c:url>
                                        
                                         <c:url value="FishWds.htm" var="urlDelete">
-                                            <c:param name="wsDataId" value="${wdsData.id}"/>
+                                            <c:param name="id" value="${wdsData.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
@@ -184,17 +184,16 @@
                                         <td class="left" width="10%">
                                         <%-- 
                                             <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                           
-                                            <a href='<c:out value="${urlDelete}"/>'>
-                                                <img src="resources/images/delete.gif" width="16" height="16" /></a>
-                                         --%>
+                                                <img src="resources/images/edit.gif" width="16" height="16" /></a> --%>
+                                         
                                             <a href='<c:out value="${urlReportPDF}"/>'>
                                             	<img src="resources/images/print.jpg" width="16" height="16" alt="pdf" /></a>&nbsp;&nbsp;
                                             <a href='<c:out value="${urlReportXLS}"/>'>
                                             	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>&nbsp;&nbsp;
                                             <a href='<c:out value="${urlReportCSV}"/>'>
                                             	<img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>
+                                            <!-- <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
+                                                <img src="resources/images/delete.gif" width="16" height="16" /></a> -->
                                         </td>
                                         <td class="left"><a id="${wdsData.id}" onclick="showDetails(this)"><c:out value="${wdsData.wdsNo}"/></a></td>
                                         <td class="left"><c:out value="${wdsData.vessel.batchNo}"/></td>

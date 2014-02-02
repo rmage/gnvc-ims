@@ -12,12 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import com.app.wms.engine.db.dao.FishBalanceDao;
-import com.app.wms.engine.db.dao.FishBalanceHistoryDao;
 import com.app.wms.engine.db.dao.FishTsDao;
 import com.app.wms.engine.db.dao.FishTsDetailDao;
-import com.app.wms.engine.db.dto.FishBalance;
-import com.app.wms.engine.db.dto.FishBalanceHistory;
 import com.app.wms.engine.db.dto.FishTs;
 import com.app.wms.engine.db.dto.FishTsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
@@ -155,6 +151,18 @@ private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     		return new ModelAndView("fish/TSDataList", "model", modelMap);
         }
 	}
+    
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishTsDao dao = DaoFactory.createFishTsDao();
+        dao.delete(id);
+        
+        FishTsDetailDao detailDao = DaoFactory.createFishTsDetailDao();
+        detailDao.deleteAllByTsId(id);
+        
+        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("fish/TSDataList", "model", modelMap);
+    }
 	
 	public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {

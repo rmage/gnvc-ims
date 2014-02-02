@@ -61,7 +61,7 @@ public class GenerateReportController extends MultiActionController {
             "WHERE ts_id=?");
 		
 		ListMap.put(Report.FSummaryWSSlip, 
-			"select ws.ws_no, s.name as supplier_name, v.name as boat_name, fs.raw_weight as spoilage, " +
+			"select ws.ws_no, s.name as supplier_name, v.name as boat_name, fs.cooked_weight as spoilage, " +
 			"v.batch_no, ws.date_shift, ws.time_shift, f.code as type, wsd.total_weight as data " +
 			"from inventory..fish_ws ws " +
 			"left join inventory..fish_ws_detail wsd on wsd.ws_id = ws.id " +
@@ -69,7 +69,7 @@ public class GenerateReportController extends MultiActionController {
 			"left join inventory..fish_vessel v on ws.vessel_id = v.id " +
 			"left join inventory..fish_supplier s on s.id = v.supplier_id " +
 			"left join inventory..fish_spoilage fs on v.id = fs.vessel_id " +
-			"where ws.vessel_id = ? AND ws.ws_type_id IN (?)");
+			"where ws.vessel_id = ?");
 		ListMap.put(Report.FSpoilagereport, 
 			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
 			"FROM inventory..fish_spoilage fs " +

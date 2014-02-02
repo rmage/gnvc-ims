@@ -6,5 +6,6 @@ import com.app.wms.engine.db.dto.FishTsDetail;
 
 public interface FishTsDetailDao extends GeneralDao<FishTsDetail> {
 
-	List<FishTsDetail> findAllByTsId(int tsId);
+	public List<FishTsDetail> findAllByTsId(int tsId);
+    public void deleteAllByTsId(int tsId);
 }

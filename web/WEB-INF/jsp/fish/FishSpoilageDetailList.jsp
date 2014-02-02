@@ -5,6 +5,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <%@include file="../metaheader.jsp" %>
         <title>WS Details</title>
     </head>
     <body>
@@ -17,9 +18,10 @@
 			        <td class="left">Fish Type</td>
 			        <td class="left">Fish Name</td>
 			        <td class="left">Raw Weight</td>
-			        <td class="left">Cooked Weight</td>
+			        <td class="left">Spoilage Weight</td>
 			        <td class="left">Total Processed</td>
 			        <td class="left">Reason</td>
+                    <td class="left">Action</td>
 			    </tr>
 			</thead>
             <tbody id="main">
@@ -73,6 +75,14 @@
 					      			<c:if test="${map.value.reason ne null}">
 					      				${map.value.reason}
 					      			</c:if>
+					      		</td>
+                                <td align="left">&nbsp;
+                                    <c:url value="FishSpoilageData.htm" var="urlDelete">
+                                        <c:param name="id" value="${map.value.id}"/>
+                                        <c:param name="action" value="inactivate"/>
+                                    </c:url>
+					      			<a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
+                                        <img src="resources/images/delete.gif" width="16" height="16" /></a>
 					      		</td>
 						</c:forEach>
 					  </c:if>

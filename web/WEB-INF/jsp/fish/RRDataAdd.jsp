@@ -1,3 +1,4 @@
+<%@page import="java.text.DateFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
 <%@page import="com.app.wms.engine.db.dto.FishWs"%>
@@ -598,7 +599,7 @@
         		<tr>
         			<td><label>Date Shift</label></td>
         			<td><label>:</label></td>
-        			<td><input type="text" id="dateShift" size="30" class="text-input"/></td>
+                    <td><input type="text" id="dateShift" size="30" class="text-input" value="<%= df.format(new Date())%>"/></td>
         		</tr>
         		<tr>
         			<td colspan="3">

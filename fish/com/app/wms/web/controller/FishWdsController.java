@@ -177,6 +177,18 @@ public class FishWdsController extends MultiActionController {
         modelMap = this.searchAndPaging(request, response);
 		return new ModelAndView("fish/WDSDataList", "model", modelMap);
 	}
+    
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = Integer.valueOf(request.getParameter("id"));
+        FishWdsDao dao = DaoFactory.createFishWdsDao();
+        dao.delete(id);
+        
+        FishWdsDetailDao detailDao = DaoFactory.createFishWdsDetailDao();
+        detailDao.deleteAllByWdsId(id);
+        
+        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
+		return new ModelAndView("fish/WDSDataList", "model", modelMap);
+    }
 	
 	public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {

@@ -98,6 +98,13 @@ public class FishRrDetailDaoImpl extends AbstractDAO implements
 		
 		jdbcTemplate.update(query, id);
 	}
+    
+    public void deleteAllByRrId(int rrId) {
+        String query = "UPDATE " + getTableName() +
+				" SET is_active='N', is_delete='Y' WHERE rr_id=?";
+		
+		jdbcTemplate.update(query, rrId);
+    }
 
 	@Override
 	public FishRrDetail findByPrimaryKey(int id) throws DaoException {

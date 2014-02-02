@@ -80,7 +80,7 @@
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-			<div id="dtl-panel" class="div-dtl" style="width: 100%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
+			<div id="dtl-panel" class="div-dtl" style="width: 99%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishSpoilageData.htm" method="post">
