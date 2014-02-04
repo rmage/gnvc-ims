@@ -183,7 +183,7 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 	public List<Prs> findWherePrsnumberEquals(String prsnumber) throws PrsDaoException
 	{
 		try {
-			return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " where prsnumber not in (select prsnumber from po) AND prsnumber like '%"+prsnumber+"%' ORDER BY prsnumber desc", this);
+			return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " where prsnumber not in (select DISTINCT prsnumber from po_detail) AND prsnumber like '%"+prsnumber+"%' ORDER BY prsnumber desc", this);
 		}
 		catch (Exception e) {
 			throw new PrsDaoException("Query failed", e);

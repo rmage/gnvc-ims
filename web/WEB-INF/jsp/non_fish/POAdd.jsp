@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Price Assignment</title>
+        <title>IMS - New Purchase Order</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -12,6 +12,9 @@
                 overflow-y: auto;
                 /* prevent horizontal scrollbar */
                 overflow-x: hidden;
+            }
+            .ui-datepicker {
+                display: none;
             }
         </style>
     </head>
@@ -24,7 +27,7 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="PriceAssignment.htm" id="poster" method="post" style="display: none;">
+                    <form action="Purchase.htm" id="poster" method="post" style="display: none;">
                         <input name="action" type="hidden" value="save" />
                     </form>
                     <form action="#" id="search" method="get">
@@ -32,11 +35,25 @@
                             <caption>Search</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
+                                    <td>PO Number</td>
+                                    <td style="width: 500px;"><input id="poCode" name="poCode" type="text" pattern="[0-9]{1,}" required="true" /></td>
+                                    <td>PO Date</td>
+                                    <td><input id="poDate" name="poDate" size="10" type="text" required="true" /></td>
+                                </tr>
+                                <tr>
                                     <td>Supplier</td>
                                     <td>
                                         <input id="sSupplier" size="50" type="text" required="true" />
                                         <input id="sSupplierCode" type="hidden" required="true" />
                                     </td>
+                                    <td>Discount</td>
+                                    <td><input id="discount" name="discount" size="1" type="text" value="0" pattern="[0-9]{1,2}" required="true" /> %</td>
+                                </tr>
+                                <tr>
+                                    <td>PPH</td>
+                                    <td><input id="pph" name="pph" size="1" type="text" value="0" pattern="[0-9]{1,2}" required="true" /> %</td>
+                                    <td>PPN</td>
+                                    <td><input id="ppn" name="ppn" size="1" type="text" value="0" pattern="[0-9]{1,2}" required="true" /> %</td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -44,26 +61,24 @@
                                     <td colspan="4">
                                         <input id="save" type="button" value="Save" />
                                         <input type="submit" value="Search" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('PriceAssignment.htm');" />
+                                        <input type="reset" value="Cancel" onclick="window.location.replace('Purchase.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                         <table class="collapse tblForm row-select">
-                            <caption>Assignment</caption>
+                            <caption>Pick Item to Generate Purchase Order</caption>
                             <thead>
                                 <tr>
+                                    <td>Action</td>
                                     <td>PRS Number</td>
-                                    <td>Assign Date</td>
                                     <td>Item Code</td>
                                     <td>Item Name</td>
+                                    <td>Department</td>
                                     <td>Quantity</td>
-                                    <td>Supplier Code</td>
-                                    <td>Supplier Name</td>
-                                    <td>Unit Price</td>
-                                    <td>Term of Payments</td>
-                                    <td>Term of Delivery</td>
-                                    <td>Warranty Period</td>
+                                    <td>Unit</td>
+                                    <td>Unit/Price</td>
+                                    <td>Amount</td>
                                 </tr>
                             </thead>
                             <tbody class="tbl-nohover" id="main"></tbody>
@@ -83,15 +98,21 @@
             
             /* BIND | element event */
             $('#save').bind('click', function() {
-                var b = false;
-                $('#main tr').each(function() {
-                    if($(this).find('input[name="price"]').val() !== '') {
-                        b = true;
-                        $('#poster').append($(this).find('input, select'));
+                var f = 0;
+                $('#main tr').each(function(i) {
+                    if($(this).find('input[type="checkbox"]')[0].checked) {
+                        $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(1)').html() + 
+                            ':' + $(this).find('td:eq(2)').html() + ':' + $(this).find('td:eq(4)').html() + 
+                            ':' + $(this).find('td:eq(8)').html().replace(/,/g, '') + ':' + i + '" />'); f = 1;
                     }
                 });
                 
-                if(b) $('#poster').submit();
+                if(f === 1) {
+                    $('#poster').append('<input name="master" type="hidden" value="' + $('#poCode').val() + 
+                        ':' + $('#poDate').val() + ':' + $('#sSupplierCode').val() + ':' + $('#discount').val() + 
+                        ':' + $('#pph').val() + ':' + $('#ppn').val() + '" />');
+                    $('#poster').submit();
+                }
             });
             
             $('#search').bind('submit', function(e) {
@@ -101,38 +122,33 @@
                 
                 /* get detail item */
                 $.ajax({
-                    url: 'PriceAssignment.htm',
-                    data: {action: 'getSupplier', key: $('#sSupplierCode').val()},
+                    url: 'Purchase.htm',
+                    data: {action: 'getItems', key: $('#sSupplierCode').val()},
                     dataType: 'json',
                     success: function(json) {
                         $('#main').html(null);
                         for(var i = 0; i < json.length; i++) {
-                            $('#main').append('<tr><td>' + json[i].prsNo + '</td><td>' + json[i].assignDate + '</td><td>' + json[i].itemCode + '</td><td>' + json[i].itemName + '</td><td>' + json[i].quantity + '</td><td>' + json[i].supplierCode + 
-                                '<input id="selected" name="selected" type="hidden" value="off" />' +
-                                '</td><td>' + json[i].supplierName + '</td><td><input name="selected" title="Selected Supplier" type="checkbox" /> <input name="price" size="10" type="text" /></td><td><select name="top"><option>Cash</option><option>Credit</option></select> ' + 
-                                '<input name="topDesc" type="text" /></td><td><input name="tod" type="text" /></td><td><input class="wp" name="wp" size="8" type="text" /><input type="hidden" name="prsNumber" value="' + json[i].prsNo + 
-                                '" /><input type="hidden" name="itemCode" value="' + json[i].itemCode + '" /><input type="hidden" name="supplierCode" value="' + json[i].supplierCode +'" /></td></tr>');
-                        
-                            setDatePicker('wp');
+                            $('#main').append('<tr><td><input title="Pick this item" type="checkbox" /></td><td>' + json[i].prsNumber + 
+                                '</td><td>' + json[i].itemCode + '</td><td>' + json[i].itemName + 
+                                '</td><td>' + json[i].departmentCode + '</td><td>' + numberWithCommas(json[i].qty) + 
+                                '</td><td>' + json[i].unit + '</td><td>' + numberWithCommas(json[i].price) +
+                                '</td><td>' + numberWithCommas(json[i].amount) + '</td></tr>');
                         }
                     },
                     complete: function() {
                         $('#load').remove();
                         $o.attr('disabled', false);
-                        
-                        if($('#main').html().trim() === '')
-                            $('#search')[0].reset();
                     }
                 });
                 
                 return false;
             });
             
-            $('input[type="checkbox"]').live('click', function() {
+            $('input[type="checkbox"]').live('change', function() {
                 if($(this)[0].checked) {
-                    $(this).parent().parent().find('#selected').remove();
+                    $(this).parent().parent().addClass("bold");
                 } else {
-                    $(this).parent().append('<input id="selected" name="selected" type="hidden" value="off" />');
+                    $(this).parent().parent().removeClass("bold");
                 }
             });
             
@@ -159,7 +175,13 @@
                 }
             });
             
-            function setDatePicker(s) { $('.' + s).datepicker({ dateFormat: "dd/mm/yy" }); }
+            $('#poDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
+            
+            function numberWithCommas(x) {
+                var parts = x.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return parts.join(".");
+            }
             
         </script>
     </body>

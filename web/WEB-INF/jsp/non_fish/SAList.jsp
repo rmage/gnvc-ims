@@ -100,7 +100,7 @@
         <script>
             /* jQuery | Binding event */
             $('.d').live('click', function(){
-                fyaQPanel($(this).html());
+                fyaQPanel($(this));
             });
 
             function fyaQPanel(p) {
@@ -111,11 +111,11 @@
                         $('#fyaQPanel').html('<center><img src="resources/img/load-spin.gif" /></center>');
                         $.ajax({
                             url: 'SupplierAssignment.htm',
-                            data: {action: 'ajaxDocument', key: p},
+                            data: {action: 'ajaxDocument', key1: p.html(), key2: p.parent().parent().find('td:eq(4)').html()},
                             dataType: 'json',
                             success: function(json) {
                                 $('#fyaQPanel').html(null);
-                                $('#fyaQPanel').append('<h6>PRS Number : ' + p + '</h6><hr />');
+                                $('#fyaQPanel').append('<h6>PRS Number : ' + p.html() + '</h6><hr />');
                                 $('#fyaQPanel').append('<table><thead><tr><th>PRS Number</th><th>Assign Date</th><th>Item Code</th><th>Item Name</th>'
                                     + '<th>Supplier Code</th><th>Supplier Name</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
                                 for(var i = 0; i < json.length; i++) {

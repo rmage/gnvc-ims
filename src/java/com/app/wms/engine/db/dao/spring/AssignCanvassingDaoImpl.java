@@ -69,8 +69,19 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
             "FROM " + getTableName() + " WHERE created_by = ? GROUP BY prsnumber, productcode ORDER BY id DESC", this, userId);
     }
     
-    public List<AssignCanvassing> findByPrsNumber(String prsNumber) {
-        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE prsnumber = ?", this, prsNumber);
+    public List<AssignCanvassing> findByUserIdPA(String userId) {
+        return jdbcTemplate.query("SELECT MAX(id) as id, prsnumber, productcode, supplier_code, MAX(unit_price) as unit_price, MAX([top]) as [top], " +
+            "MAX(top_desc) as top_desc, MAX(tod) as tod, MAX(wp) as wp, MAX(is_selected) as is_selected, MAX(created_by) as created_by, MAX(created_date) as created_date, MAX(updated_by) as updated_by, " +
+            "MAX(updated_date) as updated_date " +
+            "FROM " + getTableName() + " WHERE unit_price IS NOT NULL AND created_by = ? GROUP BY prsnumber, productcode, supplier_code ORDER BY updated_date DESC", this, userId);
+    }
+    
+    public List<AssignCanvassing> findByPrsNumberItemCode(String prsNumber, String itemCode) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE prsnumber = ? AND productcode = ?", this, prsNumber, itemCode);
+    }
+    
+    public List<AssignCanvassing> findByPrsNumberItemCodeSupplierCode(String prsNumber, String itemCode, String supplierCode) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE prsnumber = ? AND productcode = ? AND supplier_code = ?", this, prsNumber, itemCode, supplierCode);
     }
     
     public List<AssignCanvassing> findForPriceAssign(String supplierCode) {
