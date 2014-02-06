@@ -845,4 +845,9 @@ public class DaoFactory {
         return (AssignCanvassingDao) bf.getBean("AssignCanvassingDao");
     }
     
+    public static PurchaseDtlDao createPurchaseDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PurchaseDtlDao) bf.getBean("PurchaseDtlDao");
+    }
+    
 }

@@ -14,7 +14,11 @@ public interface AssignCanvassingDao {
     
     public List<AssignCanvassing> findByUserId(String userId);
     
-    public List<AssignCanvassing> findByPrsNumber(String prsNumber);
+    public List<AssignCanvassing> findByUserIdPA(String userId);
+    
+    public List<AssignCanvassing> findByPrsNumberItemCode(String prsNumber, String itemCode);
+    
+    public List<AssignCanvassing> findByPrsNumberItemCodeSupplierCode(String prsNumber, String itemCode, String supplierCode);
     
     public List<AssignCanvassing> findForPriceAssign(String supplierCode);
     

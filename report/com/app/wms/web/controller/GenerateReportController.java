@@ -69,7 +69,7 @@ public class GenerateReportController extends MultiActionController {
 			"left join inventory..fish_vessel v on ws.vessel_id = v.id " +
 			"left join inventory..fish_supplier s on s.id = v.supplier_id " +
 			"left join inventory..fish_spoilage fs on v.id = fs.vessel_id " +
-			"where ws.vessel_id = ? AND ws.date_shift = ?");
+			"where ws.vessel_id = ? AND ws.ws_type_id IN (?)");
 		ListMap.put(Report.FSpoilagereport, 
 			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
 			"FROM inventory..fish_spoilage fs " +
@@ -201,13 +201,24 @@ public class GenerateReportController extends MultiActionController {
 		);
 
 		
-		ListMap.put(Report.PPoForm, 
-			"SELECT * " +
-			"FROM inventory..po po " +
-			"LEFT JOIN inventory..po_detail pod ON po.ponumber = pod.ponumber " +
-			"LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
-			"LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
-			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name");
+    ListMap.put(Report.PPoForm, 
+//        "SELECT * " +
+//        "FROM inventory..po po " +
+//        "LEFT JOIN inventory..po_detail pod ON po.ponumber = pod.ponumber " +
+//        "LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
+//        "LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
+//        "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
+        "SELECT p.po_code, p.po_date, p.discount, p.pph, p.ppn, s.supplier_code, s.supplier_name, " +
+	"s.supplier_address, acp.unit_price, p.approved_by, p.approved_date, p.created_date, u.name, " +
+	"pr.product_name, pr.product_code, pd.department_code, prs.qty, prs.uom_name, pd.sub_total " +
+        "FROM po_detail pd " +
+	"LEFT JOIN po p ON p.po_code = pd.po_code " +
+	"LEFT JOIN \"user\" u ON u.user_id = p.created_by " +
+	"LEFT JOIN supplier s ON s.supplier_code = p.supplier_code " +
+	"LEFT JOIN product pr ON pr.product_code = pd.product_code " +
+	"LEFT JOIN prs_detail prs ON prs.prsnumber = pd.prsnumber AND prs.productcode = pd.product_code " +
+	"LEFT JOIN assign_canv_prc acp ON acp.prsnumber = pd.prsnumber AND acp.productcode = pd.product_code " +
+        "AND acp.supplier_code = ? WHERE p.po_code = ?");
 		
 		ListMap.put(Report.IMStockCardperCategory, 
 			"select * " +

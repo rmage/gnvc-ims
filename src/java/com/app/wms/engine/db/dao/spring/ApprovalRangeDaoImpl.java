@@ -156,7 +156,7 @@ public class ApprovalRangeDaoImpl extends AbstractDAO implements ParameterizedRo
 	public List<ApprovalRange> findAll() throws ApprovalRangeDaoException
 	{
 		try {
-			return jdbcTemplate.query("SELECT id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY from_amount", this);
+			return jdbcTemplate.query("SELECT id, username, role_code, from_amount, to_amount, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY from_amount DESC", this);
 		}
 		catch (Exception e) {
 			throw new ApprovalRangeDaoException("Query failed", e);

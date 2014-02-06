@@ -47,6 +47,8 @@
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
                                 <td>Prs Number</td>
+                                <td>Supplier Code</td>
+                                <td>Supplier Name</td>
                                 <td>Assign Date</td>
                                 <td>Item Code</td>
                                 <td>Item Name</td>
@@ -56,7 +58,7 @@
                             <c:if test="${model.ac != null}">
                                 <c:set scope="page" value="${((model.page-1) * model.paging) + 1}" var="no" />
                                 <c:forEach items="${model.ac}" var="x" varStatus="i">
-                                    <tr class="ganjil">
+                                    <tr <c:if test="${x.isSelected == 'Y'}">class="bold"</c:if>>
                                         <td>
                                             ${no}
                                             <c:set scope="page" value="${no + 1}" var="no"/>
@@ -65,7 +67,9 @@
                                             <!-- Image for action icon -->
                                         </td>
                                         <td><a class="d" href="#${x.prsNumber}">${x.prsNumber}</a></td>
-                                        <td><fmt:formatDate pattern="dd-MM-yyyy" value="${x.createDate}" /></a></td>
+                                        <td>${model.s[i.index].supplierCode}</td>
+                                        <td>${model.s[i.index].supplierName}</td>
+                                        <td><fmt:formatDate pattern="dd-MM-yyyy" value="${x.updatedDate}" /></a></td>
                                         <td>${model.p[i.index].productCode}</td>
                                         <td>${model.p[i.index].productName}</td>
                                     </tr>
@@ -74,7 +78,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6">
+                                <td colspan="8">
                                     <c:if test="${model.page !=null && model.page > 1}">
                                         <a href="PriceAssignment.htm?page=<c:out value="${model.page-1}" />">&lt</a>
                                     </c:if>
@@ -100,28 +104,32 @@
         <script>
             /* jQuery | Binding event */
             $('.d').live('click', function(){
-                fyaQPanel($(this).html());
+                fyaQPanel($(this));
             });
 
             function fyaQPanel(p) {
                 if(p === 0) {
                     $('#fyaQPanel').fadeOut(300, function(){ $('#fyaQPanel').html(null); });
                 } else {
+                    var $t = p.parent().parent();
                     $('#fyaQPanel').fadeIn(300, function(){
                         $('#fyaQPanel').html('<center><img src="resources/img/load-spin.gif" /></center>');
                         $.ajax({
                             url: 'PriceAssignment.htm',
-                            data: {action: 'ajaxDocument', key: p},
+                            data: {action: 'ajaxDocument', key1: p.html(), key2: $t.find('td:eq(6)').html(), key3: $t.find('td:eq(3)').html()},
                             dataType: 'json',
                             success: function(json) {
                                 $('#fyaQPanel').html(null);
-                                $('#fyaQPanel').append('<h6>PRS Number : ' + p + '</h6><hr />');
+                                $('#fyaQPanel').append('<h6>PRS Number : ' + p.html() + '</h6><hr />');
                                 $('#fyaQPanel').append('<table><thead><tr><th>PRS Number</th><th>Assign Date</th><th>Item Code</th><th>Item Name</th>'
-                                    + '<th>Supplier Code</th><th>Supplier Name</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
+                                    + '<th>Supplier Code</th><th>Supplier Name</th><th>Unit Price</th><th>ToP</th><th>ToP Desc.</th><th>ToD</th>'
+                                    + '<th>Warranty</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
                                 for(var i = 0; i < json.length; i++) {
                                     $('#fyaQPanelBody').append('<tr><td>' + json[i].prsNo + '</td><td>' + json[i].assignDate 
                                         + '</td><td>' + json[i].itemCode + '</td><td>' + json[i].itemName 
-                                        + '</td><td>' + json[i].supplierCode + '</td><td>' + json[i].supplierName + '</td></tr>');
+                                        + '</td><td>' + json[i].supplierCode + '</td><td>' + json[i].supplierName 
+                                        + '</td><td>' + numberWithCommas(json[i].unitPrice) + '</td><td>' + json[i].top 
+                                        + '</td><td>' + json[i].topDesc + '</td><td>' + json[i].tod + '</td><td>' + (json[i].warranty === 'null' ? '' : json[i].warranty) + '</td></tr>');
                                 }
                             },
                             complete: function() {
@@ -131,6 +139,12 @@
                         });
                     }); 
                 }
+            }
+            
+            function numberWithCommas(x) {
+                var parts = x.toString().split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                return parts.join(".");
             }
         </script>
     </body>

@@ -103,13 +103,14 @@ public class SupplierAssignmentController extends MultiActionController {
     public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
         throws ProductDaoException, SupplierDaoException, IOException {
         
-        String prsNumber = request.getParameter("key");
+        String prsNumber = request.getParameter("key1");
+        String itemCode = request.getParameter("key2");
         
         /* get assigned supplier */
         ProductDao productDao = DaoFactory.createProductDao();
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
         AssignCanvassingDao assignCanvassingDao = DaoFactory.createAssignCanvassingDao();
-        List<AssignCanvassing> acs = assignCanvassingDao.findByPrsNumber(prsNumber);
+        List<AssignCanvassing> acs = assignCanvassingDao.findByPrsNumberItemCode(prsNumber, itemCode);
         String out = "[";
         for(AssignCanvassing x : acs) {
             if(!out.equals("["))
