@@ -183,6 +183,7 @@
             	var id = selectedRow.getAttribute('id');
             	var balance = $('#balance'+id).html();
             	$('#dBalanceQty').html(balance);
+                $('#dRequestedQty').val(balance);
             	$('#dId').val(id);
             	
             	$("#dialog-request").dialog({ 

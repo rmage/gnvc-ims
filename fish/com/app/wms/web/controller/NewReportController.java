@@ -278,6 +278,12 @@ public class NewReportController extends MultiActionController {
 		
 		return null;
 	}
+    
+    public ModelAndView getWsSummaryReport(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+        
+        return new ModelAndView("fish/WSSummaryReport");
+    }
 	
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) 
 			throws Exception {
@@ -287,6 +293,6 @@ public class NewReportController extends MultiActionController {
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		modelMap.put("item", item);
 		modelMap.put("params", params);
-		return new ModelAndView("fish/WSSummaryReport", "model", modelMap);
+		return new ModelAndView("fish/GeneralReport", "model", modelMap);
 	}
 }

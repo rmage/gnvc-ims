@@ -14,36 +14,64 @@
                 
                 $('#addForm').validationEngine('attach');   
                 
-                $('#startDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
-                });
-                
-                $('#endDate').datepicker({                        
-                    dateFormat: "dd/mm/yy",
+                $('#dateShift').datepicker({                        
+                    dateFormat: "yy-mm-dd"
                 });
                 
                 $('#btnGenerate').click(function() {
                 	var type = $('#type').val();
-                	var item = $('#item').val();
-                	var params = $('#params').val();
-                	var url = "GenerateReport.htm?action=index&type="+type+"&item="+item;
-                	
-                	if(!(params == "null")) {
-                		url += "&params="+params;
-                	}
+                	var vesselId = $('#vesselId').val();
+                    var dateShift = $('#dateShift').val();
+                    var params = vesselId + ":" + dateShift;
+                	var url = "GenerateReport.htm?action=index&type="+type+"&item=FSummaryWSSlip"+"&params="+params;
                 	
                 	location.href = url;
                 });
+                
+                $('#batchNo').click(function() {
+					$("#dialog-ajaxSearch").dialog({ 
+						width: 500, 
+						height: 350, 
+						position: "center", 
+						modal: true, 
+						zindex: 9999, 
+						title: 'Select Batch Number' });
+                });
+                
+                $('#ajaxSearchBtn').click(function() {
+					var query = $('#query').val();
+					var ajaxUrl = 'FishJson.htm?action=findBatchNumber&query='+query
+					$("#list").jqGrid('setGridParam',{url:ajaxUrl,page:1}).trigger("reloadGrid");
+					$("#list").jqGrid({ 
+						url:ajaxUrl, 
+						datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
+	                    colNames:['Vessel Id', 'Batch Number','Vessel Name', 'Supplier Name'], 
+	                    colModel:[ 
+								   {name:'vesselId',index:'vesselId',width:50},
+	                               {name:'batchNo',index:'batchNo',width:100}, 
+	                               {name:'vesselName',index:'vesselName',width:200},
+	                               {name:'supplierName',index:'supplierName',width:200}], 
+	                    sortname: 'batchNo',
+	                    rowNum:10, rowList:[10,20,30],
+	                    jsonReader:{repeatitems: false},
+	                    onSelectRow: function(ids){
+	                    	var localRowData = $(this).getRowData(ids);
+	                    	$('#vesselId').val(localRowData.vesselId);
+                            $('#batchNo').val(localRowData.batchNo);
+                            $('#dialog-ajaxSearch').dialog('close');
+	                    },
+	                    pager: '#pager', sortname: 'batchNo', viewrecords: true, sortorder: "desc"}
+					).trigger("reloadGrid"); 
+	               	
+					jQuery("#list").jqGrid('navGrid','#pager',{edit:false,add:false,del:false});
+				});
                 
             });
         </script>
     </head>
     <body>
         <%
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-        	String item = (String) m.get("item");
-        	String params = (String) m.get("params");
+            SimpleDateFormat df = new SimpleDateFormat("yy-mm-dd");
         %>
 
         <div class="container">
@@ -54,37 +82,35 @@
 	
                 <div class="box">
                     <form action="FishReport.htm" method="post" name="form" id="addForm">
-                        <input type="hidden" name="mode" value="" />
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="isActive" value="Y"/>
-                        <input type="hidden" id="item" name="item" value="<%=item%>" />
-                        <input type="hidden" id="params" name="params" value="<%=params%>" />
+                        <input type="hidden" name="vesselId" id="vesselId" value="0" />
                         <table class="collapse tblForm row-select">
-                            <caption>Generate <%=item%></caption>
+                            <caption>Generate WSSummary Report</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
-                                   <td class="style1">Start Date</td>
+                                   <td class="style1">Batch No.</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="startDate" name="startDate" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                            <input type="text" id="batchNo" name="batchNo" 
+                                                   value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">End Date</td>
+                                   <td class="style1">Date Shift</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="endDate" name="endDate" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                            <input type="text" id="dateShift" name="dateShift" 
+                                                   value="<%=df.format(new Date())%>" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                 	<td class="style1">Format</td>
                                     <td class="style1">
-                                        <select name="type" id="type">
-                                        	<option value="xls">XLS</option>
+                                        <select id="type" name="type">
                                         	<option value="pdf">PDF</option>
-                                        	<option value="csv">CSV</option>
+                                        	<option value="xls">XLS</option>
+                                            <option value="csv">CSV</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -109,86 +135,21 @@
                     </form>
                 </div>
             </div>
+            <div id="dialog-ajaxSearch" title="Batch Number Search" style="display:none;z-index:1;">
+	        	<label>Batch Number</label>
+	        	<label>:</label>
+	        	<input type="text" id="query" size="30" class="text-input"/>
+	        	<input type="button" id="ajaxSearchBtn" style="font-size: smaller;" aria-disabled="false"                                                    
+	                                                   role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
+	                                                   name="btnBatchNumSearch" id="btnSave" value="Search" class="search" />
+	        	<table id="list"></table> 
+	            <div id="pager"></div> 
+        	</div>
             <div class="span-24 last border-top">
                 <div class="box">
                     &copy; 2013 SPFI
                 </div>
             </div>
-        </div>
-        <script type="text/javascript">
-            $(function() {
-                $('#btnCancel').click(function() {
-                    location.href = 'FishReport.htm';
-                });
-            });
-
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
-                
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
-                        },
-                        "Save": function() {
-                            $("form#addForm").submit();
-                        }
-                    },
-                    zindex: 1, title: 'Confirm' });
-
-            });
-        </script>
-
-        <script language="JavaScript">
-			function cek(){
-			if(form.length.value == "" || form.width.value == ""|| form.height.value == ""){
-			alert("data empty"); 
-			exit;
-			}
-			}
-			function kali() {
-			cek();
-			a=eval(form.length.value);
-			b=eval(form.width.value);
-			c=eval(form.height.value);
-			d=a*b*c
-			form.volumeMatrix.value = d;
-			}
-		</script>
-		
-		<script type="text/javascript">
-		   function formfocus() {
-		      document.getElementById('autofocus').focus();
-		   }
-		   window.onload = formfocus;
-    	</script>             
-        
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-        
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>            
-                                        
+        </div>                                     
     </body>
 </html>
