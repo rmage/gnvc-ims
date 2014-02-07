@@ -71,7 +71,7 @@
     </head>
     <body>
         <%
-            SimpleDateFormat df = new SimpleDateFormat("yy-mm-dd");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         %>
 
         <div class="container">

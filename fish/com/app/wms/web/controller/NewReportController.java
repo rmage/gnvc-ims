@@ -80,11 +80,13 @@ public class NewReportController extends MultiActionController {
 		String format = request.getParameter("format");
 		
 		FishRrDetailDao dao = DaoFactory.createFishRrDetailDao();
-		List<FishRrDetail> rrDetails = dao.findByRrIdGroupByFishAndStorage(rrId);
+		List<FishRrDetail> rrDetails = dao.findByRrIdGroupByFish(rrId);
 		FishRrDetail dto = rrDetails.get(0);
 		
 		Set<String> wsNumbers = new HashSet<String>();
+        Double totalSpoilage = Double.valueOf(0);
 		for (FishRrDetail rrDetail : rrDetails) {
+            totalSpoilage += rrDetail.getSpoilageWeight();
 			wsNumbers.add(rrDetail.getWeightSlip().getWsNo());
 		}
 		
@@ -103,6 +105,7 @@ public class NewReportController extends MultiActionController {
 		info.put("batchno", dto.getWeightSlip().getVessel().getBatchNo());
 		info.put("no", dto.getReceivingReport().getRrNo());
 		info.put("date", df.format(dto.getReceivingReport().getRrDate()));
+        info.put("totalspoilage", totalSpoilage);
 		
 		byte[] data = null;
 		
@@ -136,8 +139,10 @@ public class NewReportController extends MultiActionController {
 		
 		FishWdsDetail dto = wdsDetails.get(0);
 		Map<String, Object> info =  new HashMap<String, Object>();
-		info.put("no", dto.getWithdrawalSlip().getWdsNo());
+		info.put("supplier", dto.getWithdrawalSlip().getVessel().getSupplier().getName());
 		info.put("date", df.format(dto.getWithdrawalSlip().getWdsDate()));
+        info.put("batchno", dto.getWithdrawalSlip().getVessel().getBatchNo());
+        info.put("wdsno", dto.getWithdrawalSlip().getWdsNo());
 		
 		byte[] data = null;
 		
