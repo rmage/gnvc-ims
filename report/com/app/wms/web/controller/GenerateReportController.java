@@ -115,12 +115,21 @@ public class GenerateReportController extends MultiActionController {
 			"GROUP BY fv.name"
 		});
 		
-		ListMap.put(Report.IMRR, 
-			"select * " +
-			"from goodreceive gr " +
-			"LEFT JOIN goodreceive_detail grd ON gr.grnumber = grd.grnumber " +
-			"LEFT JOIN product p ON p.product_code = grd.productcode " +
-			"LEFT JOIN department d ON d.department_code = gr.department");
+            ListMap.put(Report.IMRR, 
+//                "select * " +
+//                "from goodreceive gr " +
+//                "LEFT JOIN goodreceive_detail grd ON gr.grnumber = grd.grnumber " +
+//                "LEFT JOIN product p ON p.product_code = grd.productcode " +
+//                "LEFT JOIN department d ON d.department_code = gr.department"
+                "SELECT rrd.rr_code, CONVERT(VARCHAR(10), rr.rr_date, 103) as rr_date, rr.rr_from, po.po_code, " +
+                "CONVERT(VARCHAR(10), po.po_date, 103) as po_date, " +
+                "p.product_name, p.product_code, rrd.department_code, rrd.qty_g, rrd.uom, u.name " +
+                "FROM rr_detail rrd " +
+                "INNER JOIN rr ON rr.rr_code = rrd.rr_code " +
+                "INNER JOIN po ON po.po_code = rr.po_code " +
+                "LEFT JOIN product p ON p.product_code = rrd.product_code " +
+                "LEFT JOIN \"user\" u ON u.user_id = rr.created_by " +
+                "WHERE rrd.rr_code = ?");
 		
 		ListMap.put(Report.FGEDS, 
 			"SELECT * " +
@@ -201,24 +210,24 @@ public class GenerateReportController extends MultiActionController {
 		);
 
 		
-    ListMap.put(Report.PPoForm, 
-//        "SELECT * " +
-//        "FROM inventory..po po " +
-//        "LEFT JOIN inventory..po_detail pod ON po.ponumber = pod.ponumber " +
-//        "LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
-//        "LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
-//        "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
-        "SELECT p.po_code, p.po_date, p.discount, p.pph, p.ppn, s.supplier_code, s.supplier_name, " +
-	"s.supplier_address, acp.unit_price, p.approved_by, p.approved_date, p.created_date, u.name, " +
-	"pr.product_name, pr.product_code, pd.department_code, prs.qty, prs.uom_name, pd.sub_total " +
-        "FROM po_detail pd " +
-	"LEFT JOIN po p ON p.po_code = pd.po_code " +
-	"LEFT JOIN \"user\" u ON u.user_id = p.created_by " +
-	"LEFT JOIN supplier s ON s.supplier_code = p.supplier_code " +
-	"LEFT JOIN product pr ON pr.product_code = pd.product_code " +
-	"LEFT JOIN prs_detail prs ON prs.prsnumber = pd.prsnumber AND prs.productcode = pd.product_code " +
-	"LEFT JOIN assign_canv_prc acp ON acp.prsnumber = pd.prsnumber AND acp.productcode = pd.product_code " +
-        "AND acp.supplier_code = ? WHERE p.po_code = ?");
+            ListMap.put(Report.PPoForm, 
+//                "SELECT * " +
+//                "FROM inventory..po po " +
+//                "LEFT JOIN inventory..po_detail pod ON po.ponumber = pod.ponumber " +
+//                "LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
+//                "LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
+//                "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
+                "SELECT p.po_code, p.po_date, p.discount, p.pph, p.ppn, s.supplier_code, s.supplier_name, " +
+                "s.supplier_address, acp.unit_price, p.approved_by, p.approved_date, p.created_date, u.name, " +
+                "pr.product_name, pr.product_code, pd.department_code, prs.qty, prs.uom_name, pd.sub_total " +
+                "FROM po_detail pd " +
+                "LEFT JOIN po p ON p.po_code = pd.po_code " +
+                "LEFT JOIN \"user\" u ON u.user_id = p.created_by " +
+                "LEFT JOIN supplier s ON s.supplier_code = p.supplier_code " +
+                "LEFT JOIN product pr ON pr.product_code = pd.product_code " +
+                "LEFT JOIN prs_detail prs ON prs.prsnumber = pd.prsnumber AND prs.productcode = pd.product_code " +
+                "LEFT JOIN assign_canv_prc acp ON acp.prsnumber = pd.prsnumber AND acp.productcode = pd.product_code " +
+                "AND acp.supplier_code = ? WHERE p.po_code = ?");
 		
 		ListMap.put(Report.IMStockCardperCategory, 
 			"select * " +
@@ -235,20 +244,20 @@ public class GenerateReportController extends MultiActionController {
 			"LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
 			"WHERE prsd.prsnumber = ?"
 		);
-		ListMap.put(Report.PCanvassingForm, 
-//			"SELECT * " +
-//			"FROM inventory..canvassing cv " +
-//			"LEFT JOIN inventory..canvassing_detail cvd ON cv.prsnumber = cvd.prsnumber " +
-//			"LEFT JOIN inventory..supplier su ON su.supplier_code = cvd.supplier_code "+
-//			"WHERE su.supplier_code = ?"
-                        "SELECT s.supplier_code, s.supplier_name, s.contact_person, null as id, u.name, " +
-                        "(CONVERT( VARCHAR(2), DAY(GETDATE()) ) + ' ' + DATENAME(MONTH, GETDATE()) + ' ' + CONVERT( VARCHAR(4), YEAR(GETDATE()))) as date, " +
-                        "acp.prsnumber, pd.productname, pd.qty, pd.uom_name FROM inventory..assign_canv_prc acp " +
-                        "LEFT JOIN inventory..supplier s ON s.supplier_code = acp.supplier_code " +
-                        "LEFT JOIN inventory..prs_detail pd ON pd.prsnumber = acp.prsnumber AND pd.productcode = acp.productcode " +
-                        "LEFT JOIN inventory..\"user\" u ON u.user_id = acp.created_by " +
-                        "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? "
-		);
+            ListMap.put(Report.PCanvassingForm, 
+//                    "SELECT * " +
+//                    "FROM inventory..canvassing cv " +
+//                    "LEFT JOIN inventory..canvassing_detail cvd ON cv.prsnumber = cvd.prsnumber " +
+//                    "LEFT JOIN inventory..supplier su ON su.supplier_code = cvd.supplier_code "+
+//                    "WHERE su.supplier_code = ?"
+                    "SELECT s.supplier_code, s.supplier_name, s.contact_person, null as id, u.name, " +
+                    "(CONVERT( VARCHAR(2), DAY(GETDATE()) ) + ' ' + DATENAME(MONTH, GETDATE()) + ' ' + CONVERT( VARCHAR(4), YEAR(GETDATE()))) as date, " +
+                    "acp.prsnumber, pd.productname, pd.qty, pd.uom_name FROM inventory..assign_canv_prc acp " +
+                    "LEFT JOIN inventory..supplier s ON s.supplier_code = acp.supplier_code " +
+                    "LEFT JOIN inventory..prs_detail pd ON pd.prsnumber = acp.prsnumber AND pd.productcode = acp.productcode " +
+                    "LEFT JOIN inventory..\"user\" u ON u.user_id = acp.created_by " +
+                    "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? "
+            );
 		ListMap.put(Report.PPoConfirmatory, 
 			"SELECT * " +
 			"FROM inventory..po po " +
