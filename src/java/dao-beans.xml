@@ -954,4 +954,10 @@
     <bean id="PurchaseDtlDao" class="com.app.wms.engine.db.dao.spring.PurchaseDtlDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="ReceiveReportDao" class="com.app.wms.engine.db.dao.spring.ReceiveReportDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="ReceiveReportDtlDao" class="com.app.wms.engine.db.dao.spring.ReceiveReportDtlDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>

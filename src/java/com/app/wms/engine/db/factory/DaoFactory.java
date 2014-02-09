@@ -850,4 +850,14 @@ public class DaoFactory {
         return (PurchaseDtlDao) bf.getBean("PurchaseDtlDao");
     }
     
+    public static ReceiveReportDao createReceiveReportDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ReceiveReportDao) bf.getBean("ReceiveReportDao");
+    }
+    
+    public static ReceiveReportDtlDao createReceiveReportDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ReceiveReportDtlDao) bf.getBean("ReceiveReportDtlDao");
+    }
+    
 }

@@ -56,6 +56,7 @@ public class ReportFactory {
 		reportTemplateMap.put("prsNotyetPO", new ReportModel("prsNotyetPO"));
 		reportTemplateMap.put("pts", new ReportModel("pts", true));
 		reportTemplateMap.put("receivingReport", new ReportModel("receivingReport", false));
+                reportTemplateMap.put("receivingReportNF", new ReportModel("receivingReportNF", false));
 		reportTemplateMap.put("stockCardReport", new ReportModel("stockCardReport", false));
 		reportTemplateMap.put("summaryWeightSlip", new ReportModel("summaryWeightSlip"));
 		reportTemplateMap.put("transferSlip", new ReportModel("transferSlip", false));
@@ -99,7 +100,7 @@ public class ReportFactory {
 		reportMap.put(Report.PPoForm, reportTemplateMap.get("poForm"));
 		reportMap.put(Report.PPoConfirmatory, reportTemplateMap.get("poConfirmatory"));
 		reportMap.put(Report.PPoPerDepartment, reportTemplateMap.get("poPerDepartment"));
-		reportMap.put(Report.IMRR, reportTemplateMap.get("receivingReport"));
+		reportMap.put(Report.IMRR, reportTemplateMap.get("receivingReportNF"));
 		reportMap.put(Report.IMSWS, reportTemplateMap.get("withdrawalSlip"));
 		reportMap.put(Report.IMTS, reportTemplateMap.get("transferSlip"));
 		reportMap.put(Report.IMDR, reportTemplateMap.get("deliverReceipt"));

@@ -13,9 +13,7 @@
                 /* prevent horizontal scrollbar */
                 overflow-x: hidden;
             }
-            .ui-datepicker {
-                display: none;
-            }
+            .ui-datepicker { display: none; }
         </style>
     </head>
     <body>
