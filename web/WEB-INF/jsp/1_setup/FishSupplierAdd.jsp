@@ -63,8 +63,7 @@
                                     <td>Fax</td>
                                     <td class="style1">
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="fax" size="25" id="fax" value="" />
-                                            <label class="requiredfield" title="This Field Is Required!">*</label>                                                            
+                                            <input type="text" name="fax" size="25" id="fax" value="" />                                                          
                                         </label>
                                     </td>
                                	 </tr>
@@ -82,8 +81,7 @@
                                     <td>Email</td>
                                     <td class="style1">
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="email" size="25" id="email" value="" />
-                                            <label class="requiredfield" title="This Field Is Required!">*</label>                                                            
+                                            <input type="text" name="email" size="25" id="email" value="" />                                                          
                                         </label>
                                     </td>  
                                	 </tr>

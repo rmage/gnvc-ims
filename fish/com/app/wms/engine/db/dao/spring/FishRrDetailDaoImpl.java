@@ -137,6 +137,21 @@ public class FishRrDetailDaoImpl extends AbstractDAO implements
 		
 		return resultList;
 	}
+    
+    @Override
+    public List<FishRrDetail> findByRrIdGroupByFish(int rrId) {
+        String query = "SELECT MAX(rrd.id) AS id, MAX(rrd.ws_id) AS ws_id, MAX(rrd.rr_id) AS rr_id, rrd.fish_id, " +
+				"SUM(rrd.good_weight) AS good_weight, SUM(rrd.spoilage_weight) AS spoilage_weight, " +
+				"SUM(total_weight) AS total_weight, MAX(rrd.storage_id) AS storage_id, MAX(rrd.created_date) AS created_date, " +
+				"MAX(rrd.created_by) AS created_by, MAX(rrd.updated_date) AS updated_date, " +
+				"MAX(rrd.updated_by) AS updated_by, MAX(rrd.is_active) AS is_active, MAX(rrd.is_delete) AS is_delete " +
+				"FROM inventory..fish_rr_detail rrd " +
+				"WHERE rrd.rr_id=? " +
+				"GROUP BY rrd.fish_id";
+		
+		List<FishRrDetail> resultList = jdbcTemplate.query(query, this, rrId);
+		return resultList;
+    }
 	
 	@Override
 	public List<FishRrDetail> findByRrIdGroupByFishAndStorage(int rrId) {
