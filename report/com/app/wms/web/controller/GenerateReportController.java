@@ -61,15 +61,17 @@ public class GenerateReportController extends MultiActionController {
             "WHERE ts_id=?");
 		
 		ListMap.put(Report.FSummaryWSSlip, 
-			"select ws.ws_no, s.name as supplier_name, v.name as boat_name, fs.raw_weight as spoilage, " +
-			"v.batch_no, ws.date_shift, ws.time_shift, f.code as type, wsd.total_weight as data " +
-			"from inventory..fish_ws ws " +
-			"left join inventory..fish_ws_detail wsd on wsd.ws_id = ws.id " +
-			"left join inventory..fish f on wsd.fish_id = f.id " +
-			"left join inventory..fish_vessel v on ws.vessel_id = v.id " +
-			"left join inventory..fish_supplier s on s.id = v.supplier_id " +
-			"left join inventory..fish_spoilage fs on v.id = fs.vessel_id " +
-			"where ws.vessel_id = ? AND ws.ws_type_id IN (?)");
+			"SELECT ws.ws_no, su.name AS supplier_name, fv.name AS boat_name,"
+                + "fv.batch_no, ws.date_shift, ws.time_shift, f.code AS type, wsd.total_weight AS data,"
+                + "(SELECT ISNULL(SUM(fs.cooked_weight), 0.00)FROM inventory..fish_spoilage fs "
+                + "WHERE fs.vessel_id = ws.vessel_id AND fs.fish_id = wsd.fish_id "
+                + "AND fs.date_shift = ws.date_shift) AS spoilage "
+                + "FROM inventory..fish_ws_detail wsd "
+                + "LEFT JOIN inventory..fish_ws ws ON ws.id = wsd.ws_id "
+                + "LEFT JOIN inventory..fish_vessel fv ON fv.id = ws.vessel_id "
+                + "LEFT JOIN inventory..fish_supplier su ON su.id = fv.supplier_id "
+                + "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id "
+                + "WHERE ws.vessel_id = ? AND ws.date_shift = ?");
 		ListMap.put(Report.FSpoilagereport, 
 			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
 			"FROM inventory..fish_spoilage fs " +

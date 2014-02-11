@@ -162,6 +162,13 @@ public class Util {
 		System.out.println("SUM:"+data_name+":"+type+":"+list.size()+":"+result);
 		return result!=0?result:null;
 	}
+    
+    public static Double IF(List<Map<String, Object>> list, String type, String data_name){
+		for(Map<String, Object> i:list){
+			if((""+i.get("type")).startsWith(type))	return Double.valueOf(i.get(data_name).toString());
+		}
+		return 0.0;
+	}
 
 	public static String date(){
 		return new SimpleDateFormat("MMM d, yyyy").format(new Date());
