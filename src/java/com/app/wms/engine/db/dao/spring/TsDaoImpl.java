@@ -52,6 +52,11 @@ public class TsDaoImpl extends AbstractDAO
             t.getCreatedDate(), null, null);
     }
     
+    public void updateStockInventory(String productCode, int qty) {
+        jdbcTemplate.update("UPDATE inventory..stock_inventory SET balance = balance - ? WHERE product_code = ?",
+            qty, productCode);
+    }
+    
     public List<Sws> findWhereNotInTs() {
         return jdbcTemplate.query("SELECT * FROM sws WHERE sws_code NOT IN (SELECT sws_code FROM " + getTableName() + ") ORDER BY sws_date ASC", 
             new SwsDaoImpl());

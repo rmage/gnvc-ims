@@ -66,8 +66,10 @@ public class TransferSlipController extends MultiActionController {
                 
         /* DAO | Define needed dao here */
         TsDao tsDao = DaoFactory.createTsDao();
+        SwsDtlDao swsDtlDao = DaoFactory.createSwsDtlDao();
         
         /* TRANSACTION | Something complex here */
+        // insert transfer slip
         t.setTsCode(Integer.parseInt(request.getParameter("tsCode")));
         t.setTsDate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("tsDate")));
         t.setTsInfo(request.getParameter("tsInfo"));
@@ -75,6 +77,12 @@ public class TransferSlipController extends MultiActionController {
         t.setCreatedBy(lu.getUserId());
         t.setCreatedDate(new Date());
         tsDao.insert(t);
+        
+        // get stores withdrawal slip detail and substract stock inventory balance
+        List<SwsDtl> sds = swsDtlDao.findBySws(t.getSwsCode());
+        for(SwsDtl x : sds) {
+            tsDao.updateStockInventory(x.getProductCode(), x.getQty());
+        }
         
         return new ModelAndView("redirect:TransferSlip.htm");
         

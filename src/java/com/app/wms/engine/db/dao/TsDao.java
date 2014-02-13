@@ -7,6 +7,8 @@ import java.util.List;
 public interface TsDao {
     
     public void insert(Ts t);
+    
+    public void updateStockInventory(String productCode, int qty);
 
     public List<Sws> findWhereNotInTs();
     
