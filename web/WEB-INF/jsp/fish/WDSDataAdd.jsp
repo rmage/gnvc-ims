@@ -125,6 +125,9 @@
                     var balance = $('#dBalanceQty').html().replace(/\,/g,'');
                 	var requestedQty = $('#dRequestedQty').val();
                     
+                    balance = Math.round(balance * 100) / 100;
+                    requestedQty = Math.round(requestedQty * 100) / 100;
+                    
                     if(requestedQty <= balance) {
                         $('#qtyHTML'+id).html(addCommas(requestedQty));
                         $('#qty'+id).val(requestedQty);
