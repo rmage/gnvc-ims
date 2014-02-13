@@ -137,13 +137,12 @@ public class ReceiveReportController extends MultiActionController {
                 pw.print(",");
             
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
-            
             pw.print("{\"itemCode\": \"" + p.getProductCode() + "\", ");
             pw.print("\"itemName\": \"" + p.getProductName()+ "\",");
             pw.print("\"department\": \"" + x.getDepartmentCode() + "\",");
             pw.print("\"qtyGood\": \"" + x.getQtyGood() + "\",");
             pw.print("\"qtyBad\": \"" + x.getQtyBad() + "\",");
-            pw.print("\"uom\": \"" + x.getDepartmentCode() + "\"}");
+            pw.print("\"uom\": \"" + x.getUom()+ "\"}");
             
             b = Boolean.TRUE;
         } pw.print("]");

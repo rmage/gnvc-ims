@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.AbstractMap;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -842,6 +843,14 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
             throw new ProductDaoException("Query failed", e);
         }
 
+    }
+    
+    public List<Product> findWhereProductNameEquals(String productName, int limit) {
+        HashMap hm = new HashMap();
+        hm.put("productName", "%" + productName + "%");
+        hm.put("limit", limit);
+        return jdbcTemplate.query("SELECT TOP(:limit) product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName() + 
+            " WHERE product_name LIKE :productName AND is_active = 'Y' ORDER BY product_name", this, hm);
     }
 
 }

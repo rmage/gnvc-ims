@@ -1,444 +1,125 @@
 package com.app.wms.engine.db.dto;
 
-import com.app.wms.engine.db.dao.*;
-import com.app.wms.engine.db.factory.*;
-import com.app.wms.engine.db.exceptions.*;
 import java.io.Serializable;
-import java.util.*;
 import java.util.Date;
 
-public class Sws implements Serializable
-{
-	/** 
-	 * This attribute maps to the column id in the sws table.
-	 */
-	protected int id;
+public class Sws implements Serializable {
+    
+    private int swsCode;
+    
+    private Date swsDate;
+    
+    private String swsInfo;
+    
+    private String departmentCode;
+    
+    private String approvedBy;
+    
+    private Date approvedDate;
+    
+    private String createdBy;
+    
+    private Date createdDate;
+    
+    private String updatedBy;
+    
+    private Date updatedDate;
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append( "com.app.wms.engine.db.dto.Sws: " );
+        sb.append("swsCode = ").append( getSwsCode() );
+        sb.append(", swsDate = ").append( getSwsDate() );
+        sb.append(", swsInfo = ").append( getSwsInfo() );
+        sb.append(", departmentCode = ").append( getDepartmentCode() );
+        sb.append(", approvedBy = ").append( getApprovedBy() );
+        sb.append(", approvedDate = ").append( getApprovedDate() );
+        sb.append(", createdBy = ").append( getCreatedBy() );
+        sb.append(", createdDate = ").append( getCreatedDate() );
+        sb.append(", updatedBy = ").append( getUpdatedBy() );
+        sb.append(", updatedDate = ").append( getUpdatedDate() );
+        return sb.toString();
+    }
 
-	/** 
-	 * This attribute maps to the column swsnumber in the sws table.
-	 */
-	protected String swsnumber;
+    public int getSwsCode() {
+        return swsCode;
+    }
 
-	/** 
-	 * This attribute maps to the column swsdate in the sws table.
-	 */
-	protected Date swsdate;
+    public void setSwsCode(int swsCode) {
+        this.swsCode = swsCode;
+    }
 
-	/** 
-	 * This attribute maps to the column swsreferensi in the sws table.
-	 */
-	protected String swsreferensi;
+    public Date getSwsDate() {
+        return swsDate;
+    }
 
-	/** 
-	 * This attribute maps to the column remarks in the sws table.
-	 */
-	protected String remarks;
+    public void setSwsDate(Date swsDate) {
+        this.swsDate = swsDate;
+    }
 
-	/** 
-	 * This attribute maps to the column createdby in the sws table.
-	 */
-	protected String createdby;
+    public String getDepartmentCode() {
+        return departmentCode;
+    }
 
-	/** 
-	 * This attribute maps to the column requestedBy in the sws table.
-	 */
-	protected String requestedBy;
+    public void setDepartmentCode(String departmentCode) {
+        this.departmentCode = departmentCode;
+    }
 
-	/** 
-	 * This attribute maps to the column approvedBy in the sws table.
-	 */
-	protected String approvedBy;
+    public String getApprovedBy() {
+        return approvedBy;
+    }
 
-	/** 
-	 * This attribute maps to the column wh_code in the sws table.
-	 */
-	protected String whCode;
+    public void setApprovedBy(String approvedBy) {
+        this.approvedBy = approvedBy;
+    }
 
-	/** 
-	 * This attribute maps to the column department_name in the sws table.
-	 */
-	protected String departmentName;
-	
-	protected String isApproved;
-	
-	protected Date approvedDate;
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
 
-	/**
-	 * Method 'Sws'
-	 * 
-	 */
-	public Sws()
-	{
-	}
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
+    }
 
-	public String getIsApproved() {
-		return isApproved;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	public void setIsApproved(String isApproved) {
-		this.isApproved = isApproved;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	public Date getApprovedDate() {
-		return approvedDate;
-	}
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-	public void setApprovedDate(Date approvedDate) {
-		this.approvedDate = approvedDate;
-	}
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	/**
-	 * Method 'getId'
-	 * 
-	 * @return int
-	 */
-	public int getId()
-	{
-		return id;
-	}
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
 
-	/**
-	 * Method 'setId'
-	 * 
-	 * @param id
-	 */
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	/**
-	 * Method 'getSwsnumber'
-	 * 
-	 * @return String
-	 */
-	public String getSwsnumber()
-	{
-		return swsnumber;
-	}
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
 
-	/**
-	 * Method 'setSwsnumber'
-	 * 
-	 * @param swsnumber
-	 */
-	public void setSwsnumber(String swsnumber)
-	{
-		this.swsnumber = swsnumber;
-	}
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 
-	/**
-	 * Method 'getSwsdate'
-	 * 
-	 * @return Date
-	 */
-	public Date getSwsdate()
-	{
-		return swsdate;
-	}
+    public String getSwsInfo() {
+        return swsInfo;
+    }
 
-	/**
-	 * Method 'setSwsdate'
-	 * 
-	 * @param swsdate
-	 */
-	public void setSwsdate(Date swsdate)
-	{
-		this.swsdate = swsdate;
-	}
-
-	/**
-	 * Method 'getSwsreferensi'
-	 * 
-	 * @return String
-	 */
-	public String getSwsreferensi()
-	{
-		return swsreferensi;
-	}
-
-	/**
-	 * Method 'setSwsreferensi'
-	 * 
-	 * @param swsreferensi
-	 */
-	public void setSwsreferensi(String swsreferensi)
-	{
-		this.swsreferensi = swsreferensi;
-	}
-
-	/**
-	 * Method 'getRemarks'
-	 * 
-	 * @return String
-	 */
-	public String getRemarks()
-	{
-		return remarks;
-	}
-
-	/**
-	 * Method 'setRemarks'
-	 * 
-	 * @param remarks
-	 */
-	public void setRemarks(String remarks)
-	{
-		this.remarks = remarks;
-	}
-
-	/**
-	 * Method 'getCreatedby'
-	 * 
-	 * @return String
-	 */
-	public String getCreatedby()
-	{
-		return createdby;
-	}
-
-	/**
-	 * Method 'setCreatedby'
-	 * 
-	 * @param createdby
-	 */
-	public void setCreatedby(String createdby)
-	{
-		this.createdby = createdby;
-	}
-
-	/**
-	 * Method 'getRequestedBy'
-	 * 
-	 * @return String
-	 */
-	public String getRequestedBy()
-	{
-		return requestedBy;
-	}
-
-	/**
-	 * Method 'setRequestedBy'
-	 * 
-	 * @param requestedBy
-	 */
-	public void setRequestedBy(String requestedBy)
-	{
-		this.requestedBy = requestedBy;
-	}
-
-	/**
-	 * Method 'getApprovedBy'
-	 * 
-	 * @return String
-	 */
-	public String getApprovedBy()
-	{
-		return approvedBy;
-	}
-
-	/**
-	 * Method 'setApprovedBy'
-	 * 
-	 * @param approvedBy
-	 */
-	public void setApprovedBy(String approvedBy)
-	{
-		this.approvedBy = approvedBy;
-	}
-
-	/**
-	 * Method 'getWhCode'
-	 * 
-	 * @return String
-	 */
-	public String getWhCode()
-	{
-		return whCode;
-	}
-
-	/**
-	 * Method 'setWhCode'
-	 * 
-	 * @param whCode
-	 */
-	public void setWhCode(String whCode)
-	{
-		this.whCode = whCode;
-	}
-
-	/**
-	 * Method 'getDepartmentName'
-	 * 
-	 * @return String
-	 */
-	public String getDepartmentName()
-	{
-		return departmentName;
-	}
-
-	/**
-	 * Method 'setDepartmentName'
-	 * 
-	 * @param departmentName
-	 */
-	public void setDepartmentName(String departmentName)
-	{
-		this.departmentName = departmentName;
-	}
-
-	/**
-	 * Method 'equals'
-	 * 
-	 * @param _other
-	 * @return boolean
-	 */
-	public boolean equals(Object _other)
-	{
-		if (_other == null) {
-			return false;
-		}
-		
-		if (_other == this) {
-			return true;
-		}
-		
-		if (!(_other instanceof Sws)) {
-			return false;
-		}
-		
-		final Sws _cast = (Sws) _other;
-		if (id != _cast.id) {
-			return false;
-		}
-		
-		if (swsnumber == null ? _cast.swsnumber != swsnumber : !swsnumber.equals( _cast.swsnumber )) {
-			return false;
-		}
-		
-		if (swsdate == null ? _cast.swsdate != swsdate : !swsdate.equals( _cast.swsdate )) {
-			return false;
-		}
-		
-		if (swsreferensi == null ? _cast.swsreferensi != swsreferensi : !swsreferensi.equals( _cast.swsreferensi )) {
-			return false;
-		}
-		
-		if (remarks == null ? _cast.remarks != remarks : !remarks.equals( _cast.remarks )) {
-			return false;
-		}
-		
-		if (createdby == null ? _cast.createdby != createdby : !createdby.equals( _cast.createdby )) {
-			return false;
-		}
-		
-		if (requestedBy == null ? _cast.requestedBy != requestedBy : !requestedBy.equals( _cast.requestedBy )) {
-			return false;
-		}
-		
-		if (approvedBy == null ? _cast.approvedBy != approvedBy : !approvedBy.equals( _cast.approvedBy )) {
-			return false;
-		}
-		
-		if (whCode == null ? _cast.whCode != whCode : !whCode.equals( _cast.whCode )) {
-			return false;
-		}
-		
-		if (departmentName == null ? _cast.departmentName != departmentName : !departmentName.equals( _cast.departmentName )) {
-			return false;
-		}
-		
-		return true;
-	}
-
-	/**
-	 * Method 'hashCode'
-	 * 
-	 * @return int
-	 */
-	public int hashCode()
-	{
-		int _hashCode = 0;
-		_hashCode = 29 * _hashCode + id;
-		if (swsnumber != null) {
-			_hashCode = 29 * _hashCode + swsnumber.hashCode();
-		}
-		
-		if (swsdate != null) {
-			_hashCode = 29 * _hashCode + swsdate.hashCode();
-		}
-		
-		if (swsreferensi != null) {
-			_hashCode = 29 * _hashCode + swsreferensi.hashCode();
-		}
-		
-		if (remarks != null) {
-			_hashCode = 29 * _hashCode + remarks.hashCode();
-		}
-		
-		if (createdby != null) {
-			_hashCode = 29 * _hashCode + createdby.hashCode();
-		}
-		
-		if (requestedBy != null) {
-			_hashCode = 29 * _hashCode + requestedBy.hashCode();
-		}
-		
-		if (approvedBy != null) {
-			_hashCode = 29 * _hashCode + approvedBy.hashCode();
-		}
-		
-		if (whCode != null) {
-			_hashCode = 29 * _hashCode + whCode.hashCode();
-		}
-		
-		if (departmentName != null) {
-			_hashCode = 29 * _hashCode + departmentName.hashCode();
-		}
-		
-		if (isApproved != null) {
-			_hashCode = 29 * _hashCode + isApproved.hashCode();
-		}
-		
-		if (approvedDate != null) {
-			_hashCode = 29 * _hashCode + approvedDate.hashCode();
-		}
-		
-		return _hashCode;
-	}
-
-	/**
-	 * Method 'createPk'
-	 * 
-	 * @return SwsPk
-	 */
-	public SwsPk createPk()
-	{
-		return new SwsPk(id);
-	}
-
-	/**
-	 * Method 'toString'
-	 * 
-	 * @return String
-	 */
-	public String toString()
-	{
-		StringBuffer ret = new StringBuffer();
-		ret.append( "com.app.wms.engine.db.dto.Sws: " );
-		ret.append( "id=" + id );
-		ret.append( ", swsnumber=" + swsnumber );
-		ret.append( ", swsdate=" + swsdate );
-		ret.append( ", swsreferensi=" + swsreferensi );
-		ret.append( ", remarks=" + remarks );
-		ret.append( ", createdby=" + createdby );
-		ret.append( ", requestedBy=" + requestedBy );
-		ret.append( ", approvedBy=" + approvedBy );
-		ret.append( ", whCode=" + whCode );
-		ret.append( ", departmentName=" + departmentName );
-		ret.append( ", isApproved=" + isApproved );
-		ret.append( ", approvedDate=" + approvedDate );
-		return ret.toString();
-	}
-
+    public void setSwsInfo(String swsInfo) {
+        this.swsInfo = swsInfo;
+    }
+    
 }

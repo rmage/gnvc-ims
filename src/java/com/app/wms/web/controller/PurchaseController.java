@@ -179,7 +179,7 @@ public class PurchaseController extends MultiActionController {
             if(b)
                 pw.print(",");
             
-            Prs prs = prsDao.findWherePrsnumberEquals(ac.getPrsNumber()).get(0);
+            Prs prs = prsDao.findByPrsnumberEquals(ac.getPrsNumber());
             Product p = productDao.findWhereProductCodeEquals(ac.getProductCode()).get(0);
             PrsDetail pd = prsDetailDao.findByPrsProduct(ac.getPrsNumber(), ac.getProductCode());
             

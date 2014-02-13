@@ -96,6 +96,8 @@ public interface PrsDao
 	public void update(Prs dto) throws PrsDaoException;
         
         /* FYA : 07 January 2014 */
+        public Prs findByPrsnumberEquals(String prsNumber);
+        
         public List<Prs> findByDepartment(String deptId);
         
         public List<Prs> findAllNotInCanvas();
@@ -103,4 +105,5 @@ public interface PrsDao
         public List<Prs> fyaFindByCanvaser(String userId);
         
         public List<Prs> fyaFindByCanvaser(String prsNo, String userId);
+        
 }

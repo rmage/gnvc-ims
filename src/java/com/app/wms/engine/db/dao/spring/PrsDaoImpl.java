@@ -5,11 +5,9 @@ import com.app.wms.engine.db.dto.PoDetail;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsPk;
 import com.app.wms.engine.db.dto.map.PrsListMap;
-import com.app.wms.engine.db.dto.map.SwsListMap;
 import com.app.wms.engine.db.exceptions.PoDaoException;
 import com.app.wms.engine.db.exceptions.PoDetailDaoException;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
-import com.app.wms.engine.db.exceptions.SwsDaoException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -385,6 +383,11 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 	}
         
     /* FYA : 07 January 2014 */
+    public Prs findByPrsnumberEquals(String prsNumber) {
+        List<Prs> ps = jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " WHERE prsnumber = ?", this, prsNumber);
+        return ps.isEmpty() ? null : ps.get(0);
+    }
+        
     public List<Prs> findByDepartment(String deptId) {
         try {
             return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName() + " WHERE department_name = ? ORDER BY id desc", this, deptId);

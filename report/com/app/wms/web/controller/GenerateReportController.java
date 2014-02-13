@@ -273,14 +273,33 @@ public class GenerateReportController extends MultiActionController {
 			"LEFT JOIN po ON po.ponumber = pod.ponumber " +
 			"LEFT JOIN product p ON p.product_code = pod.productcode "+
 			"WHERE MONTH(podate) = ? AND YEAR(podate) = ?");
-		ListMap.put(Report.IMSWS, 
-			"SELECT * " +
-			"FROM dbo.sws sws, dbo.sws_detail swsd " +
-			"WHERE sws.swsnumber = swsd.swsnumber"); 
-		ListMap.put(Report.IMTS,
-			"SELECT * " +
-			"FROM dbo.ts ts, dbo.ts_detail tsd " +
-			"WHERE ts.tsnumber = tsd.tsnumber");
+            ListMap.put(Report.IMSWS, 
+//                "SELECT * " +
+//                "FROM dbo.sws sws, dbo.sws_detail swsd " +
+//                "WHERE sws.swsnumber = swsd.swsnumber"
+                "SELECT sws.sws_code, sws.sws_info, CONVERT(VARCHAR(10), sws.sws_date, 103) as sws_date, " +
+                    "d.department_code, d.department_name, u.name, p.product_code, p.product_name, p.product_category, " +
+                    "swsd.qty, swsd.uom FROM sws " +
+                "INNER JOIN sws_detail swsd ON swsd.sws_code = sws.sws_code " +
+                "LEFT JOIN product p ON p.product_code = swsd.product_code " +
+                "LEFT JOIN \"user\" u ON u.user_id = sws.created_by " +
+                "LEFT JOIN department d ON d.department_code = sws.department_code " +
+                "WHERE sws.sws_code = ?"); 
+            ListMap.put(Report.IMTS,
+//                "SELECT * " +
+//                "FROM dbo.ts ts, dbo.ts_detail tsd " +
+//                "WHERE ts.tsnumber = tsd.tsnumber"
+                "SELECT ts.ts_code, CONVERT(VARCHAR(10), ts.ts_date, 103) as ts_date, d.department_name as [from], " +
+                    "u.name, ts.sws_code, ts.ts_info, p.product_name, p.product_code, p.product_category, " +
+                    "sd.qty, sd.uom, d2.department_name as [to] FROM ts " +
+                "LEFT JOIN sws ON sws.sws_code = ts.sws_code " +
+                "LEFT JOIN sws_detail sd ON sd.sws_code = sws.sws_code " +
+                "LEFT JOIN product p ON p.product_code = sd.product_code " +
+                "LEFT JOIN \"user\" u ON u.user_id = ts.created_by " +
+                "LEFT JOIN user_role ur ON ur.role_code = u.role_code " +
+                "LEFT JOIN department d ON d.department_code = ur.department_code " +
+                "LEFT JOIN department d2 ON d2.department_code = sws.department_code " +
+                "WHERE ts.ts_code = ? ");
 		ListMap.put(Report.IMDR, 
 			"SELECT * FROM dbo.dr dr " +
 			"LEFT JOIN dbo.dr_detail drd ON dr.drnumber = drd.drnumber " +

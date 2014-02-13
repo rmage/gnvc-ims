@@ -205,5 +205,8 @@ public interface ProductDao
 	public List<Product> findProductPaging(Product p,int page) throws ProductDaoException;
 	
 	public Product findByPrimaryKey(String productId) throws ProductDaoException;
+        
+        public List<Product> findWhereProductNameEquals(String productName, int limit);
+        
 
 }

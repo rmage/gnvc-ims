@@ -830,7 +830,7 @@
     <bean id="SwsDao" class="com.app.wms.engine.db.dao.spring.SwsDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="SwsDetailDao" class="com.app.wms.engine.db.dao.spring.SwsDetailDaoImpl" scope="prototype">
+    <bean id="SwsDtlDao" class="com.app.wms.engine.db.dao.spring.SwsDtlDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="BorDao" class="com.app.wms.engine.db.dao.spring.BorDaoImpl" scope="prototype">
