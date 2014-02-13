@@ -160,4 +160,11 @@ public class FishWsTypeDaoImpl extends AbstractDAO
         List<FishWSType> resultList = jdbcTemplate.query(query, this, wsType);
         return resultList.isEmpty() ? false : true;
     }
+
+    public FishWSType findByTypeCode(String typeCode) {
+        String query = "SELECT * FROM " + getTableName() + " WHERE code = ?";
+        List<FishWSType> resultList = jdbcTemplate.query(query, this, typeCode);
+        
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
 }

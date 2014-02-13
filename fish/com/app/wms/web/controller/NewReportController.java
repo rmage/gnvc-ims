@@ -20,10 +20,12 @@ import com.app.wms.engine.db.dao.FishSpoilageDao;
 import com.app.wms.engine.db.dao.FishTsDetailDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
 import com.app.wms.engine.db.dao.FishWsDetailDao;
+import com.app.wms.engine.db.dao.FishWsTypeDao;
 import com.app.wms.engine.db.dto.FishBadStockDetail;
 import com.app.wms.engine.db.dto.FishRrDetail;
 import com.app.wms.engine.db.dto.FishSpoilage;
 import com.app.wms.engine.db.dto.FishTsDetail;
+import com.app.wms.engine.db.dto.FishWSType;
 import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -38,12 +40,17 @@ public class NewReportController extends MultiActionController {
 		
 		Integer wsId = Integer.valueOf(request.getParameter("wsId"));
 		String format = request.getParameter("format");
-		String wsType = request.getParameter("wsType").toLowerCase();
+		String typeCode = request.getParameter("wsType").toLowerCase();
+        
+        FishWsTypeDao wsTypeDao = DaoFactory.createFishWsTypeDao();
+        FishWSType wsType = wsTypeDao.findByTypeCode(typeCode);
 		
 		FishWsDetailDao wsDetailDao = DaoFactory.createFishWsDetailDao();
 		List<FishWsDetail> wsDetails = wsDetailDao.findByWsIdGroupByFish(wsId);
 		FishWsDetail dto = wsDetails.get(0);
 		Map<String, Object> info =  new HashMap<String, Object>();
+        
+        info.put("title", wsType.getDescription());
 		info.put("supplier", dto.getWeightSlip().getVessel().getSupplier().getName());
 		info.put("batch", dto.getWeightSlip().getVessel().getBatchNo());
 		info.put("timeShift", dto.getWeightSlip().getTimeShift());
@@ -52,18 +59,18 @@ public class NewReportController extends MultiActionController {
 		info.put("no", dto.getWeightSlip().getWsNo());
 		
 		byte[] data = null;
-		String filename = wsType + dto.getWeightSlip().getWsNo();
+		String filename = typeCode + dto.getWeightSlip().getWsNo();
 		
 		if(format.equalsIgnoreCase("pdf")) {
-			data = new ReportModel(wsType, false).getReportPDF(wsDetails, info);
+			data = new ReportModel("wsgeneral", false).getReportPDF(wsDetails, info);
 			response.setHeader("Content-disposition", "attachment; filename="+filename+".pdf");
 		}
 		else if(format.equalsIgnoreCase("xls")) {
-			data = new ReportModel(wsType, false).getReportXLS(wsDetails, info);
+			data = new ReportModel("wsgeneral", false).getReportXLS(wsDetails, info);
 			response.setHeader("Content-disposition", "attachment; filename="+filename+".xls");	
 		}
 		else if(format.equalsIgnoreCase("csv")) {
-			data = new ReportModel(wsType, false).getReportCSV(wsDetails, info);
+			data = new ReportModel("wsgeneral", false).getReportCSV(wsDetails, info);
 			response.setHeader("Content-disposition", "attachment; filename="+filename+".csv");	
 		}
 		
