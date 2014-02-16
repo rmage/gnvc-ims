@@ -77,7 +77,7 @@
                                     	<label>
 	                                        <select id="category" name="category">
 	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
-	                                        		  <option value="<c:out value='${droplist.categoryName}'/>" 
+	                                        		  <option value="<c:out value='${droplist.categoryCode}'/>" 
 	                                        		   <c:if test="${param.selecValue == item }"> selected</c:if> >
 	                                        		  	<c:out value="${droplist.categoryName}" />
 	                                        		  </option> 

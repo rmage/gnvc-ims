@@ -1,326 +1,175 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dao.PtsDao;
+import com.app.wms.engine.db.dao.PtsDtlDao;
+import com.app.wms.engine.db.dto.Product;
+import com.app.wms.engine.db.dto.Pts;
+import com.app.wms.engine.db.dto.PtsDtl;
+import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.ProductDaoException;
+import com.app.wms.engine.db.factory.DaoFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import com.app.wms.engine.db.dao.PtsDao;
-import com.app.wms.engine.db.dto.Pts;
-import com.app.wms.engine.db.dto.map.LoginUser;
-import com.app.wms.engine.db.factory.DaoFactory;
-import com.app.wms.web.util.AppConstant;
-
 public class PTSController extends MultiActionController {
-	
-
-
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-           
-            HashMap m = null;
-            final String mode = request.getParameter("mode");
-            if (mode != null && mode.equals("edit")) {
-                m = this.getModelByPrimaryKey(request);
-                m.put("mode", "edit");
-                return new ModelAndView("2_receive/PTSEdit", "model", m);
-            } else {
-
-                m = this.searchAndPaging(request, response);
-                return new ModelAndView("2_receive/PTSList", "model", m);
-            }
-
-        }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-	
-	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
-
-            HashMap m = new HashMap();
-
-            Integer page = null;
-            Integer paging = null;
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-            }
-            if (request.getParameter("paging") != null) {
-                paging = Integer.parseInt(request.getParameter("paging"));
-            }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
-            int start = (page - 1) * paging + 1;
-            int end = start + paging - 1;
-
-            Pts p = new Pts();
-            
-            String ptsCode = request.getParameter("");
-            String ptsDate = request.getParameter("");
-            
-            p.setPtsCode(ptsCode);
-            p.setPtsDate(ptsDate);
-            /*
-            p.setPackStyleSize(packStyleSize);
-            p.setCanCode(canCode);
-            p.setForBrand(forBrand);
-            p.setReff(reff);
-            p.setNsDs(nsDs);
-            p.setProductBatch(productBatch);
-            p.setBasket(basket);
-            p.setQuantity(quantity);
-            p.setFlkPercent(flkPercent);
-            p.setNw(nw);
-            p.setDw(dw);
-            p.setPw(pw);
-            p.setReleaseTo(releaseTo);
-            p.setRemarks(remarks);
-            p.setIssuedBy(issuedBy);
-            p.setCheckedBy(checkedBy);
-            p.setReceivedBy(receivedBy);
-            p.setIsActive(isActive);
-            */
-            PtsDao dao = DaoFactory.createPtsDao();
-            List<Pts> listSearchPage = dao.findPtsPaging(p,page);
-            int total = 2000; 
-            m.put("pts", listSearchPage);
-            m.put("totalRows", total);
-            m.put("page", page);
-            m.put("paging", paging);
-
-            return m;
-
-		}catch (Exception e){
-			throw e;
-		}
-		
-	}
-	
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-		try {
-		 PtsDao dao = DaoFactory.createPtsDao();
-         Pts dto = new Pts();
-
-         String mode = request.getParameter("mode");
-         if (mode != null && mode.equals("edit")) {
-        	 Integer id = Integer.parseInt(request.getParameter("id"));
-             dto = dao.findByPrimaryKey(id);
-            
-         }
-         if (dto.getPtsCode() == null) {
-        	 
-        	 dto.setPtsCode("");
-        	 dto.setPtsDate("");
-             dto.setIsActive("Y");
-             dto.setIsDelete("N");
-         }
-         
-         if (dto.getPtsCode() != null || dto.getPtsDate() != null) {
-        	 dto.setPtsCode(dto.getPtsCode());
-        	 dto.setPtsDate(dto.getPtsDate());
-             dto.setIsActive(dto.getIsActive());
-             dto.setIsDelete(dto.getIsDelete());
-         }
-         //edit
-         HashMap m = new HashMap();
-         m.put("dto", dto);
-         
-         return m;
-         
-		} catch (Exception e) {
-            throw e;
-        }
-	}
-	
-	/**
-	 * Method 'findAll'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			
-			PtsDao dao = DaoFactory.createPtsDao();
-			List<Pts> dto = dao.findAll();
-			
-			return new ModelAndView( "2_receive/PTSList", "model", dto);
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-        String createdBy = "";
-        if (lu == null) {
-			HashMap m = new HashMap();
-            String msg = "You haven't login or your session has been expired! Please do login again";
-            m.put("msg", msg);
-            return new ModelAndView("login", "model", m);
-        }else{
-        	createdBy = (String)lu.getUserId();
-        }
-       
-        PtsDao dao = DaoFactory.createPtsDao();
+    
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) 
+        throws ProductDaoException {
         
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        Pts dto = dao.findByPrimaryKey(id);
-        if (dto != null) {
-            dto.setIsActive(AppConstant.STATUS_FALSE);
-            dto.setUpdatedBy(createdBy);
-            dto.setUpdatedDate(new java.util.Date());
-            dao.update(dto.createPk(), dto);
-        }
-
-        HashMap m = this.searchAndPaging(request, response);
-        return new ModelAndView("2_receive/PTSList", "model", m);
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        
+        /* DAO | Define needed dao here */
+        PtsDao ptsDao = DaoFactory.createPtsDao();
+        ProductDao productDao = DaoFactory.createProductDao();
+        
+        /* TRANSACTION | Something complex here */
+        List<Pts> ps = ptsDao.findByUser(lu.getUserId());
+        for(Pts x : ps) {
+            Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
+            x.setProductCode(p.getBrandName() + " (" + p.getProductCode() + " - " + p.getProductName() + "):"
+                + p.getPackstyle() + " / " + p.getPacksize());
+        } m.put("p", ps);
+        
+        return new ModelAndView("finish_goods/PTSList", "model", m);
+        
     }
-	
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		Map map = new HashMap();
-		map = this.getModelByPrimaryKey(request);
-		map.put("mode", "create");		
-		
-		PtsDao dao = DaoFactory.createPtsDao();
-		
-		return new ModelAndView( "2_receive/PTSAdd", "model", map);
-	}
+    
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+        
+        /* DAO | Define needed dao here */
+        
+        /* TRANSACTION | Something complex here */
+        
+        return new ModelAndView("finish_goods/PTSAdd", "model", m);
+        
+    }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
+        throws ParseException {
+        
+        /* DATA | get initial value */
+        String[] master = request.getParameter("master").split(":");
+        String[] details = request.getParameterValues("detail");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
-	
-	/**
-	 * Method 'save'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
+        /* DAO | Define needed dao here */
+        PtsDao ptsDao = DaoFactory.createPtsDao();
+        PtsDtlDao ptsDtlDao = DaoFactory.createPtsDtlDao();
 
-      boolean isCreate = true;
-      String strError = "";
-      Date now = new Date();
-      java.lang.String mode = request.getParameter("mode");
-      Pts dto = null;
-      try {
-          if (mode.equalsIgnoreCase("create")) {
-              isCreate = true;
-          } else {
-              isCreate = false;
-          }
+        /* TRANSACTION | Something complex here */
+        // insert master pts
+        Pts p = new Pts();
+        p.setPtsCode(Integer.parseInt(master[0]));
+        p.setPtsDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
+        p.setPtsCanCode(master[2]);
+        p.setPtsCs(new BigDecimal(master[3]));
+        p.setPtsLocation(master[4]);
+        p.setProductCode(master[5]);
+        p.setBorCode(master[6]);
+        p.setCoeFlk(new BigDecimal(master[7]));
+        p.setCoeNw(new BigDecimal(master[8]));
+        p.setCoeDw(new BigDecimal(master[9]));
+        p.setCoePw(new BigDecimal(master[10]));
+        p.setQadReleaseTo(master[11]);
+        p.setQadRemarks(master[12]);
+        p.setCreatedBy(lu.getUserId());
+        p.setCreatedDate(new Date());
+        ptsDao.insert(p);
+        
+        for(String x : details) {
+            // insert detail pts
+            String[] detail = x.split(":");
+            PtsDtl pd = new PtsDtl();
+            pd.setPtsCode(p.getPtsCode());
+            pd.setPtsShift(detail[0]);
+            pd.setPtsDate(new SimpleDateFormat("dd/MM/yyyy").parse(detail[1]));
+            pd.setPtsProdBatch(detail[2]);
+            pd.setPtsBasket(detail[3]);
+            pd.setPtsQty(new BigDecimal(detail[4]));
+            pd.setCreatedBy(lu.getUserId());
+            pd.setCreatedDate(new Date());
+            ptsDtlDao.insert(pd);
+            
+            // update stock inventiry
+            ptsDao.updateStockInventory(p.getProductCode(), pd.getPtsQty());
+        }
+        
+        return new ModelAndView("redirect:Pts.htm");
+        
+    }
+    
+    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException, NumberFormatException{
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        int ptsCode = Integer.parseInt(request.getParameter("key"));
 
-          PtsDao dao = DaoFactory.createPtsDao();
-          if (isCreate) {
-        	  dto = new Pts();
-          } else {
-        	  Integer id = Integer.parseInt(request.getParameter("id"));
-              dto = dao.findByPrimaryKey(id);
-          }
-          
-          String ptsCode = request.getParameter("ptsCode");
-          if (ptsCode.trim().isEmpty()) {
-              strError += "PTS Code Cannot be Empty!" + AppConstant.EOL;
-          }
+        /* DAO | Define needed dao here */
+        PtsDtlDao ptsDtlDao = DaoFactory.createPtsDtlDao();
 
-          String ptsDate = request.getParameter("ptsDate");
-          if (ptsDate.trim().isEmpty()) {
-              strError += "PTS Date Cannot be Empty!" + AppConstant.EOL;
-          }
-          
-          LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-          String userId = "";
-          if (lu == null) {
-  			HashMap m = new HashMap();
-              String msg = "You haven't login or your session has been expired! Please do login again";
-              m.put("msg", msg);
-              return new ModelAndView("login", "model", m);
-          }else{
-        	  userId = (String)lu.getUserId();
-          }
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<PtsDtl> pds = ptsDtlDao.findByPts(ptsCode);
+        for(PtsDtl x : pds) {
+            if(b)
+                pw.print(",");
+            
+            pw.print("{\"shift\": \"" + x.getPtsShift() + "\", ");
+            pw.print("\"date\": \"" + new SimpleDateFormat("dd/MM/yyyy").format(x.getPtsDate()) + "\",");
+            pw.print("\"prodbatch\": \"" + x.getPtsProdBatch() + "\",");
+            pw.print("\"basket\": \"" + x.getPtsBasket() + "\",");
+            pw.print("\"qty\": \"" + x.getPtsQty() + "\"}");
+            
+            b = Boolean.TRUE;
+        } pw.print("]");
+        
+    }
+    
+    public void getBrandName(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        String brandName = request.getParameter("term");
 
-          if (isCreate) {
-              dto.setCreatedBy(userId);
-              dto.setCreatedDate(now);
-          }
-          
-          dto.setPtsCode(ptsCode);
-          dto.setPtsDate(ptsDate);
-          dto.setIsActive("Y");
-          dto.setIsDelete("N");
-          dto.setUpdatedBy(userId);
-          dto.setUpdatedDate(new java.util.Date());
+        /* DAO | Define needed dao here */
+        ProductDao productDao = DaoFactory.createProductDao();
 
-          if (strError.length() > 0) {
-              throw new Exception(strError);
-          }
-
-          if (isCreate) {
-              dao.insert(dto);
-          } 
-          
-          else {
-              dto.setUpdatedBy(userId);
-              dto.setUpdatedDate(new java.util.Date());
-              dao.update(dto.createPk(), dto);
-          }
-		 
-          return new ModelAndView("2_receive/PTSView", "dto", dto);
-
-      } catch (Exception e) {
-    	  e.printStackTrace();
-          String errorMsg = e.getMessage();
-          HashMap m = this.getModelByPrimaryKey(request);
-          m.put("mode", mode);
-          m.put("msg", errorMsg);
-
-          if (isCreate) {
-              return new ModelAndView("2_receive/PTSAdd", "model", m);
-          } else {
-              return new ModelAndView("2_receive/PTSEdit", "model", m);
-          }
-      }
-      
-  }
-
-
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<Product> ps = productDao.findWhereBrandNameEquals(brandName, 5);
+        for(Product x : ps) {
+            if(b)
+                pw.print(",");
+            
+            pw.print("{\"itemCode\": \"" + x.getProductCode() + "\", ");
+            pw.print("\"itemName\": \"" + x.getProductName() + "\",");
+            pw.print("\"style\": \"" + x.getPackstyle() + "\",");
+            pw.print("\"size\": \"" + x.getPacksize() + "\",");
+            pw.print("\"brand\": \"" + x.getBrandName() + "\"}");
+            
+            b = Boolean.TRUE;
+        } pw.print("]");
+        
+    }
 
 }

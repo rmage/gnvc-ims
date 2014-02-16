@@ -4,7 +4,6 @@ import com.app.wms.engine.db.dao.WsDao;
 import com.app.wms.engine.db.dto.Pts;
 import com.app.wms.engine.db.dto.Ws;
 import com.app.wms.engine.db.dto.WsPk;
-import com.app.wms.engine.db.exceptions.PtsDaoException;
 import com.app.wms.engine.db.exceptions.WsDaoException;
 import java.util.Date;
 import java.util.List;

@@ -878,7 +878,7 @@
     <bean id="DrDao" class="com.app.wms.engine.db.dao.spring.DrDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="DrDetailDao" class="com.app.wms.engine.db.dao.spring.DrDetailDaoImpl" scope="prototype">
+    <bean id="DrDtlDao" class="com.app.wms.engine.db.dao.spring.DrDtlDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     
@@ -958,6 +958,9 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="ReceiveReportDtlDao" class="com.app.wms.engine.db.dao.spring.ReceiveReportDtlDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="PtsDtlDao" class="com.app.wms.engine.db.dao.spring.PtsDtlDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

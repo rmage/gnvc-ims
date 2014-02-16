@@ -40,7 +40,7 @@
                                 <tr>
                                     <td colspan="5">
                                         <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('Sws.htm');" />
+                                        <input type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>

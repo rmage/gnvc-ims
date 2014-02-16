@@ -62,7 +62,7 @@
                                             <c:set scope="page" value="${no + 1}" var="no"/>
                                         </td>
                                         <td>
-                                             <a href="GenerateReport.htm?action=index&item=IMTS&type=xls&params=${x.tsCode}"><img src="resources/images/printxls.gif" title="Print Stores Withdrawal Slip (xls)" /></a>
+                                             <a href="GenerateReport.htm?action=index&item=IMTS&type=xls&params=${x.tsCode}"><img src="resources/images/printxls.gif" title="Print Transfer Slip (xls)" /></a>
                                         </td>
                                         <td>${x.tsCode}</td>
                                         <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.tsDate}" /></td>

@@ -302,13 +302,27 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN department d ON d.department_code = ur.department_code " +
                 "LEFT JOIN department d2 ON d2.department_code = sws.department_code " +
                 "WHERE ts.ts_code = ? ");
-		ListMap.put(Report.IMDR, 
-			"SELECT * FROM dbo.dr dr " +
-			"LEFT JOIN dbo.dr_detail drd ON dr.drnumber = drd.drnumber " +
-			"LEFT JOIN product p ON p.product_code = drd.productcode");
-		ListMap.put(Report.FGPTS, 
-			"SELECT * "+
-			"FROM inventory..pts");
+            ListMap.put(Report.IMDR, 
+//                "SELECT * FROM dbo.dr dr " +
+//                "LEFT JOIN dbo.dr_detail drd ON dr.drnumber = drd.drnumber " +
+//                "LEFT JOIN product p ON p.product_code = drd.productcode"
+                "SELECT dr.dr_code, CONVERT(VARCHAR(10), dr.dr_date, 103) as dr_date, dr.dr_from, dr.dr_fromloc, " +
+                "dr.or_code, dr.dr_toloc, dr.dm_code, dr.dr_remarks, dd.dr_qty, dd.dr_uom, s.supplier_name, " +
+                "p.product_code, p.product_name, u.name FROM dr " +
+                "INNER JOIN dr_detail dd ON dd.dr_code = dr.dr_code " +
+                "LEFT JOIN supplier s ON s.supplier_code = dr.supplier_code " +
+                "LEFT JOIN product p ON p.product_code = dd.product_code " +
+                "LEFT JOIN \"user\" u ON u.user_id = dr.created_by " +
+                "WHERE dr.dr_code = ?");
+            ListMap.put(Report.FGPTS, 
+//                "SELECT * "+
+//                "FROM inventory..pts"
+                "SELECT pts.pts_code, pts.pts_cancode, pts.bor_code, pts.pts_cs, pts.pts_location, pts.coe_flk, " +
+                "pts.coe_nw, pts.coe_dw, pts.coe_pw, pts.qad_releaseto, pts.qad_remarks, pd.pts_shift, CONVERT(VARCHAR(10), pd.pts_date, 103) as pts_date, " +
+                "pd.pts_prodbatch, pd.pts_basket, pd.pts_qty, p.brand_name, p.packstyle, p.packsize FROM pts " +
+                "INNER JOIN pts_detail pd ON pd.pts_code = pts.pts_code " +
+                "LEFT JOIN product p ON p.product_code = pts.product_code " +
+                "WHERE pts.pts_code = ?");
 		ListMap.put(Report.FGTS, 
 			"SELECT * " +
 			"FROM dbo.ts ts, dbo.ts_detail tsd " +

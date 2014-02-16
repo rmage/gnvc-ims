@@ -360,7 +360,7 @@ public class ProductController extends MultiActionController
             String productName = request.getParameter("productName");
             String barcode = request.getParameter("barcode");
             String productCategory = request.getParameter("category");
-            //String brand = request.getParameter("brand");
+            String brand = request.getParameter("brand");
             //String productColor = request.getParameter("color");
             //String productDescription = request.getParameter("description");
             String pisActive = request.getParameter("isActive");
@@ -393,7 +393,7 @@ public class ProductController extends MultiActionController
             dto.setProductAlias(productAlias);
             dto.setBarCode(barcode);
             dto.setProductCategory(productCategory);
-            dto.setBrandName("");
+            dto.setBrandName(brand);
             dto.setProductColor("");
             dto.setProductDescription("");
             dto.setIsActive(pisActive);
