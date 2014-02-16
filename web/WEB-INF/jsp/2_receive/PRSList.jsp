@@ -72,15 +72,7 @@
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
                                         <td class="center" width="5%">
-                                                <c:url  value="PurchaseRequisition.htm"  var="urlPrint">
-                                                    <c:param name="prsnumber" value="${po.prsnumber}"/>
-                                                    <c:param name="templateName" value="rptPurchaseReqList"/>
-                                                    <c:param name="parametersKey" value="P_DOC_NO"/>
-                                                    <c:param name="action" value="doPrint" />
-                                                </c:url>
-                                                <a href='<c:out value="${urlPrint}"/>'>
-                                                        <img src="resources/images/print.jpg" width="16" height="16" alt="View" />
-                                                </a>
+                                            <a href="GenerateReport.htm?action=index&item=PPrsForm&type=xls&params=${po.prsnumber}"><img src="resources/images/printxls.gif" title="Print Delivery Receipt (xls)" /></a>
                                         </td>
                                         <td class="style1">
                                             <a href="#" class="no-decoration" onclick="csbShowDetail('PRS', '<c:out value="${po.prsnumber}" />', 'Purchase Requisition Detail')">

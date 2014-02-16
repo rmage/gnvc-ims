@@ -15,29 +15,29 @@
                     
                     $('#prsAddForm').validationEngine('attach');        
                     
-                    $("#list2").jqGrid({ url:'productjson.htm', datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-                                colNames:[ 'Item Code','Item Name','Stock on Hand','Unit','Item Category','Brand Name', 'Description'], 
-                                colModel:[ {name:'productCode',index:'productCode'}, {name:'productName',index:'productName'},
-                                           {name:'balance',index:'balance'}, {name:'uomName',index:'uomName'},  
-                                           {name:'productCategory',index:'productCategory'}, {name:'brandName',index:'brandName'}, 
-                                           {name:'productDescription',index:'productDescription'}], 
-                                sortname: 'productCode',
-                                rowNum:10, rowList:[10,20,30], 
-                                jsonReader : {
-                                    repeatitems: false
-                                },
-                                onSelectRow: function(ids) { 
-                                    if(ids != null) {         
-                                            var localRowData = $(this).getRowData(ids); 
-                                            $("#productcode").val(localRowData.productCode);
-                                            $("#productname").val(localRowData.productName);
-                                            $("#uomName").val(localRowData.uomName);    
-                                            $("#stockonhand").val(localRowData.balance);                                       
-                                            $("#dialog").dialog('close');
-                                        } 
-                                },
-                                pager: '#pager2', sortname: 'id', viewrecords: true, sortorder: "desc"}); 
-                            jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
+//                    $("#list2").jqGrid({ url:'productjson.htm', datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
+//                                colNames:[ 'Item Code','Item Name','Stock on Hand','Unit','Item Category','Brand Name', 'Description'], 
+//                                colModel:[ {name:'productCode',index:'productCode'}, {name:'productName',index:'productName'},
+//                                           {name:'balance',index:'balance'}, {name:'uomName',index:'uomName'},  
+//                                           {name:'productCategory',index:'productCategory'}, {name:'brandName',index:'brandName'}, 
+//                                           {name:'productDescription',index:'productDescription'}], 
+//                                sortname: 'productCode',
+//                                rowNum:10, rowList:[10,20,30], 
+//                                jsonReader : {
+//                                    repeatitems: false
+//                                },
+//                                onSelectRow: function(ids) { 
+//                                    if(ids != null) {         
+//                                            var localRowData = $(this).getRowData(ids); 
+//                                            $("#productcode").val(localRowData.productCode);
+//                                            $("#productname").val(localRowData.productName);
+//                                            $("#uomName").val(localRowData.uomName);    
+//                                            $("#stockonhand").val(localRowData.balance);                                       
+//                                            $("#dialog").dialog('close');
+//                                        } 
+//                                },
+//                                pager: '#pager2', sortname: 'id', viewrecords: true, sortorder: "desc"}); 
+//                            jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
                
                     /*
                      * calendar request date
@@ -357,9 +357,29 @@
                 
                 
                 
-                $("#productcode").click(function () {
-                        $("#dialog").dialog({ width: 900, height: 275, position: "center", modal: true, zindex: 1, title: 'Select Item' });
-                });
+//                $("#productcode").click(function () {
+//                        $("#dialog").dialog({ width: 900, height: 275, position: "center", modal: true, zindex: 1, title: 'Select Item' });
+//                });
+                // modified by : FYA
+                $('#productcode').autocomplete({
+                    source: '?action=getProduct',
+                    minLength: 2,
+                    select: function( event, ui ) {
+                        $("#productcode").val(ui.item.itemCode);
+                        $("#productname").val(ui.item.itemName);
+                        $("#uomName").val(ui.item.uom);
+                        $("#stockonhand").val(ui.item.soh);
+                        $('#jumlah').focus();
+                        
+                        return false;
+                    }
+                }).data( 'autocomplete' )._renderItem = function( ul, item ) {
+                    return $( '<li>' )
+                        .data( "item", item ) 
+                        .append( '<a><b>' + item.itemCode + ' : ' + item.itemName +
+                        '</b><br /> Stock : ' + item.soh + '</a></li>' )
+                        .appendTo( ul );
+                };
                  
                 $("#btnSavePurchase").click(function () {                         
 
@@ -404,10 +424,10 @@
             <div id="pager3"></div> 
         </div>
         
-        <div id="dialog" title="Item Search" style="display:none;z-index:1;">
+<!--        <div id="dialog" title="Item Search" style="display:none;z-index:1;">
             <table id="list2" cellpadding="0" cellspacing="0" width="100%"></table> 
             <div id="pager2"></div> 
-        </div>
+        </div>-->
         
         <div id="dialog-confirm" title="Item Search" style="display:none;z-index:1;">
             Save Data?

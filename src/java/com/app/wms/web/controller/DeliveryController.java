@@ -1,517 +1,189 @@
 package com.app.wms.web.controller;
 
-import java.io.FileNotFoundException;
+import com.app.wms.engine.db.dao.DrDao;
+import com.app.wms.engine.db.dao.DrDtlDao;
+import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dao.StockInventoryDao;
+import com.app.wms.engine.db.dao.SupplierDao;
+import com.app.wms.engine.db.dto.Dr;
+import com.app.wms.engine.db.dto.DrDtl;
+import com.app.wms.engine.db.dto.Product;
+import com.app.wms.engine.db.dto.StockInventory;
+import com.app.wms.engine.db.dto.Supplier;
+import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.ProductDaoException;
+import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
+import com.app.wms.engine.db.exceptions.SupplierDaoException;
+import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import com.app.web.engine.search.DeliverySearch;
-import com.app.wms.engine.db.dao.DeliveryDao;
-import com.app.wms.engine.db.dao.DoDetailDao;
-import com.app.wms.engine.db.dao.DrDao;
-import com.app.wms.engine.db.dao.DrDetailDao;
-import com.app.wms.engine.db.dao.SalesOrderDetailDao;
-import com.app.wms.engine.db.dto.Delivery;
-import com.app.wms.engine.db.dto.DoDetail;
-import com.app.wms.engine.db.dto.Dr;
-import com.app.wms.engine.db.dto.DrDetail;
-import com.app.wms.engine.db.dto.Product;
-import com.app.wms.engine.db.dto.Prs;
-import com.app.wms.engine.db.dto.PrsDetail;
-import com.app.wms.engine.db.dto.SalesOrderDetail;
-import com.app.wms.engine.db.dto.map.LoginUser;
-import com.app.wms.engine.db.factory.DaoFactory;
-import com.app.wms.engine.util.ctrlIDGenerator;
-import com.app.wms.web.util.AppConstant;
+public class DeliveryController extends MultiActionController {
 
-public class DeliveryController extends ReportManagerController 
-{
-
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-           
-            HashMap m = null;
-            final String mode = request.getParameter("mode");
-            if (mode != null && mode.equals("edit")) {
-                m = this.getModelByPrimaryKey(request);
-                m.put("mode", "edit");
-                return new ModelAndView("8_delivery/DeliveryEdit", "model", m);
-            } else {
-
-                m = this.searchAndPaging(request, response);
-                return new ModelAndView("8_delivery/DeliveryList", "model", m);
-            }
-
-        }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-
-	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {
-            HashMap m = new HashMap();
-
-            Integer page = null;
-            Integer paging = null;
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-            }
-            if (request.getParameter("paging") != null) {
-                paging = Integer.parseInt(request.getParameter("paging"));
-            }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
-            int start = (page - 1) * paging + 1;
-            int end = start + paging - 1;
-
-            Dr d = new Dr();
-            String drNo = request.getParameter("drno");
-            String drdate = request.getParameter("drdate");
-            d.setDrnumber(drNo);
-            
-            DrDao dao = DaoFactory.createDrDao();
-            if(drdate == null || drdate == ""){
-            	List<Dr> listSearchPage = dao.findAll();
-            	m.put("delivery", listSearchPage);
-            }else if (drdate != null && drdate != ""){
-            	d.setDrdate(new SimpleDateFormat("dd/MM/yyyy").parse(drdate));
-            	List<Dr> listSearchPage = dao.findDeliveryPaging(d, page);
-            	m.put("delivery", listSearchPage);
-            }
-
-            int total = 2000; 
-            
-            m.put("totalRows", total);
-            m.put("page", page);
-            m.put("paging", paging);
-
-            return m;
-
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-        try {
-            java.lang.String deliveryCode = request.getParameter("deliveryCode");
-            DeliveryDao dao = DaoFactory.createDeliveryDao();
-            Delivery dto = null;
-
-            String mode = request.getParameter("mode");
-            if (mode != null && mode.equals("edit")) {
-//                dto = dao.findByPrimaryKey(deliveryCode);
-            }
-
-            if (dto == null) {
-                dto = new Delivery();
-            }    
-
-            HashMap m = new HashMap();
-            m.put("dto", dto);
-
-            return m;
-
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        java.lang.String deliveryCode = request.getParameter("deliveryCode");
-
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-        BigDecimal pcreatedBy = BigDecimal.ZERO;
-        if (lu == null) {
-			HashMap m = new HashMap();
-            String msg = "You haven't login or your session has been expired! Please do login again";
-            m.put("msg", msg);
-            return new ModelAndView("login", "model", m);
-        }else{
-        	pcreatedBy = new BigDecimal(lu.getUserId());
-        }
-       
-        DeliveryDao dao = DaoFactory.createDeliveryDao();
-
-        HashMap m = this.searchAndPaging(request, response);
-        return new ModelAndView("8_delivery/DeliveryList", "model", m);
-    }
-
-	/**
-	 * Method 'findAll'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			
-			DeliveryDao dao = DaoFactory.createDeliveryDao();
-		
-			List<Delivery> dto = dao.findAll();
-		
-			return new ModelAndView( "8_delivery/DeliveryList", "result", dto );
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-
-	/**
-	 * Method 'findWhereWhCodeEquals'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findWhereWhCodeEquals(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			// parse parameters
-			java.lang.String pdeliveryCode = request.getParameter("deliveryCode");
-		
-			// create the DAO class
-			DeliveryDao dao = DaoFactory.createDeliveryDao();
-		
-			// execute the finder
-			List<Delivery> dto = dao.findWhereDeliveryNoEquals(pdeliveryCode);
-		
-			return new ModelAndView( "8_delivery/DeliveryList", "result", dto );
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-
-	/**
-	 * Method 'findWhereNameEquals'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findWhereNameEquals(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			// parse parameters
-			java.lang.String pname = request.getParameter("name");
-		
-			// create the DAO class
-			DeliveryDao dao = DaoFactory.createDeliveryDao();
-		
-			// execute the finder
-			List<Delivery> dto = dao.findWhereDeliveryNameEquals(pname);
-		
-			return new ModelAndView( "8_delivery/DeliveryList", "result", dto );
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-
-	
-
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-	
-		String deliveryNo = ""+new ctrlIDGenerator().getIDDelivery();
-		Date date 		 = (Date)new Date();
-		Timestamp ts     = new Timestamp(date.getTime());
-		
-		HashMap m = this.getModelByPrimaryKey(request);
-		m = this.getModelByPrimaryKey(request);
-		m.put("mode", "create");
-		m.put("deliveryNo", deliveryNo);
-		return new ModelAndView( "8_delivery/DeliveryAdd", "model", m);
-	}
-	
-	 private ModelAndView listDeliveryByAuthLogin(HttpServletRequest request,HttpServletResponse response) throws Exception 
-	 {
-		 request.getSession().removeAttribute("resultListDelivery");
-		 Map map = new HashMap();
-		 try{
-			 
-			 LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-			 if (lu == null) {
-		            String msg = "You haven't login or your session has been expired! Please do login again";
-		            map.put("msg", msg);
-		            return new ModelAndView("login", "model", map);
-		     }
-			 
-		 }catch (Exception e){
-			 e.printStackTrace();
-		 }
-		 return new ModelAndView("8_delivery/DeliveryList", "model", map);
-	}
-
-	/**
-	 * Method 'saveDelivery'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-	
-	{
-		
-		Map map = new HashMap();
-	    boolean isCreate = true;
-	    String strError = "";
-	    java.lang.String mode = request.getParameter("mode");
-      
-      try {
-    	  
-    	  LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-          String userId = "";
-          if (lu == null) {
-  			HashMap m = new HashMap();
-              String msg = "You haven't login or your session has been expired! Please do login again";
-              m.put("msg", msg);
-              return new ModelAndView("login", "model", m);
-          }else{
-        	  userId = (String)(lu.getUserId());
-          }
-          
-          Dr dto = new Dr();
-          DrDetail dd = new DrDetail();
-          DrDao dao = DaoFactory.createDrDao();
-          DrDetailDao daod = DaoFactory.createDrDetailDao();
-          
-          String drno = request.getParameter("drno");
-          
-          List<Dr> tmp = dao.findWhereDrnumberEquals(drno);
-          if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getDrnumber().equals(drno))) {
-	  		  strError += "DR No. already exists. Please try a different values" + AppConstant.EOL;
-	  	  }
-          
-          String drdate = request.getParameter("drdate");
-          String to = request.getParameter("to");
-          String orno = request.getParameter("orNo");
-          String location = request.getParameter("location");
-          String dmno = request.getParameter("dmNo");
-          String deliveryby = request.getParameter("deliveryBy");
-          String approvedby = request.getParameter("approvedBy");
-          String receivedby = request.getParameter("receivedBy");
-          String remarks = request.getParameter("remarks");
-         
-          dto.setDrnumber(drno);
-          dto.setDrdate(new SimpleDateFormat("dd/MM/yyyy").parse(drdate));
-          dto.setSupplierName(to);
-          dto.setOrnumber(orno);
-          dto.setLotid(location);
-          dto.setDmnumber(dmno);
-          dto.setDeliveredBy(deliveryby);
-          dto.setApprovedBy(approvedby);
-          dto.setReceivedBy(receivedby);
-          dto.setRemarks(remarks);
-          
-	      List<DrDetail> drDetail = new ArrayList<DrDetail>();
-	      String[] productcode1s = request.getParameterValues("productCode1");
-		  String[] productname1 = request.getParameterValues("productName1");
-	      String[] qtys = request.getParameterValues("qty");
-	      String[] uomName = request.getParameterValues("uomName1");
-	      
-	      for(int i = 0; i < productcode1s.length; i++){
-	    	    DrDetail drDetails = new DrDetail();
-	    	    drDetails.setDrnumber(drno);
-	    	    drDetails.setProductcode(productcode1s[i]);
-	    	    drDetails.setQtyreal(new BigDecimal(qtys[i]));
-	        	daod.insert(drDetails);
-	        }
-	      
-	      dao.insert(dto);
-	      
-      } catch (Exception e) {
-         e.printStackTrace();
-         return new ModelAndView("Error", "deliveryreceipt", e);
-      }
-      
-      return new ModelAndView("8_delivery/DeliveryList", "model", map);
-
-  }
-	
-	@Transactional
-    public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        /*
-         *  GET LOGIN USER
-         */
-        String deliveryNo = request.getParameter("deliveryNo");
-        HashMap model = new HashMap();
-
-        DoDetailDao dao = DaoFactory.createDoDetailDao();
-        DoDetail dto	= dao.findByPrimaryKey(deliveryNo);
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) 
+        throws SupplierDaoException {
         
-        if(dto != null){
-            System.out.println("[SalesOrderNo][Ajax Document] sales order no : " + deliveryNo + " is valid");
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
 
-            DoDetail dod = new DoDetail();
-            dod.setDeliveryNo(deliveryNo);
-            
-            List<DoDetail> listSearch = dao.findDetail(dod);
-            Map tableMap = new HashMap();
-            for (DoDetail searchDetail : listSearch){
-            	
-            	Map returnMap = new HashMap();
-                deliveryNo    = ((DoDetail)searchDetail).getDeliveryNo();
-				String productCode  = ((DoDetail)searchDetail).getProductCode();
-				String productName  = ((DoDetail)searchDetail).getProductName();
-				BigDecimal quantity    	= ((DoDetail)searchDetail).getQtyDelivery();
-				returnMap.put("deliveryNo",deliveryNo);
-				returnMap.put("productCode",productCode);
-				returnMap.put("productName",productName);
-				returnMap.put("quantity",quantity);
-				
-				tableMap.put(returnMap, returnMap);
-			}
-            
-            model.put("master", dto);
-            model.put("tableMap", tableMap);
-            
-        } else{
-            System.out.println("[DeliveryNo][Ajax Document] delivery order no : " + deliveryNo + " is not valid");
+        /* DAO | Define needed dao here */
+        DrDao drDao = DaoFactory.createDrDao();
+        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+
+        /* TRANSACTION | Something complex here */
+        m.put("type", request.getParameter("type"));
+        
+        List<Dr> ds = drDao.findAll(request.getParameter("type"));
+        for(Dr x : ds) {
+            Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
+            x.setSupplierCode(s.getSupplierName());
         }
-
-        return new ModelAndView("8_delivery/util/DeliveryDetail", "model", model);
+        m.put("d", ds);
+        
+        return new ModelAndView("finish_goods/DRList", "model", m);
+        
     }
+    
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
+        throws SupplierDaoException {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
 
- /**
-	 * Method 'doPrint'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
- @Transactional
-	public void doPrint(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		
-			
-			String deliveryNo = request.getParameter("deliveryNo");
-			System.out.println("deliveryNo ="+deliveryNo);
-			
-			templateName = request.getParameter("templateName");
-			System.out.println("templateName ="+templateName);
-			
-			parametersKey = request.getParameter("parametersKey");
-			System.out.println("parameterKey ="+parametersKey);
-			
-			ArrayList resultList = new ArrayList();
-			resultList.add(deliveryNo);
-			setParameterValues(resultList);
-			
-			List paramKey = new ArrayList();
-			paramKey.add(parametersKey);
-			setParameterKeys((ArrayList<String>) paramKey);
-			outputFormat = "pdf";
-			createOnlineReport();
-			
-			try{
-				printToStream(response);
-				
-			}catch(FileNotFoundException ex){
-				Logger.getLogger(DeliveryController.class.getName()).log(Level.SEVERE, null, ex);
-			}catch(IOException ex){
-				Logger.getLogger(DeliveryController.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			
-		}
- 
- /**
-	 * Method 'doPrint'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
- 	@Transactional
-	public void doPrint2(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		
-			
-			String deliveryNo = request.getParameter("deliveryNo");
-			System.out.println("deliveryNo ="+deliveryNo);
-			
-			templateName = request.getParameter("templateName");
-			System.out.println("templateName ="+templateName);
-			
-			parametersKey = request.getParameter("parametersKey");
-			System.out.println("parameterKey ="+parametersKey);
-			
-			ArrayList resultList = new ArrayList();
-			resultList.add(deliveryNo);
-			setParameterValues(resultList);
-			
-			List paramKey = new ArrayList();
-			paramKey.add(parametersKey);
-			setParameterKeys((ArrayList<String>) paramKey);
-			outputFormat = "pdf";
-			createOnlineReport();
-			
-			try{
-				printToStream(response);
-				
-			}catch(FileNotFoundException ex){
-				Logger.getLogger(DeliveryController.class.getName()).log(Level.SEVERE, null, ex);
-			}catch(IOException ex){
-				Logger.getLogger(DeliveryController.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			
-		}
+        /* DAO | Define needed dao here */
+        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+        
+        /* TRANSACTION | Something complex here */
+        m.put("type", request.getParameter("type"));
+        
+        List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
+        m.put("supplier", ss);
+        
+        return new ModelAndView("finish_goods/DRAdd", "model", m);
+        
+    }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
+        throws ParseException, NumberFormatException {
+        
+        /* DATA | get initial value */
+        String type = request.getParameter("type");
+        String[] master = request.getParameter("master").split(":", -1);
+        String[] details = request.getParameterValues("detail");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
+        /* DAO | Define needed dao here */
+        DrDao drDao = DaoFactory.createDrDao();
+        DrDtlDao drDtlDao = DaoFactory.createDrDtlDao();
 
+        /* TRANSACTION | Something complex here */
+        // insert master delivery receipt
+        Dr d = new Dr();
+        d.setDrCode(Integer.parseInt(master[0]));
+        d.setDrDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
+        d.setDrFrom(master[2]);
+        d.setDrFromLoc(master[3]);
+        d.setDrToLoc(master[4]);
+        d.setDrRemarks(master[5]);
+        d.setDrType(type);
+        d.setSupplierCode(master[6]);
+        d.setOrCode(master[7]);
+        d.setDmCode(master[8]);
+        d.setCreatedBy(lu.getUserId());
+        d.setCreatedDate(new Date());
+        drDao.insert(d);
+        
+        // insert detail delivery receipt
+        for(String x : details) {
+            String[] detail = x.split(":");
+            DrDtl dd = new DrDtl();
+            dd.setDrCode(d.getDrCode());
+            dd.setDrQty(new BigDecimal(detail[0]));
+            dd.setDrUom(detail[1]);
+            dd.setProductCode(detail[2]);
+            dd.setCreatedBy(lu.getUserId());
+            dd.setCreatedDate(new Date());
+            drDtlDao.insert(dd);
+            
+            // update stock inventory
+            drDao.updateStockInventory(dd.getProductCode(), dd.getDrQty());
+        }
+        
+        return new ModelAndView("redirect:Delivery.htm?type=" + type);
+        
+    }
+    
+    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException, ProductDaoException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        int drCode = Integer.parseInt(request.getParameter("key"));
+
+        /* DAO | Define needed dao here */
+        DrDtlDao drDtlDao = DaoFactory.createDrDtlDao();
+        ProductDao productDao = DaoFactory.createProductDao();
+
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<DrDtl> dds = drDtlDao.findByDR(drCode);
+        for(DrDtl x : dds) {
+            if(b)
+                pw.print(",");
+            
+            Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
+            pw.print("{\"itemCode\": \"" + p.getProductCode() + "\", ");
+            pw.print("\"itemName\": \"" + p.getProductName() + "\",");
+            pw.print("\"qty\": \"" + x.getDrQty() + "\",");
+            pw.print("\"uom\": \"" + x.getDrUom() + "\"}");
+            
+            b = Boolean.TRUE;
+        } pw.print("]");
+        
+    }
+    
+    public void getProduct(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException, StockInventoryDaoException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        String productName = request.getParameter("term");
+        
+        /* DAO | Define needed dao here */
+        ProductDao productDao = DaoFactory.createProductDao();
+        StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
+        
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<Product> ps = productDao.findWhereProductNameEquals(productName, 5);
+        for(Product x : ps) {
+            if(b)
+                pw.print(",");
+            
+            StockInventory si = stockInventoryDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
+            
+            pw.print("{\"itemCode\": \"" + x.getProductCode() + "\", ");
+            pw.print("\"itemName\": \"" + x.getProductName() + "\",");
+            pw.print("\"type\": \"" + x.getProductCategory() + "\",");
+            pw.print("\"soh\": \"" + si.getBalance() + "\",");
+            pw.print("\"uom\": \"" + x.getUom() + "\"}");
+            
+            b = Boolean.TRUE;
+            
+        } pw.print("]");
+        
+    }
 
 }

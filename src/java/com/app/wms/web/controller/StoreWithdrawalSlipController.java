@@ -69,7 +69,7 @@ public class StoreWithdrawalSlipController extends MultiActionController {
         
         /* DATA | get initial value */
         HashMap m = new HashMap();
-        String[] master = request.getParameter("master").split(":");
+        String[] master = request.getParameter("master").split(":", -1);
         String[] details = request.getParameterValues("detail");
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         

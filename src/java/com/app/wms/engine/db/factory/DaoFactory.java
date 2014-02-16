@@ -656,10 +656,10 @@ public class DaoFactory {
 			return (DrDao) bf.getBean( "DrDao" );
 		}
 
-		public static DrDetailDao createDrDetailDao()
+		public static DrDtlDao createDrDtlDao()
 		{
 			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (DrDetailDao) bf.getBean( "DrDetailDao" );
+			return (DrDtlDao) bf.getBean( "DrDtlDao" );
 		}
 
 		public static EdsDao createEdsDao()
@@ -852,6 +852,11 @@ public class DaoFactory {
     public static ReceiveReportDtlDao createReceiveReportDtlDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (ReceiveReportDtlDao) bf.getBean("ReceiveReportDtlDao");
+    }
+    
+    public static PtsDtlDao createPtsDtlDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (PtsDtlDao) bf.getBean( "PtsDtlDao" );
     }
     
 }

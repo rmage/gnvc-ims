@@ -96,7 +96,7 @@ public class PurchaseController extends MultiActionController {
         
         try {
             /* DATA | get initial value */
-            String[] master = request.getParameter("master").split(":");
+            String[] master = request.getParameter("master").split(":", -1);
             String[] details = request.getParameterValues("detail");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             
