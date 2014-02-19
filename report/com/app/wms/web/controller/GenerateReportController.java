@@ -81,7 +81,62 @@ public class GenerateReportController extends MultiActionController {
 			"WHERE fv.id = ? AND fs.date_shift = ? AND fs.time_shift = ?");
 		
 		ListMap.put(Report.FMDailyProductionReport, null);
-		ListMap.put(Report.FGBOR, null);
+            ListMap.put(Report.FGBOR, 
+                "DECLARE " +
+                "	@cols AS VARCHAR(MAX), " +
+                "	@colsin AS VARCHAR(MAX), " +
+                "	@query AS VARCHAR(MAX), " +
+                "       @id AS VARCHAR(10); " +
+                "	SET @cols = STUFF((SELECT distinct  ',' + QUOTENAME(bd.id) + ' AS data' + CAST(ROW_NUMBER() OVER (ORDER BY id) AS VARCHAR(10)) " +
+                "		FROM bor_detail bd WHERE bd.bor_code = ? FOR XML PATH(''), TYPE).value('.', 'VARCHAR(MAX)') " +
+                "		, 1, 1, ''); " +
+                "		 " +
+                "	SET @colsin = STUFF((SELECT distinct  ',' + QUOTENAME(bd.id) " +
+                "		FROM bor_detail bd WHERE bd.bor_code = ? FOR XML PATH(''), TYPE).value('.', 'VARCHAR(MAX)') " +
+                "		, 1, 1, ''); " +
+                "	SET @id = ? " +
+                "	SET @query = 'SELECT id = col, title, ' + @cols + ', bor.bor_code, CONVERT(VARCHAR(30), bor.bor_date, 106) as bor_date,  " +
+                "		bor.prepared_by, CONVERT(VARCHAR(30), bor.prepared_date, 106) as prepared_date, bor.reviewed_by,  " +
+                "		CONVERT(VARCHAR(30), bor.reviewed_date, 106) as reviewed_date FROM ( " +
+                "		SELECT id, col, title, value FROM ( " +
+                "			SELECT * FROM bor_detail bd  " +
+                "			WHERE bd.bor_code =  ' + @id + ' " +
+                "		) as q " +
+                "		CROSS APPLY( " +
+                "			SELECT 1, ''Pack Style'', bor_packstyle UNION ALL " +
+                "			SELECT 2, ''Can Size / NW'', bor_cansize UNION ALL " +
+                "			SELECT 3, ''Qty (FCL)'', CAST(bor_qty as VARCHAR(10)) + '' FCL'' UNION ALL " +
+                "			SELECT 4, ''Cases per FCL'', CAST(bor_cs as VARCHAR(10)) + '' CS'' UNION ALL " +
+                "			SELECT 5, ''CNF Prise / case'', CAST(bor_cnfprice as VARCHAR(10)) UNION ALL " +
+                "			SELECT 6, ''Commission'', bor_commission UNION ALL " +
+                "			SELECT 7, ''Buyer'', bor_buyer UNION ALL " +
+                "			SELECT 8, ''Label / Brand'', bor_brand UNION ALL " +
+                "			SELECT 9, ''Shipment Date'', bor_shipmentdate UNION ALL " +
+                "			SELECT 10, ''Destination Port'', bor_destinationport UNION ALL " +
+                "			SELECT 11, ''PO Number'', bor_ponumber UNION ALL " +
+                "			SELECT 12, ''Other'', NULL UNION ALL " +
+                "			SELECT 13, ''       Drained / Pressed Wt'', CAST(bor_o_dpw as VARCHAR(10)) + '' g'' UNION ALL " +
+                "			SELECT 14, ''       Freight Terms'', bor_o_ft UNION ALL " +
+                "			SELECT 15, ''       Payment Terms'', bor_o_pt UNION ALL " +
+                "			SELECT 16, ''       GSP Form'', bor_o_gf UNION ALL " +
+                "			SELECT 17, ''       Can Code Max'', bor_o_ccm UNION ALL " +
+                "			SELECT 18, ''       Oil Medium'', bor_o_om UNION ALL " +
+                "			SELECT 19, ''       GMO / Non GMO'', bor_o_gmo UNION ALL " +
+                "			SELECT 20, ''       Extra Cartons / FCL'', bor_o_ec UNION ALL " +
+                "			SELECT 21, ''       Percent Flakes'', bor_o_pf UNION ALL " +
+                "			SELECT 22, ''       Oil Water Ratio'', bor_o_owr UNION ALL " +
+                "			SELECT 23, ''       Number of Loins'', bor_o_nol UNION ALL " +
+                "			SELECT 24, ''       Additional Info'', bor_o_info  " +
+                "		) c(col, title, value) " +
+                "	) q " +
+                "	PIVOT ( " +
+                "		MAX(value) " +
+                "		FOR id IN (' + @colsin + ') " +
+                "	) pvt  " +
+                "	LEFT JOIN bor ON bor.bor_code = ' + @id + ' " +
+                "	ORDER BY id ASC'; " +
+                "		 " +
+                "	execute (@query);");
 		ListMap.put(Report.FGTunaVayaReport, null);
 		ListMap.put(Report.FGOFAL, null);
 
@@ -221,7 +276,7 @@ public class GenerateReportController extends MultiActionController {
 //                "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
                 "SELECT p.po_code, p.po_date, p.discount, p.pph, p.ppn, s.supplier_code, s.supplier_name, " +
                 "s.supplier_address, acp.unit_price, p.approved_by, p.approved_date, p.created_date, u.name, " +
-                "pr.product_name, pr.product_code, pd.department_code, prs.qty, prs.uom_name, pd.sub_total " +
+                "pr.product_name, pr.product_code, pd.department_code, prs.qty, prs.uom_name, pd.sub_total, acp.top_desc " +
                 "FROM po_detail pd " +
                 "LEFT JOIN po p ON p.po_code = pd.po_code " +
                 "LEFT JOIN \"user\" u ON u.user_id = p.created_by " +
@@ -241,10 +296,16 @@ public class GenerateReportController extends MultiActionController {
 			"inner join stock_inventory si " +
 			"on p.product_code = si.product_code");
             ListMap.put(Report.PPrsForm, 
-                "SELECT * " +
-                "FROM inventory..prs " +
-                "LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
-                "WHERE prsd.prsnumber = ?"
+//                "SELECT * " +
+//                "FROM inventory..prs " +
+//                "LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
+//                "WHERE prsd.prsnumber = ?"
+                "SELECT prs.prsnumber, CONVERT(VARCHAR(10), prs.prsdate, 103) as prsdate, prsd.productcode, " +
+                "prsd.productname, prsd.qty, prsd.uom_name, prs.department_name, prs.remarks, " +
+                "CONVERT(VARCHAR(20), prs.requestdate, 106)as requestdate, u.name " +
+                "FROM inventory..prs LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
+                "LEFT JOIN \"user\" u ON u.user_id = prs.createdby " +
+                "WHERE prs.prsnumber = ?"
             );
             ListMap.put(Report.PCanvassingForm, 
 //                "SELECT * " +

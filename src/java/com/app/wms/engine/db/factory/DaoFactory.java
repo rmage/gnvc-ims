@@ -644,10 +644,10 @@ public class DaoFactory {
 			return (BorDao) bf.getBean( "BorDao" );
 		}
 
-		public static BorDetailDao createBorDetailDao()
+		public static BorDtlDao createBorDtlDao()
 		{
 			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (BorDetailDao) bf.getBean( "BorDetailDao" );
+			return (BorDtlDao) bf.getBean( "BorDtlDao" );
 		}
 
 		public static DrDao createDrDao()

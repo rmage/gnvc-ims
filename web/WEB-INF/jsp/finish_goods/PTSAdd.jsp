@@ -64,15 +64,15 @@
                                 <tr>
                                     <td colspan="2" rowspan="2"><big><b>CUT OUT EVALUATION</b></big></td>
                                     <td>%Flk</td>
-                                    <td><input id="coeFlk" type="text" /></td>
+                                    <td><input id="coeFlk" type="text" value="0" required="true" /></td>
                                     <td>NW</td>
-                                    <td><input id="coeNw" type="text" /></td>
+                                    <td><input id="coeNw" type="text" value="0" required="true" /></td>
                                 </tr>
                                 <tr>
                                     <td>DW</td>
-                                    <td><input id="coeDw" type="text" /></td>
+                                    <td><input id="coeDw" type="text" value="0" required="true" /></td>
                                     <td>PW</td>
-                                    <td><input id="coePw" type="text" /></td>
+                                    <td><input id="coePw" type="text" value="0" /></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"><big><b>QA DISPOSITION</b></big></td>

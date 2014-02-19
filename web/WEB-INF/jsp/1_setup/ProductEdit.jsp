@@ -75,14 +75,13 @@
                                     <td class="style1">Category</td>
                                     <td class="style1">
                                     	<label>
-	                                        <select id="category" name="category">
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
-	                                        		  <option value="<c:out value='${droplist.categoryCode}'/>" 
-	                                        		   <c:if test="${param.selecValue == item }"> selected</c:if> >
-	                                        		  	<c:out value="${droplist.categoryName}" />
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                        </select>
+                                            <select id="category" name="category">
+                                                <c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
+                                                    <option value="<c:out value='${droplist.categoryCode}'/>"  <c:if test="${droplist.categoryCode == model.dto.productCategory}">selected="true"</c:if>>
+                                                          <c:out value="${droplist.categoryName}" />
+                                                    </option> 
+                                                </c:forEach>
+                                            </select>
                                     	</label>
                                     	<label class="requiredfield" title="This Field Is Required!">*</label>
                             		</td>
@@ -97,14 +96,13 @@
                                     <td class="style1">Unit of Measurement (UoM)</td>
                                     <td class="style1">
                                     	<label>
-	                                        <select name="uom">
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListUOM}">
-	                                        		  <option value="<c:out value='${droplist.uomName}'/>" 
-	                                        		   <c:if test="${param.selecValue == item }"> selected</c:if> >
-	                                        		  	<c:out value="${droplist.uomName}" />
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                        </select>
+                                            <select name="uom">
+                                                <c:forEach var="droplist" items="${requestScope.model.dropListUOM}">
+                                                    <option value="${droplist.uomName}" <c:if test="${droplist.uomName == model.dto.uom}">selected="true"</c:if>>
+                                                          ${droplist.uomName}
+                                                    </option> 
+                                                </c:forEach>
+                                            </select>
                                     	</label>
                                     	<label class="requiredfield" title="This Field Is Required!">*</label>
                             		</td>
@@ -132,11 +130,11 @@
                                     </td>
                                     <td class="style1">Pack Size</td>
                                     <td class="style1">
-                                         <select name="packsize">
-	    										<option value=""></option>  
-	    										<option value="603">603</option> 
-	    										<option value="307">307</option>    
-	 									</select>
+                                        <select name="packsize">
+                                            <option value="" <c:if test="${'' == model.dto.packsize}">selected="true"</c:if>></option>
+                                            <option value="603" <c:if test="${'603' == model.dto.packsize}">selected="true"</c:if>>603</option>
+                                            <option value="307" <c:if test="${'307' == model.dto.packsize}">selected="true"</c:if>>307</option>
+                                        </select>
                                     </td>
                                 </tr>
                                 <tr>
@@ -158,10 +156,10 @@
                                     <td class="style1">
                                         <label>
                                             <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-										</label>
-										<label>
-										    <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-					                    </label>
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
+                                        </label>
                                    </td>
                                    <td></td>
                                    <td></td>
@@ -218,35 +216,35 @@
 		   }
 		   window.onload = formfocus;
 		   
-		   function getSelectedIndexes(select) {
-			   var selected = [];
-			   for (var i = 0; i  < select.options.length; i++) {
-			       if(select.options[i].selected ) {
-			            selected.push(i);
-			       }
-			   }
-			   return selected;
-			}
-
-			var select = document.getElementById("options");
-			var prevSelected = getSelectedIndexes(select);
-
-			select.onchange = function(e) {
-			    var currentlySelected = getSelectedIndexes(this);
-
-			    for (var i =0; i < currentlySelected.length; i++) {
-			        if (prevSelected.indexOf(currentlySelected[i]) == -1) {
-			            console.log("Added to selection ", this.options[currentlySelected[i]].text);
-			        }
-			    }
-
-			    for (var i =0; i < prevSelected.length; i++) {
-			        if (currentlySelected.indexOf(prevSelected[i]) == -1) {
-			            console.log("Removed from selection  ", this.options[prevSelected[i]].text);
-			        }
-			    }        
-			    prevSelected = currentlySelected;
-			};
+//		   function getSelectedIndexes(select) {
+//			   var selected = [];
+//			   for (var i = 0; i  < select.options.length; i++) {
+//			       if(select.options[i].selected ) {
+//			            selected.push(i);
+//			       }
+//			   }
+//			   return selected;
+//			}
+//
+//			var select = document.getElementById("options");
+//			var prevSelected = getSelectedIndexes(select);
+//
+//			select.onchange = function(e) {
+//			    var currentlySelected = getSelectedIndexes(this);
+//
+//			    for (var i =0; i < currentlySelected.length; i++) {
+//			        if (prevSelected.indexOf(currentlySelected[i]) == -1) {
+//			            console.log("Added to selection ", this.options[currentlySelected[i]].text);
+//			        }
+//			    }
+//
+//			    for (var i =0; i < prevSelected.length; i++) {
+//			        if (currentlySelected.indexOf(prevSelected[i]) == -1) {
+//			            console.log("Removed from selection  ", this.options[prevSelected[i]].text);
+//			        }
+//			    }        
+//			    prevSelected = currentlySelected;
+//			};
     	</script>
                                         
     </body>

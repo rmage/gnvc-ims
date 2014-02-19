@@ -164,6 +164,45 @@ public class PurchaseController extends MultiActionController {
         
     }
     
+    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException, NumberFormatException, ProductDaoException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        int poCode = Integer.parseInt(request.getParameter("key"));
+
+        /* DAO | Define needed dao here */
+        ProductDao productDao = DaoFactory.createProductDao();
+        PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
+        PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
+        PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
+
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<PurchaseDtl> pds = purchaseDtlDao.findByPo(poCode);
+        for(PurchaseDtl x : pds) {
+            if(b)
+                pw.print(",");
+            
+            Purchase pr = purchaseDao.findByPo(String.valueOf(x.getPoCode()));
+            Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
+            PrsDetail pd = prsDetailDao.findByPrsProduct(x.getPrsNumber(), x.getProductCode());
+            AssignCanvassing ac = purchaseDao.findByPrsSupplierProduct(x.getPrsNumber(), pr.getSupplierCode(), x.getProductCode());
+            
+            pw.print("{\"itemCode\": \"" + p.getProductCode() + "\", ");
+            pw.print("\"itemName\": \"" + p.getProductName() + "\",");
+            pw.print("\"department\": \"" + x.getDepartmentCode() + "\",");
+            pw.print("\"qty\": \"" + pd.getQty() + "\",");
+            pw.print("\"uom\": \"" + pd.getUomName() + "\",");
+            pw.print("\"price\": \"" + ac.getUnitPrice() + "\",");
+            pw.print("\"amount\": \"" + x.getSubTotal() + "\"}");
+            
+            b = Boolean.TRUE;
+        } pw.print("]");
+        
+    } 
+    
     public void getItems(HttpServletRequest request, HttpServletResponse response) 
         throws IOException, ProductDaoException, PrsDaoException {
         

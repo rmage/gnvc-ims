@@ -836,7 +836,7 @@
     <bean id="BorDao" class="com.app.wms.engine.db.dao.spring.BorDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="BorDetailDao" class="com.app.wms.engine.db.dao.spring.BorDetailDaoImpl" scope="prototype">
+    <bean id="BorDtlDao" class="com.app.wms.engine.db.dao.spring.BorDtlDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="TsDao" class="com.app.wms.engine.db.dao.spring.TsDaoImpl" scope="prototype">

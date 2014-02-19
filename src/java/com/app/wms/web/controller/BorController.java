@@ -1,271 +1,160 @@
 package com.app.wms.web.controller;
 
-import java.io.FileNotFoundException;
+import com.app.wms.engine.db.dao.BorDao;
+import com.app.wms.engine.db.dao.BorDtlDao;
+import com.app.wms.engine.db.dao.UserDao;
+import com.app.wms.engine.db.dto.Bor;
+import com.app.wms.engine.db.dto.BorDtl;
+import com.app.wms.engine.db.dto.User;
+import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.UserDaoException;
+import com.app.wms.engine.db.factory.DaoFactory;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
-import com.app.wms.engine.db.dao.BorDao;
-import com.app.wms.engine.db.dao.BorDetailDao;
-import com.app.wms.engine.db.dto.Bor;
-import com.app.wms.engine.db.dto.BorDetail;
-import com.app.wms.engine.db.dto.map.LoginUser;
-import com.app.wms.engine.db.factory.DaoFactory;
-import com.app.wms.hbm.bean.Vgrdetailproduct;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-public class BorController extends ReportManagerController {
-	
-   public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-   try {
-       
-       HashMap m = null;
-       final String mode = request.getParameter("mode");
-       if (mode != null && mode.equals("edit")) {
-           m = this.getModelByPrimaryKey(request);
-           m.put("mode", "edit");
-           return new ModelAndView("8_delivery/BorEdit", "model", m);
-       } else {
-           m = this.searchAndPaging(request, response);
-           return new ModelAndView("8_delivery/BorList", "model", m);
-       }
-
-   	} catch (Throwable e) {
-	  e.printStackTrace();
-	  return new ModelAndView( "Error", "th", e );
-	}
-	   
-   }
-	   
-   private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-   try {
-
-	    HashMap m = new HashMap();
-	    Integer page = null;
-	    Integer paging = null;
-        if (request.getParameter("page") != null) {
-           page = Integer.parseInt(request.getParameter("page"));
-        }
-        if (request.getParameter("paging") != null) {
-           paging = Integer.parseInt(request.getParameter("paging"));
-        }
-        if (page == null) {
-           page = 1;
-        }
-        if (paging == null) {
-           paging = 10;
-        }
-        
-	    int start = (page - 1) * paging + 1;
-	    int end = start + paging - 1;
-	
-	    Bor b = new Bor();
-	    String borNo = request.getParameter("bornumber");
-	    String borDate = request.getParameter("bordate");
-	    b.setBornumber(borNo);
-
-	    BorDao dao = DaoFactory.createBorDao();
-	    if(borDate == null || borDate.equalsIgnoreCase("")){
-	    	List<Bor> listSearchPage = dao.findAll();
-	    	m.put("bookOrderReport", listSearchPage);
-	    }else{
-	    	b.setBordate(new SimpleDateFormat("dd/MM/yyyy").parse(borDate));
-	    	List<Bor> listSearchPage = dao.findBorPaging(b,page);
-	    	m.put("bookOrderReport", listSearchPage);
-	    }
-	      
-	    int total = 2000; 
-	   
-	    m.put("totalRows", total);
-	    m.put("page", page);
-	    m.put("paging", paging);
-	    m.put("bordate", borDate);
-	    m.put("bornumber", borNo);
-
-	    return m;
-
-		} catch (Exception e){
-		  throw e;
-		}
-	}
-
-	private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-	try {
-		 BorDao dao = DaoFactory.createBorDao();
-         Bor dto = new Bor();
-
-         String mode = request.getParameter("mode");
-         if (mode != null && mode.equals("edit")) {
-        	 Integer id = Integer.parseInt(request.getParameter("id"));
-             dto = dao.findByPrimaryKey(id);
-            
-         }
-         if (dto.getBornumber() == null) {
-        	 
-        	 dto.setBornumber("");
-        	 dto.setBordate(null);
-        	 dto.setBorreferensi("");
-        	 dto.setBuyerName("");
-        	
-         }
-         
-         if(dto.getBornumber() != null || dto.getBordate() != null){
-        	 dto.setBornumber(dto.getBornumber());
-        	 dto.setBordate(dto.getBordate());
-        	 dto.setBorreferensi(dto.getBorreferensi());
-        	 dto.setBuyerName(dto.getBuyerName());
-        	 
-         }
-         
-         //edit
-         HashMap m = new HashMap();
-         m.put("dto", dto);
-         
-         return m;
-         
-		} catch (Exception e) {
-            throw e;
-        }
-	}
-		
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HashMap m = this.getModelByPrimaryKey(request);
-        m = this.getModelByPrimaryKey(request);
-        m.put("mode", "create");
-        m.put("hash", new Date().getTime());
-        return new ModelAndView("8_delivery/BorAdd", "model", m);
-    }
-		
-	public ModelAndView save (HttpServletRequest request, HttpServletResponse response) throws Exception {
-    try {
-            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            String createdBy = "";
-            if (lu == null) {
-    			HashMap m = new HashMap();
-                String msg = "You haven't login or your session has been expired! Please do login again";
-                m.put("msg", msg);
-                return new ModelAndView("login", "model", m);
-            }else{
-            	createdBy = lu.getUserId();
-            }
-
-            Bor b = new Bor();
-            BorDao dao = DaoFactory.createBorDao();
-            BorDetailDao daod = DaoFactory.createBorDetailDao();
-          
-            b.setBornumber(request.getParameter("bornumber"));
-            b.setBordate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("bordate") +""));
-            b.setBuyerName(request.getParameter("buyername"));
-            b.setCreatedby(createdBy);
-            
-            String[] productcode1s = request.getParameterValues("productcode1");
-            String[] producttypes = request.getParameterValues("producttype");
-            String[] qtys = request.getParameterValues("qty");
-
-            List<BorDetail> borDetails = new ArrayList<BorDetail>();
-
-            for (int i = 0; i < productcode1s.length; i++) {
-                BorDetail borDetail = new BorDetail();
-                borDetail.setBornumber(request.getParameter("bornumber"));
-                borDetail.setProductcode(productcode1s[i]);
-                borDetail.setProducttype(producttypes[i]);
-                borDetail.setQty(Integer.parseInt(qtys[i] + ""));
-                daod.insert(borDetail);
-            }
-
-            dao.insert(b);
-            Map m = new HashMap();
-            m = this.searchAndPaging(request, response);
-            return new ModelAndView("8_delivery/BorList", "model", m);
-        } catch (Exception e) {
-        	e.printStackTrace();
-            logger.error(e, e);
-            return new ModelAndView("8_delivery/BorList");
-        }
+public class BorController extends MultiActionController {
     
-	}
-
-	@Transactional
-    public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        /*
-         *  GET LOGIN USER
-         */
-        String poNo = request.getParameter("poNo");
-        HashMap model = new HashMap();
-
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         
-        //List<Vgrdetailproduct> listSearch	= poDao.getDetail(poNo);
-        List<Vgrdetailproduct> listSearch	= null;
-        System.out.println("poNo "+poNo);
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+        /* DAO | Define needed dao here */
+        BorDao borDao = DaoFactory.createBorDao();
+
+        /* TRANSACTION | Something complex here */
+        List<Bor> bs = borDao.findAll();
+        m.put("b", bs);
+        m.put("user", lu);
         
-        if(listSearch != null){
-            System.out.println("[poNo][Ajax Document] sales order no : " + poNo + " is valid");
-           
-            Map tableMap = new HashMap();
-            for (Vgrdetailproduct searchDetail : listSearch){
-            	
-            	Map returnMap = new HashMap();
-                  String po_number    = (searchDetail).getPonumber();
-                  String productCode  = (searchDetail).getProductCode();
-                  String productName  = (searchDetail).getProductName();
-                  BigDecimal quantity    	= (searchDetail).getQty();
+        return new ModelAndView("finish_goods/BORList", "model", m);
+        
+    }
+    
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
 
-                  returnMap.put("po_number",po_number);
-                  returnMap.put("productCode",productCode);
-                  returnMap.put("productName",productName);
-                  returnMap.put("quantity",quantity);
+        /* DAO | Define needed dao here */
 
-                  tableMap.put(returnMap, returnMap);
-              }
+        /* TRANSACTION | Something complex here */
+        
+        return new ModelAndView("finish_goods/BORAdd", "model", m);
+        
+    }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
+        throws ParseException {
+        
+        /* DATA | get initial value */
+        String[] master = request.getParameter("master").split(":", -1);
+        String[] details = request.getParameterValues("detail");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        
+        /* DAO | Define needed dao here */
+        BorDao borDao = DaoFactory.createBorDao();
+        BorDtlDao borDtlDao = DaoFactory.createBorDtlDao();
+
+        /* TRANSACTION | Something complex here */
+        // insert master bor
+        Bor b = new Bor();
+        b.setBorCode(master[0]);
+        b.setBorDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
+        b.setCreatedBy(lu.getUserId());
+        b.setCreatedDate(new Date());
+        borDao.insert(b);
+        
+        // insert detail bor
+        for(int i = 1; i < 5; i++) {
+
+            int j = 0;
+            String[] data = new String[24];
+            String[] detail = details[0].split(":", -1); 
+            if(detail[i].isEmpty())
+                break;
             
-            model.put("master", listSearch);
-            model.put("tableMap", tableMap);
+            for(String x : details) {
+                detail = x.split(":", -1);
+                data[j] = detail[i]; j++;
+            }
             
-        } else{
-            System.out.println("[BorDetail][Ajax Document] bor no : " + poNo + " is not valid");
+            BorDtl bd = new BorDtl();
+            bd.setBorCode(b.getBorCode());
+            bd.setBorPackStyle(data[0]);
+            bd.setBorCanSize(data[1]);
+            bd.setBorQty(new BigDecimal(data[2].isEmpty() ? "0" : data[2]));
+            bd.setBorCs(new BigDecimal(data[3].isEmpty() ? "0" : data[3]));
+            bd.setBorCnfPrice(new BigDecimal(data[4].isEmpty() ? "0" : data[4]));
+            bd.setBorCommission(data[5]);
+            bd.setBorBuyer(data[6]);
+            bd.setBorBrand(data[7]);
+            bd.setBorShipmentDate(data[8]);
+            bd.setBorDestinationPort(data[9]);
+            bd.setBorPoNumber(data[10]);
+            bd.setBorODpw(new BigDecimal(data[11].isEmpty() ? "0" : data[11]));
+            bd.setBorOFt(data[12]);
+            bd.setBorOPt(data[13]);
+            bd.setBorOGf(data[14]);
+            bd.setBorOCcm(data[15]);
+            bd.setBorOOm(data[16]);
+            bd.setBorOGmo(data[17]);
+            bd.setBorOEc(data[18]);
+            bd.setBorOPf(data[19]);
+            bd.setBorOOwr(data[20]);
+            bd.setBorONol(data[21]);
+            bd.setBorOInfo(data[22]);
+            bd.setCreatedBy(lu.getUserId());
+            bd.setCreatedDate(new Date());
+            borDtlDao.insert(bd);
+            
         }
+        
+        return new ModelAndView("redirect:Bor.htm");
+        
+    }
+    
+    public ModelAndView approval(HttpServletRequest request, HttpServletResponse response) 
+        throws UserDaoException {
+        
+        /* DATA | get initial value */
+        String mode = request.getParameter("mode");
+        String borCode = request.getParameter("key");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
-        return new ModelAndView("8_delivery/BorDetail", "model", model);
+        /* DAO | Define needed dao here */
+        BorDao borDao = DaoFactory.createBorDao();
+        UserDao userDao = DaoFactory.createUserDao();
+
+        /* TRANSACTION | Something complex here */
+        // get user
+        User u = userDao.findByPrimaryKey(lu.getUserId());
+        
+        // set bor preparition to update
+        Bor b = new Bor();
+        b.setBorCode(borCode);
+        if(mode.equals("p")) {
+            b.setPreparedBy(u.getName());
+            b.setPreparedDate(new Date());
+        } else if(mode.equals("r")) {
+            b.setReviewedBy(u.getName());
+            b.setReviewedDate(new Date());
+        }
+        b.setUpdatedBy(lu.getUserId());
+        b.setUpdatedDate(new Date());
+        borDao.approval(b, mode);
+        
+        return new ModelAndView("redirect:Bor.htm");
+        
     }
 
-	public void doPrint(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-	String salesOrderNo = request.getParameter("sonumber");
-	System.out.println("salesOrderNo ="+salesOrderNo);
-	
-	templateName = request.getParameter("templateName");
-	System.out.println("templateName ="+templateName);
-	
-	parametersKey = request.getParameter("parametersKey");
-	System.out.println("parameterKey ="+parametersKey);
-	
-	ArrayList resultList = new ArrayList();
-	resultList.add(salesOrderNo);
-	setParameterValues(resultList);
-	
-	List paramKey = new ArrayList();
-	paramKey.add(parametersKey);
-	setParameterKeys((ArrayList<String>) paramKey);
-	outputFormat = "pdf";
-	createOnlineReport();
-		
-	try{
-		printToStream(response);
-		
-	}catch(FileNotFoundException ex){
-     ex.printStackTrace();
-              
-	}catch(Exception ex){
-     ex.printStackTrace();
-	}
-		
-  }
-
-	
 }

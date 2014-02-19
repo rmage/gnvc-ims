@@ -63,8 +63,16 @@ public class PurchaseDaoImpl extends AbstractDAO
         return ps.isEmpty() ? null : ps.get(0);
     }
     
+    public AssignCanvassing findByPrsSupplierProduct(String prsCode, String supplierCode, String productCode) {
+        List<AssignCanvassing> acs = jdbcTemplate.query("SELECT * FROM assign_canv_prc acp " +
+            "LEFT JOIN po_detail pd ON pd.prsnumber = acp.prsnumber AND pd.product_code = acp.productcode " +
+            "WHERE acp.prsnumber = ? AND acp.supplier_code = ? AND acp.productcode = ?", new AssignCanvassingDaoImpl(), prsCode, supplierCode, productCode);
+        
+        return acs.isEmpty() ? null : acs.get(0);
+    }
+    
     public List<Purchase> findAll() {
-        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " ORDER BY created_date desc", this);
+        return jdbcTemplate.query("SELECT po.* FROM " + getTableName() + " ORDER BY (CASE WHEN is_approved IS NULL THEN 0 ELSE 1 END), created_date DESC", this);
     }
     
     public List<AssignCanvassing> findBySupplier(String supplierCode) {
@@ -72,5 +80,5 @@ public class PurchaseDaoImpl extends AbstractDAO
             "LEFT JOIN po_detail pd ON pd.prsnumber = acp.prsnumber AND pd.product_code = acp.productcode " +
             "WHERE acp.is_selected = 'Y' AND acp.supplier_code = ? AND pd.po_code IS NULL ", new AssignCanvassingDaoImpl(), supplierCode);
     }
-
+    
 }

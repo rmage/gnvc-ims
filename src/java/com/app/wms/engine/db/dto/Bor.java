@@ -1,278 +1,117 @@
 package com.app.wms.engine.db.dto;
 
-import com.app.wms.engine.db.dao.*;
-import com.app.wms.engine.db.factory.*;
-import com.app.wms.engine.db.exceptions.*;
 import java.io.Serializable;
-import java.util.*;
 import java.util.Date;
 
-public class Bor implements Serializable
-{
-	/** 
-	 * This attribute maps to the column id in the bor table.
-	 */
-	protected int id;
+public class Bor implements Serializable {
+    
+    private String borCode;
+    
+    private Date borDate;
+    
+    private String preparedBy;
+    
+    private Date preparedDate;
+    
+    private String reviewedBy;
+    
+    private Date reviewedDate;
+    
+    private String createdBy;
+    
+    private Date createdDate;
+    
+    private String updatedBy;
+    
+    private Date updatedDate;
 
-	/** 
-	 * This attribute maps to the column bornumber in the bor table.
-	 */
-	protected String bornumber;
+    @Override
+    public String toString() {
+        //FIXME :: Bor @toString completion
+        StringBuilder sb = new StringBuilder();
+        sb.append( "com.app.wms.engine.db.dto.Bor: " );
+        
+        return sb.toString();
+    }
 
-	/** 
-	 * This attribute maps to the column bordate in the bor table.
-	 */
-	protected Date bordate;
+    public String getBorCode() {
+        return borCode;
+    }
 
-	/** 
-	 * This attribute maps to the column borreferensi in the bor table.
-	 */
-	protected String borreferensi;
+    public void setBorCode(String borCode) {
+        this.borCode = borCode;
+    }
 
-	/** 
-	 * This attribute maps to the column createdby in the bor table.
-	 */
-	protected String createdby;
+    public Date getBorDate() {
+        return borDate;
+    }
 
-	/** 
-	 * This attribute maps to the column buyer_name in the bor table.
-	 */
-	protected String buyerName;
+    public void setBorDate(Date borDate) {
+        this.borDate = borDate;
+    }
 
-	/**
-	 * Method 'Bor'
-	 * 
-	 */
-	public Bor()
-	{
-	}
+    public String getPreparedBy() {
+        return preparedBy;
+    }
 
-	/**
-	 * Method 'getId'
-	 * 
-	 * @return int
-	 */
-	public int getId()
-	{
-		return id;
-	}
+    public void setPreparedBy(String preparedBy) {
+        this.preparedBy = preparedBy;
+    }
 
-	/**
-	 * Method 'setId'
-	 * 
-	 * @param id
-	 */
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+    public Date getPreparedDate() {
+        return preparedDate;
+    }
 
-	/**
-	 * Method 'getBornumber'
-	 * 
-	 * @return String
-	 */
-	public String getBornumber()
-	{
-		return bornumber;
-	}
+    public void setPreparedDate(Date preparedDate) {
+        this.preparedDate = preparedDate;
+    }
 
-	/**
-	 * Method 'setBornumber'
-	 * 
-	 * @param bornumber
-	 */
-	public void setBornumber(String bornumber)
-	{
-		this.bornumber = bornumber;
-	}
+    public String getReviewedBy() {
+        return reviewedBy;
+    }
 
-	/**
-	 * Method 'getBordate'
-	 * 
-	 * @return Date
-	 */
-	public Date getBordate()
-	{
-		return bordate;
-	}
+    public void setReviewedBy(String reviewedBy) {
+        this.reviewedBy = reviewedBy;
+    }
 
-	/**
-	 * Method 'setBordate'
-	 * 
-	 * @param bordate
-	 */
-	public void setBordate(Date bordate)
-	{
-		this.bordate = bordate;
-	}
+    public Date getReviewedDate() {
+        return reviewedDate;
+    }
 
-	/**
-	 * Method 'getBorreferensi'
-	 * 
-	 * @return String
-	 */
-	public String getBorreferensi()
-	{
-		return borreferensi;
-	}
+    public void setReviewedDate(Date reviewedDate) {
+        this.reviewedDate = reviewedDate;
+    }
 
-	/**
-	 * Method 'setBorreferensi'
-	 * 
-	 * @param borreferensi
-	 */
-	public void setBorreferensi(String borreferensi)
-	{
-		this.borreferensi = borreferensi;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	/**
-	 * Method 'getCreatedby'
-	 * 
-	 * @return String
-	 */
-	public String getCreatedby()
-	{
-		return createdby;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	/**
-	 * Method 'setCreatedby'
-	 * 
-	 * @param createdby
-	 */
-	public void setCreatedby(String createdby)
-	{
-		this.createdby = createdby;
-	}
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-	/**
-	 * Method 'getBuyerName'
-	 * 
-	 * @return String
-	 */
-	public String getBuyerName()
-	{
-		return buyerName;
-	}
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	/**
-	 * Method 'setBuyerName'
-	 * 
-	 * @param buyerName
-	 */
-	public void setBuyerName(String buyerName)
-	{
-		this.buyerName = buyerName;
-	}
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
 
-	/**
-	 * Method 'equals'
-	 * 
-	 * @param _other
-	 * @return boolean
-	 */
-	public boolean equals(Object _other)
-	{
-		if (_other == null) {
-			return false;
-		}
-		
-		if (_other == this) {
-			return true;
-		}
-		
-		if (!(_other instanceof Bor)) {
-			return false;
-		}
-		
-		final Bor _cast = (Bor) _other;
-		if (id != _cast.id) {
-			return false;
-		}
-		
-		if (bornumber == null ? _cast.bornumber != bornumber : !bornumber.equals( _cast.bornumber )) {
-			return false;
-		}
-		
-		if (bordate == null ? _cast.bordate != bordate : !bordate.equals( _cast.bordate )) {
-			return false;
-		}
-		
-		if (borreferensi == null ? _cast.borreferensi != borreferensi : !borreferensi.equals( _cast.borreferensi )) {
-			return false;
-		}
-		
-		if (createdby == null ? _cast.createdby != createdby : !createdby.equals( _cast.createdby )) {
-			return false;
-		}
-		
-		if (buyerName == null ? _cast.buyerName != buyerName : !buyerName.equals( _cast.buyerName )) {
-			return false;
-		}
-		
-		return true;
-	}
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 
-	/**
-	 * Method 'hashCode'
-	 * 
-	 * @return int
-	 */
-	public int hashCode()
-	{
-		int _hashCode = 0;
-		_hashCode = 29 * _hashCode + id;
-		if (bornumber != null) {
-			_hashCode = 29 * _hashCode + bornumber.hashCode();
-		}
-		
-		if (bordate != null) {
-			_hashCode = 29 * _hashCode + bordate.hashCode();
-		}
-		
-		if (borreferensi != null) {
-			_hashCode = 29 * _hashCode + borreferensi.hashCode();
-		}
-		
-		if (createdby != null) {
-			_hashCode = 29 * _hashCode + createdby.hashCode();
-		}
-		
-		if (buyerName != null) {
-			_hashCode = 29 * _hashCode + buyerName.hashCode();
-		}
-		
-		return _hashCode;
-	}
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
 
-	/**
-	 * Method 'createPk'
-	 * 
-	 * @return BorPk
-	 */
-	public BorPk createPk()
-	{
-		return new BorPk(id);
-	}
-
-	/**
-	 * Method 'toString'
-	 * 
-	 * @return String
-	 */
-	public String toString()
-	{
-		StringBuffer ret = new StringBuffer();
-		ret.append( "com.app.wms.engine.db.dto.Bor: " );
-		ret.append( "id=" + id );
-		ret.append( ", bornumber=" + bornumber );
-		ret.append( ", bordate=" + bordate );
-		ret.append( ", borreferensi=" + borreferensi );
-		ret.append( ", createdby=" + createdby );
-		ret.append( ", buyerName=" + buyerName );
-		return ret.toString();
-	}
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
 
 }

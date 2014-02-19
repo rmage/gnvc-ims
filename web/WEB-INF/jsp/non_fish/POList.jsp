@@ -74,7 +74,7 @@
                                                 <a href="GenerateReport.htm?action=index&item=PPoForm&type=xls&params=${xx[0]}:${x.poCode}"><img src="resources/images/printxls.gif" title="Print PO Form (xls)" /></a>
                                             </c:if>
                                         </td>
-                                        <td>${x.poCode}</td>
+                                        <td><a class="d" href="#${x.poCode}">${x.poCode}</a></td>
                                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${x.poDate}" /></a></td>
                                         <td>${xx[0]}</td>
                                         <td>${xx[1]}</td>
@@ -114,6 +114,40 @@
         <!-- javascript block HERE -->
         <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
+            $('.d').live('click', function(){
+                fyaQPanel($(this).html());
+            });
+            
+            function fyaQPanel(p) {
+                if(p === 0) {
+                    $('#fyaQPanel').fadeOut(300, function(){ $('#fyaQPanel').html(null); });
+                } else {
+                    $('#fyaQPanel').fadeIn(300, function(){
+                        $('#fyaQPanel').html('<center><img src="resources/img/load-spin.gif" /></center>');
+                        $.ajax({
+                            url: 'Purchase.htm',
+                            data: {action: 'ajaxDocument', key: p},
+                            dataType: 'json',
+                            success: function(json) {
+                                $('#fyaQPanel').html(null);
+                                $('#fyaQPanel').append('<h6>PO Number : ' + p + '</h6><hr />');
+                                $('#fyaQPanel').append('<table><thead><tr><th>Item Name</th><th>Item Code</th><th>Department</th>' +
+                                    '<th>Quantity</th><th>Unit</th><th>Unit/Price</th><th>Amount</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
+                                for(var i = 0; i < json.length; i++) {
+                                    $('#fyaQPanelBody').append('<tr><td>' + json[i].itemName + '</td><td>' + json[i].itemCode + '</td><td>' +
+                                        json[i].department + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td>' + json[i].uom + '</td><td>' +
+                                        numberWithCommas(json[i].price) + '</td><td>' + numberWithCommas(json[i].amount) + '</td></tr>');
+                                }
+                            },
+                            complete: function() {
+                                if($('#fyaQPanel').html() === '')
+                                    fyaQPanel(0);
+                            }
+                        });
+                    }); 
+                }
+            }
+            
             $('.box > table > tbody tr').each(function() {
                 var $o = $(this).find('td:eq(7)');
                 $o.html( numberWithCommas($o.html()) );

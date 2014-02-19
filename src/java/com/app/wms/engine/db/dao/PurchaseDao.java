@@ -12,8 +12,10 @@ public interface PurchaseDao {
     
     public Purchase findByPo(String poCode);
     
+    public AssignCanvassing findByPrsSupplierProduct(String prsCode, String supplierCode, String productCode);
+    
     public List<Purchase> findAll();
 
     public List<AssignCanvassing> findBySupplier(String supplierCode);
-
+    
 }
