@@ -247,7 +247,7 @@
                 if(f) {
                     $('#poster').append('<input name="master" type="hidden" value="' + $('#borCode').val() + 
                         ':' + $('#borDate').val() + '" />');
-//                    $('#poster').submit();
+                    $('#poster').submit();
                 }
                 
                 return false;

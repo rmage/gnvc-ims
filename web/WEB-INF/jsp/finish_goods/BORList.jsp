@@ -45,14 +45,14 @@
                         <caption>List</caption>
                         <thead>
                             <tr>
-                                <td rowspan="2" style="width: 15px">No</td>
-                                <td rowspan="2" style="width: 50px">Action</td>
-                                <td rowspan="2">BOR Number</td>
-                                <td rowspan="2">BOR Date</td>
-                                <td rowspan="2">Prepared By</td>
-                                <td rowspan="2">Prepared Date</td>
-                                <td rowspan="2">Reviewed By</td>
-                                <td rowspan="2">Reviewed Date</td>
+                                <td style="width: 15px">No</td>
+                                <td style="width: 50px">Action</td>
+                                <td>BOR Number</td>
+                                <td>BOR Date</td>
+                                <td>Prepared By</td>
+                                <td>Prepared Date</td>
+                                <td>Reviewed By</td>
+                                <td>Reviewed Date</td>
                             </tr>
                         </thead>
                         <tbody>

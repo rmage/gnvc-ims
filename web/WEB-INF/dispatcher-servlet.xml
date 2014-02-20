@@ -1156,4 +1156,10 @@
     <bean name="/ReceiveReport.htm" class="com.app.wms.web.controller.ReceiveReportController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FishMeal.htm" class="com.app.wms.web.controller.FishMealController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AccPricing.htm" class="com.app.wms.web.controller.AccPricingController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>
