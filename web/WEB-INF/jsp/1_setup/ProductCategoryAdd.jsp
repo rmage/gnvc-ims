@@ -1,32 +1,29 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
+         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>IMS - New Product Category</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function(){
                 
-                $('#addForm').validationEngine('attach');        
-                
+                $('#addForm').validationEngine('attach');   
             });
         </script>
     </head>
-
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             com.app.wms.engine.db.dto.ProductCategory dto = (com.app.wms.engine.db.dto.ProductCategory) m.get("dto");
             String mode = (String) m.get("mode");
         %>
-        
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-
             <div id="content" style="display: none" class="span-24 last">
-
                 <div class="box">
                     <form action="ProductCategory.htm" method="post" id="addForm">
                         <input type="hidden" name="mode" value="<%=mode%>" />
@@ -36,34 +33,32 @@
                             <caption>Product Category - Add</caption>
                             <tbody class="tbl-nohover">
                             	<tr>
-                                    <td class="style1">Category Code</td>
-                                    <td class="style1">
+                                    <td>Category Code</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="categoryCode" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" name="categoryCode" id="category_code" value="" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Category Name</td>
-                                    <td class="style1">
+                                    <td>Category Name</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="categoryName" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" name="categoryName" value="" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <table class="collapse tblForm row-select ui-widget-content">
-
-                            <tbody class="tbl-nohover">
-                                
-                            </tbody>
+                            <tbody class="tbl-nohover"></tbody>
                             <tfoot class="ui-widget-header">
-                                <tr><td colspan="7">
+                                <tr>
+                                    <td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+                                            <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
@@ -89,53 +84,32 @@
                     location.href = 'ProductCategory.htm';
                     return false;
                 });
-
-
             });
-
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
-                
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
-                        },
-                        "Save": function() {
-                            $("form#addForm").submit();
-                        }
-                    },
-                    zindex: 1, title: 'Confirm' });
-
+            
+             $(function() {
+                $('#category_code').bind('blur', function() {
+                  var $o = $(this);
+                   if (!$o.val()) return;
+                   
+                   $.ajax({
+                       url: 'ProductCategory.htm?term='+$o.val(),
+                       method: 'post',
+                       data: {
+                           action: 'getUnique', term: $o.val()
+                       },
+                       dataType: 'json',
+                       success: function(json){
+                           if(json.status) {
+                               alert('Not Unique code found!');
+                               $o.val(null);
+                               $o.focus();
+                           }
+                       }
+                });
             });
+        });
+
         </script>
-        
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-        
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>
         
     </body>
 </html>

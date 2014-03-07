@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
           <title>IMS - Product Category List</title>
         <%@include file="../metaheader.jsp" %>
@@ -22,21 +22,14 @@
                         <caption>Search Product Category</caption>
                         <tbody>
                         	<tr>
-                                  <td width="20%">
-                                      Category Code
-                                  </td>
-                                  <td>
-                                      <input type="text" name="categoryCode" value=""/>
-                                  </td>
-                                  <td>
-                                      Category Name
-                                  </td>
-                                  <td>
-                                      <input type="text" name="categoryName" value="" />
-                                  </td>
+                                  <td width="20%">Category Code</td>
+                                  <td><input type="text" name="categoryCode" value=""/></td>
+                                  
+                                  <td>Category Name</td>
+                                    <td><input type="text" name="categoryName" value="" /></td>
                                   <td colspan="2">
                                   </td>
-                            </tr>
+                                </tr>
                             <tr>
                                
                             </tr>
@@ -108,13 +101,13 @@
                                                 &lt;
                                             </a>
                                         </c:if>
-                                       		&nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-										    <a href="ProductCategory.htm?page=<c:out value="${model.page+1}" />">
-												&gt;
-										    </a>
-										</c:if>
-				    				</span>
+                                            &nbsp;page: <c:out value="${model.page}" />&nbsp;
+						<c:if test="${model.page < model.totalRows/model.paging}">
+                                                    <a href="ProductCategory.htm?page=<c:out value="${model.page+1}" />">
+							&gt;
+                                                    </a>
+					</c:if>
+				    </span>
                                 </td>
                             </tr>
                         </tbody>

@@ -324,5 +324,8 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
             throw new ProductCategoryDaoException("Query failed", e);
         }
     }
+        public List<ProductCategory> findByCode(String category_code){
+            return jdbcTemplate.query("SELECT * FROM product_category WHERE category_code = ?", this, category_code);
+        }
 
 }

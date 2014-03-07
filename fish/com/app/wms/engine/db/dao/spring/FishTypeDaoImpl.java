@@ -151,4 +151,8 @@ public class FishTypeDaoImpl extends AbstractDAO
 		List<FishType> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+code+"%");
 		return resultList;
     }
+    
+     public List<FishType> findByCode(String code){
+         return jdbcTemplate.query("SELECT * FROM fish_type WHERE code = ?", this, code);
+     }
 }

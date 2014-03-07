@@ -90,5 +90,7 @@ public interface ProductCategoryDao
 	public ProductCategory findByPrimaryKey(ProductCategoryPk pk) throws ProductCategoryDaoException;
 	
 	public List<ProductCategory> findProductCategoryPaging(ProductCategory p, int page) throws ProductCategoryDaoException;
+        
+        public List<ProductCategory> findByCode(String category_code);
 
 }

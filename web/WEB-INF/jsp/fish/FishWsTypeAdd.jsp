@@ -1,10 +1,12 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="com.app.wms.engine.db.dto.FishWSType"%>
 <%@page import="com.app.wms.engine.db.dto.FishType"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>IMS - New Fish Ws Type</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
@@ -39,36 +41,35 @@
                                    <td class="style1">Code</td>
                                    <td class="style1">
                                         <label>
-                                            <input type="text" name="code" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" name="code" value="" size="30" required="true" pattern="[a-zA-Z0-9]{1,}" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">Description</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" name="description" value="" size="50" class="validate[required] text-input"/>
-                                        </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
-                                    </td>
+                                <td class="style1">Description</td>
+                                  <td class="style1">
+                                    <label>
+                                       <input type="text" name="description" value="" size="50" required="true" pattern="[a-zA-Z0-9]| |{1,}" />
+                                    </label>
+                                    <label>*</label>
+                                  </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <table class="collapse tblForm row-select ui-widget-content">
-
+                        <table>
                             <tbody class="tbl-nohover">
                                 
                             </tbody>
                             <tfoot class="ui-widget-header">
                                 <tr><td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+                                            <input type="submit" style="font-size: smaller;" aria-disabled="false"
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" />
+                                            <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" />
                                         </label>
                                     </td>
                                 </tr>
@@ -89,66 +90,32 @@
                     location.href = 'FishWsType.htm';
                 });
             });
-
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
-                
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
-                        },
-                        "Save": function() {
-                            $("form#addForm").submit();
-                        }
-                    },
-                    zindex: 1, title: 'Confirm' });
-
+            
+             $(function() {
+                $('#code').bind('blur', function() {
+                  var $o = $(this);
+                   if (!$o.val()) return;
+                   
+                   $.ajax({
+                       url: 'FishWsType.htm?term='+$o.val(),
+                       method: 'post',
+                       data: {
+                           action: 'getUnique', term: $o.val()
+                       },
+                       dataType: 'json',
+                       success: function(json){
+                           if(json.status) {
+                               alert('Not Unique code found!');
+                               $o.val(null);
+                               $o.focus();
+                           }
+                       }
+                });
             });
-        </script>
+        });
 
-        <script language="JavaScript">
-			function cek(){
-			if(form.length.value == "" || form.width.value == ""|| form.height.value == ""){
-			alert("data empty"); 
-			exit;
-			}
-			}
-			function kali() {
-			cek();
-			a=eval(form.length.value);
-			b=eval(form.width.value);
-			c=eval(form.height.value);
-			d=a*b*c
-			form.volumeMatrix.value = d;
-			}
-		</script>
-		
-		<script type="text/javascript">
-		   function formfocus() {
-		      document.getElementById('autofocus').focus();
-		   }
-		   window.onload = formfocus;
-    	</script>             
+        </script>
+             
         
         <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
             Save data?

@@ -2,59 +2,28 @@
 <%@page import="com.app.wms.engine.db.dto.FishType"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>IMS - New Fish Ws Type</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
-            $(document).ready(function(){
+             $(document).ready(function(){
                 
                 $('#addForm').validationEngine('attach'); 
-                
-                $('#code').focus().on("blur",function() {
-        			var code = $('#code').val();
-        			$.ajax({
-        				url:"FishJson.htm?action=checkWsCode&query="+code,
-        				dataType: 'json',
-        				success: function(data) {
-        					if(data.result) {
-        						$("#dialog-not-unique").dialog({
-                                    open: function () {
-                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                                    },
-                                    title: 'Warning',
-                                    resizable: false,
-                                    height: 120,
-                                    modal: true,
-                                    buttons: {
-                                        "Ok" : function () {
-                                            $(this).dialog("close");
-                                            $('#code').focus();
-                                        }
-                                    }
-                                });
-        					}
-        				}
-        			});
-        		});
-                
             });
         </script>
     </head>
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
         %>
-
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-
             <div id="content" style="display: none" class="span-24 last">
-
                 <div class="box">
                     <form action="FishWsType.htm" method="post" name="form" id="addForm">
                         <input type="hidden" name="mode" value="<%=mode%>" />
@@ -64,34 +33,32 @@
                             <caption>Fish WS Type - Add</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
-                                   <td class="style1">Code</td>
-                                   <td class="style1">
+                                   <td>Code</td>
+                                   <td>
                                         <label>
-                                            <input id="code" type="text" name="code" value="" size="30" class="validate[required] text-input"/>
+                                            <input type="text" name="code" id="code" value="" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">Description</td>
-                                    <td class="style1">
+                                    <td>Description</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="description" value="" size="50" class="validate[required] text-input"/>
+                                            <input type="text" name="description" value="" size="50" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <table class="collapse tblForm row-select ui-widget-content">
-
-                            <tbody class="tbl-nohover">
-                                
-                            </tbody>
+                            <tbody class="tbl-nohover"></tbody>
                             <tfoot class="ui-widget-header">
-                                <tr><td colspan="7">
+                                <tr>
+                                    <td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+                                            <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
@@ -117,78 +84,30 @@
                     location.href = 'FishWsType.htm';
                 });
             });
-
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
-                
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
-                        },
-                        "Save": function() {
-                            $("form#addForm").submit();
-                        }
-                    },
-                    zindex: 1, title: 'Confirm' });
-
+            
+             $(function() {
+                $('#code').bind('blur', function() {
+                  var $o = $(this);
+                   if (!$o.val()) return;
+                   
+                   $.ajax({
+                       url: 'FishWsType.htm?term='+$o.val(),
+                       method: 'post',
+                       data: {
+                           action: 'getUnique', term: $o.val()
+                       },
+                       dataType: 'json',
+                       success: function(json){
+                           if(json.status) {
+                               alert('Not Unique code found!');
+                               $o.val(null);
+                               $o.focus();
+                           }
+                       }
+                });
             });
-        </script>
-
-        <script language="JavaScript">
-			function cek(){
-			if(form.length.value == "" || form.width.value == ""|| form.height.value == ""){
-			alert("data empty"); 
-			exit;
-			}
-			}
-			function kali() {
-			cek();
-			a=eval(form.length.value);
-			b=eval(form.width.value);
-			c=eval(form.height.value);
-			d=a*b*c
-			form.volumeMatrix.value = d;
-			}
-		</script>
-		
-		<script type="text/javascript">
-		   function formfocus() {
-		      document.getElementById('autofocus').focus();
-		   }
-		   window.onload = formfocus;
-    	</script>             
-        
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-        
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>
-        
-        <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
-            "WS Code" is not unique
-        </div>
-                                        
+        });
+    </script>         
+                                 
     </body>
 </html>

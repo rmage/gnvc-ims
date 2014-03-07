@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.*;
 import java.math.*;
 import java.util.List;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import com.app.wms.engine.db.dao.*;
 import com.app.wms.engine.db.dto.*;
@@ -440,5 +442,25 @@ public class ProductCategoryController extends MultiActionController {
 
         return new ModelAndView("1_setup/ProductCategoryList", "model", m);
     }
+    
+     public void getUnique (HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+     
+             PrintWriter pw = response.getWriter();
+              String uniCategoryCode = request.getParameter("term");
+              System.out.println("term: "+uniCategoryCode);
+              
+               ProductCategoryDao productcategoryDao = DaoFactory.createProductCategoryDao();
+               
+                //  pw.print("[");
+              List<ProductCategory> cr = productcategoryDao.findByCode(uniCategoryCode);
+              System.out.println("data: "+cr);
+                if(cr.isEmpty()) {
+                    pw.print("{\"status\": true}");
+                }else{
+                    pw.print("{\"status\": false}");
+                }
+//                pw.print("]");
+     }
 		
 }

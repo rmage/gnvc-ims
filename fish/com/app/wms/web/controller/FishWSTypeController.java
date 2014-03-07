@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -135,4 +138,26 @@ public class FishWSTypeController extends MultiActionController {
         
         return new ModelAndView("1_setup/FishWsTypeEdit", "model", modelMap);
     }
+    
+    public void getUnique (HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+        
+              PrintWriter pw = response.getWriter();
+              String uniCode = request.getParameter("term");
+              System.out.println("term: "+uniCode);
+              
+              FishWsTypeDao fishwstypeDao = DaoFactory.createFishWsTypeDao();
+              
+               // pw.print("[");
+              List<FishWSType> cr = fishwstypeDao.findByCode(uniCode);
+              System.out.println("data: "+cr);
+                if(cr.isEmpty()) {
+                    pw.print("{\"status\": true}");
+                }else{
+                    pw.print("{\"status\": false}");
+                }
+//                pw.print("]");
+             
+    }
+    
 }

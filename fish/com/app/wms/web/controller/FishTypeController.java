@@ -14,6 +14,8 @@ import com.app.wms.engine.db.dao.FishTypeDao;
 import com.app.wms.engine.db.dto.FishType;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class FishTypeController extends MultiActionController 
 {
@@ -136,5 +138,25 @@ public class FishTypeController extends MultiActionController
             
         	return new ModelAndView("1_setup/FishTypeView", "dto", dto);
         }
-	}
+    }
+    public void getUnique (HttpServletRequest request, HttpServletResponse response)
+        throws IOException{
+                
+        PrintWriter pw = response.getWriter();
+        String uniCode = request.getParameter("term");
+        System.out.println("term: "+uniCode);
+
+        FishTypeDao fishtypeDao = DaoFactory.createFishTypeDao();
+
+        //              pw.print("[");
+        List<FishType> cr = fishtypeDao.findByCode(uniCode);
+        System.out.println("data: "+cr);
+          if(cr.isEmpty()) {
+              pw.print("{\"status\": true}");
+          }else{
+              pw.print("{\"status\": false}");
+          }
+        //                pw.print("]");
+              
+    }
 }
