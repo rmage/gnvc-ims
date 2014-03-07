@@ -149,52 +149,54 @@ public class FishRrController extends MultiActionController {
         		
         		FishRrDetailDao rrDetailDao = DaoFactory.createFishRrDetailDao();
         		int id = rrDetailDao.insert(rrDetail);
-        		
-        		if(id > 0) {
-        			FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
-        			FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(
-        					vesselId, rrDetail.getStorageId(), rrDetail.getFishId());
-        			
-        			if(fishBalance != null) {
-        				Double balance = fishBalance.getBalance();
-        				fishBalance.setBalance(balance + rrDetail.getGoodWeight());
-        				fishBalance.setUpdatedDate(new Date());
-        				fishBalance.setUpdatedBy(user.getUserId());
-        				fishBalanceDao.update(fishBalance.getId(), fishBalance);
-        			}
-        			else {
-        				fishBalance = new FishBalance();
-        				fishBalance.setVesselId(vesselId);
-        				fishBalance.setStorageId(rrDetail.getStorageId());
-        				fishBalance.setFishId(rrDetail.getFishId());
-        				fishBalance.setBalance(rrDetail.getGoodWeight());
-        				fishBalance.setCreatedDate(new Date());
-        				fishBalance.setCreatedBy(user.getUserId());
-        				fishBalance.setIsActive("Y");
-        				fishBalance.setIsDelete("N");
-        				int balanceId = fishBalanceDao.insert(fishBalance);
-        				fishBalance = fishBalanceDao.findByPrimaryKey(balanceId);
-        			}
-        			
-        			//insert balance history
-        			Double currentBalance = fishBalance.getBalance();
-        			FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
-        			fishBalanceHistory.setDocNo(rrNo);
-        			fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
-        			fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
-        			fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0 ?
-        					"FRESH" : fishBalance.getStorage().getCode());
-        			fishBalanceHistory.setQtyIn(rrDetail.getGoodWeight());
-        			fishBalanceHistory.setQtyOut(Double.valueOf("0"));
-        			fishBalanceHistory.setBalance(currentBalance);
-        			fishBalanceHistory.setCreatedDate(new Date());
-        			fishBalanceHistory.setCreatedBy(user.getUserId());
-        			fishBalanceHistory.setIsActive("Y");
-        			fishBalanceHistory.setIsDelete("N");
-        			
-        			FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
-        			balanceHistoryDao.insert(fishBalanceHistory);
-        		}
+
+//---- Insert to Fish Inventory        		
+//        		if(id > 0) {
+//        			FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
+//        			FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(
+//        					vesselId, rrDetail.getStorageId(), rrDetail.getFishId());
+//        			
+//        			if(fishBalance != null) {
+//        				Double balance = fishBalance.getBalance();
+//        				fishBalance.setBalance(balance + rrDetail.getGoodWeight());
+//        				fishBalance.setUpdatedDate(new Date());
+//        				fishBalance.setUpdatedBy(user.getUserId());
+//        				fishBalanceDao.update(fishBalance.getId(), fishBalance);
+//        			}
+//        			else {
+//        				fishBalance = new FishBalance();
+//        				fishBalance.setVesselId(vesselId);
+//        				fishBalance.setStorageId(rrDetail.getStorageId());
+//        				fishBalance.setFishId(rrDetail.getFishId());
+//        				fishBalance.setBalance(rrDetail.getGoodWeight());
+//        				fishBalance.setCreatedDate(new Date());
+//        				fishBalance.setCreatedBy(user.getUserId());
+//        				fishBalance.setIsActive("Y");
+//        				fishBalance.setIsDelete("N");
+//        				int balanceId = fishBalanceDao.insert(fishBalance);
+//        				fishBalance = fishBalanceDao.findByPrimaryKey(balanceId);
+//        			}
+//        			
+//        			//insert balance history
+//        			Double currentBalance = fishBalance.getBalance();
+//        			FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
+//        			fishBalanceHistory.setDocNo(rrNo);
+//        			fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
+//        			fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
+//        			fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0 ?
+//        					"FRESH" : fishBalance.getStorage().getCode());
+//        			fishBalanceHistory.setQtyIn(rrDetail.getGoodWeight());
+//        			fishBalanceHistory.setQtyOut(Double.valueOf("0"));
+//        			fishBalanceHistory.setBalance(currentBalance);
+//        			fishBalanceHistory.setCreatedDate(new Date());
+//        			fishBalanceHistory.setCreatedBy(user.getUserId());
+//        			fishBalanceHistory.setIsActive("Y");
+//        			fishBalanceHistory.setIsDelete("N");
+//        			
+//        			FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
+//        			balanceHistoryDao.insert(fishBalanceHistory);
+//        		}
+// ------ end
         	}
         	
         	modelMap = this.searchAndPaging(request, response);
