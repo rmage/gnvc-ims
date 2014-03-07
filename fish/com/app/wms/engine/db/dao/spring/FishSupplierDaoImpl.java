@@ -177,5 +177,8 @@ public class FishSupplierDaoImpl extends AbstractDAO implements
 		List<FishSupplier> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+supplierName+"%");
 		return resultList;
     }
-
+    
+    public List<FishSupplier> findByCode(String code){
+         return jdbcTemplate.query("SELECT * FROM fish_supplier WHERE code = ?", this, code);
+     }
 }
