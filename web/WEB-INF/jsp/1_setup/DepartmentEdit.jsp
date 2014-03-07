@@ -1,12 +1,11 @@
 <%@page import="com.app.wms.engine.db.dto.Department"%>
 <%@page import="com.app.wms.hbm.bean.Tallyman"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
         <title>IMS - Update Department</title>
         <%@include file="../metaheader.jsp" %>
-    </head>
-    
+    </head>    
     <body>
         <%
             java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
@@ -19,10 +18,7 @@
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-
-
             <div id="content" style="display: none" class="span-24 last">
-
                 <div class="box">
                     <form action="Department.htm" method="post">
                         <input type="hidden" name="mode" value="<%=mode%>" />
@@ -33,26 +29,26 @@
                             <caption>Department - Detail</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
-                                    <td class="style1">Department Code</td>
-                                    <td class="style1">
+                                    <td>Department Code</td>
+                                    <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="departmentCode" value="<%=departmentCode%>" maxlength="10" size="12" />
+                                            <input type="text" class="shorttext" name="departmentCode" value="<%=departmentCode%>" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" readonly />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Department Name</td>
-                                    <td class="style1">
+                                    <td>Department Name</td>
+                                    <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="departmentName"  value="<%=departmentName%>" maxlength="25" size="30" />
+                                            <input type="text" class="shorttext" name="departmentName"  value="<%=departmentName%>" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Is Active</td>
-                                    <td class="style1">
+                                    <td>Is Active</td>
+                                    <td>
                                         <label>
                                             <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
                                         </label>
@@ -64,12 +60,12 @@
                             </tbody>
                             <tfoot>
                                 <td colspan="2">
-                                    <span class="style1">
+                                    <span>
                                         <label>
                                             <input type="submit" name="btnSave" id="btnSave" value="Save" />
                                         </label>
                                     </span>
-                                    <input type="button" class="style1" name="button" id="btnBack" value="Back" />
+                                    <input type="button" name="button" id="btnBack" value="Back" />
                                 </td>
                             </tfoot>
                         </table>
@@ -88,8 +84,6 @@
                     location.href = 'Department.htm';
                     return false;
                 });
-
-
             });
         </script>
     </body>
