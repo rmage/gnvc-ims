@@ -1,5 +1,7 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.FishBalanceDao;
+import com.app.wms.engine.db.dao.FishBalanceHistoryDao;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +20,8 @@ import com.app.wms.engine.db.dao.FishWsDao;
 import com.app.wms.engine.db.dao.FishWsDetailDao;
 import com.app.wms.engine.db.dao.FishWsTypeDao;
 import com.app.wms.engine.db.dto.Fish;
+import com.app.wms.engine.db.dto.FishBalance;
+import com.app.wms.engine.db.dto.FishBalanceHistory;
 import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.FishWSType;
 import com.app.wms.engine.db.dto.FishWs;
@@ -133,7 +137,7 @@ public class FishWsController extends MultiActionController {
         }else{
         	String userId = "";
         	userId = (String)user.getUserId();
-        	
+                
         	String wsNo = request.getParameter("wsNo");
         	Integer wsTypeId = Integer.valueOf(request.getParameter("wsTypeId"));
         	Integer vesselId = Integer.valueOf(request.getParameter("vesselId"));
@@ -174,8 +178,59 @@ public class FishWsController extends MultiActionController {
             	wsDetail.setIsDelete("N");
             	
             	FishWsDetailDao wsDetailDao = DaoFactory.createFishWsDetailDao();
-            	wsDetailDao.insert(wsDetail);	
-        	}
+            	int wsid = wsDetailDao.insert(wsDetail);
+                
+                if(wsid > 0) {
+                    FishWsTypeDao wsTypeDao = DaoFactory.createFishWsTypeDao();
+                    FishWSType wsTypesFrz = wsTypeDao.findTypeCodeById(wsTypeId.intValue());
+                    String wsTypeFrozen = wsTypesFrz.getCode();
+                    FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
+                    FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(vesselId, dto.getStorageId(), 
+                        wsDetail.getFishId());
+                    
+                    if (wsTypeFrozen.equalsIgnoreCase("WSBF") || wsTypeFrozen.equalsIgnoreCase("WSABF") || 
+                        wsTypeFrozen.equalsIgnoreCase("WSNC")) {   
+                        if(fishBalance != null) {
+                            Double balance = fishBalance.getBalance();
+                            fishBalance.setBalance(balance + wsDetail.getTotalWeight());
+                            fishBalance.setUpdatedDate(new Date());
+                            fishBalance.setUpdatedBy(user.getUserId());
+                            fishBalanceDao.update(fishBalance.getId(), fishBalance);
+                        } else {
+                            fishBalance = new FishBalance();
+                            fishBalance.setVesselId(vesselId);
+                            fishBalance.setStorageId(dto.getStorageId());
+                            fishBalance.setFishId(wsDetail.getFishId());
+                            fishBalance.setBalance(wsDetail.getTotalWeight());
+                            fishBalance.setCreatedDate(new Date());
+                            fishBalance.setCreatedBy(user.getUserId());
+                            fishBalance.setIsActive("Y");
+                            fishBalance.setIsDelete("N");
+                            int balanceId = fishBalanceDao.insert(fishBalance);
+                            fishBalance = fishBalanceDao.findByPrimaryKey(balanceId);
+                        }
+        			
+                        //insert balance history
+                        Double currentBalance = fishBalance.getBalance();
+                        FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
+                        fishBalanceHistory.setDocNo(wsNo);
+                        fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
+                        fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
+                        fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0 ?
+                                        "FROZEN" : fishBalance.getStorage().getCode());
+                        fishBalanceHistory.setQtyIn(wsDetail.getTotalWeight());
+                        fishBalanceHistory.setQtyOut(Double.valueOf("0"));
+                        fishBalanceHistory.setBalance(currentBalance);
+                        fishBalanceHistory.setCreatedDate(new Date());
+                        fishBalanceHistory.setCreatedBy(user.getUserId());
+                        fishBalanceHistory.setIsActive("Y");
+                        fishBalanceHistory.setIsDelete("N");
+
+                        FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
+                        balanceHistoryDao.insert(fishBalanceHistory);
+                    }
+            }
+            }
         	
         	modelMap = this.searchAndPaging(request, response);
     		return new ModelAndView("fish/WSDataList", "model", modelMap);

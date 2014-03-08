@@ -167,4 +167,11 @@ public class FishWsTypeDaoImpl extends AbstractDAO
         
         return resultList.isEmpty() ? null : resultList.get(0);
     }
+    
+     public FishWSType findTypeCodeById(int idCode) {
+        String query = "SELECT * FROM " + getTableName() + " WHERE id = ?";
+        List<FishWSType> resultList = jdbcTemplate.query(query, this, idCode);
+        
+        return resultList.isEmpty() ? null : resultList.get(0);
+    }
 }
