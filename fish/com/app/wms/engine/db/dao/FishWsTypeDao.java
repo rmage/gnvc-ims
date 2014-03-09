@@ -9,5 +9,4 @@ public interface FishWsTypeDao extends GeneralDao<FishWSType> {
     public boolean checkWsTypeIsExist(String wsType);
     public FishWSType findByTypeCode(String typeCode);
     public FishWSType findTypeCodeById(int idCode);
-    public List<FishWSType> findByCode(String code);
 }
