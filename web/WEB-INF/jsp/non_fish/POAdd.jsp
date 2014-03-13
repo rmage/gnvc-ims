@@ -53,6 +53,24 @@
                                     <td>PPN</td>
                                     <td><input id="ppn" name="ppn" size="1" type="text" value="0" pattern="[0-9]{1,2}" required="true" /> %</td>
                                 </tr>
+                                <tr>
+                                    <td>Currency</td>
+                                    <td>
+                                        <select id="currency" name="currency">
+                                            <c:forEach items="${model.c}" var="x">
+                                            <option>${x.currencyCode}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
+                                    <td>Remarks</td>
+                                    <td>
+                                        <select id="confirmatory">
+                                            <option value="0">Normal</option>
+                                            <option value="1">Confirmatory</option>
+                                        </select>
+                                        <input id="remarks" name="remarks" size="50" type="text" />
+                                    </td>
+                                </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -108,7 +126,7 @@
                 if(f === 1) {
                     $('#poster').append('<input name="master" type="hidden" value="' + $('#poCode').val() + 
                         ':' + $('#poDate').val() + ':' + $('#sSupplierCode').val() + ':' + $('#discount').val() + 
-                        ':' + $('#pph').val() + ':' + $('#ppn').val() + '" />');
+                        ':' + $('#pph').val() + ':' + $('#ppn').val()+ ':' + $('#currency').val() + ':' + $('#remarks').val() + '" />');
                     $('#poster').submit();
                 }
             });
@@ -174,6 +192,16 @@
             });
             
             $('#poDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
+            
+            $('#confirmatory').bind('change', function() {
+                var $r = $('#remarks');
+                if($(this).val() === '1') {
+                    if($r.val().indexOf('CONFIRMATORY') < 0)
+                        $r.val('CONFIRMATORY; ' + $r.val());
+                } else {
+                    $r.val($r.val().replace(/CONFIRMATORY; /gi, ''));
+                }
+            });
             
             function numberWithCommas(x) {
                 var parts = x.toString().split(".");

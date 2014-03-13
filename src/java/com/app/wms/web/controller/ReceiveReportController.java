@@ -1,16 +1,22 @@
 package com.app.wms.web.controller;
 
 import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dao.ProductPriceDao;
 import com.app.wms.engine.db.dao.PrsDetailDao;
+import com.app.wms.engine.db.dao.PurchaseDao;
+import com.app.wms.engine.db.dao.PurchaseDtlDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dao.ReceiveReportDtlDao;
+import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dto.Product;
+import com.app.wms.engine.db.dto.ProductPrice;
 import com.app.wms.engine.db.dto.PrsDetail;
 import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.PurchaseDtl;
 import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.dto.ReceiveReportDtl;
+import com.app.wms.engine.db.dto.StockInventory;
 import com.app.wms.engine.db.dto.Supplier;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
@@ -19,6 +25,7 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,7 +83,12 @@ public class ReceiveReportController extends MultiActionController {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
             /* DAO | Define needed dao here */
+            PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
+            PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
+            PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
+            ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
             ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
+            StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
             ReceiveReportDtlDao receiveReportDtlDao = DaoFactory.createReceiveReportDtlDao();
 
             /* TRANSACTION | Something complex here */
@@ -89,6 +101,10 @@ public class ReceiveReportController extends MultiActionController {
             rr.setCreatedBy(lu.getUserId());
             rr.setCreatedDate(new Date());
             receiveReportDao.insert(rr);
+            
+            // get sub total and quantity
+            Purchase p = purchaseDao.findByPo(String.valueOf(rr.getPoCode()));
+            List<PurchaseDtl> pds = purchaseDtlDao.findByPo(p.getPoCode());
             
             // insert detail receiving report
             for(String x : details) {
@@ -103,6 +119,27 @@ public class ReceiveReportController extends MultiActionController {
                 rrd.setCreatedBy(lu.getUserId());
                 rrd.setCreatedDate(new Date());
                 receiveReportDtlDao.insert(rrd);
+                
+                // XXX: FYA | ACCOUNTING - set average price
+                PurchaseDtl pd = new PurchaseDtl();
+                for(PurchaseDtl xx : pds) {
+                    if(xx.getProductCode().equals(rrd.getProductCode())) {
+                        pd = xx; break;
+                    }
+                }
+                PrsDetail prd = prsDetailDao.findByPrsProduct(pd.getPrsNumber(), rrd.getProductCode());
+                ProductPrice pp = productPriceDao.findByProduct(rrd.getProductCode());
+                
+                // FIXME: FYA | Only Support IDR not check PO Currency
+                StockInventory si = stockInventoryDao.findWhereProductCodeEquals(rrd.getProductCode()).get(0);
+                pp.setUnitPrice( (pp.getUnitPrice()
+                    .multiply( si.getBalance() ).setScale(2, RoundingMode.HALF_EVEN)).add( (pd.getSubTotal()
+                    .divide(prd.getQty(), 2, RoundingMode.HALF_EVEN))
+                    .multiply(new BigDecimal(rrd.getQtyGood())).setScale(2, RoundingMode.HALF_EVEN) )
+                    .divide( si.getBalance().add(new BigDecimal(rrd.getQtyGood())), 2, RoundingMode.HALF_EVEN ));
+                pp.setUpdatedBy(lu.getUserId());
+                pp.setUpdatedDate(new Date());
+                productPriceDao.update(pp, 1, new BigDecimal(rrd.getQtyGood()));
                 
                 // insert or update stock_inventory
                 receiveReportDao.updateStockInventory(rrd.getProductCode(), rrd.getQtyGood());

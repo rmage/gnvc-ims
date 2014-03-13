@@ -4,6 +4,7 @@ import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dto.StockInventory;
 import com.app.wms.engine.db.dto.StockInventoryPk;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import org.springframework.jdbc.core.SqlParameter;
@@ -108,4 +109,7 @@ public interface StockInventoryDao
 	public void updateBalance(StockInventory dto) throws StockInventoryDaoException;
 	
 	public void updateBalanceNoWarehouse(StockInventory dto) throws StockInventoryDaoException;
+        
+    /* added by FYA */
+    public void updateBalance(String productCode, BigDecimal qty, String name, BigDecimal initQty);
 }

@@ -1,5 +1,6 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.PrsDao;
 import com.app.wms.engine.db.dao.PrsDetailDao;
@@ -8,6 +9,7 @@ import com.app.wms.engine.db.dao.PurchaseDtlDao;
 import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.AssignCanvassing;
+import com.app.wms.engine.db.dto.Currency;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsDetail;
@@ -16,6 +18,7 @@ import com.app.wms.engine.db.dto.PurchaseDtl;
 import com.app.wms.engine.db.dto.Supplier;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ApprovalRangeDaoException;
+import com.app.wms.engine.db.exceptions.CurrencyDaoException;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
 import com.app.wms.engine.db.exceptions.SupplierDaoException;
@@ -75,18 +78,23 @@ public class PurchaseController extends MultiActionController {
     }
     
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
-        throws SupplierDaoException {
+        throws SupplierDaoException, CurrencyDaoException {
         
         /* DATA | get initial value */
         HashMap m = new HashMap();
         
         /* DAO | Define needed dao here */
+        CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
         
         /* TRANSACTION | Something complex here */
         // get supplier list
         List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
         m.put("supplier", ss);
+        
+        // get currency
+        List<Currency> cs = currencyDao.findAll();
+        m.put("c", cs);
         
         return new ModelAndView("non_fish/POAdd", "model", m);
         
@@ -113,6 +121,8 @@ public class PurchaseController extends MultiActionController {
             p.setDiscount(Integer.parseInt(master[3]));
             p.setPph(Integer.parseInt(master[4]));
             p.setPpn(Integer.parseInt(master[5]));
+            p.setCurrency(master[6]);
+            p.setRemarks(master[7]);
             p.setCreatedBy(lu.getUserId());
             p.setCreatedDate(new Date());
             purchaseDao.insert(p);

@@ -668,12 +668,6 @@ public class DaoFactory {
 			return (EdsDao) bf.getBean( "EdsDao" );
 		}
 
-		public static EdsDetailDao createEdsDetailDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (EdsDetailDao) bf.getBean( "EdsDetailDao" );
-		}
-
 		public static TsDao createTsDao()
 		{
 			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
@@ -857,6 +851,36 @@ public class DaoFactory {
     public static PtsDtlDao createPtsDtlDao() {
         BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
         return (PtsDtlDao) bf.getBean( "PtsDtlDao" );
+    }
+    
+    public static OfalDao createOfalDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (OfalDao) bf.getBean( "OfalDao" );
+    }
+    
+    public static OfalDtlDao createOfalDtlDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (OfalDtlDao) bf.getBean( "OfalDtlDao" );
+    }
+    
+    public static FishMealDao createFishMealDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (FishMealDao) bf.getBean( "FishMealDao" );
+    }
+    
+    public static FishMealDtlDao createFishMealDtlDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (FishMealDtlDao) bf.getBean( "FishMealDtlDao" );
+    }
+    
+    public static FishWsDtlActualDao createFishWsDtlActualDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (FishWsDtlActualDao) bf.getBean( "FishWsDtlActualDao" );
+    }
+    
+    public static TsDtlDao createTsDtlDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (TsDtlDao) bf.getBean( "TsDtlDao" );
     }
     
 }

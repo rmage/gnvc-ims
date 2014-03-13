@@ -192,7 +192,7 @@ public class PurchaseRequisitionController extends ReportManagerController {
                 prsDetail.setPrsnumber(p.getPrsnumber());
                 prsDetail.setProductcode(productcode1s[i]);
                 prsDetail.setProductname(productname1[i]);
-                prsDetail.setQty(new BigDecimal(qtys[i]));
+                prsDetail.setQty(new BigDecimal(qtys[i].replaceAll(",", "")));
                 prsDetail.setUomName(uomName[i]);
                 daod.insert(prsDetail);
             }

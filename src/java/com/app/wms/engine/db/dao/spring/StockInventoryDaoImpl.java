@@ -5,6 +5,7 @@ import com.app.wms.engine.db.dto.StockInventory;
 import com.app.wms.engine.db.dto.StockInventoryPk;
 import com.app.wms.engine.db.dto.map.BalanceMap;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -386,9 +387,9 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
 	public void updateBalance(StockInventory dto) throws StockInventoryDaoException {
 		
 		SqlUpdate su = new SqlUpdate 
-					  ( dataSource,
-						" update " + getTableName() + " set balance = ? " +	
-						" where product_code = ? and wh_code = ? " );
+                ( dataSource,
+                    " update " + getTableName() + " set balance = ? " +	
+                    " where product_code = ? and wh_code = ? " );
 		
 		su.declareParameter( new SqlParameter( java.sql.Types.DECIMAL) );
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
@@ -400,9 +401,9 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
 	
 	public void updateBalanceNoWarehouse(StockInventory dto) throws StockInventoryDaoException {
 		SqlUpdate su = new SqlUpdate 
-		 			  ( dataSource,
-						" update " + getTableName() + " set balance = ?, wh_code = ? " +	
-						" where product_code = ? " );
+                ( dataSource,
+                    " update " + getTableName() + " set balance = ?, wh_code = ? " +	
+                    " where product_code = ? " );
 		
 		su.declareParameter( new SqlParameter( java.sql.Types.DECIMAL) );
 		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
@@ -412,4 +413,11 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
 		
 	}
 
+    /* added by FYA */
+    public void updateBalance(String productCode, BigDecimal qty, String name, BigDecimal initQty) {
+        jdbcTemplate.update("UPDATE " + getTableName() + " SET balance = ?, updated_by = ?, updated_date = GETDATE() WHERE product_code = ?;" + 
+            "INSERT INTO inventory..stock_inventory_log VALUES(?, ?, GETDATE());" , qty, name, productCode, productCode, "updated by " + name + " from value " + initQty + 
+            " with value " + qty);
+    }
+        
 }

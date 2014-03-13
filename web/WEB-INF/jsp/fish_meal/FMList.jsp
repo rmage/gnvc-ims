@@ -12,6 +12,23 @@
             #fyaQPanelBody tr:nth-child(2n+1) {
                 background-color: #EEEEEE;
             }
+            #firstUse {
+                background-color: #DFEFFC;
+                border-radius: 3px 3px 3px 3px;
+                left: 50%;
+                margin-left: -165px;
+                margin-top: -95px;
+                padding: 10px;
+                position: fixed;
+                top: 50%;
+                width: 310px;
+            }
+            #main input {
+                background: none repeat scroll 0 0 transparent;
+                border: medium none;
+                font-size: 9px;
+                width: 35px;
+            }
         </style>
     </head>
     <body>
@@ -47,7 +64,6 @@
                                 <tr>
                                     <td colspan="2">
                                         <input type="submit" value="Generate" name="btnSearch" />
-                                        <!--<input type="button" value="Add" name="btnAdd" onclick="window.location.replace('FishMeal.htm?action=create');" />-->
                                     </td>
                                 </tr>
                             </tfoot>
@@ -58,12 +74,12 @@
                         <thead>
                             <tr>
                                 <td colspan="21">
-                                    <select id="year">
+                                    <select id="yearL">
                                         <c:forEach items="${model.year}" var="x">
                                             <option>${x}</option>
                                         </c:forEach>
                                     </select>
-                                    <select id="month">    
+                                    <select id="monthL">    
                                         <c:forEach items="${model.month}" var="x">
                                             <option value="${x[0]}" <c:if test="${x[2] == '1'}">selected="true"</c:if>>${x[1]}</option>
                                         </c:forEach>
@@ -110,19 +126,6 @@
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>
-<!--                        <tfoot>
-                            <tr>
-                                <td colspan="14">
-                                    <c:if test="${model.page !=null && model.page > 1}">
-                                        <a href="FishMeal.htm?page=<c:out value="${model.page-1}" />">&lt</a>
-                                    </c:if>
-                                    &nbsp;page: ${model.page}&nbsp;
-                                    <c:if test="${model.page < model.totalRows/model.paging}">
-                                        <a href="FishMeal.htm?page=<c:out value="${model.page+1}" />">&gt;</a>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </tfoot>-->
                     </table>
                 </div>
             </div>
@@ -134,15 +137,261 @@
         </div>
 
         <!-- javascript block HERE -->
-        <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
+        <div id="firstUse" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <td colspan="3"><h5>Please fill your last end inventory (<b>28 February 2014</b>)</h5></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bags</td>
+                        <td><input id="fuBags" type="text" value="0" /></td>
+                    </tr>
+                    <tr>
+                        <td>Kilos</td>
+                        <td><input id="fuKilos" type="text" value="0" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input id="fuConfirm" type="button" value="Confirm" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <script>
+            
+            $('#year > option:last-child').attr('selected', true);
+            
+            var date = new Date();
+            var limit = new Date(date.getYear(), (date.getMonth() + 1), 0).getDate();
+            var range = {start: 1, end: 0};
+            for(var i = 0; i < limit; i++) {
+                if(i === date.getDate())
+                    range.end = i;
+                $('#main').append('<tr><td><img class="update" src="resources/images/copy.png" style="float: right;" title="Click to update!" />' + (i + 1) + ' ' + $('#month > option:selected').html() + ' ' + $('#year').val() + '</td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td>' +
+                    '<td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td>' +
+                    '<td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td>' +
+                    '<td><input type="text" disabled="true" /></td></tr>');
+                $('#main tr:last-child').data('date', (i + 1) + '/' + $('#month').val() + '/' + $('#year').val());
+            }
+            for(var i = 0; i < ${model.date}; i++) {
+                $('#main tr:eq(' + i + ')').find('input').attr('disabled', false);
+            }
            
-           $('#view').bind('click', function() {
-               $o = $(this);
-               $o.attr('disabled', 'true');
-               $o.after(' <img id="load" src="resources/ui-anim_basic_16x16.gif" style="vertical-align: middle; background-color: rgb(255, 255, 255); border-radius: 4px; padding: 2.5px;" />');
-           });
-           
+            $('#view').bind('click', function() {
+                var $o = $(this);
+                $o.attr('disabled', true);
+                $o.after(' <img id="load" src="resources/ui-anim_basic_16x16.gif" style="vertical-align: middle; background-color: rgb(255, 255, 255); border-radius: 4px; padding: 2.5px;" />');
+                
+                $.ajax({
+                    url: 'FishMeal.htm',
+                    data: {action: 'getContent', year: $('#yearL').val(), month: $('#monthL').val()},
+                    dataType: 'json',
+                    success: function(json) {
+                        if(json.message) {
+                            alert(json.message); return false;
+                        } else {
+                            if(json.request) {
+                                $('#firstUse').show();
+                                $('#fuBags').focus();
+                                return false;
+                            }
+                        }
+                        
+                        if(json.data) {
+                            // already have data
+                            for(var i = 0; i < json.data.length; i++) {
+                                var $tr = $('#main tr:eq(' + i + ')');
+                                $tr.data('id', json.data[i].id);
+                                $tr.find('input:eq(0)').val(json.data[i].biBags);
+                                $tr.find('input:eq(1)').val(json.data[i].biKilos);
+                                $tr.find('input:eq(2)').val(json.data[i].rS1Rm);
+                                $tr.find('input:eq(3)').val(json.data[i].rS1Bags);
+                                $tr.find('input:eq(4)').val(json.data[i].rS1Kilos);
+                                $tr.find('input:eq(5)').val(json.data[i].rS2Rm);
+                                $tr.find('input:eq(6)').val(json.data[i].rS2Bags);
+                                $tr.find('input:eq(7)').val(json.data[i].rS2Kilos);
+                                $tr.find('input:eq(8)').val(json.data[i].rS3Rm);
+                                $tr.find('input:eq(9)').val(json.data[i].rS3Bags);
+                                $tr.find('input:eq(10)').val(json.data[i].rS3Kilos);
+                                $tr.find('input:eq(11)').val(json.data[i].ttdBags);
+                                $tr.find('input:eq(12)').val(json.data[i].ttdKilos);
+                                $tr.find('input:eq(13)').val(json.data[i].iBags);
+                                $tr.find('input:eq(14)').val(json.data[i].iKilos);
+                                $tr.find('input:eq(15)').val(json.data[i].iPrice);
+                                $tr.find('input:eq(16)').val(json.data[i].eiBags);
+                                $tr.find('input:eq(17)').val(json.data[i].eiKilos);
+                                $tr.find('input:eq(18)').val(json.data[i].rMhrs);
+                                $tr.find('input:eq(19)').val(json.data[i].rOthr);
+                            } setXVal(); $('#main').data('id', json.fmId);
+                        } else {
+                            // first use
+                            var $tr = $('#main tr:first-child');
+                            $tr.find('td:eq(1) input').data('xval', json.bags);
+                            $tr.find('td:eq(2) input').data('xval', json.kilos);
+                            // $tr.find('input').attr('disabled', false); 
+                            getXVal();
+                            // ajax funtion on success
+                            var firstMonth = function(json) {
+                                if(json.message) {
+                                    $('#main').data('id', json.fmId);
+                                    $tr.data('id', json.id);
+                                    setXVal(0);
+                                    $tr.next().find('input').attr('disabled', false); getXVal();
+                                } else {
+                                    getXVal(0);
+                                }
+                            };
+
+                            // send ajax request
+                            var _detail = $tr.data('date');
+                            $('#main tr:first-child input').each(function() {
+                                _detail += (':' + $(this).val());
+                            });
+                            callAjaxUpdate({
+                                action: 'saveContent', 
+                                master: $('#monthL').val() + ':' + $('#yearL').val(),
+                                detail: _detail,
+                                status: 0 }, firstMonth);
+                        }
+//                        $('#main').html(null);
+//                        for(var i = 0; i < json.length; i++) {
+//                            $('#main').append('');
+//                        }
+                    },
+                    complete: function() {
+                        $('#load').remove();
+                        $o.attr('disabled', false);  
+                    }
+                });
+            });
+            
+            /*_TEST_GLOBAL_AJAX_FUNCTION_____*/
+            function callAjaxUpdate(_data, _fnc) {
+                $.ajax({
+                    url: 'FishMeal.htm',
+                    data: _data,
+                    dataType: 'json',
+                    success: _fnc
+                });
+            }
+            
+            function setXVal(tr) {
+                if(tr) {
+                    $('#main tr:eq(' + tr + ') input').each(function() {
+                        $(this).data('xval', $(this).val());
+                    });
+                } else {
+                    $('#main input').each(function() {
+                        $(this).data('xval', $(this).val());
+                    });
+                }
+            }
+            
+            function getXVal(tr) {
+                if(tr) {
+                    $('#main tr:eq(' + tr + ') input').each(function() {
+                        $(this).val($(this).data('xval'));
+                    });
+                } else {
+                    $('#main input').each(function(i) {
+                        if(!$(this).attr('disabled')) {
+                            if(i%20 === 16)
+                                if($(this).data('xval'))
+                                    $(this).val($(this).data('xval'));
+                                else
+                                    $(this).val($(this).parent().parent().find('input:eq(0)').val());
+                            else if(i%20 === 17)
+                                if($(this).data('xval'))
+                                    $(this).val($(this).data('xval'));
+                                else
+                                    $(this).val($(this).parent().parent().find('input:eq(1)').val());
+                            else if(i%20 === 18 || i%20 === 19) {}
+                            else
+                                $(this).val($(this).data('xval') ? $(this).data('xval') : 0);
+                        } else {
+                            return false;
+                        }
+                    });
+                }
+            }
+            
+            $('#main .update').live('click', function() {
+                var $this = $(this);
+                if(!$this.data('process')) {
+                    $this.data('process', true);
+                    
+                     // ajax funtion on success
+                    var currentRow = function(json) {
+                        if(json.message) {
+                            $('#main').data('id', json.fmId);
+                            $tr.data('id', json.id);
+                            setXVal($('#main tr').index($tr));
+                            alert('Success update data!');
+                        } else {
+                            getXVal($('#main tr').index($tr));
+                        }
+                        
+                        $this.data('process', false);
+                    };
+                    
+                    // send ajax request
+                    var $tr = $(this).parent().parent();
+                    var _detail = $tr.data('date');
+                    $('#main tr:eq(' + $('#main tr').index($tr) + ') input').each(function() {
+                        _detail += (':' + $(this).val());
+                    });
+                    callAjaxUpdate({
+                        action: 'saveContent', 
+                        fmId: $('#main').data('id'),
+                        id: ($tr.data('id') ? $tr.data('id') : 0),
+                        detail: _detail,
+                        status: ($tr.data('id') ? 1 : 0) }, currentRow);
+                }
+            });
+            
+            var reNumber = new RegExp('^[0-9]+$');
+            $('#main input').live('blur', function() {
+                var $tr = $(this).parent().parent();
+                if($('#main tr').index($tr) !== 0) {
+                    $tr.find('input:eq(0)').val($tr.prev().find('input:eq(16)').val());
+                    $tr.find('input:eq(1)').val($tr.prev().find('input:eq(17)').val());
+                }
+                
+                var i = 0; 
+                if(reNumber.test($tr.find('input:eq(3)').val())) { i += parseInt($tr.find('input:eq(3)').val()); }
+                if(reNumber.test($tr.find('input:eq(6)').val())) { i += parseInt($tr.find('input:eq(6)').val()); }
+                if(reNumber.test($tr.find('input:eq(9)').val())) { i += parseInt($tr.find('input:eq(9)').val()); } 
+                $tr.find('input:eq(11)').val(i); 
+                if(reNumber.test($tr.find('input:eq(13)').val())) { i -= parseInt($tr.find('input:eq(13)').val()); } 
+                if(reNumber.test($tr.find('input:eq(0)').val())) { i += parseInt($tr.find('input:eq(0)').val()); } 
+                $tr.find('input:eq(16)').val(i); i = 0;
+                
+                if(reNumber.test($tr.find('input:eq(4)').val())) { i += parseInt($tr.find('input:eq(4)').val()); }
+                if(reNumber.test($tr.find('input:eq(7)').val())) { i += parseInt($tr.find('input:eq(7)').val()); }
+                if(reNumber.test($tr.find('input:eq(10)').val())) { i += parseInt($tr.find('input:eq(10)').val()); } 
+                $tr.find('input:eq(12)').val(i);
+                if(reNumber.test($tr.find('input:eq(14)').val())) { i -= parseInt($tr.find('input:eq(14)').val()); } 
+                if(reNumber.test($tr.find('input:eq(1)').val())) { i += parseInt($tr.find('input:eq(1)').val()); } 
+                $tr.find('input:eq(17)').val(i); i = 0;
+            });
+            
+            $('#fuConfirm').bind('click', function() {
+                $('#firstUse').hide();
+                $.ajax({
+                    url: 'FishMeal.htm',
+                    data: {action: 'confirmFirstUse', bags: $('#fuBags').val(), kilos: $('#fuKilos').val()},
+                    dataType: 'json',
+                    success: function(json) {
+                        if(json.message)
+                            $('#view').trigger('click');
+                        else
+                            $('#firstUse').show();
+                    }
+                });
+            });
+           setTimeout(function(){ $('#view').trigger('click'); }, 1500);
         </script>
     </body>
 </html>

@@ -17,6 +17,10 @@ public class Purchase implements Serializable {
     
     private int ppn;
     
+    private String currency;
+    
+    private String remarks;
+    
     private String isApproved;
     
     private String approvedBy;
@@ -152,6 +156,22 @@ public class Purchase implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
 }

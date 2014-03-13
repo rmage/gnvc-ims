@@ -67,7 +67,8 @@
                                     <td>Item Name</td>
                                     <td>Item Code</td>
                                     <td>Type</td>
-                                    <td>Quantity</td>
+                                    <td>Quantity Request</td>
+                                    <td>Quantity Out</td>
                                     <td>Uom</td>
                                 </tr>
                             </thead>
@@ -103,8 +104,8 @@
                     success: function(json) {
                         $('#main').html(null);
                         for(var i = 0; i < json.length; i++) {
-                            $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].itemName + '</td><td>' + json[i].itemCode + 
-                                '</td><td>' + json[i].type + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td>' + json[i].uom + '</td></tr>');
+                            $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].itemName + '</td><td><input name="item" type="hidden" value="' + json[i].itemCode + '" />' + json[i].itemCode + 
+                                '</td><td>' + json[i].type + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td><input name="qty" pattern="[0-9]{1,}" type="text" required="true" /></td><td>' + json[i].uom + '</td></tr>');
                         }
                     },
                     complete: function() {

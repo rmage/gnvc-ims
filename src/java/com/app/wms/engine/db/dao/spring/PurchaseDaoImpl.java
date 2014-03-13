@@ -34,6 +34,8 @@ public class PurchaseDaoImpl extends AbstractDAO
         p.setDiscount(rs.getInt("discount"));
         p.setPph(rs.getInt("pph"));
         p.setPpn(rs.getInt("ppn"));
+        p.setCurrency(rs.getString("currency"));
+        p.setRemarks(rs.getString("remarks"));
         p.setIsApproved(rs.getString("is_approved"));
         p.setApprovedBy(rs.getString("approved_by"));
         p.setApprovedDate(rs.getDate("approved_date"));
@@ -46,15 +48,15 @@ public class PurchaseDaoImpl extends AbstractDAO
     }
     
     public void insert(Purchase p) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            p.getPoCode(), p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), "N", null, null, p.getCreatedBy(),
-            p.getCreatedDate(), null, null);
+        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            p.getPoCode(), p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getCurrency(), 
+            p.getRemarks(), "N", null, null, p.getCreatedBy(), p.getCreatedDate(), null, null);
     }
     
     public void update(Purchase p) {
-        jdbcTemplate.update("UPDATE " + getTableName() + " SET po_date = ?, supplier_code = ?, discount = ?, pph = ?, ppn = ?, is_approved = ?" +
+        jdbcTemplate.update("UPDATE " + getTableName() + " SET po_date = ?, supplier_code = ?, discount = ?, pph = ?, ppn = ?, currency = ?, remarks = ?, is_approved = ?" +
             ",approved_by = ?, approved_date = ?, updated_by = ?, updated_date = ? WHERE po_code = ?", 
-            p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getIsApproved(), p.getApprovedBy(), p.getApprovedDate(),
+            p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getCurrency(), p.getRemarks(), p.getIsApproved(), p.getApprovedBy(), p.getApprovedDate(),
             p.getUpdatedBy(), p.getUpdatedDate(), p.getPoCode());
     }
     

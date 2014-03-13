@@ -26,11 +26,12 @@
                 	var type = $('#type').val();
                     var item = $('#item').val();
                 	var params = $('#params').val();
-                	var url = "GenerateReport.htm?action=index&type="+type+"&item="+item;
+                	var url = "GenerateReport.htm?action=index&type=" + type + "&item=" + item + 
+                            '&params=' + $('#startDate').val() + ':' + $('#endDate').val();
                 	
-                	if(!(params == "null")) {
-                		url += "&params="+params;
-                	}
+//                	if(!(params === "null")) {
+//                            url += "&params="+params;
+//                	} 
                 	
                 	location.href = url;
                 });

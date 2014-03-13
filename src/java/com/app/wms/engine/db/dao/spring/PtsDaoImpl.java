@@ -62,6 +62,19 @@ public class PtsDaoImpl extends AbstractDAO
             qty, productCode, productCode, qty);
     }
     
+    public Pts findByPts(int ptsCode) {
+        List<Pts> ps = jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE pts_code = ?", this, ptsCode);
+        return ps.isEmpty() ? null : ps.get(0);
+    }
+    
+    public List<Pts> findByBor(String borCode) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE bor_code = ?", this, borCode);
+    }
+    
+    public List<Pts> findByBorNotInOfal(String borCode) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE bor_code = ? AND pts_code NOT IN (SELECT pts_code FROM ofal_detail)", this, borCode);
+    }
+    
     public List<Pts> findByUser(String userId) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE created_by = ? ORDER BY created_date DESC", this, userId);
     }

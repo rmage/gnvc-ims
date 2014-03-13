@@ -345,7 +345,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 	public List<Product> findWhereProductCodeEquals(String productCode) throws ProductDaoException
 	{
 		try {
-			return jdbcTemplate.query("SELECT product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName() + " WHERE product_code = ? ORDER BY product_code", this,productCode);
+			return jdbcTemplate.query("SELECT product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName() + " WHERE product_code = ? ORDER BY product_name", this,productCode);
 		}
 		catch (Exception e) {
 			throw new ProductDaoException("Query failed", e);
@@ -390,7 +390,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 	public List<Product> findWhereProductCategoryEquals(String productCategory) throws ProductDaoException
 	{
 		try {
-			return jdbcTemplate.query("SELECT id, product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName() + " WHERE product_category = ? ORDER BY product_category", this,productCategory);
+			return jdbcTemplate.query("SELECT id, product_id, product_code, product_name, is_active, product_category, updated_by, updated_date FROM " + getTableName() + " WHERE product_category = ? ORDER BY product_name", new ProductListMap(),productCategory);
 		}
 		catch (Exception e) {
 			throw new ProductDaoException("Query failed", e);

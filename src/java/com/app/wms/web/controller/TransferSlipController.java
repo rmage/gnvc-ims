@@ -3,10 +3,12 @@ package com.app.wms.web.controller;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.SwsDtlDao;
 import com.app.wms.engine.db.dao.TsDao;
+import com.app.wms.engine.db.dao.TsDtlDao;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.Sws;
 import com.app.wms.engine.db.dto.SwsDtl;
 import com.app.wms.engine.db.dto.Ts;
+import com.app.wms.engine.db.dto.TsDtl;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -62,26 +64,36 @@ public class TransferSlipController extends MultiActionController {
         
         /* DATA | get initial value */
         Ts t = new Ts();
+        String[] qtys = request.getParameterValues("qty");
+        String[] items = request.getParameterValues("item");
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
                 
         /* DAO | Define needed dao here */
         TsDao tsDao = DaoFactory.createTsDao();
-        SwsDtlDao swsDtlDao = DaoFactory.createSwsDtlDao();
+        TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
         
         /* TRANSACTION | Something complex here */
         // insert transfer slip
         t.setTsCode(Integer.parseInt(request.getParameter("tsCode")));
-        t.setTsDate(new SimpleDateFormat("dd/MM/yyyy").parse(request.getParameter("tsDate")));
+        t.setTsDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(request.getParameter("tsDate") + " " + 
+            new SimpleDateFormat("HH:mm:ss").format(new Date())));
         t.setTsInfo(request.getParameter("tsInfo"));
         t.setSwsCode(Integer.parseInt(request.getParameter("swsCode")));
         t.setCreatedBy(lu.getUserId());
         t.setCreatedDate(new Date());
         tsDao.insert(t);
         
-        // get stores withdrawal slip detail and substract stock inventory balance
-        List<SwsDtl> sds = swsDtlDao.findBySws(t.getSwsCode());
-        for(SwsDtl x : sds) {
-            tsDao.updateStockInventory(x.getProductCode(), x.getQty());
+        int i = 0;
+        TsDtl td = new TsDtl();
+        td.setTsCode(t.getTsCode());
+        td.setCreatedBy(lu.getUserId());
+        td.setCreatedDate(new Date());
+        for(String x : items) {
+            td.setProductCode(x);
+            td.setQty(Integer.parseInt(qtys[i]));
+            tsDtlDao.insert(td);
+            // substract stock inventory balance
+            tsDao.updateStockInventory(td.getProductCode(), td.getQty()); i++;
         }
         
         return new ModelAndView("redirect:TransferSlip.htm");

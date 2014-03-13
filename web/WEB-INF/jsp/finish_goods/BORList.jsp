@@ -65,7 +65,7 @@
                                             <c:set scope="page" value="${no + 1}" var="no"/>
                                         </td>
                                         <td>
-                                            <a href="GenerateReport.htm?action=index&item=FGBOR&type=xls&params=${x.borCode}:${x.borCode}:${x.borCode}"><img src="resources/images/printxls.gif" title="Print Booked Order Report (xls)" /></a>
+                                            <a href="GenerateReport.htm?action=index&item=FGBOR&type=xls&params=${x.borCode}"><img src="resources/images/printxls.gif" title="Print Booked Order Report (xls)" /></a>
                                             <c:if test="${x.preparedBy == null && model.user.userId == x.createdBy}">
                                                 <a href="?action=approval&mode=p&key=${x.borCode}"><img src="resources/images/checkmark.gif" title="Prepared Booked Order Report" /></a>
                                             </c:if>

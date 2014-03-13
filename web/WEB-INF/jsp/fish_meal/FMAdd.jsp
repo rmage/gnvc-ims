@@ -63,32 +63,32 @@
         <script>
             
             /* BIND | element event */
-            $('#borDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
-            
-            $('#borForm').bind('submit', function() {
-                var f = false;
-                $('#main tr').each(function() {
-                    var v = ':';
-                    var b = false;
-                    $(this).find('td').each(function(i) {
-                        if(i !== 0) {
-                            v += $(this).find('input').val() + ':';
-                            b = true;
-                        }
-                    }); f = true;
-
-                    if(b)
-                        $('#poster').append('<input name="detail" type="hidden" value="' + v + '" />');
-                });
-                
-                if(f) {
-                    $('#poster').append('<input name="master" type="hidden" value="' + $('#borCode').val() + 
-                        ':' + $('#borDate').val() + '" />');
-//                    $('#poster').submit();
-                }
-                
-                return false;
-            });
+//            $('#borDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
+//            
+//            $('#borForm').bind('submit', function() {
+//                var f = false;
+//                $('#main tr').each(function() {
+//                    var v = ':';
+//                    var b = false;
+//                    $(this).find('td').each(function(i) {
+//                        if(i !== 0) {
+//                            v += $(this).find('input').val() + ':';
+//                            b = true;
+//                        }
+//                    }); f = true;
+//
+//                    if(b)
+//                        $('#poster').append('<input name="detail" type="hidden" value="' + v + '" />');
+//                });
+//                
+//                if(f) {
+//                    $('#poster').append('<input name="master" type="hidden" value="' + $('#borCode').val() + 
+//                        ':' + $('#borDate').val() + '" />');
+////                    $('#poster').submit();
+//                }
+//                
+//                return false;
+//            });
             
 //            $('#brandName').bind('focus', function() {
 //                $(this).val(null); $('#itemCode').html(null); $('#itemName').html(null); $('#pack').html(null);

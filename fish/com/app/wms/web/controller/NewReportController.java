@@ -21,6 +21,8 @@ import com.app.wms.engine.db.dao.FishTsDetailDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
 import com.app.wms.engine.db.dao.FishWsDetailDao;
 import com.app.wms.engine.db.dao.FishWsTypeDao;
+import com.app.wms.engine.db.dao.ProductCategoryDao;
+import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.FishBadStockDetail;
 import com.app.wms.engine.db.dto.FishRrDetail;
 import com.app.wms.engine.db.dto.FishSpoilage;
@@ -28,8 +30,13 @@ import com.app.wms.engine.db.dto.FishTsDetail;
 import com.app.wms.engine.db.dto.FishWSType;
 import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.FishWsDetail;
+import com.app.wms.engine.db.dto.ProductCategory;
+import com.app.wms.engine.db.dto.User;
+import com.app.wms.engine.db.exceptions.ProductCategoryDaoException;
+import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.report.test.ReportModel;
+import java.util.ArrayList;
 
 public class NewReportController extends MultiActionController {
 
@@ -307,4 +314,136 @@ public class NewReportController extends MultiActionController {
 		modelMap.put("params", params);
 		return new ModelAndView("fish/GeneralReport", "model", modelMap);
 	}
+        
+    public ModelAndView getPoNotYetDeliveredCash(HttpServletRequest request, HttpServletResponse response) 
+        throws UserDaoException {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+
+        /* DAO | Define needed dao here */
+        UserDao userDao = DaoFactory.createUserDao();
+
+        /* TRANSACTION | Something complex here */
+        List<User> us = userDao.findRoleCanvasser();
+        m.put("u", us);
+        
+        return new ModelAndView("fish/PoNotYetDeliveredCash", "model", m);
+    }
+    
+    public ModelAndView getPoNotYetDeliveredCredit(HttpServletRequest request, HttpServletResponse response) 
+        throws UserDaoException {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+
+        /* DAO | Define needed dao here */
+        UserDao userDao = DaoFactory.createUserDao();
+
+        /* TRANSACTION | Something complex here */
+        List<User> us = userDao.findRoleCanvasser();
+        m.put("u", us);
+        
+        return new ModelAndView("fish/PoNotYetDeliveredCredit", "model", m);
+    }
+    
+    public ModelAndView getPrsNotyetPO(HttpServletRequest request, HttpServletResponse response) 
+        throws UserDaoException {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+
+        /* DAO | Define needed dao here */
+        UserDao userDao = DaoFactory.createUserDao();
+
+        /* TRANSACTION | Something complex here */
+        List<User> us = userDao.findRoleCanvasser();
+        m.put("u", us);
+        
+        return new ModelAndView("fish/PrsNotyetPO", "model", m);
+    }
+    
+    public ModelAndView getPoRegisterPerPeriode(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+
+        /* DAO | Define needed dao here */
+
+        /* TRANSACTION | Something complex here */
+        
+        return new ModelAndView("fish/PoRegisterPerPeriode");
+        
+    }
+    
+    public ModelAndView getPoConfirmatory(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+
+        /* DAO | Define needed dao here */
+
+        /* TRANSACTION | Something complex here */
+        
+        return new ModelAndView("fish/PoConfirmatory");
+        
+    }
+    
+    public ModelAndView getPoPerDepartment(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+
+        /* DAO | Define needed dao here */
+
+        /* TRANSACTION | Something complex here */
+        
+        return new ModelAndView("fish/PoPerDepartment");
+        
+    }
+            
+    public ModelAndView getPoIssuedPerSupplier(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+
+        /* DAO | Define needed dao here */
+
+        /* TRANSACTION | Something complex here */
+        
+        return new ModelAndView("fish/PoIssuedPerSupplier");
+        
+    }
+    
+    public ModelAndView getIMStockCardperCategory(HttpServletRequest request, HttpServletResponse response) 
+        throws ProductCategoryDaoException {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+        List<ProductCategory> pcs = new ArrayList<ProductCategory>();
+
+        /* DAO | Define needed dao here */
+        ProductCategoryDao productCategoryDao = DaoFactory.createProductCategoryDao();
+
+        /* TRANSACTION | Something complex here */
+        pcs = productCategoryDao.findAll();
+        m.put("pc", pcs);
+        
+        return new ModelAndView("fish/IMStockCardperCategory", "model", m);
+        
+    }
+    
+    public ModelAndView getIMStockCardTransactionReport(HttpServletRequest request, HttpServletResponse response) 
+        throws ProductCategoryDaoException {
+        
+        /* DATA | get initial value */
+        HashMap m = new HashMap();
+        List<ProductCategory> pcs = new ArrayList<ProductCategory>();
+
+        /* DAO | Define needed dao here */
+        ProductCategoryDao productCategoryDao = DaoFactory.createProductCategoryDao();
+
+        /* TRANSACTION | Something complex here */
+        pcs = productCategoryDao.findAll();
+        m.put("pc", pcs);
+        
+        return new ModelAndView("fish/IMStockCardTransactionReport", "model", m);
+        
+    }
 }
