@@ -290,9 +290,9 @@ public class DepartmentController extends MultiActionController {
 
         List<Department> dp = departmentDao.findWhereDepartmentCodeEquals(uniCode);
         if (dp.isEmpty()) {
-            pw.print("{\"status\": true}");
-        } else {
             pw.print("{\"status\": false}");
+        } else {
+            pw.print("{\"status\": true}");
         }
     }
 }

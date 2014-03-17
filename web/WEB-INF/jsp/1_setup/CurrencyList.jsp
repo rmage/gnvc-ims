@@ -1,8 +1,8 @@
 <%@page import="com.app.wms.engine.db.dto.Currency"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
         <title>IMS - Currency List</title>
         <%@include file="../metaheader.jsp" %>
@@ -15,40 +15,8 @@
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="Currency.htm" method="post">
-                        <table class="collapse tblForm row-select">
-                            <caption>Search Currency</caption>
-                            <tbody>
-                                <tr>
-                                    <td width="20%">
-                                        Currency Code
-                                    </td>
-                                    <td>
-                                        <input type="text" name="code" value="" disabled/>
-                                    </td>
-                                    <td width="20%">
-                                       Currency Name
-                                    </td>
-                                    <td>
-                                        <input type="text" name="name" value="" disabled/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <td colspan="4">
-                                     <span class="style1">
-                                        <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
-                                        <label>
-                                        <input type="button" name="button" id="btnAdd" value="Add" />
-                                    	</label>
-                                    </span> 
-                                </td>
-                            </tfoot>
-                        </table>
-                    </form>
                     <table class="collapse tblForm row-select">
                         <caption>Currency - List</caption>
                         <thead>
@@ -112,7 +80,7 @@
                         <tfoot>
                             <td colspan="10">
                                 <span class="style1">
-                                   
+                                    <input type="button" name="button" id="btnAdd" value="Add" />
                                 </span>
                             </td>
                         </tfoot>

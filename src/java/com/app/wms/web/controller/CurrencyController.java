@@ -17,23 +17,25 @@ import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dto.Currency;
 import com.app.wms.engine.db.dto.CurrencyPk;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.CurrencyDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class CurrencyController extends MultiActionController {
 
-	/**
-	 * Method 'findByPrimaryKey'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
+    /**
+     * Method 'findByPrimaryKey'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
 
-	 public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-     try {
-            
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -41,44 +43,43 @@ public class CurrencyController extends MultiActionController {
                 m.put("mode", "edit");
                 return new ModelAndView("1_setup/CurrencyEdit", "model", m);
             } else {
-            	CurrencyDao dao = DaoFactory.createCurrencyDao();
-            	List<Currency> list = dao.findAll();
-            	m = this.getModelByPrimaryKey(request);
-            	
-            	Currency dto = new Currency();
-            	for(Currency valueSearch : list){
-            		
-            		String currencyCode = valueSearch.getCurrencyCode();
-            		String currencyName = valueSearch.getCurrencyName();
-            		String currencySymbol = valueSearch.getCurrencySymbol();
-            		
-            		dto.setCurrencyCode(currencyCode);
-            		dto.setCurrencyName(currencyName);
-            		dto.setCurrencySymbol(currencySymbol);
-            		m.put("dto", dto);
-            	}
-            	m.put("currency", list);
-               // m = this.searchAndPaging(request, response);
+                CurrencyDao dao = DaoFactory.createCurrencyDao();
+                List<Currency> list = dao.findAll();
+                m = this.getModelByPrimaryKey(request);
+
+                Currency dto = new Currency();
+                for (Currency valueSearch : list) {
+
+                    String currencyCode = valueSearch.getCurrencyCode();
+                    String currencyName = valueSearch.getCurrencyName();
+                    String currencySymbol = valueSearch.getCurrencySymbol();
+
+                    dto.setCurrencyCode(currencyCode);
+                    dto.setCurrencyName(currencyName);
+                    dto.setCurrencySymbol(currencySymbol);
+                    m.put("dto", dto);
+                }
+                m.put("currency", list);
+                // m = this.searchAndPaging(request, response);
                 return new ModelAndView("1_setup/CurrencyList", "model", m);
             }
 
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
         }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
 
     }
-	 
-	 private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
-     try {
-           
+
+    private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
+        try {
+
             CurrencyDao dao = DaoFactory.createCurrencyDao();
             Currency dto = null;
-            
+
             String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
-            	Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
 
@@ -96,27 +97,25 @@ public class CurrencyController extends MultiActionController {
             throw e;
         }
     }
-	
-	
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		HashMap m = this.getModelByPrimaryKey(request);
-		m.put("mode", "create");
-		
-		return new ModelAndView("1_setup/CurrencyAdd", "model", m);
-	}
+
+    /**
+     * Method 'create'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HashMap m = this.getModelByPrimaryKey(request);
+        m.put("mode", "create");
+
+        return new ModelAndView("1_setup/CurrencyAdd", "model", m);
+    }
 
     /**
      * Method 'save'
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
@@ -128,7 +127,7 @@ public class CurrencyController extends MultiActionController {
         Date now = new Date();
         String mode = request.getParameter("mode");
         Currency dto = null;
-        try{
+        try {
             if (mode.equalsIgnoreCase("create")) {
                 isCreate = true;
             } else {
@@ -136,9 +135,9 @@ public class CurrencyController extends MultiActionController {
             }
 
             CurrencyDao dao = DaoFactory.createCurrencyDao();
-            if(isCreate){
+            if (isCreate) {
                 dto = new Currency();
-            } else{
+            } else {
                 Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
@@ -146,13 +145,13 @@ public class CurrencyController extends MultiActionController {
             String code = request.getParameter("code");
             String name = request.getParameter("name");
             String symbol = request.getParameter("symbol");
-            List <Currency> tmp = dao.findWhereCurrencyCodeEquals(code);
+            List<Currency> tmp = dao.findWhereCurrencyCodeEquals(code);
 
             if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getCurrencyCode().equals(code))) {
                 strError += "Currency code already exists. Please try a different values" + AppConstant.EOL;
             }
 
-            if(isCreate){
+            if (isCreate) {
                 dto.setCurrencyCode(code);
                 dto.setCurrencyName(name);
                 dto.setCurrencySymbol(symbol);
@@ -168,48 +167,48 @@ public class CurrencyController extends MultiActionController {
                 throw new Exception(strError);
             }
 
-            if(isCreate) {
+            if (isCreate) {
                 CurrencyPk cp = dao.insert(dto);
                 dto.setId(cp.getId());
             } else {
                 dao.update(dto.createPk(), dto);
             }
 
-            return new ModelAndView( "1_setup/CurrencyView", "dto", dto );
-        } catch (Exception e){
+            return new ModelAndView("1_setup/CurrencyView", "dto", dto);
+        } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();
             HashMap m = new HashMap();
             m.put("mode", mode);
             m.put("msg", errorMsg);
 
-            if(isCreate){
-                return new ModelAndView( "1_setup/CurrencyAdd", "model", m );
-            } else{
-                return new ModelAndView( "1_setup/CurrencyEdit", "model", m );
+            if (isCreate) {
+                return new ModelAndView("1_setup/CurrencyAdd", "model", m);
+            } else {
+                return new ModelAndView("1_setup/CurrencyEdit", "model", m);
             }
         }
     }
-	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Integer id = Integer.parseInt(request.getParameter("id"));
-        
+
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String pcreatedBy = "";
         if (lu == null) {
-			HashMap m = new HashMap();
+            HashMap m = new HashMap();
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	pcreatedBy = lu.getUserId();
+        } else {
+            pcreatedBy = lu.getUserId();
         }
         CurrencyDao dao = DaoFactory.createCurrencyDao();
         Currency dto = dao.findByPrimaryKey(id);
 
         if (dto != null) {
-        	dto.setIsActive(AppConstant.STATUS_FALSE);
+            dto.setIsActive(AppConstant.STATUS_FALSE);
             dto.setUpdatedBy(pcreatedBy);
             dto.setUpdatedDate(new java.util.Date());
             dao.update(dto.createPk(), dto);
@@ -219,11 +218,25 @@ public class CurrencyController extends MultiActionController {
 
         HashMap m = new HashMap();
 
-
         m.put("currency", list);
-        m.put("totalRows", 0); 
+        m.put("totalRows", 0);
 
         return new ModelAndView("1_setup/CurrencyList", "model", m);
     }
-		
+
+    public void getUnique(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, CurrencyDaoException {
+
+        PrintWriter pw = response.getWriter();
+        String uniCode = request.getParameter("term");
+
+        CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
+
+        List<Currency> dp = currencyDao.findWhereCurrencyCodeEquals(uniCode);
+        if (dp.isEmpty()) {
+            pw.print("{\"status\": false}");
+        } else {
+            pw.print("{\"status\": true}");
+        }
+    }
 }
