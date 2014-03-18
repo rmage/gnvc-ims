@@ -180,4 +180,17 @@ public class FishDaoImpl extends AbstractDAO
         List<Fish> resultList = jdbcTemplate.query(query, this, code);
         return resultList.isEmpty() ? false : true;
     }
+    
+    public List<Fish> findFishByBatchNo(String batchNo) {
+        String query = "select distinct f.id, f.code, 0 as fish_type_id, 0 as fish_weight_type_id, getdate() as created_date, ft.description as created_by, getdate() as updated_date, '' as updated_by, '' as is_active, '' as is_delete from inventory..fish_ws ws "
+                + "inner join inventory..fish_vessel fv on fv.id = ws.vessel_id "
+                + "inner join inventory..fish_ws_type fwt on fwt.id = ws.ws_type_id "
+                + "inner join inventory..fish_ws_detail fwd on fwd.ws_id = ws.id "
+                + "inner join inventory..fish f on f.id = fwd.fish_id "
+                + "inner join inventory..fish_type ft on ft.id = f.fish_type_id "
+                + "where fwt.code in ('WSHR','WSBR','WSL') and batch_no = ? ";
+        
+        List<Fish> resultList = jdbcTemplate.query(query, this, batchNo);
+        return resultList;
+    }
 }

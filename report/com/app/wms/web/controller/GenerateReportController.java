@@ -71,7 +71,8 @@ public class GenerateReportController extends MultiActionController {
                 + "LEFT JOIN inventory..fish_vessel fv ON fv.id = ws.vessel_id "
                 + "LEFT JOIN inventory..fish_supplier su ON su.id = fv.supplier_id "
                 + "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id "
-                + "WHERE ws.vessel_id = ? AND ws.date_shift = ?");
+                + "LEFT JOIN inventory..fish_ws_type fwt ON fwt.id = ws.ws_type_id "
+                + "WHERE ws.vessel_id = ? AND ws.date_shift = ? AND fwt.code in (?) ");
 		ListMap.put(Report.FSpoilagereport, 
 			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
 			"FROM inventory..fish_spoilage fs " +

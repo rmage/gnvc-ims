@@ -18,6 +18,8 @@ import com.app.wms.engine.db.dto.Fish;
 import com.app.wms.engine.db.dto.FishSpoilage;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class FishSpoilageDataController extends MultiActionController {
 
@@ -212,5 +214,29 @@ public class FishSpoilageDataController extends MultiActionController {
         
         HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
 		return new ModelAndView("fish/FishSpoilageList", "model", modelMap);
+    }
+    
+    public void getFishType(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        String batchNo = request.getParameter("term");
+        System.out.println("batchNo: "+batchNo);
+        
+        FishDao dao = DaoFactory.createFishDao();
+        
+        pw.print("[");
+        List<Fish> fishDataList = dao.findFishByBatchNo(batchNo);
+        for(Fish x : fishDataList) {
+            if(b)
+            
+            pw.print(",");
+            pw.print("{\"id\": \"" + x.getId() + "\", ");
+            pw.print("\"code\": \"" + x.getCode() + "\",");
+            pw.print("\"description\": \"" + x.getCreatedBy() + "\"}");
+            
+            b = Boolean.TRUE;
+        }
+            pw.print("]");   
     }
 }
