@@ -1,22 +1,15 @@
 <%@page import="com.app.wms.engine.db.dto.Uom"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE>
+<html>
     <head>
         <title>IMS - New UoM</title>
         <%@include file="../metaheader.jsp" %>
-        <script language="JavaScript">
-            $(document).ready(function(){
-                
-                $('#addForm').validationEngine('attach');        
-                
-            });
-        </script>
     </head>
     <body>
         <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             com.app.wms.engine.db.dto.Uom dto = (com.app.wms.engine.db.dto.Uom) m.get("dto");
             String mode = (String) m.get("mode");
         %>
@@ -36,26 +29,26 @@
                             <caption>UoM - Detail</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
-                                    <td class="style1">UoM Code</td>
-                                    <td class="style1">
+                                    <td>UoM Code</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="uomCode" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="uomCode" name="uomCode" size="30" pattern="^\S+[A-Za-z0-9]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">UoM Name</td>
-                                    <td class="style1">
+                                    <td>UoM Name</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="uomName" size="30" class="validate[required] text-input"/>
+                                            <input type="text" name="uomName" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Remarks</td>
-                                    <td class="style1">
+                                    <td>Remarks</td>
+                                    <td>
                                         <label>
                                             <input type="text" class="shorttext" name="remarks" size="30" />
                                         </label>
@@ -71,7 +64,7 @@
                             <tfoot class="ui-widget-header">
                                 <tr><td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+                                            <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
@@ -97,53 +90,28 @@
                     location.href = 'Uom.htm';
                     return false;
                 });
-
-
-            });
-
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
                 
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
+                $('#uomCode').bind('blur', function() {
+                    var $o = $(this);
+                    if (!$o.val())
+                        return;
+                    $.ajax({
+                        url: 'Uom.htm?term=' + $o.val(),
+                        method: 'post',
+                        data: {
+                            action: 'getUnique', term: $o.val()
                         },
-                        "Save": function() {
-                            $("form#addForm").submit();
+                        dataType: 'json',
+                        success: function(json) {
+                            if (json.status) {
+                                alert('The code is already exist!');
+                                $o.val(null);
+                                $o.focus();
+                            }
                         }
-                    },
-                    zindex: 1, title: 'Confirm' });
-
+                    });
+                });
             });
         </script>
-        
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-        
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>
-        
     </body>
 </html>

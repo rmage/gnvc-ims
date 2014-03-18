@@ -12,8 +12,11 @@ import java.util.List;
 import com.app.wms.engine.db.dao.*;
 import com.app.wms.engine.db.dto.*;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.UomDaoException;
 import com.app.wms.engine.db.factory.*;
 import com.app.wms.web.util.AppConstant;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 public class UomController extends MultiActionController {
@@ -407,6 +410,20 @@ public class UomController extends MultiActionController {
         m.put("totalRows", 0); 
 
         return new ModelAndView("1_setup/UOMList", "model", m);
+    }
+    
+    public void getUnique(HttpServletRequest request, HttpServletResponse response)
+        throws IOException, UomDaoException {
+        
+        PrintWriter pw = response.getWriter();
+        String uniCode = request.getParameter("term");
+        UomDao uomDao = DaoFactory.createUomDao();
+        List<Uom> uom = uomDao.findWhereUomCodeEquals(uniCode);
+        if (uom.isEmpty()) {
+            pw.print("{\"status\": false}");
+        } else {
+            pw.print("{\"status\": true}");
+        }
     }
     
 }
