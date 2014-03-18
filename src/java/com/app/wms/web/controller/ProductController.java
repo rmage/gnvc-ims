@@ -8,8 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dto.*;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.factory.*;
 import com.app.wms.web.util.AppConstant;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
@@ -441,6 +444,18 @@ public class ProductController extends MultiActionController
           }
       } 
   }
-	
-	
+    
+    public void getUnique(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException, ProductDaoException {
+
+        PrintWriter pw = response.getWriter();
+        String uniCode = request.getParameter("term");
+        ProductDao productDao = DaoFactory.createProductDao();
+        List<Product> sp = productDao.findWhereProductCodeEquals(uniCode);
+        if (sp.isEmpty()) {
+            pw.print("{\"status\": false}");
+        } else {
+            pw.print("{\"status\": true}");
+        }
+    }
 }

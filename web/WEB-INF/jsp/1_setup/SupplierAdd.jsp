@@ -1,21 +1,14 @@
 <%@page import="com.app.wms.engine.db.dto.Supplier"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
         <title>IMS - New Supplier</title>
         <%@include file="../metaheader.jsp" %>
-        <script language="JavaScript">
-                $(document).ready(function(){
-                    
-                    $('#addForm').validationEngine('attach');        
-                    
-                });
-        </script> 
     </head>
     <body>
-        <%
+        <%            
             java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
         %>
@@ -24,10 +17,9 @@
             <jsp:include page="../dynmenu.jsp" />
 
             <div id="content" style="display: none" class="span-24 last">
-
                 <div class="box">
                     <form action="Supplier.htm" method="post" id="addForm">
-                    	<input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" name="isActive" value="Y"/>
 
@@ -35,76 +27,77 @@
                             <caption>Supplier - Detail</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
-                                    <td class="style1">Supplier Code</td>
-                                    <td class="style1">
+                                    <td>Supplier Code</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="supplierCode" maxlength="10" size="12" class="validate[required] text-input"/>
+                                            <input type="text" id="supplierCode" name="supplierCode" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Supplier Name</td>
-                                    <td class="style1">
+                                    <td>Supplier Name</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="supplierName" maxlength="25" size="30" class="validate[required] text-input"/>
+                                            <input type="text" name="supplierName" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Supplier Address</td>
-                                    <td class="style1">
+                                    <td>Supplier Address</td>
+                                    <td>
                                         <label>
-                                            <input type="text" name="supplierAddress" maxlength="55" size="55" class="validate[required] text-input"/>
+                                            <input type="text" name="supplierAddress" maxlength="55" size="55" pattern="^\S+[^'\x22]+\S" required="true" />
                                         </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Supplier Telephone</td>
-                                    <td class="style1">
+                                    <td>Supplier Telephone</td>
+                                    <td>
                                         <label>
                                             <input type="text" class="shorttext" name="telephone" maxlength="25" size="30" />
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Supplier Fax</td>
-                                    <td class="style1">
+                                    <td>Supplier Fax</td>
+                                    <td>
                                         <label>
                                             <input type="text" class="shorttext" name="fax" maxlength="25" size="30" />
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Supplier Email</td>
-                                    <td class="style1">
+                                    <td>Supplier Email</td>
+                                    <td>
                                         <label>
                                             <input type="text" class="shorttext" name="email" maxlength="25" size="30" />
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="style1">Contact Person</td>
-                                    <td class="style1">
+                                    <td>Contact Person</td>
+                                    <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="contactPerson" maxlength="25" size="30" />
+                                            <input type="text" class="shorttext" name="contactPerson" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
+                                        <label>*</label>
                                     </td>
                                 </tr>
-								
+
                             </tbody>
                         </table>
                         <table class="collapse tblForm row-select ui-widget-content">
 
                             <tbody class="tbl-nohover">
-                                
+
                             </tbody>
                             <tfoot class="ui-widget-header">
                                 <tr><td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+                                            <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
@@ -113,7 +106,7 @@
                                         </label>
                                     </td>
                                 </tr>
-                           </tfoot>
+                            </tfoot>
                         </table>
                     </form>
                 </div>
@@ -130,51 +123,28 @@
                     location.href = 'Supplier.htm';
                     return false;
                 });
-            });
-
-            $("#btnSave").click(function () {                         
-
-                //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
-                    $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        });
-                    return false;
-                 }
                 
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
-                    buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
+                $('#supplierCode').bind('blur', function() {
+                    var $o = $(this);
+                    if (!$o.val())
+                        return;
+                    $.ajax({
+                        url: 'Supplier.htm?term=' + $o.val(),
+                        method: 'post',
+                        data: {
+                            action: 'getUnique', term: $o.val()
                         },
-                        "Save": function() {
-                            $("form#addForm").submit();
+                        dataType: 'json',
+                        success: function(json) {
+                            if (json.status) {
+                                alert('The code is already exist!');
+                                $o.val(null);
+                                $o.focus();
+                            }
                         }
-                    },
-                    zindex: 1, title: 'Confirm' });
-
+                    });
+                });
             });
         </script>
-        
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-        
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>
-        
     </body>
 </html>

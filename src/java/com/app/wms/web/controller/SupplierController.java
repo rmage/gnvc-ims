@@ -15,8 +15,11 @@ import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dto.Supplier;
 import com.app.wms.engine.db.dto.SupplierPk;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.SupplierDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class SupplierController  extends MultiActionController {
 
@@ -297,8 +300,18 @@ public class SupplierController  extends MultiActionController {
         }
       
     }
-	
+    
+    public void getUnique(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException, SupplierDaoException {
 
-	
-
+        PrintWriter pw = response.getWriter();
+        String uniCode = request.getParameter("term");
+        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+        List<Supplier> sp = supplierDao.findWhereSupplierCodeEquals(uniCode);
+        if (sp.isEmpty()) {
+            pw.print("{\"status\": false}");
+        } else {
+            pw.print("{\"status\": true}");
+        }
+    }
 }
