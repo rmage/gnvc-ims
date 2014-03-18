@@ -446,4 +446,17 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("fish/IMStockCardTransactionReport", "model", m);
         
     }
+    
+    public ModelAndView getRRPeriode(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("non_fish/ReportRRPeriode");
+    }
+    
+    public ModelAndView getPurchasedItems(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("non_fish/ReportPurchasedItems");
+    }
+    
+    public ModelAndView getPurchasedPerSupplier(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("non_fish/ReportPurchasedPerSupplier");
+    }
+    
 }

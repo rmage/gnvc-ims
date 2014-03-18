@@ -410,7 +410,7 @@
             *  Generate Button
             */
            $('#fmForm').bind('submit', function() {
-               $('#params').val($('#year').val() + ':' + $('#month').val() + ':' + 'FISH MEAL INVENTORY');
+               $('#params').val($('#year').val() + ':' + $('#month').val() + ':' + 'FISH MEAL INVENTORY:FISH_MEAL');
            });
            $('#adjForm').bind('submit', function() {
                $('#date').val($('#yearL').val() + '-' + $('#monthL').val() + '-01');
