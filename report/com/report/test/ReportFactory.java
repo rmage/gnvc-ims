@@ -28,7 +28,7 @@ public class ReportFactory {
         FGPTS, FGOFAL, FGBOR,
         FGTS, FGEDS, FGBadStockReport,
         FGTunaVayaReport, Accounting, PPoNotyetDeliveredDP,
-        RRPeriode, PurchasedItems, PurchasedPerSupplier;
+        RRPeriode, PurchasedItems, PurchasedPerSupplier, TSPeriode, CanvassingHistory;
     }
 	
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -76,6 +76,8 @@ public class ReportFactory {
         reportTemplateMap.put("RRPeriode", new ReportModel("gnvRRPeriode", false));
         reportTemplateMap.put("PurchasedItems", new ReportModel("gnvPurchasedItems", false));
         reportTemplateMap.put("PurchasedPerSupplier", new ReportModel("gnvPurchasedPerSupplier", false));
+        reportTemplateMap.put("TSPeriode", new ReportModel("gnvTSPeriode", false));
+        reportTemplateMap.put("CanvassingHistory", new ReportModel("gnvCanvassingHistory", false));
 
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
@@ -118,6 +120,8 @@ public class ReportFactory {
         reportMap.put(Report.RRPeriode, reportTemplateMap.get("RRPeriode"));
         reportMap.put(Report.PurchasedItems, reportTemplateMap.get("PurchasedItems"));
         reportMap.put(Report.PurchasedPerSupplier, reportTemplateMap.get("PurchasedPerSupplier"));
+        reportMap.put(Report.TSPeriode, reportTemplateMap.get("TSPeriode"));
+        reportMap.put(Report.CanvassingHistory, reportTemplateMap.get("CanvassingHistory"));
 
         reportMap.put(Report.FWSL, reportTemplateMap.get("wshr"));
         reportMap.put(Report.FGBadStockReport, reportTemplateMap.get("badStockCard"));

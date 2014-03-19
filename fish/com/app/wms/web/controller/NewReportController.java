@@ -459,4 +459,8 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("non_fish/ReportPurchasedPerSupplier");
     }
     
+    public ModelAndView getTSPeriode(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("non_fish/ReportTSPeriode");
+    }
+    
 }

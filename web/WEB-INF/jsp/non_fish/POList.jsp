@@ -73,6 +73,7 @@
                                             <c:if test="${x.approvedDate != null}">
                                                 <a href="GenerateReport.htm?action=index&item=PPoForm&type=xls&params=${xx[0]}:${x.poCode}"><img src="resources/images/printxls.gif" title="Print PO Form (xls)" /></a>
                                             </c:if>
+                                            <a href="GenerateReport.htm?action=index&item=CanvassingHistory&type=xls&params=${x.poCode}"><img src="resources/images/copy.png" title="Canvassing History (xls)" /></a>
                                         </td>
                                         <td><a class="d" href="#${x.poCode}">${x.poCode}</a></td>
                                         <td><fmt:formatDate pattern="dd-MM-yyyy" value="${x.poDate}" /></a></td>

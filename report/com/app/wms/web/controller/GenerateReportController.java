@@ -26,42 +26,54 @@ public class GenerateReportController extends MultiActionController {
 	public static final Map<Report, PostProcess> PostProcess = new HashMap<Report, PostProcess>();
 	
 	static {
-		ListMap.put(Report.FWS, 
-            "SELECT f.code AS kode, wdsd.description AS nama_barang, " +
-            "'FISH' AS tipe, wdsd.qty, wdsd.uom_code AS satuan " +
-            "FROM inventory..fish_wds_detail wdsd " +
-            "LEFT JOIN inventory..fish f ON f.id = wdsd.fish_id " +
-            "LEFT JOIN inventory..fish_storage fs ON fs.id = wdsd.storage_id " +
-            "WHERE wds_id=?");
-		ListMap.put(Report.FWSABF, null);
-		ListMap.put(Report.FWSBR, null);
-		ListMap.put(Report.FWSHR, null);
-		ListMap.put(Report.FWSL, null);
-        ListMap.put(Report.FWSNC, null);
-		ListMap.put(Report.FWeightSlip, 
-            "SELECT f.code, SUM(wsd.total_weight) AS total_weight " +
-            "FROM inventory..fish_ws_detail wsd " +
-            "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id " +
-            "WHERE wsd.ws_id = ? " +
-            "GROUP BY f.code");
-		ListMap.put(Report.FRR, 
-            "SELECT MAX(ft.description) AS description, f.code, " +
-            "SUM(frd.good_weight) AS qty, 'Kg' AS unit " +
-            "FROM inventory..fish_rr_detail frd " +
-            "LEFT JOIN inventory..fish f ON f.id = frd.fish_id " +
-            "LEFT JOIN inventory..fish_type ft ON ft.id = f.fish_type_id " +
-            "WHERE frd.rr_id = ? " +
-            "GROUP BY f.code");
-		ListMap.put(Report.FTS, 
-            "SELECT tsd.description, f.code, " +
-            "tsd.qty, tsd.uom_code AS unit " +
-            "FROM inventory..fish_ts_detail tsd " +
-            "LEFT JOIN inventory..fish f ON f.id = tsd.fish_id " +
-            "LEFT JOIN inventory..fish_storage fs ON fs.id = tsd.storage_id " +
-            "WHERE ts_id=?");
+            ListMap.put(Report.FWS, 
+                "SELECT f.code AS kode, wdsd.description AS nama_barang, " +
+                "'FISH' AS tipe, wdsd.qty, wdsd.uom_code AS satuan " +
+                "FROM inventory..fish_wds_detail wdsd " +
+                "LEFT JOIN inventory..fish f ON f.id = wdsd.fish_id " +
+                "LEFT JOIN inventory..fish_storage fs ON fs.id = wdsd.storage_id " +
+                "WHERE wds_id=?"
+            );
+                
+            ListMap.put(Report.FWSABF, null);
+            
+            ListMap.put(Report.FWSBR, null);
+            
+            ListMap.put(Report.FWSHR, null);
+            
+            ListMap.put(Report.FWSL, null);
+                
+            ListMap.put(Report.FWSNC, null);
+        
+            ListMap.put(Report.FWeightSlip, 
+                "SELECT f.code, SUM(wsd.total_weight) AS total_weight " +
+                "FROM inventory..fish_ws_detail wsd " +
+                "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id " +
+                "WHERE wsd.ws_id = ? " +
+                "GROUP BY f.code"
+            );
+                
+            ListMap.put(Report.FRR, 
+                "SELECT MAX(ft.description) AS description, f.code, " +
+                "SUM(frd.good_weight) AS qty, 'Kg' AS unit " +
+                "FROM inventory..fish_rr_detail frd " +
+                "LEFT JOIN inventory..fish f ON f.id = frd.fish_id " +
+                "LEFT JOIN inventory..fish_type ft ON ft.id = f.fish_type_id " +
+                "WHERE frd.rr_id = ? " +
+                "GROUP BY f.code"
+            );
+                
+            ListMap.put(Report.FTS, 
+                "SELECT tsd.description, f.code, " +
+                "tsd.qty, tsd.uom_code AS unit " +
+                "FROM inventory..fish_ts_detail tsd " +
+                "LEFT JOIN inventory..fish f ON f.id = tsd.fish_id " +
+                "LEFT JOIN inventory..fish_storage fs ON fs.id = tsd.storage_id " +
+                "WHERE ts_id=?"
+            );
 		
-		ListMap.put(Report.FSummaryWSSlip, 
-			"SELECT ws.ws_no, su.name AS supplier_name, fv.name AS boat_name,"
+            ListMap.put(Report.FSummaryWSSlip, 
+                "SELECT ws.ws_no, su.name AS supplier_name, fv.name AS boat_name,"
                 + "fv.batch_no, ws.date_shift, ws.time_shift, f.code AS type, wsd.total_weight AS data,"
                 + "(SELECT ISNULL(SUM(fs.cooked_weight), 0.00)FROM inventory..fish_spoilage fs "
                 + "WHERE fs.vessel_id = ws.vessel_id AND fs.fish_id = wsd.fish_id "
@@ -72,14 +84,18 @@ public class GenerateReportController extends MultiActionController {
                 + "LEFT JOIN inventory..fish_supplier su ON su.id = fv.supplier_id "
                 + "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id "
                 + "LEFT JOIN inventory..fish_ws_type fwt ON fwt.id = ws.ws_type_id "
-                + "WHERE ws.vessel_id = ? AND ws.date_shift = ? AND fwt.code in (?) ");
-		ListMap.put(Report.FSpoilagereport, 
-			"SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
-			"FROM inventory..fish_spoilage fs " +
-			"LEFT JOIN inventory..fish f ON fs.fish_id = f.id " +
-			"LEFT JOIN inventory..fish_vessel fv ON fv.id = fs.vessel_id " +
-			"LEFT JOIN inventory..fish_supplier s ON fv.supplier_id = s.id " +
-			"WHERE fv.id = ? AND fs.date_shift = ? AND fs.time_shift = ?");
+                + "WHERE ws.vessel_id = ? AND ws.date_shift = ? AND fwt.code in (?) "
+            );
+                
+            ListMap.put(Report.FSpoilagereport, 
+                "SELECT catcher_no, f.code, cooked_weight, raw_weight, total_processed, reason, batch_no, date_shift, time_shift, supplier_name " +
+                "FROM inventory..fish_spoilage fs " +
+                "LEFT JOIN inventory..fish f ON fs.fish_id = f.id " +
+                "LEFT JOIN inventory..fish_vessel fv ON fv.id = fs.vessel_id " +
+                "LEFT JOIN inventory..fish_supplier s ON fv.supplier_id = s.id " +
+                "WHERE fv.id = ? AND fs.date_shift = ? AND fs.time_shift = ?"
+            );
+                
             ListMap.put(Report.RPDailyProduction,
                 "DECLARE  @YEAR INT, @MONTH INT, @PERIODE VARCHAR(30), @DATE VARCHAR(10) " +
                 "SET @YEAR = ? SET @MONTH = ? SET @DATE = (CAST(@YEAR AS VARCHAR(4)) + '-' + CAST(@MONTH AS VARCHAR(2)) + '-01') " +
@@ -91,6 +107,7 @@ public class GenerateReportController extends MultiActionController {
                 "       LEFT JOIN stock_inventory_log sil ON sil.product_code = ? AND YEAR(sil.created_date) = @YEAR AND MONTH(sil.created_date) = @MONTH " +
                 "WHERE fm.fm_year = @YEAR AND fm.fm_month = @MONTH ORDER BY fmd.fm_date"
             );
+            
             ListMap.put(Report.FGBOR, 
                 "DECLARE " +
                 "	@cols AS VARCHAR(MAX), " +
@@ -147,8 +164,11 @@ public class GenerateReportController extends MultiActionController {
                 "	LEFT JOIN bor ON bor.bor_code = ''' + @id + ''' " +
                 "	ORDER BY id ASC'; " +
                 "		 " +
-                "	execute (@query);");
-		ListMap.put(Report.FGTunaVayaReport, null);
+                "	execute (@query);"
+            );
+            
+            ListMap.put(Report.FGTunaVayaReport, null);
+                
             ListMap.put(Report.FGOFAL, 
                 "SELECT pts.pts_code, pts.pts_cancode, ptsd.pts_basket, ptsd.pts_prodbatch, ptsd.pts_shift,\n" +
                 "	ptsd.pts_qty, pts.coe_nw, pts.coe_dw, pts.coe_flk, pts.pts_location, o.ofal_shipment, bd.*\n" +
@@ -163,39 +183,42 @@ public class GenerateReportController extends MultiActionController {
                 "			FROM bor \n" +
                 "			LEFT JOIN bor_detail bd ON bd.bor_code = bor.bor_code\n" +
                 "			WHERE bor.bor_code = SUBSTRING(o.bor_code, 1, LEN(o.bor_code) - 2)) x ORDER BY id DESC) bd\n" +
-                "WHERE o.ofal_id = ? ORDER BY pts.pts_cancode");
+                "WHERE o.ofal_id = ? ORDER BY pts.pts_cancode"
+            );
 
-		ListMap.put(Report.FGBadStockReport, 
-			"select * " +
-			"from product p " +
-			"inner join product_category pc " +
-			"on p.product_category = pc.category_name " +
-			"inner join stock_balance s " +
-			"on p.product_code = s.product_code " +
-			"inner join stock_inventory si " +
-			"on p.product_code = si.product_code");
-		ListMap.put(Report.FFrozenFishStock, new String[]{
-			"DECLARE @sDate DATETIME " +
-			"SET @sDate = ? " +
-			"DECLARE @eDate DATETIME " +
-			"SET @eDate = ? " +
-			"SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty, @eDate edate " +
-			"FROM inventory..fish f " +
-			"LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
-			"LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
-			"LEFT JOIN inventory..fish_rr_detail frd ON f.id = fwd.fish_id " +
-			"WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate OR " +
-			"fwd.created_date >= @sDate AND fwd.created_date <= @eDate OR " +
-			"frd.created_date >= @sDate AND frd.created_date <= @eDate " +
-			"GROUP BY f.code " +
-			"ORDER BY f.code",
-			
-			"SELECT fv.name, SUM(fb.balance) qty " +
-			"FROM inventory..fish_balance fb " +
-			"LEFT JOIN inventory..fish_vessel fv ON fb.vessel_id = fv.id " +
-			"WHERE fb.created_date >= ? AND fb.created_date <= ? " +
-			"GROUP BY fv.name"
-		});
+            ListMap.put(Report.FGBadStockReport, 
+                "select * " +
+                "from product p " +
+                "inner join product_category pc " +
+                "on p.product_category = pc.category_name " +
+                "inner join stock_balance s " +
+                "on p.product_code = s.product_code " +
+                "inner join stock_inventory si " +
+                "on p.product_code = si.product_code"
+            );
+            
+            ListMap.put(Report.FFrozenFishStock, new String[]{
+                "DECLARE @sDate DATETIME " +
+                "SET @sDate = ? " +
+                "DECLARE @eDate DATETIME " +
+                "SET @eDate = ? " +
+                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty, @eDate edate " +
+                "FROM inventory..fish f " +
+                "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
+                "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_rr_detail frd ON f.id = fwd.fish_id " +
+                "WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate OR " +
+                "fwd.created_date >= @sDate AND fwd.created_date <= @eDate OR " +
+                "frd.created_date >= @sDate AND frd.created_date <= @eDate " +
+                "GROUP BY f.code " +
+                "ORDER BY f.code",
+
+                "SELECT fv.name, SUM(fb.balance) qty " +
+                "FROM inventory..fish_balance fb " +
+                "LEFT JOIN inventory..fish_vessel fv ON fb.vessel_id = fv.id " +
+                "WHERE fb.created_date >= ? AND fb.created_date <= ? " +
+                "GROUP BY fv.name"
+            });
 		
             ListMap.put(Report.IMRR, 
 //                "select * " +
@@ -216,9 +239,9 @@ public class GenerateReportController extends MultiActionController {
             ListMap.put(Report.FGEDS, 
                 "");
 		
-		ListMap.put(Report.FMDR, "SELECT * " +
-			"FROM dbo.dr dr, dbo.dr_detail drd " +
-			"WHERE dr.drnumber = drd.drnumber");
+            ListMap.put(Report.FMDR, "SELECT * " +
+                "FROM dbo.dr dr, dbo.dr_detail drd " +
+                "WHERE dr.drnumber = drd.drnumber");
 		
             ListMap.put(Report.PPrsNotyetPO, 
                 "SELECT '' as prs_id, prd.prsnumber as prs_number, REPLACE(CONVERT(VARCHAR(9), prs.prsdate, 6), ' ', '-') as prs_date, \n" +
@@ -236,15 +259,15 @@ public class GenerateReportController extends MultiActionController {
 //			"WHERE prs.prsnumber = prsd.prsnumber AND po.prsnumber = prs.prsnumber"
             );
 		
-		ListMap.put(Report.PPoNotyetDeliveredDP, 
-			"SELECT * " +
-			"FROM inventory..po po " +
-			"LEFT JOIN inventory..po_detail pod ON pod.ponumber = po.ponumber " +
-			"LEFT JOIN inventory..prs ON prs.prsnumber = po.prsnumber " +
-			"LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prsd.prsnumber " +
-			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name "+
-			"WHERE pod.payment = 'DP'"
-		);
+            ListMap.put(Report.PPoNotyetDeliveredDP, 
+                    "SELECT * " +
+                    "FROM inventory..po po " +
+                    "LEFT JOIN inventory..po_detail pod ON pod.ponumber = po.ponumber " +
+                    "LEFT JOIN inventory..prs ON prs.prsnumber = po.prsnumber " +
+                    "LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prsd.prsnumber " +
+                    "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name "+
+                    "WHERE pod.payment = 'DP'"
+            );
 		
             ListMap.put(Report.PPoNotyetDeliveredCash, 
                 "SELECT '' as prs_id, pod.prsnumber as prs_number, REPLACE(CONVERT(VARCHAR(9), prs.prsdate, 6), ' ', '-') as prs_date, \n" +
@@ -352,6 +375,31 @@ public class GenerateReportController extends MultiActionController {
                 "WHERE YEAR(rr.rr_date) = @YEAR AND MONTH(rr.rr_date) = @MONTH ORDER BY rr.rr_code"
             );
             
+            ListMap.put(Report.TSPeriode, 
+                "DECLARE @YEAR INT, @MONTH INT " +
+                "SET @YEAR = ? " +
+                "SET @MONTH = ? " +
+                "SELECT ts.ts_code, CONVERT(VARCHAR(10), ts.ts_date, 105) ts_date, p.product_code, p.product_name, pc.category_name, tsd.qty,  " +
+                "	p.uom_name, ? periode " +
+                "FROM ts " +
+                "	INNER JOIN ts_detail tsd ON tsd.ts_code = ts.ts_code " +
+                "	LEFT JOIN product p ON p.product_code = tsd.product_code " +
+                "	LEFT JOIN product_category pc ON pc.category_code = p.product_category " +
+                "WHERE YEAR(ts.ts_date) = @YEAR AND MONTH(ts.ts_date) = @MONTH " +
+                "ORDER BY ts_code"
+            );
+			
+            ListMap.put(Report.CanvassingHistory, 
+                "SELECT po.po_code, CONVERT(VARCHAR(10), po.po_date, 105) po_date, p.product_code, p.product_name, acp.prsnumber, s.supplier_name, p.uom_name, " +
+                "acp.unit_price, acp.[top], acp.top_desc, acp.tod, CONVERT(VARCHAR(10), acp.wp, 105)wp FROM po " +
+                "	INNER JOIN po_detail pod ON pod.po_code = po.po_code " +
+                "	INNER JOIN assign_canv_prc acp ON acp.productcode = pod.product_code AND acp.prsnumber = pod.prsnumber " +
+                "	LEFT JOIN product p ON p.product_code = pod.product_code " +
+                "	LEFT JOIN supplier s ON s.supplier_code = acp.supplier_code " +
+                "WHERE po.po_code = ?  " +
+                "ORDER BY prsnumber, product_code, (CASE WHEN is_selected = 'Y' THEN 0 ELSE 1 END), supplier_name"
+            );
+            
             ListMap.put(Report.PurchasedItems, 
                 "DECLARE @YEAR INT, @MONTH INT " +
                 "SET @YEAR = ? " +
@@ -420,20 +468,20 @@ public class GenerateReportController extends MultiActionController {
                 ") x ORDER BY category_name, idr DESC, usd DESC, php DESC, jpy DESC"
             );
 					
-		ListMap.put(Report.PPoIssuedPerItem,
-			"SELECT prs.prsnumber, pod.productcode, cvd.productname, " +
-			"SUM(pod.qty) as qty, dep.department_code, pod.currencyCode, pod.unitprice, " +
-			"SUM(pod.amount) as amount, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks " +
-			"FROM inventory..po po " +
-			"LEFT JOIN inventory..po_detail pod ON pod.ponumber = po.ponumber " +
-			"LEFT JOIN inventory..prs ON prs.prsnumber = po.prsnumber " +
-			"LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prs.prsnumber " +
-			"LEFT JOIN inventory..canvassing cv ON cv.prsnumber = prs.prsnumber " +
-			"LEFT JOIN inventory..canvassing_detail cvd ON cvd.prsnumber = prs.prsnumber " +
-			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name " +
-			"GROUP BY prs.prsnumber, pod.productcode, cvd.productname, dep.department_code, " +
-			"pod.currencyCode, pod.unitprice, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks"
-		);
+            ListMap.put(Report.PPoIssuedPerItem,
+                    "SELECT prs.prsnumber, pod.productcode, cvd.productname, " +
+                    "SUM(pod.qty) as qty, dep.department_code, pod.currencyCode, pod.unitprice, " +
+                    "SUM(pod.amount) as amount, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks " +
+                    "FROM inventory..po po " +
+                    "LEFT JOIN inventory..po_detail pod ON pod.ponumber = po.ponumber " +
+                    "LEFT JOIN inventory..prs ON prs.prsnumber = po.prsnumber " +
+                    "LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prs.prsnumber " +
+                    "LEFT JOIN inventory..canvassing cv ON cv.prsnumber = prs.prsnumber " +
+                    "LEFT JOIN inventory..canvassing_detail cvd ON cvd.prsnumber = prs.prsnumber " +
+                    "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name " +
+                    "GROUP BY prs.prsnumber, pod.productcode, cvd.productname, dep.department_code, " +
+                    "pod.currencyCode, pod.unitprice, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks"
+            );
 
 		
             ListMap.put(Report.PPoForm, 
@@ -467,6 +515,7 @@ public class GenerateReportController extends MultiActionController {
                 "WHERE p.product_category = ? AND ( z.qty_in1 != 0 OR z.qty_out1 != 0 OR y.qty_begin !=0 OR x.qty_end != 0 ) " +
                 "ORDER BY p.product_name"
             );
+            
             ListMap.put(Report.IMStockCardTransactionReport, 
                 "DECLARE @YEAR INT, @MONTH INT, @DAY INT " +
                 "SET @YEAR = ? SET @MONTH = ? SET @DAY = ? " +
@@ -511,6 +560,7 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN inventory..\"user\" u ON u.user_id = acp.created_by " +
                 "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? "
             );
+            
             ListMap.put(Report.PPoConfirmatory, 
                 "SELECT '' as prs_id, prd.prsnumber as prs_number, REPLACE(CONVERT(VARCHAR(9), prs.prsdate, 6), ' ', '-') as prs_date, \n" +
                 "	p.product_code, p.product_name, prd.qty, prs.department_name, '' as date_received, '' as currency, acp.unit_price as price, \n" +
@@ -562,6 +612,7 @@ public class GenerateReportController extends MultiActionController {
 //			"LEFT JOIN product p ON p.product_code = pod.productcode "+
 //			"WHERE MONTH(podate) = ? AND YEAR(podate) = ?"
             );
+            
             ListMap.put(Report.IMSWS, 
 //                "SELECT * " +
 //                "FROM dbo.sws sws, dbo.sws_detail swsd " +
@@ -574,6 +625,7 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN \"user\" u ON u.user_id = sws.created_by " +
                 "LEFT JOIN department d ON d.department_code = sws.department_code " +
                 "WHERE sws.sws_code = ?"); 
+            
             ListMap.put(Report.IMTS,
 //                "SELECT * " +
 //                "FROM dbo.ts ts, dbo.ts_detail tsd " +
@@ -590,6 +642,7 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN department d ON d.department_code = ur.department_code " +
                 "LEFT JOIN department d2 ON d2.department_code = sws.department_code " +
                 "WHERE ts.ts_code = ? ");
+            
             ListMap.put(Report.IMDR, 
 //                "SELECT * FROM dbo.dr dr " +
 //                "LEFT JOIN dbo.dr_detail drd ON dr.drnumber = drd.drnumber " +
@@ -602,6 +655,7 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN product p ON p.product_code = dd.product_code " +
                 "LEFT JOIN \"user\" u ON u.user_id = dr.created_by " +
                 "WHERE dr.dr_code = ?");
+            
             ListMap.put(Report.FGPTS, 
 //                "SELECT * "+
 //                "FROM inventory..pts"
@@ -611,10 +665,11 @@ public class GenerateReportController extends MultiActionController {
                 "INNER JOIN pts_detail pd ON pd.pts_code = pts.pts_code " +
                 "LEFT JOIN product p ON p.product_code = pts.product_code " +
                 "WHERE pts.pts_code = ?");
-		ListMap.put(Report.FGTS, 
-			"SELECT * " +
-			"FROM dbo.ts ts, dbo.ts_detail tsd " +
-			"WHERE ts.tsnumber = tsd.tsnumber");
+            
+            ListMap.put(Report.FGTS, 
+                "SELECT * " +
+                "FROM dbo.ts ts, dbo.ts_detail tsd " +
+                "WHERE ts.tsnumber = tsd.tsnumber");
 	}
 	
 	public ModelAndView getReportXLS(HttpServletRequest request, HttpServletResponse response) throws Exception {
