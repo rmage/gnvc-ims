@@ -207,9 +207,11 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
                 "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
                 "LEFT JOIN inventory..fish_rr_detail frd ON f.id = fwd.fish_id " +
-                "WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate OR " +
-                "fwd.created_date >= @sDate AND fwd.created_date <= @eDate OR " +
-                "frd.created_date >= @sDate AND frd.created_date <= @eDate " +
+                "LEFT JOIN inventory..fish_ws fw ON fwd.ws_id = fw.id " +
+                "LEFT JOIN inventory..fish_ws_type fwt ON fw.ws_type_id = fwt.id " +
+                "WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') OR " +
+                "fwd.created_date >= @sDate AND fwd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') OR " +
+                "frd.created_date >= @sDate AND frd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') " +
                 "GROUP BY f.code " +
                 "ORDER BY f.code",
 
@@ -728,7 +730,8 @@ public class GenerateReportController extends MultiActionController {
 		for(Entry<String, String[]> e:temp.entrySet()){
 			map.put(e.getKey(), e.getValue()[0]);
 		}
-
+                System.out.println("params: "+request.getParameter("params"));
+                System.out.println("map: "+map);
 		Report reportType = Report.valueOf(map.get("item").toString());
 		
 		List data = getDataForType(reportType, map);
