@@ -867,11 +867,6 @@ public class DaoFactory {
         return (FishMealDtlDao) bf.getBean( "FishMealDtlDao" );
     }
     
-    public static FishWsDtlActualDao createFishWsDtlActualDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (FishWsDtlActualDao) bf.getBean( "FishWsDtlActualDao" );
-    }
-    
     public static TsDtlDao createTsDtlDao() {
         BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
         return (TsDtlDao) bf.getBean( "TsDtlDao" );

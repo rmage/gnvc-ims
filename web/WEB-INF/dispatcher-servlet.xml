@@ -289,7 +289,4 @@
     <bean name="/Ofal.htm" class="com.app.wms.web.controller.OfalController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <bean name="/FishWsActual.htm" class="com.app.wms.web.controller.FishWsActualController">
-    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
 </beans>
