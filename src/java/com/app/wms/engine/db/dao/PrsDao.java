@@ -4,6 +4,7 @@ import com.app.wms.engine.db.dao.PrsDao;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsPk;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -105,5 +106,10 @@ public interface PrsDao
         public List<Prs> fyaFindByCanvaser(String userId);
         
         public List<Prs> fyaFindByCanvaser(String prsNo, String userId);
+        
+        // DAO | for filtering, paging, and sorting
+        public int ajaxMaxPage(String deptId, BigDecimal show);
+        
+        public List<Prs> ajaxSearch(String deptId, String where, String order, int page, int show);
         
 }

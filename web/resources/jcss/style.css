@@ -1,3 +1,23 @@
+.filter-down:before {
+    background-image: url("../images/pager_arrow_right.gif");
+    content: "";
+    float: right;
+    height: 13px;
+    transform: rotate(90deg);
+    width: 13px;
+}
+
+.filter-up:before {
+    background-image: url("../images/pager_arrow_right.gif");
+    content: "";
+    float: right;
+    height: 13px;
+    transform: rotate(-90deg);
+    width: 13px;
+}
+
+/* OLD | css */
+
 /*
  	Header Layout
 */

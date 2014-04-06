@@ -8,6 +8,7 @@ import com.app.wms.engine.db.dto.map.PrsListMap;
 import com.app.wms.engine.db.exceptions.PoDaoException;
 import com.app.wms.engine.db.exceptions.PoDetailDaoException;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
+import java.math.BigDecimal;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -426,6 +428,28 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
         } catch(DataAccessException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    
+    public int ajaxMaxPage(String deptId, BigDecimal show) {
+        try {
+            return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM prs WHERE department_name = ?", show, deptId);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+    
+    public List<Prs> ajaxSearch(String deptId, String where, String order, int page, int show) {
+        try {
+            return jdbcTemplate.query("DECLARE @page INT, @show INT " +
+                "SELECT @page = ?, @show = ? " +
+                "SELECT * FROM ( " +
+                "   SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved, ROW_NUMBER() OVER(" + (order.isEmpty() ? "ORDER BY id" : order) + ") row FROM prs " + (where.isEmpty() ? "WHERE department_name = '" + deptId + "'" : where + " AND department_name = '" + deptId + "'") +
+                ") list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", this, page, show);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return new ArrayList<Prs>();
         }
     }
 

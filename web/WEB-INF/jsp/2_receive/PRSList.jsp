@@ -8,8 +8,7 @@
     </head>
 
     <body>
-        <%
-            com.app.wms.engine.db.dto.map.LoginUser l = (com.app.wms.engine.db.dto.map.LoginUser) request.getSession().getAttribute("user");
+        <%            com.app.wms.engine.db.dto.map.LoginUser l = (com.app.wms.engine.db.dto.map.LoginUser) request.getSession().getAttribute("user");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -17,7 +16,7 @@
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="PurchaseRequisition.htm" method="post">
+                    <form action="PurchaseRequisition.htm" id="search" method="post">
                         <table class="collapse tblForm row-select">
                             <caption>Search Purchase Requisition</caption>
                             <tbody>
@@ -26,146 +25,96 @@
                                         PRS No
                                     </td>
                                     <td>
-                                        <input type="text" name="prsNo" value="${model.purchaseNo}"/>
+                                        <input type="text" name="prsnumber" value="${model.purchaseNo}"/>
                                     </td>
                                     <td width="20%">
                                         PRS Date
                                     </td>
                                     <td>
-                                        <input type="text" name="estimationDeliveryDate" value="${model.estimationDeliveryDate}" id="estimationDeliveryDate" />
+                                        <input type="text" name="prsdate" value="${model.estimationDeliveryDate}" id="estimationDeliveryDate" />
                                     </td>
-                                    
+
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="6">
-                                    <span class="style1">
+                                    <span>
                                         <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
-                                    	<label>
-                                        <input type="button" name="button" id="btnAdd" value="Add" />
-                                    	</label>
+                                        <label>
+                                            <input type="button" name="button" id="btnAdd" value="Add" />
+                                        </label>
                                     </span>
                                 </td>
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
+                    <table class="collapse tblForm row-select" id="list">
                         <caption>PRS - List</caption>
                         <thead>
                             <tr>
-                                <td class="style1">No</td>
-                                <td class="style1">Action</td>
-                                <td class="style1">PRS No</td>
-                                <td class="style1">PRS Date</td>  
-                                <td class="style1">Charge to Department</td> 
-                                <td class="style1">Date Needed</td>
-                                <!--<td class="style1">Status Approved</td>-->
+                                <td>No</td>
+                                <td>Action</td>
+                                <td column="prsnumber">PRS No</td>
+                                <td column="prsdate">PRS Date</td>  
+                                <td>Charge to Department</td> 
+                                <td>Date Needed</td>
+                                <!--<td>Status Approved</td>-->
                             </tr>
                         </thead>
-                        <tbody id="main">
-                            <c:if test="${model.purchaseReq!=null}">
-                                <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
-                                <c:forEach items="${model.purchaseReq}" var="po">
-                                    <tr>
-                                        <td class="center" width="1%">
-                                            <c:out value="${nomor}" />
-                                            <c:set scope="page" value="${nomor+1}" var="nomor"/>
-                                        </td>
-                                        <td class="center" width="5%">
-                                            <a href="GenerateReport.htm?action=index&item=PPrsForm&type=xls&params=${po.prsnumber}"><img src="resources/images/printxls.gif" title="Print Delivery Receipt (xls)" /></a>
-                                        </td>
-                                        <td class="style1">
-                                            <a href="#" class="no-decoration" onclick="csbShowDetail('PRS', '<c:out value="${po.prsnumber}" />', 'Purchase Requisition Detail')">
-                                                <c:out value="${po.prsnumber}"/>
-                                            </a>
-                                        </td>
-                                        <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.prsdate}" /></td>
-                                        <td class="style1"><c:out value="${po.departmentName}"/></td>
-                                        <td class="style1"><fmt:formatDate pattern="dd-MM-yyyy" value="${po.requestdate}" /></td>
-                                            <%--<td class="left" width="15%">
-                                            <input class="mark" type="button" code="${po.prsnumber}" name="button" value="Y" />&nbsp;
-                                            <input class="markb" type="button" code="${po.prsnumber}" name="button" value="N" />					   			
-                                            <c:choose>
-                                                <c:when test="${po.isApproved == 'Y'}">&nbsp;<img src="resources/images/checkmark.gif" width="16" height="16" alt="View" /></c:when>
-                                                <c:otherwise>
-                                                    &nbsp;<img src="resources/images/Forbidden.png" width="16" height="16" alt="View" />
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td>--%>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                            <tr>
-                                <td colspan="10">
-                                    <span class="style1">
-                                        <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="PurchaseRequisition.htm?page=<c:out value="${model.page-1}" />">
-                                                &lt;
-                                            </a>
-                                        </c:if>
-                                        &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-										    <a href="PurchaseRequisition.htm?page=<c:out value="${model.page+1}" />">
-												&gt;
-										    </a>
-										</c:if>
-				    				</span>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="main"></tbody>
                         <tfoot>
                             <td colspan="10">
-                                <span class="style1">
-                                  
+                                <span>
+
                                 </span>
                             </td>
                         </tfoot>
                     </table>
                     <div id="ab_dialog" style="display: none">
-                    	<span id="ab_dialog_doc"></span>: Are you sure?
-                	 </div>
-                	 
-                        <script>
-                            $('.mark').click(function(){
-                                var code = $(this).attr('code');
-                                $('#ab_dialog_doc').html($(this).attr('code'));
-                                $('#ab_dialog').dialog({
-                                    buttons: {
-                                        "Close": function() {
-                                            $(this).dialog("close");
-                                        },
-                                        "Ok": function() {
-                                            window.location.href = 'PurchaseRequisition.htm?action=approvedPRS&prsNo=' + code;
-                                        }
+                        <span id="ab_dialog_doc"></span>: Are you sure?
+                    </div>
+
+                    <script>
+                        $('.mark').click(function() {
+                            var code = $(this).attr('code');
+                            $('#ab_dialog_doc').html($(this).attr('code'));
+                            $('#ab_dialog').dialog({
+                                buttons: {
+                                    "Close": function() {
+                                        $(this).dialog("close");
                                     },
-                                    modal: true,
-                                    width: 500,
-                                    height: 150,
-                                    'title': 'PRS Approved'
-                                });
+                                    "Ok": function() {
+                                        window.location.href = 'PurchaseRequisition.htm?action=approvedPRS&prsNo=' + code;
+                                    }
+                                },
+                                modal: true,
+                                width: 500,
+                                height: 150,
+                                'title': 'PRS Approved'
                             });
-                        </script>
-                        
-                        <script>
-                            $('.markb').click(function(){
-                                var code = $(this).attr('code');
-                                $('#ab_dialog_doc').html($(this).attr('code'));
-                                $('#ab_dialog').dialog({
-                                    buttons: {
-                                        "Close": function() {
-                                            $(this).dialog("close");
-                                        },
-                                        "Ok": function() {
-                                            window.location.href = 'PurchaseRequisition.htm?action=cancelPRS&prsNo=' + code;
-                                        }
+                        });
+                    </script>
+
+                    <script>
+                        $('.markb').click(function() {
+                            var code = $(this).attr('code');
+                            $('#ab_dialog_doc').html($(this).attr('code'));
+                            $('#ab_dialog').dialog({
+                                buttons: {
+                                    "Close": function() {
+                                        $(this).dialog("close");
                                     },
-                                    modal: true,
-                                    width: 500,
-                                    height: 150,
-                                    'title': 'PRS Cancel'
-                                });
+                                    "Ok": function() {
+                                        window.location.href = 'PurchaseRequisition.htm?action=cancelPRS&prsNo=' + code;
+                                    }
+                                },
+                                modal: true,
+                                width: 500,
+                                height: 150,
+                                'title': 'PRS Cancel'
                             });
-                        </script>
+                        });
+                    </script>
 
                 </div>
             </div>
@@ -175,8 +124,8 @@
                 </div>
             </div>
         </div>
-                                                                                
-       
+
+
 
         <script type="text/javascript">
             $(function() {
@@ -187,9 +136,9 @@
                 $('#btnEdit').click(function() {
                     location.href = '';
                 });
-                
+
                 $('#btnPrintAll').click(function() {
-                    window.location  = '<c:out value="${urlPrintAll}"/>';
+                    window.location = '<c:out value="${urlPrintAll}"/>';
                 });
 
                 $('.tab').hide();
@@ -197,15 +146,17 @@
                     $('.tab').show();
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
-              
-                
-                $('#estimationDeliveryDate').datepicker({                        
-                    dateFormat: "dd/mm/yy"                        
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
+
+
+                $('#estimationDeliveryDate').datepicker({
+                    dateFormat: "dd/mm/yy"
                 });
-              
+
             });
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'));
         </script>
-      
+
     </body>
 </html>

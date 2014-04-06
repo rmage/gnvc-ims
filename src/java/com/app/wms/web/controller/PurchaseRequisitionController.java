@@ -38,15 +38,7 @@ public class PurchaseRequisitionController extends ReportManagerController {
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try{
             Map m = new HashMap();
-            final String mode = request.getParameter("mode");
-            if(mode != null && mode.equals("edit")){
-                m = this.getModelByPrimaryKey(request);
-                m.put("mode", "edit");
-                return new ModelAndView ("2_receive/PRSEdit", "model", m);
-            } else{
-                m = this.searchAndPaging(request, response);
-                return new ModelAndView ("2_receive/PRSList", "model", m);
-            }
+            return new ModelAndView ("2_receive/PRSList", "model", m);
         } catch (Exception e){
             e.printStackTrace();
             return new ModelAndView("Error", "th", e);
@@ -395,4 +387,34 @@ public class PurchaseRequisitionController extends ReportManagerController {
         } pw.print("]");
         
     }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        
+        /* DAO | Define needed dao here */
+        PrsDao prsDao = DaoFactory.createPrsDao();
+        
+        /* TRANSACTION | Something complex here */
+        pw.print("{\"maxpage\": " + prsDao.ajaxMaxPage(lu.getDepartmentCode(), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Prs> ps = prsDao.ajaxSearch(lu.getDepartmentCode(), request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for(Prs x : ps) {
+            if(b)
+                pw.print(",");
+            
+            pw.print("{\"2\": \"" + x.getPrsnumber() + "\", ");
+            pw.print("\"3\": \"" + sdf.format(x.getPrsdate()) + "\",");
+            pw.print("\"4\": \"" + x.getDepartmentName()+ "\",");
+            pw.print("\"5\": \"" + sdf.format(x.getRequestdate()) + "\"}");
+            
+            b = Boolean.TRUE;
+        } pw.print("]}");
+        
+    }
+    
 }
