@@ -15,11 +15,11 @@
                 $('#addForm').validationEngine('attach');   
                 
                 $('#startDate').datepicker({                        
-                    dateFormat: "dd/mm/yy"
+                    dateFormat: "yy-mm-dd"
                 });
                 
                 $('#endDate').datepicker({                        
-                    dateFormat: "dd/mm/yy"
+                    dateFormat: "yy-mm-dd"
                 });
                 
                 $('#btnGenerate').click(function() {
@@ -67,7 +67,7 @@
                                    <td class="style1">Start Date</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="startDate" name="startDate" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                            <input type="text" id="startDate" name="startDate" value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -75,7 +75,7 @@
                                    <td class="style1">End Date</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="endDate" name="endDate" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                            <input type="text" id="endDate" name="endDate" value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>

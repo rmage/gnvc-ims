@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS - Generate Stock Card per Category</title>
+        <title>IMS - Generate Stock Card Transaction Report</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -17,7 +17,7 @@
                 <div class="box">
                     <form action="#" method="post" id="genForm">
                         <table class="collapse tblForm row-select">
-                            <caption>Generate Stock Card per Category</caption>
+                            <caption>Generate Stock Card Transaction Report</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
                                     <td style="width: 150px;">As of</td>
@@ -73,7 +73,8 @@
                 var date = $('.date:eq(0)').val().split("/");
                 
                 window.location.replace('GenerateReport.htm?action=index&item=IMStockCardTransactionReport&type=' + $('#type').val() + '&params=' + 
-                    date[2] + ':' + date[1] + ':' + $('#category').val() + ':' + (monthName[date[1] - 1] + ' ' + date[0] + ', ' + date[2]));
+//                    date[2] + ':' + date[1] + ':' + $('#category').val() + ':' + (monthName[date[1] - 1] + ' ' + date[0] + ', ' + date[2]));
+                    date[2] + ':' + date[1] + ':' + date[0] + ':' + (monthName[date[1] - 1] + ' ' + date[0] + ', ' + date[2]) + ':' + $('#category').val());
                 return false;
             });
             

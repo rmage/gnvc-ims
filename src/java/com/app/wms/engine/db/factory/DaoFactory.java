@@ -715,12 +715,6 @@ public class DaoFactory {
 			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
 			return (BeritaAcaraDao) bf.getBean( "BeritaAcaraDao" );
 		}
-	
-		public static AccountingDao createAccountingDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (AccountingDao) bf.getBean( "AccountingDao" );
-		}
 		
 		public static FishDao createFishDao() {
 			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));

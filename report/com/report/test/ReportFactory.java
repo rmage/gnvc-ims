@@ -19,7 +19,7 @@ public class ReportFactory {
         FWSNR, FWSL, FSummaryWSSlip,
         FSpoilagereport, FRR, FWS, 
         FDR, FTS, FFrozenFishStock,
-        FMDailyProductionReport, FMDR, PPrsNotyetPO,
+        RPDailyProduction, FMDR, PPrsNotyetPO,
         PPoNotyetDeliveredCash, PPoNotyetDeliveredCredit, PPoRegisterPerPeriode,
         PPoIssuedPerSupplier, PPoIssuedPerItem, PPrsForm,
         PCanvassingForm, PPoForm, PPoConfirmatory,
@@ -38,9 +38,7 @@ public class ReportFactory {
     static {
         reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("canvassingForm", new ReportModel("canvassingForm", false));
-        reportTemplateMap.put("dailyReport", new ReportModel("dailyReport"));
         reportTemplateMap.put("eds", new ReportModel("eds", false));
-        reportTemplateMap.put("fishMealInventory", new ReportModel("fishMealInventory"));
         reportTemplateMap.put("FrozenFishStock", new ReportModel("FrozenFishStock"));
         reportTemplateMap.put("poConfirmatory", new ReportModel("poConfirmatory"));
         reportTemplateMap.put("poForm", new ReportModel("poForm", false));
@@ -54,8 +52,6 @@ public class ReportFactory {
         reportTemplateMap.put("pts", new ReportModel("pts", true));
         reportTemplateMap.put("receivingReport", new ReportModel("receivingReport", false));
         reportTemplateMap.put("receivingReportNF", new ReportModel("receivingReportNF", false));
-        reportTemplateMap.put("stockCardReportPerCategory", new ReportModel("stockCardReportPerCategory", false));
-        reportTemplateMap.put("stockCardTransactionReport", new ReportModel("stockCardTransactionReport", false));
         reportTemplateMap.put("stockCardReport", new ReportModel("stockCardReport", false));
         reportTemplateMap.put("summaryWeightSlip", new ReportModel("summaryWeightSlip"));
         reportTemplateMap.put("transferSlip", new ReportModel("transferSlip", false));
@@ -72,7 +68,10 @@ public class ReportFactory {
         reportTemplateMap.put("poIssuedPerItem", new ReportModel("poIssuedPerItem", false));
         reportTemplateMap.put("viandTunaInv", new ReportModel("viandTunaInv", false));
         reportTemplateMap.put("withdrawalSlip", new ReportModel("withdrawalSlip", false));
-        reportTemplateMap.put("badStockCard", new ReportModel("badStockCard", false));		
+        reportTemplateMap.put("badStockCard", new ReportModel("badStockCard", false));	
+        reportTemplateMap.put("IMStockCardperCategory", new ReportModel("gnvStockCardIM", false));
+        reportTemplateMap.put("IMStockCardTransactionReport", new ReportModel("gnvTransactionReportIM", false));
+        reportTemplateMap.put("RPDailyProduction", new ReportModel("gnvRenderingPlantIM", false));
 
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
@@ -103,15 +102,15 @@ public class ReportFactory {
         reportMap.put(Report.IMRR, reportTemplateMap.get("receivingReportNF"));
         reportMap.put(Report.IMSWS, reportTemplateMap.get("withdrawalSlip"));
         reportMap.put(Report.IMTS, reportTemplateMap.get("transferSlipNF"));
-        reportMap.put(Report.IMStockCardperCategory, reportTemplateMap.get("stockCardReportPerCategory"));
-        reportMap.put(Report.IMStockCardTransactionReport, reportTemplateMap.get("stockCardTransactionReport"));
+        reportMap.put(Report.IMStockCardperCategory, reportTemplateMap.get("IMStockCardperCategory"));
+        reportMap.put(Report.IMStockCardTransactionReport, reportTemplateMap.get("IMStockCardTransactionReport"));
         reportMap.put(Report.FGPTS, reportTemplateMap.get("pts"));
         reportMap.put(Report.FGOFAL, reportTemplateMap.get("ofal"));
         reportMap.put(Report.FGBOR, reportTemplateMap.get("bookedOrderReport"));
         reportMap.put(Report.FGTS, reportTemplateMap.get("transferSlip"));
         reportMap.put(Report.FGEDS, reportTemplateMap.get("eds"));
 
-        reportMap.put(Report.FMDailyProductionReport, reportTemplateMap.get("dailyReport"));
+        reportMap.put(Report.RPDailyProduction, reportTemplateMap.get("RPDailyProduction"));
 
         reportMap.put(Report.FWSL, reportTemplateMap.get("wshr"));
         reportMap.put(Report.FGBadStockReport, reportTemplateMap.get("badStockCard"));

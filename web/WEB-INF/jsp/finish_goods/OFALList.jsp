@@ -65,7 +65,7 @@
                                             <c:set scope="page" value="${no + 1}" var="no"/>
                                         </td>
                                         <td>
-                                             <a href="GenerateReport.htm?action=index&item=FGEDS&type=xls&params=${x.ofalId}"><img src="resources/images/printxls.gif" title="Print OFAL (xls)" /></a>
+                                             <a href="GenerateReport.htm?action=index&item=FGOFAL&type=xls&params=${x.ofalId}"><img src="resources/images/printxls.gif" title="Print OFAL (xls)" /></a>
                                         </td>
                                         <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.createdDate}" /></td>
                                         <td><a class="d" href="#${x.ofalId}" data-id="${x.ofalId}">${xx[0]}</a></td>

@@ -9,4 +9,9 @@ public interface FishMealDao {
     public boolean testFirstUse();
     
     public int insertFirstUse(int bags, int kilos, String userId);
+    
+    public void insertOrUpdateAdjustFM(int bags, int kilos, String date, int b);
+    
+    public String findAdjusted(String date, int b);
+    
 }

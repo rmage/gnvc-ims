@@ -43,7 +43,7 @@ public class AlertJsonController {
         
         List<Alert> alerts = new ArrayList<Alert>();
         List<Object[]> objectss = new ArrayList<Object[]>();
-        objectss.addAll(goodReceiveDao.getExpiredProducts(lu.getWhCode()));
+//        objectss.addAll(goodReceiveDao.getExpiredProducts(lu.getWhCode()));
         
         Alert alert = new Alert();
         StringBuilder stringBuilder = new StringBuilder("");

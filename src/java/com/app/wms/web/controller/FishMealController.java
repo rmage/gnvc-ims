@@ -57,6 +57,22 @@ public class FishMealController extends MultiActionController {
         
     }
     
+    public ModelAndView adjustStock(HttpServletRequest request, HttpServletResponse response) {
+        
+        /* DATA | get initial value */
+        String date = request.getParameter("date");
+        int bags = Integer.parseInt(request.getParameter("bags"));
+        int kilos = Integer.parseInt(request.getParameter("kilos"));
+        
+        /* DAO | Define needed dao here */
+        FishMealDao fishMealDao = DaoFactory.createFishMealDao();
+        
+        /* TRANSACTION | Something complex here */
+        fishMealDao.insertOrUpdateAdjustFM(bags, kilos, date, 1);
+        
+        return new ModelAndView("redirect:FishMeal.htm");
+    }
+    
     public void saveContent(HttpServletRequest request, HttpServletResponse response) 
         throws IOException, ParseException {
         
@@ -106,8 +122,8 @@ public class FishMealController extends MultiActionController {
         fmd.setFmIPrice(new BigDecimal(detail[16]));
         fmd.setFmEiBags(Integer.parseInt(detail[17]));
         fmd.setFmEiKilos(Integer.parseInt(detail[18]));
-        fmd.setFmRMhrs(detail[19]);
-        fmd.setFmROthr(detail[20]);
+//        fmd.setFmRMhrs(detail[19]);
+//        fmd.setFmROthr(detail[20]);
         
         if(request.getParameter("status").equals("0")) {
             if(masters != null)
@@ -166,6 +182,7 @@ public class FishMealController extends MultiActionController {
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, (month - 1));
         cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
         
         List<FishMealDtl> fmds = fishMealDtlDao.findCurrentMonth(year, month, Integer.parseInt(new SimpleDateFormat("dd").format(cal.getTime())));
         if(fmds.isEmpty()) {
@@ -175,10 +192,16 @@ public class FishMealController extends MultiActionController {
             } else {
                 month -= 1;
             }
+            cal.add(Calendar.MONTH, -1);
+            cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
             FishMealDtl fmd = fishMealDtlDao.findLastDate(year, month);
-            pw.print("{\"message\": false, \"bags\": " + fmd.getFmEiBags() + ", \"kilos\": " + fmd.getFmEiKilos() + "}");
+            if(sdf.format(fmd.getFmDate()).equals(sdf.format(cal.getTime())))
+                pw.print("{\"message\": false, \"bags\": " + fmd.getFmEiBags() + ", \"kilos\": " + fmd.getFmEiKilos() + "}");
+            else
+                pw.print("{\"message\": \"Please complete all form previous month!\"}");
         } else {
-            pw.print("{\"message\": false, \"fmId\": " + fmds.get(0).getFmId() + ",\"data\": [");
+            String val = fishMealDao.findAdjusted(year + "-" + month + "-01", 1);
+            pw.print("{\"message\": false, \"fmId\": " + fmds.get(0).getFmId() + ", \"adjust\":\"" + (val == null ? "0:0" : val) + "\",\"data\": [");
             for(FishMealDtl x : fmds) {
                 if(b)
                     pw.print(",");

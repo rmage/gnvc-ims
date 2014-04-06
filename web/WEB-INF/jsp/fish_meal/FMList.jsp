@@ -40,22 +40,35 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="FishMeal.htm" method="post">
+                    <form id="fmForm" action="GenerateReport.htm" method="get">
+                        <input name="action" type="hidden" value="index" />
+                        <input name="item" type="hidden" value="RPDailyProduction" />
+                        <input id="params" name="params" type="hidden" />
                         <table class="collapse tblForm row-select">
                             <caption>Generate Report</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">FM Date</td>
                                     <td>
-                                        <select id="year">
+                                        <select id="year" required="true">
                                             <c:forEach items="${model.year}" var="x">
                                                 <option>${x}</option>
                                             </c:forEach>
                                         </select>
-                                        <select id="month">    
+                                        <select id="month" required="true">
                                             <c:forEach items="${model.month}" var="x">
                                                 <option value="${x[0]}" <c:if test="${x[2] == '1'}">selected="true"</c:if>>${x[1]}</option>
                                             </c:forEach>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Report Type</td>
+                                    <td>
+                                        <select name="type" required="true">
+                                            <option value="xls">XLS</option>
+                                            <option value="pdf">PDF</option>
+                                            <option value="csv">CSV</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -63,7 +76,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="2">
-                                        <input type="submit" value="Generate" name="btnSearch" />
+                                        <input id="btnGenerate" name="btnGenerate" type="submit" value="Generate" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -94,7 +107,6 @@
                                 <td colspan="2" rowspan="2">TOTAL TO DAY</td>
                                 <td colspan="3" rowspan="2">ISSUANCES</td>
                                 <td colspan="2" rowspan="2">END INVENTORY</td>
-                                <td colspan="2" rowspan="2">REMARKS</td>
                             </tr>
                             <tr>
                                 <td colspan="3">SHIFT I</td>
@@ -105,28 +117,35 @@
                                 <td></td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
-                                <td>R.M</td>
+                                <td>SCRAPS</td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
-                                <td>R.M</td>
+                                <td>SCRAPS</td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
-                                <td>R.M</td>
+                                <td>SCRAPS</td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
-                                <td>PRICE</td>
+                                <td>QUANTITY</td>
                                 <td>BAGS</td>
                                 <td>KILOS</td>
-                                <td>M.HRS</td>
-                                <td>OTHERS</td>
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>
                     </table>
+                    <form action="FishMeal.htm" id="adjForm" method="post">
+                        <input name="action" type="hidden" value="adjustStock" />
+                        <input id="date" name="date" type="hidden" value="" />
+                        <span id="adjust" style="display: none; float: right;">
+                            Adjust this Month : <input name="bags" size="6" type="text" style="font-size: smaller; text-align: right;" value="0" /> <b>BAGS</b>
+                            <input name="kilos" size="6" type="text" style="font-size: smaller; text-align: right;" value="0" readonly="true" /> <b>KILOS</b>
+                            <input type="submit" value="Adjust Stock" />
+                        </span>
+                    </form>
                 </div>
             </div>
             
@@ -151,7 +170,7 @@
                     </tr>
                     <tr>
                         <td>Kilos</td>
-                        <td><input id="fuKilos" type="text" value="0" /></td>
+                        <td><input id="fuKilos" type="text" value="0" readonly="true" /></td>
                     </tr>
                     <tr>
                         <td colspan="2"><input id="fuConfirm" type="button" value="Confirm" /></td>
@@ -160,30 +179,17 @@
             </table>
         </div>
         <script>
+            var m = 40;
             
             $('#year > option:last-child').attr('selected', true);
-            
-            var date = new Date();
-            var limit = new Date(date.getYear(), (date.getMonth() + 1), 0).getDate();
-            var range = {start: 1, end: 0};
-            for(var i = 0; i < limit; i++) {
-                if(i === date.getDate())
-                    range.end = i;
-                $('#main').append('<tr><td><img class="update" src="resources/images/copy.png" style="float: right;" title="Click to update!" />' + (i + 1) + ' ' + $('#month > option:selected').html() + ' ' + $('#year').val() + '</td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td>' +
-                    '<td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td>' +
-                    '<td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td>' +
-                    '<td><input type="text" disabled="true" /></td></tr>');
-                $('#main tr:last-child').data('date', (i + 1) + '/' + $('#month').val() + '/' + $('#year').val());
-            }
-            for(var i = 0; i < ${model.date}; i++) {
-                $('#main tr:eq(' + i + ')').find('input').attr('disabled', false);
-            }
-           
             $('#view').bind('click', function() {
                 var $o = $(this);
                 $o.attr('disabled', true);
+                $('#adjust').hide(); $('#adjust').val(0);
                 $o.after(' <img id="load" src="resources/ui-anim_basic_16x16.gif" style="vertical-align: middle; background-color: rgb(255, 255, 255); border-radius: 4px; padding: 2.5px;" />');
                 
+                $('#main').html('');
+                $('#main tr input').val(''); 
                 $.ajax({
                     url: 'FishMeal.htm',
                     data: {action: 'getContent', year: $('#yearL').val(), month: $('#monthL').val()},
@@ -198,7 +204,7 @@
                                 return false;
                             }
                         }
-                        
+                        generateSlot();
                         if(json.data) {
                             // already have data
                             for(var i = 0; i < json.data.length; i++) {
@@ -222,17 +228,16 @@
                                 $tr.find('input:eq(15)').val(json.data[i].iPrice);
                                 $tr.find('input:eq(16)').val(json.data[i].eiBags);
                                 $tr.find('input:eq(17)').val(json.data[i].eiKilos);
-                                $tr.find('input:eq(18)').val(json.data[i].rMhrs);
-                                $tr.find('input:eq(19)').val(json.data[i].rOthr);
-                            } setXVal(); $('#main').data('id', json.fmId);
+                            } setXVal(); $('#main').data('id', json.fmId); checkFullSheetForAdjust();
+                            var adjust = json.adjust.split(':');
+                            $('#adjust input:eq(0)').val(adjust[0]).next().next().val(adjust[1]);
                         } else {
                             // first use
                             var $tr = $('#main tr:first-child');
                             $tr.find('td:eq(1) input').data('xval', json.bags);
                             $tr.find('td:eq(2) input').data('xval', json.kilos);
                             // $tr.find('input').attr('disabled', false); 
-                            getXVal();
-                            // ajax funtion on success
+                            getXVal();                            // ajax funtion on success
                             var firstMonth = function(json) {
                                 if(json.message) {
                                     $('#main').data('id', json.fmId);
@@ -265,6 +270,9 @@
                         $o.attr('disabled', false);  
                     }
                 });
+            });
+            $('#adjust input:eq(0)').bind('blur', function() {
+                $(this).next().next().val($(this).val() * m);
             });
             
             /*_TEST_GLOBAL_AJAX_FUNCTION_____*/
@@ -334,12 +342,14 @@
                         }
                         
                         $this.data('process', false);
+                        checkFullSheetForAdjust();
                     };
                     
                     // send ajax request
                     var $tr = $(this).parent().parent();
                     var _detail = $tr.data('date');
                     $('#main tr:eq(' + $('#main tr').index($tr) + ') input').each(function() {
+                        if($(this).val() === '') $(this).val(0).trigger('blur');
                         _detail += (':' + $(this).val());
                     });
                     callAjaxUpdate({
@@ -391,7 +401,61 @@
                     }
                 });
             });
+            $('#fuBags').bind('blur', function() {
+                $('#fuKilos').val($(this).val() * m);
+            });
            setTimeout(function(){ $('#view').trigger('click'); }, 1500);
+           
+           /*
+            *  Generate Button
+            */
+           $('#fmForm').bind('submit', function() {
+               $('#params').val($('#year').val() + ':' + $('#month').val() + ':' + 'FISH MEAL INVENTORY');
+           });
+           $('#adjForm').bind('submit', function() {
+               $('#date').val($('#yearL').val() + '-' + $('#monthL').val() + '-01');
+           });
+           
+           /*
+            *  Function Group
+            */
+           function generateSlot() {
+                var limit = new Date($('#yearL').val(), (parseInt($('#monthL').val())), 0);
+                for(var i = 0; i < limit.getDate(); i++) {
+                    $('#main').append('<tr><td><img class="update" src="resources/images/copy.png" style="float: right;" title="Click to update!" /><span>' + (i + 1) + ' ' + $('#monthL > option:selected').html() + ' ' + $('#yearL').val() + '</span></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td>' +
+                        '<td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" readonly="true" /></td>' +
+                        '<td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" /></td><td><input type="text" disabled="true" readonly="true" /></td><td><input type="text" disabled="true" readonly="true" /></td></tr>');
+                    $('#main tr:last-child').data('date', (i + 1) + '/' + $('#monthL').val() + '/' + $('#yearL').val());
+                }
+                var date = new Date();
+                var day = date.getDate();
+                if(date.getFullYear() >= $('#yearL').val() && date.getMonth() + 1 > $('#monthL').val())
+                    day = 31;
+                for(var i = 0; i < day; i++) {
+                    $('#main tr:eq(' + i + ')').find('input').attr('disabled', false);
+                }
+                
+                $('#main tr').each(function() {
+                    $(this).find('input:eq(3),input:eq(6),input:eq(9),input:eq(13)').live('blur', function() {
+                        $(this).parent().next().find('input').val($(this).val() * m);
+                    });
+                });
+           }
+           
+           function checkFullSheetForAdjust() {
+               var c = true;
+               $('#main tr').each(function() {
+                   if($(this).find('input:eq(17)').val() === '') {
+                       c = false; return false;
+                   }
+               });
+               
+               if(c) {
+                   $('#adjust').show();
+               }
+           }
+           
+           
         </script>
     </body>
 </html>

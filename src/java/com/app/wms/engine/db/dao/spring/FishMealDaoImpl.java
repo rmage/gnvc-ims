@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -59,6 +60,48 @@ public class FishMealDaoImpl extends AbstractDAO
             "INSERT INTO fishmeal_detail(fm_id, fm_date, fm_ei_bags, fm_ei_kilos, created_by, created_date) VALUES(" +
             "(SELECT @@IDENTITY), (SELECT CAST('20140228' AS DATE)), ?, ?, ?, GETDATE())", 
             "2", "2014", null, null, null, null, userId, null, null, bags, kilos, userId);
+    }
+    
+    public void insertOrUpdateAdjustFM(int bags, int kilos, String date, int b) {
+        String productCode = "";
+        
+        switch(b) {
+            case 1: {
+                productCode = "FISH_MEAL";
+            } break;
+            case 2: {
+                productCode = "FISH_OIL";
+            } break;
+        }
+        
+        jdbcTemplate.update("UPDATE stock_inventory_log SET log = ? WHERE product_code = '" + productCode + "' AND created_date = ? " + 
+            "IF(@@ROWCOUNT = 0) INSERT INTO stock_inventory_log VALUES('" + productCode + "', ?, ?) " +
+            "DECLARE @DATE VARCHAR(10), @BAGS INT, @KILOS INT " +
+            "SET @DATE = ? SET @BAGS = ? SET @KILOS = ? " +
+            "UPDATE fishmeal_detail SET fm_bi_bags = fm_bi_bags - @BAGS, fm_bi_kilos = fm_bi_kilos - @KILOS, fm_ei_bags = fm_ei_bags - @BAGS, fm_ei_kilos = fm_ei_kilos - @KILOS " +
+            "WHERE YEAR(fm_date) >= YEAR(@DATE) AND MONTH(fm_date) > MONTH(@DATE)",
+            bags + ":" + kilos, date, bags + ":" + kilos, date, date, bags, kilos);
+    }
+    
+    public String findAdjusted(String date, int b) {
+        String productCode = "";
+        
+        switch(b) {
+            case 1: {
+                productCode = "FISH_MEAL";
+            } break;
+            case 2: {
+                productCode = "FISH_OIL";
+            } break;
+        }
+        
+        List<String> ls = jdbcTemplate.query("SELECT log FROM stock_inventory_log WHERE product_code = ? AND created_date = ?", new ParameterizedRowMapper<String>() {
+            public String mapRow(ResultSet rs, int i) throws SQLException {
+                return rs.getString(1);
+            }
+        }, productCode, date);
+        
+        return ls.isEmpty() ? null : ls.get(0);
     }
     
 }

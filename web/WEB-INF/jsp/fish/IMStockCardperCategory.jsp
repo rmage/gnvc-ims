@@ -73,7 +73,8 @@
                 var date = $('.date:eq(0)').val().split("/");
                 
                 window.location.replace('GenerateReport.htm?action=index&item=IMStockCardperCategory&type=' + $('#type').val() + '&params=' + 
-                    (monthName[date[1] - 1] + ' ' + date[0] + ', ' + date[2]) + ':' + date[2] + ':' + date[1] + ':' + $('#category').val());
+                    //(monthName[date[1] - 1] + ' ' + date[0] + ', ' + date[2]) + ':' + date[2] + ':' + date[1] + ':' + $('#category').val());
+                    date[2] + ':' + date[1] + ':' + date[0] + ':' + (monthName[date[1] - 1] + ' ' + date[0] + ', ' + date[2]) + ':' + $('#category').val());
                 return false;
             });
             

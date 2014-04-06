@@ -7,6 +7,7 @@ import com.app.wms.engine.db.dao.PurchaseDao;
 import com.app.wms.engine.db.dao.PurchaseDtlDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dao.ReceiveReportDtlDao;
+import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dto.Product;
@@ -86,6 +87,7 @@ public class ReceiveReportController extends MultiActionController {
             PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
             PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
             PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
+            StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
             ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
             ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
             StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
@@ -140,6 +142,9 @@ public class ReceiveReportController extends MultiActionController {
                 pp.setUpdatedBy(lu.getUserId());
                 pp.setUpdatedDate(new Date());
                 productPriceDao.update(pp, 1, new BigDecimal(rrd.getQtyGood()));
+                
+                // stock balance history for stock card
+                stockBalanceDao.insertOrUpdate(rrd.getProductCode(), new Date(), si.getBalance(), new BigDecimal(rrd.getQtyGood()), 10);
                 
                 // insert or update stock_inventory
                 receiveReportDao.updateStockInventory(rrd.getProductCode(), rrd.getQtyGood());

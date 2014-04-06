@@ -25,7 +25,7 @@ public class GeneralReportController extends MultiActionController {
 	public static final Map<Report, PostProcess> PostProcess = new HashMap<Report, PostProcess>();
 	
 	static {		
-		ListMap.put(Report.FMDailyProductionReport, null);
+		ListMap.put(Report.RPDailyProduction, null);
 		ListMap.put(Report.FGBOR, null);
 		ListMap.put(Report.FGBadStockReport, null);
 		ListMap.put(Report.FGTunaVayaReport, null);

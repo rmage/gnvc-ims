@@ -1,19 +1,24 @@
 package com.app.wms.web.controller;
 
 import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dao.StockBalanceDao;
+import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SwsDtlDao;
 import com.app.wms.engine.db.dao.TsDao;
 import com.app.wms.engine.db.dao.TsDtlDao;
 import com.app.wms.engine.db.dto.Product;
+import com.app.wms.engine.db.dto.StockInventory;
 import com.app.wms.engine.db.dto.Sws;
 import com.app.wms.engine.db.dto.SwsDtl;
 import com.app.wms.engine.db.dto.Ts;
 import com.app.wms.engine.db.dto.TsDtl;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
+import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,7 +65,7 @@ public class TransferSlipController extends MultiActionController {
     }
     
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
-        throws ParseException {
+        throws ParseException, StockInventoryDaoException {
         
         /* DATA | get initial value */
         Ts t = new Ts();
@@ -71,6 +76,8 @@ public class TransferSlipController extends MultiActionController {
         /* DAO | Define needed dao here */
         TsDao tsDao = DaoFactory.createTsDao();
         TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
+        StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
+        StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
         
         /* TRANSACTION | Something complex here */
         // insert transfer slip
@@ -92,6 +99,11 @@ public class TransferSlipController extends MultiActionController {
             td.setProductCode(x);
             td.setQty(Integer.parseInt(qtys[i]));
             tsDtlDao.insert(td);
+            
+            // stock balance history for stock card
+            StockInventory si = stockInventoryDao.findWhereProductCodeEquals(td.getProductCode()).get(0);
+            stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 20);
+            
             // substract stock inventory balance
             tsDao.updateStockInventory(td.getProductCode(), td.getQty()); i++;
         }
