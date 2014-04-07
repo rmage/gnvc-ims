@@ -2,6 +2,7 @@
 var variable = {
     page: 1,
     show: 5,
+    action: null,
     column: 1,
     maxPage: 1,
     urlPage: document.location.pathname,
@@ -98,7 +99,7 @@ var ajax = {
                 variable.listTable.find('#main').html('<tr><td colspan="' + variable.column + '" style="text-align: center;">' + variable.ajaxImageLoader + '</td></tr>');
             },
             success: function (data) {
-                var i, j, row = (((variable.page - 1) * variable.show) + 1), html, $main = variable.listTable.find('#main');
+                var i, j, z, R, action = variable.action.split(':'), row = (((variable.page - 1) * variable.show) + 1), html, $main = variable.listTable.find('#main');
                 $main.html('');
                 for (i = 0; i < data.data.length; i += 1) {
                     html = '<tr>';
@@ -109,7 +110,28 @@ var ajax = {
                             row += 1;
                             break;
                         case 1:
-                            html += '<td></td>';
+                            html += '<td>';
+                            for (z = 0; z < action.length; z += 1) {
+                                switch (action[z]) {
+                                case 'u':
+                                    html += '<a href="' + variable.urlPage + '?action=update&key=' + data.data[i][j] + '" onclick="return confirm(\'Continue to UPDATE THIS THIS : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/edit.gif" title="Update"></a> ';
+                                    break;
+                                case 'd':
+                                    html += '<a href="' + variable.urlPage + '?action=delete&key=' + data.data[i][j] + '" onclick="return confirm(\'Continue to DELETE THIS THIS : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/delete.gif" title="Delete"></a> ';
+                                    break;
+                                default:
+                                    // CHECK | report action here
+                                    if (/^R/.test(action[z])) {
+                                        R = action[z].split('_');
+                                        html += '<span class="separator"></span><a href="GenerateReport.htm?action=index&item=' + R[1] + '&type=xls&params=' + data.data[i][j + 1] + '" onclick="return confirm(\'Continue to PRINT THIS ITEM : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/printxls.gif" title="' + R[2] + '" /></a>';
+                                    }
+                                    break;
+                                }
+                            }
+                            html += '</td>';
+                            break;
+                        case 2:
+                            html += '<td><a class="d" href="#">' + data.data[i][j] + '</a></td>';
                             break;
                         default:
                             html += '<td>' + data.data[i][j] + '</td>';
@@ -150,10 +172,11 @@ var util = {
             return false;
         });
     },
-    initListTable: function ($jqo) {
+    initListTable: function ($jqo, action) {
         'use strict';
-        // VARIABLE | list table
+        // VARIABLE | list table, action
         variable.listTable = $jqo;
+        variable.action = action;
         // COLUMN | set event on filterable column
         var td = 0;
         $jqo.find('thead tr td').each(function () {
@@ -166,14 +189,22 @@ var util = {
         variable.column = td;
         // TFOOT | for paging
         if ($jqo.find('tfoot').length < 1) { $jqo.append('<tfoot></tfoot>'); }
-        $jqo.find('tfoot').append('<tr><td colspan="' + variable.column + '" style="text-align: right;">Page : <input type="text" style="text-align: center;" value="1" size="1"> of <span id="maxpage">' + variable.page + '</span> | Show : <input type="text" style="text-align: center;" value="' + variable.show + '" size="1"></td></tr>');
-        $jqo.find('input:eq(0)').on('blur', function () {
+        $jqo.find('tfoot').append('<tr><td colspan="' + variable.column + '" style="text-align: right;">Page : <input type="text" style="text-align: center;" value="1" size="2"> of <span id="maxpage">' + variable.page + '</span> | Show : <input type="text" style="text-align: center;" value="' + variable.show + '" size="2"></td></tr>');
+        $jqo.find('input:eq(0)').on('focus', function () {
+            $(this).val(null);
+        }).on('blur', function () {
             $(this).val(event.paging($(this).val()));
             variable.page = parseInt($(this).val(), 10);
+        }).on('keydown', function (e) {
+            if (e.keyCode === 13) { $(this).trigger("blur"); variable.searchForm.submit(); }
         });
-        $jqo.find('input:eq(1)').on('blur', function () {
+        $jqo.find('input:eq(1)').on('focus', function () {
+            $(this).val(null);
+        }).on('blur', function () {
             $(this).val(event.limit($(this).val()));
             variable.show = parseInt($(this).val(), 10);
+        }).on('keydown', function (e) {
+            if (e.keyCode === 13) { $(this).trigger("blur"); variable.searchForm.submit(); }
         });
         // ACTION | click search button
         variable.searchForm.submit();

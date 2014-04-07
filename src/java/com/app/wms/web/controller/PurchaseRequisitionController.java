@@ -401,13 +401,14 @@ public class PurchaseRequisitionController extends ReportManagerController {
         PrsDao prsDao = DaoFactory.createPrsDao();
         
         /* TRANSACTION | Something complex here */
-        pw.print("{\"maxpage\": " + prsDao.ajaxMaxPage(lu.getDepartmentCode(), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        pw.print("{\"maxpage\": " + prsDao.ajaxMaxPage(lu.getDepartmentCode(), request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
         List<Prs> ps = prsDao.ajaxSearch(lu.getDepartmentCode(), request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
         for(Prs x : ps) {
             if(b)
                 pw.print(",");
             
-            pw.print("{\"2\": \"" + x.getPrsnumber() + "\", ");
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getPrsnumber() + "\", ");
             pw.print("\"3\": \"" + sdf.format(x.getPrsdate()) + "\",");
             pw.print("\"4\": \"" + x.getDepartmentName()+ "\",");
             pw.print("\"5\": \"" + sdf.format(x.getRequestdate()) + "\"}");
