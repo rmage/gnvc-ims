@@ -27,7 +27,8 @@ public class ReportFactory {
         IMTS, IMDR, IMStockCardperCategory, IMStockCardTransactionReport,
         FGPTS, FGOFAL, FGBOR,
         FGTS, FGEDS, FGBadStockReport,
-        FGTunaVayaReport, Accounting, PPoNotyetDeliveredDP;
+        FGTunaVayaReport, Accounting, PPoNotyetDeliveredDP,
+        RRPeriode, PurchasedItems, PurchasedPerSupplier;
     }
 	
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -72,6 +73,9 @@ public class ReportFactory {
         reportTemplateMap.put("IMStockCardperCategory", new ReportModel("gnvStockCardIM", false));
         reportTemplateMap.put("IMStockCardTransactionReport", new ReportModel("gnvTransactionReportIM", false));
         reportTemplateMap.put("RPDailyProduction", new ReportModel("gnvRenderingPlantIM", false));
+        reportTemplateMap.put("RRPeriode", new ReportModel("gnvRRPeriode", false));
+        reportTemplateMap.put("PurchasedItems", new ReportModel("gnvPurchasedItems", false));
+        reportTemplateMap.put("PurchasedPerSupplier", new ReportModel("gnvPurchasedPerSupplier", false));
 
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
@@ -111,11 +115,15 @@ public class ReportFactory {
         reportMap.put(Report.FGEDS, reportTemplateMap.get("eds"));
 
         reportMap.put(Report.RPDailyProduction, reportTemplateMap.get("RPDailyProduction"));
+        reportMap.put(Report.RRPeriode, reportTemplateMap.get("RRPeriode"));
+        reportMap.put(Report.PurchasedItems, reportTemplateMap.get("PurchasedItems"));
+        reportMap.put(Report.PurchasedPerSupplier, reportTemplateMap.get("PurchasedPerSupplier"));
 
         reportMap.put(Report.FWSL, reportTemplateMap.get("wshr"));
         reportMap.put(Report.FGBadStockReport, reportTemplateMap.get("badStockCard"));
         reportMap.put(Report.FGTunaVayaReport, reportTemplateMap.get("viandTunaInv"));
         reportMap.put(Report.Accounting, reportTemplateMap.get("stockCardReport"));
+        
 
         IGNORED_COLUMN.add("index");
     }	

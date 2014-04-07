@@ -83,9 +83,11 @@ public class GenerateReportController extends MultiActionController {
                 "DECLARE  @YEAR INT, @MONTH INT, @PERIODE VARCHAR(30), @DATE VARCHAR(10) " +
                 "SET @YEAR = ? SET @MONTH = ? SET @DATE = (CAST(@YEAR AS VARCHAR(4)) + '-' + CAST(@MONTH AS VARCHAR(2)) + '-01') " +
                 "SET @PERIODE = DATENAME(MONTH, @DATE) + ' ' + LEFT(CONVERT(VARCHAR(10), DATEADD(s,-1,DATEADD(mm, DATEDIFF(m,0, @DATE)+1,0)), 105), 2) + ', ' + CAST(@YEAR AS VARCHAR(4)) " +
-                "SELECT CONVERT(VARCHAR(10), fmd.fm_date, 105) date, fmd.fm_bi_bags bags_begin, fmd.fm_bi_kilos kilos_begin, fmd.fm_ttd_bags bags_ttd, fmd.fm_ttd_kilos kilos_ttd, fmd.fm_i_bags bags_issuances, fmd.fm_i_kilos kilos_issuances, fmd.fm_i_price qty_issuances, fmd.fm_ei_bags bags_end, fmd.fm_ei_kilos kilos_end, ? title, @PERIODE periode " +
+                "SELECT CONVERT(VARCHAR(10), fmd.fm_date, 105) date, fmd.fm_bi_bags bags_begin, fmd.fm_bi_kilos kilos_begin, fmd.fm_ttd_bags bags_ttd, fmd.fm_ttd_kilos kilos_ttd, fmd.fm_i_bags bags_issuances, fmd.fm_i_kilos kilos_issuances, fmd.fm_i_price qty_issuances, fmd.fm_ei_bags bags_end, fmd.fm_ei_kilos kilos_end, ? title, @PERIODE periode, " +
+                "SUBSTRING(sil.log, 1, CHARINDEX(':', sil.log) - 1) adj_bags, SUBSTRING(sil.log, CHARINDEX(':', sil.log) + 1, LEN(sil.log)) adj_kilos " +
                 "FROM fishmeal fm " +
                 "	LEFT JOIN fishmeal_detail fmd ON fmd.fm_id = fm.fm_id " +
+                "       LEFT JOIN stock_inventory_log sil ON sil.product_code = ? AND YEAR(sil.created_date) = @YEAR AND MONTH(sil.created_date) = @MONTH " +
                 "WHERE fm.fm_year = @YEAR AND fm.fm_month = @MONTH ORDER BY fmd.fm_date"
             );
             ListMap.put(Report.FGBOR, 
@@ -210,10 +212,8 @@ public class GenerateReportController extends MultiActionController {
                 "LEFT JOIN \"user\" u ON u.user_id = rr.created_by " +
                 "WHERE rrd.rr_code = ?");
 		
-		ListMap.put(Report.FGEDS, 
-			"SELECT * " +
-			"FROM dbo.eds eds, dbo.eds_detail edsd " +
-			"WHERE eds.edsnumber = edsd.edsnumber");
+            ListMap.put(Report.FGEDS, 
+                "");
 		
 		ListMap.put(Report.FMDR, "SELECT * " +
 			"FROM dbo.dr dr, dbo.dr_detail drd " +
@@ -335,12 +335,66 @@ public class GenerateReportController extends MultiActionController {
                 "	LEFT JOIN supplier s ON s.supplier_code = po.supplier_code \n" +
                 "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? AND DAY(po.po_date) BETWEEN ? AND ? \n" +
                 "ORDER BY prs_date, prs_number, product_name"
-//			"SELECT * " +
-//			"FROM inventory..po po " +
-//			"LEFT JOIN inventory..po_detail pod ON pod.ponumber = po.ponumber " +
-//			"LEFT JOIN inventory..prs ON prs.prsnumber = po.prsnumber " +
-//			"LEFT JOIN inventory..prs_detail prsd ON prsd.prsnumber = prsd.prsnumber " +
-//			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name " 
+            );
+            
+            ListMap.put(Report.RRPeriode, 
+                "DECLARE @YEAR INT, @MONTH INT " +
+                "SET @YEAR = ? " +
+                "SET @MONTH = ? " +
+                "SELECT rr.rr_code, CONVERT(VARCHAR(10), rr.rr_date, 105) rr_date, rr.rr_from, p.product_code, p.product_name, rrd.qty_g, rrd.qty_b, rrd.uom, " +
+                "	rr.po_code, CONVERT(VARCHAR(10), po.po_date, 105) po_date, u.name, po.remarks, ? periode " +
+                "FROM rr " +
+                "	INNER JOIN rr_detail rrd ON rrd.rr_code = rr.rr_code " +
+                "	INNER JOIN product p ON p.product_code = rrd.product_code " +
+                "	INNER JOIN po ON po.po_code = rr.po_code " +
+                "	LEFT JOIN \"user\" u ON u.user_id = po.created_by " +
+                "WHERE YEAR(rr.rr_date) = @YEAR AND MONTH(rr.rr_date) = @MONTH ORDER BY rr.rr_code"
+            );
+            
+            ListMap.put(Report.PurchasedItems, 
+                "DECLARE @YEAR INT, @MONTH INT " +
+                "SET @YEAR = ? " +
+                "SET @MONTH = ? " +
+                "SELECT p.product_code, p.product_name, ? periode, " +
+                "	SUM(CASE WHEN MONTH(po.po_date) = @MONTH THEN prsd.qty END) as qty1, " +
+                "	SUM(CASE WHEN po.currency = 'IDR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as idr1, " +
+                "	SUM(CASE WHEN po.currency = 'USD' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as usd1, " +
+                "	SUM(CASE WHEN po.currency = 'EUR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as eur1, " +
+                "	SUM(CASE WHEN po.currency = 'JPY' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as jpy1, " +
+                "	SUM(CASE WHEN 1 = 1 THEN prsd.qty END) as qty2, " +
+                "	SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr2, " +
+                "	SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd2, " +
+                "	SUM(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur2, " +
+                "	SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy2 " +
+                "FROM po " +
+                "	INNER JOIN po_detail pod ON pod.po_code = po.po_code " +
+                "	LEFT JOIN product p ON p.product_code = pod.product_code " +
+                "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code " +
+                "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = @YEAR " +
+                "GROUP BY p.product_code, p.product_name ORDER BY p.product_name"
+            );
+            
+            ListMap.put(Report.PurchasedPerSupplier, 
+                "DECLARE @YEAR INT, @MONTH INT " +
+                "SET @YEAR = ? " +
+                "SET @MONTH = ? " +
+                "SELECT s.supplier_code, s.supplier_name, ? periode, " +
+                "	SUM(CASE WHEN MONTH(po.po_date) = @MONTH THEN prsd.qty END) as qty1, " +
+                "	SUM(CASE WHEN po.currency = 'IDR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as idr1, " +
+                "	SUM(CASE WHEN po.currency = 'USD' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as usd1, " +
+                "	SUM(CASE WHEN po.currency = 'EUR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as eur1, " +
+                "	SUM(CASE WHEN po.currency = 'JPY' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as jpy1, " +
+                "	SUM(CASE WHEN 1 = 1 THEN prsd.qty END) as qty2, " +
+                "	SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr2, " +
+                "	SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd2, " +
+                "	SUM(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur2, " +
+                "	SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy2 " +
+                "FROM po " +
+                "	INNER JOIN po_detail pod ON pod.po_code = po.po_code " +
+                "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code " +
+                "	INNER JOIN supplier s ON s.supplier_code = po.supplier_code " +
+                "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = @YEAR " +
+                "GROUP BY s.supplier_code, s.supplier_name ORDER BY s.supplier_name"
             );
 		
             ListMap.put(Report.PPoIssuedPerSupplier, 
@@ -406,8 +460,8 @@ public class GenerateReportController extends MultiActionController {
                 "SELECT p.product_code, p.product_name, p.uom_name, ISNULL(y.qty_begin, 0) qty_begin, z.qty_in1, z.qty_out1, ISNULL(x.qty_end, 0) qty_end, pc.category_name, ? periode " +
                 "FROM product p " +
                 "	LEFT JOIN ( SELECT sb.product_code, SUM(sb.qty_in1) qty_in1, SUM(sb.qty_out1) qty_out1 FROM stock_balance sb WHERE YEAR(sb.date) = @YEAR AND MONTH(sb.date) = @MONTH AND DAY(sb.date) BETWEEN 1 AND @DAY GROUP BY sb.product_code ) z ON z.product_code = p.product_code " +
-                "	OUTER APPLY ( SELECT TOP (1) sb.[begin] as qty_begin FROM stock_balance sb WHERE YEAR(sb.date) = @YEAR AND MONTH(sb.date) = ( @MONTH - 1 ) AND sb.product_code = p.product_code ORDER BY sb.date ASC ) y " +
-                "	OUTER APPLY ( SELECT TOP (1) sb.[end] as qty_end FROM stock_balance sb WHERE YEAR(sb.date) = @YEAR AND MONTH(sb.date) = @MONTH AND sb.product_code = p.product_code ORDER BY sb.date DESC ) x " +
+                "	OUTER APPLY ( SELECT TOP (1) sb.[begin] as qty_begin FROM stock_balance sb WHERE YEAR(sb.date) = @YEAR AND MONTH(sb.date) < @MONTH AND sb.product_code = p.product_code ORDER BY sb.date DESC ) y " +
+                "	OUTER APPLY ( SELECT TOP (1) sb.[end] as qty_end FROM stock_balance sb WHERE YEAR(sb.date) = @YEAR AND MONTH(sb.date) <= @MONTH AND sb.product_code = p.product_code ORDER BY sb.date DESC ) x " +
                 "	LEFT JOIN product_category pc ON pc.category_code = p.product_category " +
                 "WHERE p.product_category = ? AND ( z.qty_in1 != 0 OR z.qty_out1 != 0 OR y.qty_begin !=0 OR x.qty_end != 0 ) " +
                 "ORDER BY p.product_name"

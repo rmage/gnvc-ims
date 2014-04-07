@@ -74,13 +74,25 @@ public class FishMealDaoImpl extends AbstractDAO
             } break;
         }
         
-        jdbcTemplate.update("UPDATE stock_inventory_log SET log = ? WHERE product_code = '" + productCode + "' AND created_date = ? " + 
-            "IF(@@ROWCOUNT = 0) INSERT INTO stock_inventory_log VALUES('" + productCode + "', ?, ?) " +
-            "DECLARE @DATE VARCHAR(10), @BAGS INT, @KILOS INT " +
-            "SET @DATE = ? SET @BAGS = ? SET @KILOS = ? " +
-            "UPDATE fishmeal_detail SET fm_bi_bags = fm_bi_bags - @BAGS, fm_bi_kilos = fm_bi_kilos - @KILOS, fm_ei_bags = fm_ei_bags - @BAGS, fm_ei_kilos = fm_ei_kilos - @KILOS " +
-            "WHERE YEAR(fm_date) >= YEAR(@DATE) AND MONTH(fm_date) > MONTH(@DATE)",
-            bags + ":" + kilos, date, bags + ":" + kilos, date, date, bags, kilos);
+        jdbcTemplate.update("DECLARE @_DATE VARCHAR(10), @_BAGS INT, @_KILOS INT, @_PRODUCT VARCHAR(30), @BAGS INT, @KILOS INT, @VAL VARCHAR(30) " +
+            "SET @_DATE = ? " +
+            "SET @_BAGS = ? " +
+            "SET @_KILOS = ? " +
+            "SET @_PRODUCT = ? " +
+            " " +
+            "SELECT TOP 1 @VAL = log FROM stock_inventory_log WHERE product_code = @_PRODUCT AND created_date = @_DATE " +
+            "IF (@VAL IS NULL) BEGIN " +
+            "	UPDATE fishmeal_detail SET fm_bi_bags = fm_bi_bags + @_BAGS, fm_bi_kilos = fm_bi_kilos + @_KILOS, fm_ei_bags = fm_ei_bags + @_BAGS, fm_ei_kilos = fm_ei_kilos + @_KILOS " +
+            "		WHERE YEAR(fm_date) >= YEAR(@_DATE) AND MONTH(fm_date) > MONTH(@_DATE) " +
+            "	INSERT INTO stock_inventory_log VALUES(@_PRODUCT, (CAST(@_BAGS AS VARCHAR) + ':' + CAST(@_KILOS AS VARCHAR)), @_DATE) " +
+            "END ELSE BEGIN " +
+            "	SELECT  " +
+            "		@BAGS = CAST(SUBSTRING(@VAL, 1, CHARINDEX(':', @VAL) - 1) AS INT), " +
+            "		@KILOS = CAST(SUBSTRING(@VAL, CHARINDEX(':', @VAL) + 1, LEN(@VAL)) AS INT) " +
+            "	UPDATE fishmeal_detail SET fm_bi_bags = fm_bi_bags + (@_BAGS - @BAGS), fm_bi_kilos = fm_bi_kilos + (@_KILOS - @KILOS), fm_ei_bags = fm_ei_bags + (@_BAGS - @BAGS), fm_ei_kilos = fm_ei_kilos + (@_KILOS - @KILOS) " +
+            "		WHERE YEAR(fm_date) >= YEAR(@_DATE) AND MONTH(fm_date) > MONTH(@_DATE) " +
+            "	UPDATE stock_inventory_log SET log = (CAST(@_BAGS AS VARCHAR) + ':' + CAST(@_KILOS AS CHAR)) WHERE product_code = @_PRODUCT AND created_date = @_DATE " +
+            "END", date, bags, kilos, productCode);
     }
     
     public String findAdjusted(String date, int b) {
