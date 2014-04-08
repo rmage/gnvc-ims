@@ -289,4 +289,7 @@
     <bean name="/Ofal.htm" class="com.app.wms.web.controller.OfalController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/Distributor.htm" class="com.app.wms.web.controller.DistributorController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

@@ -375,4 +375,7 @@
     <bean id="TsDtlDao" class="com.app.wms.engine.db.dao.spring.TsDtlDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="DistributorDao" class="com.app.wms.engine.db.dao.spring.DistributorDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>
