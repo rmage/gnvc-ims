@@ -213,35 +213,6 @@
             }
             window.onload = formfocus;
 
-//		   function getSelectedIndexes(select) {
-//			   var selected = [];
-//			   for (var i = 0; i  < select.options.length; i++) {
-//			       if(select.options[i].selected ) {
-//			            selected.push(i);
-//			       }
-//			   }
-//			   return selected;
-//			}
-//
-//			var select = document.getElementById("options");
-//			var prevSelected = getSelectedIndexes(select);
-//
-//			select.onchange = function(e) {
-//			    var currentlySelected = getSelectedIndexes(this);
-//
-//			    for (var i =0; i < currentlySelected.length; i++) {
-//			        if (prevSelected.indexOf(currentlySelected[i]) == -1) {
-//			            console.log("Added to selection ", this.options[currentlySelected[i]].text);
-//			        }
-//			    }
-//
-//			    for (var i =0; i < prevSelected.length; i++) {
-//			        if (currentlySelected.indexOf(prevSelected[i]) == -1) {
-//			            console.log("Removed from selection  ", this.options[prevSelected[i]].text);
-//			        }
-//			    }        
-//			    prevSelected = currentlySelected;
-//			};
         </script>
     </body>
 </html>

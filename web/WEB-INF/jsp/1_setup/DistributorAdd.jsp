@@ -1,4 +1,3 @@
-<%@page import="com.app.wms.engine.db.dto.Distributor"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
@@ -8,9 +7,6 @@
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
-        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            String mode = (String) m.get("mode");
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
@@ -18,7 +14,7 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="Distributor.htm" method="post" id="addForm">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" name="isActive" value="Y"/>
 

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,13 +32,6 @@ public class DistributorController extends MultiActionController {
         m.put("t", distributor);
 
         return new ModelAndView("1_setup/DistributorList", "model", m);
-
-    }
-
-    public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) {
-        DistributorDao distributorDao = DaoFactory.createDistributorDao();
-        List<Distributor> distributor = distributorDao.findAll();
-        return new ModelAndView("1_setup/DistributorList", "model", distributor);
     }
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
@@ -47,14 +39,9 @@ public class DistributorController extends MultiActionController {
         map.put("mode", "create");
         return new ModelAndView("1_setup/DistributorAdd", "model", map);
     }
-    
-//    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) {
-//        Map map = new HashMap();
-//        map.put("mode", "update");
-//        return new ModelAndView("1_setup/DistributorEdit","model",map);
-//    }
 
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         Distributor d = new Distributor();
         d.setDistributorCode(request.getParameter("distributorCode"));
         d.setDistributorName(request.getParameter("distributorName"));
@@ -65,7 +52,7 @@ public class DistributorController extends MultiActionController {
         d.setContactPerson(request.getParameter("contactPerson"));
         d.setIsActive(request.getParameter("isActive"));
         d.setIsDelete(request.getParameter("isDelete"));
-        d.setCreatedBy(request.getParameter("createdBy"));
+        d.setCreatedBy(lu.getUserId());
         d.setCreatedDate(new Date());
 
         DistributorDao distributorDao = DaoFactory.createDistributorDao();
@@ -73,29 +60,46 @@ public class DistributorController extends MultiActionController {
 
         return new ModelAndView("redirect:Distributor.htm");
     }
-    
-    public ModelAndView update(HttpServletRequest request, HttpServletResponse response){
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        DistributorDao distributorDao = DaoFactory.createDistributorDao();
+        Distributor distributor = distributorDao.findId(id);
+
+        Map map = new HashMap();
+        map.put("dist", distributor);
+        return new ModelAndView("1_setup/DistributorEdit", "model", map);
+    }
+
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         Distributor d = new Distributor();
         d.setDistributorName(request.getParameter("distributorName"));
         d.setDistributorAddress(request.getParameter("distributorAddress"));
         d.setTelephone(request.getParameter("telephone"));
         d.setFax(request.getParameter("fax"));
         d.setEmail(request.getParameter("email"));
-        d.setDistributorCode(request.getParameter("distributorCoode"));
-        
+        d.setContactPerson(request.getParameter("contactPerson"));
+        d.setId(Integer.parseInt(request.getParameter("id")));
+        d.setUpdatedBy(lu.getUserId());
+        d.setUpdatedDate(new Date());
+
         DistributorDao distributorDao = DaoFactory.createDistributorDao();
         distributorDao.edit(d);
-        
+
         return new ModelAndView("redirect:Distributor.htm");
     }
-    
-    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response){
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         Distributor d = new Distributor();
-        d.setDistributorCode(request.getParameter("distributorCode"));
-        
+        d.setId(Integer.parseInt(request.getParameter("key")));
+        d.setUpdatedBy(lu.getUserId());
+        d.setUpdatedDate(new Date());
+
         DistributorDao distributorDao = DaoFactory.createDistributorDao();
         distributorDao.delete(d);
-        
+
         return new ModelAndView("redirect:Distributor.htm");
     }
 
@@ -108,8 +112,9 @@ public class DistributorController extends MultiActionController {
         pw.print("{\"maxpage\": " + distDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
         List<Distributor> ps = distDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
         for (Distributor x : ps) {
-            if (b) 
+            if (b) {
                 pw.print(",");
+            }
             pw.print("{\"1\": \"" + x.getId() + "\", ");
             pw.print("\"2\": \"" + x.getDistributorCode() + "\", ");
             pw.print("\"3\": \"" + x.getDistributorName() + "\", ");
