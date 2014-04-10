@@ -20,6 +20,8 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.text.ParseException;
 
 public class SupplierController  extends MultiActionController {
 
@@ -149,7 +151,7 @@ public class SupplierController  extends MultiActionController {
 		
 	}
 	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String createdBy = "";
         if (lu == null) {
@@ -162,7 +164,7 @@ public class SupplierController  extends MultiActionController {
         }
        
         SupplierDao dao = DaoFactory.createSupplierDao();
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer id = Integer.parseInt(request.getParameter("key"));
         Supplier dto = dao.findByPrimaryKey(id);
         if (dto != null) {
             dto.setIsActive(AppConstant.STATUS_FALSE);
@@ -313,5 +315,56 @@ public class SupplierController  extends MultiActionController {
         } else {
             pw.print("{\"status\": true}");
         }
+    }
+    
+    //Modified 9 April 2014
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        SupplierDao supDao = DaoFactory.createSupplierDao();
+
+        pw.print("{\"maxpage\": " + supDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Supplier> ps = supDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (Supplier x : ps) {
+            if (b) 
+                pw.print(",");
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getSupplierCode() + "\", ");
+            pw.print("\"3\": \"" + x.getSupplierName() + "\", ");
+            pw.print("\"4\": \"" + x.getIsActive()+ "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+    
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+        Supplier dto = supplierDao.findId(id);
+        
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/SupplierEdit","model",map);
+    }
+    
+    public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws ParseException {
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        Supplier s = new Supplier();
+        s.setSupplierName(request.getParameter("supplierName"));
+        s.setSupplierAddress(request.getParameter("supplierAddress"));
+        s.setTelephone(request.getParameter("telephone"));
+        s.setFax(request.getParameter("fax"));
+        s.setEmail(request.getParameter("email"));
+        s.setContactPerson(request.getParameter("contactPerson"));
+        s.setId(Integer.parseInt(request.getParameter("id")));
+        s.setUpdatedBy(lu.getUserId());
+        s.setUpdatedDate(new Date());
+
+        SupplierDao distributorDao = DaoFactory.createSupplierDao();
+        distributorDao.edit(s);
+
+        return new ModelAndView("redirect:Supplier.htm");
     }
 }

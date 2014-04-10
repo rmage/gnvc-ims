@@ -8,7 +8,6 @@
     </head>
     <body>
         <%
-        	
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -16,7 +15,7 @@
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="Supplier.htm" method="post">
+                    <form action="Supplier.htm" id="search" method="post">
                         <table class="collapse tblForm row-select">
                             <caption>Search Supplier</caption>
                             <tbody>
@@ -25,27 +24,27 @@
                                         Supplier Code
                                     </td>
                                     <td>
-                                        <input type="text" name="supplierCode" value=""/>
+                                        <input type="text" name="supplier_code" value=""/>
                                     </td>
                                     <td>
                                         Supplier Name
                                     </td>
                                     <td>
-                                        <input type="text" name="supplierName" value="" />
+                                        <input type="text" name="supplier_name" value="" />
                                     </td>
                                     <td colspan="2">
                                     </td>
                                 </tr>
                                 <tr>
-                                   
+
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="4">
-                                    <span class="style1">
+                                    <span>
                                         <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
-                                     <label>
+                                    <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
                                 </td>
@@ -53,77 +52,20 @@
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
+                    <table class="collapse tblForm row-select" id="list">
                         <caption>Supplier - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="style1">No</td>
-                                <td class="style1">Action</td>
-                                <td class="style1">Supplier Code</td>
-                                <td class="style1">Supplier Name</td>
-                                <td class="style1">Is Active</td>
+                                <td>No</td>
+                                <td>Action</td>
+                                <td column="supplier_code">Supplier Code</td>
+                                <td column="supplier_name">Supplier Name</td>
+                                <td>Is Active</td>
                             </tr>
                         </thead>
-                        <tbody id="main">
-                            <c:if test="${model.supplier!=null}">
-                                <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
-                                <c:forEach items="${model.supplier}" var="sup">
-                                    <tr class="ganjil">
-                                        <td class="center" width="1%">
-                                            <c:out value="${nomor}" />
-                                            <c:set scope="page" value="${nomor+1}" var="nomor"/>
-                                        </td>
-                                        <c:url value="Supplier.htm" var="urlEdit">
-                                            <c:param name="id" value="${sup.id}"/>
-                                            <c:param name="page" value="${model.page}" />
-                                            <c:param name="mode" value="edit"/>
-                                        </c:url>
-                                        <c:url value="Supplier.htm" var="urlDelete">
-                                            <c:param name="id" value="${sup.id}"/>
-                                            <c:param name="page" value="${model.page}" />
-                                            <c:param name="action" value="inactivate"/>
-                                        </c:url>
-                                        <td class="center" width="5%">
-                                            <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                            <a href='<c:out value="${urlDelete}"/>'>
-                                                <img src="resources/images/delete.gif" width="16" height="16" /></a>
-                                        </td>
-                                        <td class="style1"><c:out value="${sup.supplierCode}"/></td>
-                                        <td class="style1"><c:out value="${sup.supplierName}"/></td>
-                                        <td class="center"><c:out value="${sup.isActive}"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                          <tr>
-                                <td colspan="5">
-                                    <span class="style1">
-                                        <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="Supplier.htm?page=<c:out value="${model.page-1}" />">
-                                                &lt;
-                                            </a>
-                                        </c:if>
-                                        &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="Supplier.htm?page=<c:out value="${model.page+1}" />">
-											&gt;
-						    				</a>
-										</c:if>
-				    				</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-
-                            <td colspan="6">
-                                <span class="style1">
-                                   
-                                </span>
-                            </td>
-                        </tfoot>
-
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
-
                 </div>
             </div>
             <div class="span-24 last border-top">
@@ -147,10 +89,12 @@
                     $('.tab').show();
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
             });
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'u:d');
         </script>
-        
+
     </body>
 
 </html>

@@ -8,11 +8,12 @@ import org.springframework.core.io.ClassPathResource;
 
 public class DaoFactory {
 
-  public static BasicDataSource getReportDataSource() {
+    public static BasicDataSource getReportDataSource() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
 
         return (BasicDataSource) bf.getBean("dataSource");
     }
+
     /**
      * Method 'createNextSequenceDao'
      *
@@ -51,8 +52,6 @@ public class DaoFactory {
         return (AppMenuRoleDao) bf.getBean("AppMenuRoleDao");
     }
 
-   
-
     /**
      * Method 'createBundleDao'
      *
@@ -72,8 +71,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (BundleDetailDao) bf.getBean("BundleDetailDao");
     }
-    
-   
+
     /**
      * Method 'createCityDao'
      *
@@ -155,7 +153,6 @@ public class DaoFactory {
     }
 
     /*Warehouse Management System 12:50 AM*/
-    
     /**
      * Method 'createCorporateDao'
      *
@@ -165,7 +162,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CorporateDao) bf.getBean("CorporateDao");
     }
-    
+
     /**
      * Method 'createCorpDao'
      *
@@ -175,7 +172,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CorpDao) bf.getBean("CorpDao");
     }
-    
+
     /**
      * Method 'createCorpUserDao'
      *
@@ -185,7 +182,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CorpUserDao) bf.getBean("CorpUserDao");
     }
-    
+
     /**
      * Method 'createCorpUserGroupDao'
      *
@@ -195,7 +192,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CorpUserGroupDao) bf.getBean("CorpUserGroupDao");
     }
-    
+
     /**
      * Method 'createCorpWhDao'
      *
@@ -205,7 +202,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CorpWhDao) bf.getBean("CorpWhDao");
     }
-    
+
     /**
      * Method 'createTallymanDao'
      *
@@ -215,7 +212,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (TallymanDao) bf.getBean("TallymanDao");
     }
-    
+
     /**
      * Method 'createWhLocationDao'
      *
@@ -225,7 +222,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (WhLocationDao) bf.getBean("WhLocationDao");
     }
-    
+
     /**
      * Method 'createWhLocationDetailDao'
      *
@@ -235,7 +232,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (WhLocationDetailDao) bf.getBean("WhLocationDetailDao");
     }
-    
+
     /**
      * Method 'createWarehouseLocationDao'
      *
@@ -245,7 +242,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (WarehouseLocationDao) bf.getBean("WarehouseLocationDao");
     }
-    
+
     /**
      * Method 'createProvinceDao'
      *
@@ -255,7 +252,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (ProvinceDao) bf.getBean("ProvinceDao");
     }
-    
+
     /**
      * Method 'createPurchaseDao'
      *
@@ -265,7 +262,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PurchaseDao) bf.getBean("PurchaseDao");
     }
-    
+
     /**
      * Method 'createGoodReceiveDao'
      *
@@ -275,7 +272,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (GoodreceiveDao) bf.getBean("GoodreceiveDao");
     }
-    
+
     /**
      * Method 'createPutawayDao'
      *
@@ -285,7 +282,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PutawayDao) bf.getBean("PutawayDao");
     }
-    
+
     /**
      * Method 'createCrossdockDao'
      *
@@ -295,7 +292,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CrossDockDao) bf.getBean("CrossDockDao");
     }
-    
+
     /**
      * Method 'createSalesOrderDao'
      *
@@ -305,7 +302,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (SalesOrderDao) bf.getBean("SalesOrderDao");
     }
-    
+
     /**
      * Method 'createSalesOrderDetailDao'
      *
@@ -315,7 +312,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (SalesOrderDetailDao) bf.getBean("SalesOrderDetailDao");
     }
-    
+
     /**
      * Method 'createPickingDao'
      *
@@ -325,7 +322,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PickingDao) bf.getBean("PickingDao");
     }
-    
+
     /**
      * Method 'createPickingDetailDao'
      *
@@ -335,7 +332,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PickingDetailDao) bf.getBean("PickingDetailDao");
     }
-    
+
     /**
      * Method 'createPackingDao'
      *
@@ -345,7 +342,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PackingDao) bf.getBean("PackingDao");
     }
-    
+
     /**
      * Method 'createDeliveryDao'
      *
@@ -355,7 +352,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (DeliveryDao) bf.getBean("DeliveryDao");
     }
-    
+
     /**
      * Method 'createConsolidateDao'
      *
@@ -375,7 +372,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (ConsolidateDetailDao) bf.getBean("ConsolidateDetailDao");
     }
-    
+
     /**
      * Method 'createKittingDao'
      *
@@ -385,7 +382,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (KittingDao) bf.getBean("KittingDao");
     }
-    
+
     /**
      * Method 'createKittingDetailDao'
      *
@@ -395,8 +392,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (KittingDetailDao) bf.getBean("KittingDetailDao");
     }
-    
-    
+
     /**
      * Method 'createDoDetailDao'
      *
@@ -406,470 +402,436 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (DoDetailDao) bf.getBean("DoDetailDao");
     }
-	
-	/**
-	 * Method 'createPackingDetailDao'
-	 * 
-	 * @return PackingDetailDao
-	 */
-	public static PackingDetailDao createPackingDetailDao()
-	{
-		BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-		return (PackingDetailDao) bf.getBean( "PackingDetailDao" );
-	}
-	
-	/**
-	 * Method 'createPutawayDetailDao'
-	 * 
-	 * @return PutawayDetailDao
-	 */
-	public static PutawayDetailDao createPutawayDetailDao()
-	{
-		BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-		return (PutawayDetailDao) bf.getBean( "PutawayDetailDao" );
-	}
-	
-	/**
-	 * Method 'createReplenishDetailDao'
-	 * 
-	 * @return ReplenishDetailDao
-	 */
-	public static ReplenishDetailDao createReplenishDetailDao()
-	{
-		BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-		return (ReplenishDetailDao) bf.getBean( "ReplenishDetailDao" );
-	}
 
-	/**
-	 * Method 'createReplenishmentDao'
-	 * 
-	 * @return ReplenishmentDao
-	 */
-	public static ReplenishmentDao createReplenishmentDao()
-	{
-		BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-		return (ReplenishmentDao) bf.getBean( "ReplenishmentDao" );
-	}
-	
-	/**
-	 * Method 'createConsigneeDao'
-	 * 
-	 * @return ConsigneeDao
-	 */
-	public static ConsigneeDao createConsigneeDao()
-	{
-		BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-		return (ConsigneeDao) bf.getBean( "ConsigneeDao" );
-	}
-        
-        public static POCrossDockDao createPOCrossDockDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (POCrossDockDao) bf.getBean( "POCrossDockDao" );
-        }
+    /**
+     * Method 'createPackingDetailDao'
+     *
+     * @return PackingDetailDao
+     */
+    public static PackingDetailDao createPackingDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PackingDetailDao) bf.getBean("PackingDetailDao");
+    }
 
-        public static POCrossDockDtlDao createPOCrossDockDtlDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (POCrossDockDtlDao) bf.getBean( "POCrossDockDtlDao" );
-        }
-        
-        public static GRCrossDockDao createGRCrossDockDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (GRCrossDockDao) bf.getBean( "GRCrossDockDao" );
-        }
+    /**
+     * Method 'createPutawayDetailDao'
+     *
+     * @return PutawayDetailDao
+     */
+    public static PutawayDetailDao createPutawayDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PutawayDetailDao) bf.getBean("PutawayDetailDao");
+    }
 
-        public static GRCrossDockDtlDao createGRCrossDockDtlDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (GRCrossDockDtlDao) bf.getBean( "GRCrossDockDtlDao" );
-        }
-        
-        public static PACrossDockDao createPACrossDockDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (PACrossDockDao) bf.getBean( "PACrossDockDao" );
-        }
-        
-        public static SOCrossDockDao createSOCrossDockDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (SOCrossDockDao) bf.getBean( "SOCrossDockDao" );
-        }
-        
-        public static PCrossDockDao createPCrossDockDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (PCrossDockDao) bf.getBean( "PCrossDockDao" );
-        }
-        
-        public static DOCrossDockDao createDOCrossDockDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (DOCrossDockDao) bf.getBean( "DOCrossDockDao" );
-        }
-        
-        public static WhLocatingAreaDao createWhLocatingAreaDao()
-        {
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (WhLocatingAreaDao) bf.getBean( "WhLocatingAreaDao" );
-        }
-        
-        public static QuarantineDao createQuarantineDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (QuarantineDao) bf.getBean( "QuarantineDao" );
-        }
-        
-        public static QuarantineDtlDao createQuarantineDtlDao(){
-            BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-            return (QuarantineDtlDao) bf.getBean( "QuarantineDtlDao" );
-        }
-	
-		public static UomDao createUomDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (UomDao) bf.getBean( "UomDao" );
-		}
-		
-		public static DepartmentDao createDepartmentDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (DepartmentDao) bf.getBean( "DepartmentDao" );
-		}
-		
-		public static SupplierDao createSupplierDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (SupplierDao) bf.getBean( "SupplierDao" );
-		}
-		
-		public static PoDao createPoDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (PoDao) bf.getBean( "PoDao" );
-		}
-		
-		public static PoDetailDao createPoDetailDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (PoDetailDao) bf.getBean( "PoDetailDao" );
-		}
-		
-		public static GoodreceiveDetailDao createGoodreceiveDetailDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (GoodreceiveDetailDao) bf.getBean( "GoodreceiveDetailDao" );
-		}
+    /**
+     * Method 'createReplenishDetailDao'
+     *
+     * @return ReplenishDetailDao
+     */
+    public static ReplenishDetailDao createReplenishDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ReplenishDetailDao) bf.getBean("ReplenishDetailDao");
+    }
 
-		public static VgrdetailproductcategoryDao createVgrdetailproductcategoryDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (VgrdetailproductcategoryDao) bf.getBean( "VgrdetailproductcategoryDao" );
-		}
-		
-		public static CurrencyDao createCurrencyDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (CurrencyDao) bf.getBean( "CurrencyDao" );
-		}
-	
-		public static PriceCatalogDao createPriceCatalogDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (PriceCatalogDao) bf.getBean( "PriceCatalogDao" );
-		}
+    /**
+     * Method 'createReplenishmentDao'
+     *
+     * @return ReplenishmentDao
+     */
+    public static ReplenishmentDao createReplenishmentDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ReplenishmentDao) bf.getBean("ReplenishmentDao");
+    }
 
-		public static ProductPriceDao createProductPriceDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (ProductPriceDao) bf.getBean( "ProductPriceDao" );
-		}
-		
-		public static PtsDao createPtsDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (PtsDao) bf.getBean( "PtsDao" );
-		}
-		
-		public static StockBalanceDao createStockBalanceDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (StockBalanceDao) bf.getBean( "StockBalanceDao" );
-		}
-		
-		public static StockInDao createStockInDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (StockInDao) bf.getBean( "StockInDao" );
-		}
-		
-		public static StockInventoryDao createStockInventoryDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (StockInventoryDao) bf.getBean( "StockInventoryDao" );
-		}
-		
-		public static StockOpnameDao createStockOpnameDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (StockOpnameDao) bf.getBean( "StockOpnameDao" );
-		}
-		
-		public static StockOutDao createStockOutDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (StockOutDao) bf.getBean( "StockOutDao" );
-		}
-		
-		public static WarehouseDao createWarehouseDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (WarehouseDao) bf.getBean( "WarehouseDao" );
-		}
-		
-		public static WsDao createWsDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (WsDao) bf.getBean( "WsDao" );
-		}
-		
-		public static SwsDao createSwsDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (SwsDao) bf.getBean( "SwsDao" );
-		}
+    /**
+     * Method 'createConsigneeDao'
+     *
+     * @return ConsigneeDao
+     */
+    public static ConsigneeDao createConsigneeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ConsigneeDao) bf.getBean("ConsigneeDao");
+    }
 
-		public static SwsDtlDao createSwsDtlDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (SwsDtlDao) bf.getBean( "SwsDtlDao" );
-		}
-	
-		public static BorDao createBorDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (BorDao) bf.getBean( "BorDao" );
-		}
+    public static POCrossDockDao createPOCrossDockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (POCrossDockDao) bf.getBean("POCrossDockDao");
+    }
 
-		public static BorDtlDao createBorDtlDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (BorDtlDao) bf.getBean( "BorDtlDao" );
-		}
+    public static POCrossDockDtlDao createPOCrossDockDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (POCrossDockDtlDao) bf.getBean("POCrossDockDtlDao");
+    }
 
-		public static DrDao createDrDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (DrDao) bf.getBean( "DrDao" );
-		}
+    public static GRCrossDockDao createGRCrossDockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (GRCrossDockDao) bf.getBean("GRCrossDockDao");
+    }
 
-		public static DrDtlDao createDrDtlDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (DrDtlDao) bf.getBean( "DrDtlDao" );
-		}
+    public static GRCrossDockDtlDao createGRCrossDockDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (GRCrossDockDtlDao) bf.getBean("GRCrossDockDtlDao");
+    }
 
-		public static EdsDao createEdsDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (EdsDao) bf.getBean( "EdsDao" );
-		}
+    public static PACrossDockDao createPACrossDockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PACrossDockDao) bf.getBean("PACrossDockDao");
+    }
 
-		public static TsDao createTsDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (TsDao) bf.getBean( "TsDao" );
-		}
-		
-		public static PrsDao createPrsDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (PrsDao) bf.getBean( "PrsDao" );
-		}
+    public static SOCrossDockDao createSOCrossDockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (SOCrossDockDao) bf.getBean("SOCrossDockDao");
+    }
 
-		public static PrsDetailDao createPrsDetailDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (PrsDetailDao) bf.getBean( "PrsDetailDao" );
-		}
-		
-		public static CanvassingDao createCanvassingDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (CanvassingDao) bf.getBean( "CanvassingDao" );
-		}
+    public static PCrossDockDao createPCrossDockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PCrossDockDao) bf.getBean("PCrossDockDao");
+    }
 
-		public static CanvassingDetailDao createCanvassingDetailDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (CanvassingDetailDao) bf.getBean( "CanvassingDetailDao" );
-		}
-		
-		public static AssignCanvasserDao createAssignCanvasserDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (AssignCanvasserDao) bf.getBean( "AssignCanvasserDao" );
-		}
-		
-		public static ApprovalRangeDao createApprovalRangeDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (ApprovalRangeDao) bf.getBean( "ApprovalRangeDao" );
-		}
-		
-		public static BeritaAcaraDao createBeritaAcaraDao()
-		{
-			BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-			return (BeritaAcaraDao) bf.getBean( "BeritaAcaraDao" );
-		}
-		
-		public static FishDao createFishDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishDao) bf.getBean("FishDao");
-		}
-		
-		public static FishTypeDao createFishTypeDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishTypeDao) bf.getBean("FishTypeDao");
-		}
-		
-		public static FishWeightTypeDao createFishWeightTypeDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishWeightTypeDao) bf.getBean("FishWeightTypeDao");
-		}
-		
-		public static FishWsTypeDao createFishWsTypeDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishWsTypeDao) bf.getBean("FishWsTypeDao");
-		}
-		
-		public static FishStorageDao createFishStorageDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishStorageDao) bf.getBean("FishStorageDao");
-		}
-		
-		public static FishWsDao createFishWsDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishWsDao) bf.getBean("FishWsDao");
-		}
-		
-		public static FishWsDetailDao createFishWsDetailDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishWsDetailDao) bf.getBean("FishWsDetailDao");
-		}
-		
-		public static FishSpoilageDao createFishSpoilageDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishSpoilageDao) bf.getBean("FishSpoilageDao");
-		}
-		
-		public static FishSupplierDao createFishSupplierDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishSupplierDao) bf.getBean("FishSupplierDao");
-		}
-		
-		public static FishVesselDao createFishVesselDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishVesselDao) bf.getBean("FishVesselDao");
-		}
-		
-		public static FishRrDao createFishRrDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishRrDao) bf.getBean("FishRrDao");
-		}
-		
-		public static FishRrDetailDao createFishRrDetailDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishRrDetailDao) bf.getBean("FishRrDetailDao");
-		}
-		
-		public static FishBalanceDao createFishBalanceDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishBalanceDao) bf.getBean("FishBalanceDao");
-		}
-		
-		public static FishWdsDao createFishWdsDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishWdsDao) bf.getBean("FishWdsDao");
-		}
-		
-		public static FishWdsDetailDao createFishWdsDetailDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishWdsDetailDao) bf.getBean("FishWdsDetailDao");
-		}
-		
-		public static FishTsDao createFishTsDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishTsDao) bf.getBean("FishTsDao");
-		}
-		
-		public static FishTsDetailDao createFishTsDetailDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishTsDetailDao) bf.getBean("FishTsDetailDao");
-		}
-		
-		public static FishBalanceHistoryDao createFishBalanceHistoryDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishBalanceHistoryDao) bf.getBean("FishBalanceHistoryDao");
-		}
-		
-		public static FishBadStockDao createFishBadStockDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishBadStockDao) bf.getBean("FishBadStockDao");
-		}
-		
-		public static FishBadStockDetailDao createFishBadStockDetailDao() {
-			BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-			return (FishBadStockDetailDao) bf.getBean("FishBadStockDetailDao");
-		}
+    public static DOCrossDockDao createDOCrossDockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (DOCrossDockDao) bf.getBean("DOCrossDockDao");
+    }
+
+    public static WhLocatingAreaDao createWhLocatingAreaDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (WhLocatingAreaDao) bf.getBean("WhLocatingAreaDao");
+    }
+
+    public static QuarantineDao createQuarantineDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (QuarantineDao) bf.getBean("QuarantineDao");
+    }
+
+    public static QuarantineDtlDao createQuarantineDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (QuarantineDtlDao) bf.getBean("QuarantineDtlDao");
+    }
+
+    public static UomDao createUomDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (UomDao) bf.getBean("UomDao");
+    }
+
+    public static DepartmentDao createDepartmentDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (DepartmentDao) bf.getBean("DepartmentDao");
+    }
+
+    public static SupplierDao createSupplierDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (SupplierDao) bf.getBean("SupplierDao");
+    }
+
+    public static PoDao createPoDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PoDao) bf.getBean("PoDao");
+    }
+
+    public static PoDetailDao createPoDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PoDetailDao) bf.getBean("PoDetailDao");
+    }
+
+    public static GoodreceiveDetailDao createGoodreceiveDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (GoodreceiveDetailDao) bf.getBean("GoodreceiveDetailDao");
+    }
+
+    public static VgrdetailproductcategoryDao createVgrdetailproductcategoryDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (VgrdetailproductcategoryDao) bf.getBean("VgrdetailproductcategoryDao");
+    }
+
+    public static CurrencyDao createCurrencyDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (CurrencyDao) bf.getBean("CurrencyDao");
+    }
+
+    public static PriceCatalogDao createPriceCatalogDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PriceCatalogDao) bf.getBean("PriceCatalogDao");
+    }
+
+    public static ProductPriceDao createProductPriceDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ProductPriceDao) bf.getBean("ProductPriceDao");
+    }
+
+    public static PtsDao createPtsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PtsDao) bf.getBean("PtsDao");
+    }
+
+    public static StockBalanceDao createStockBalanceDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (StockBalanceDao) bf.getBean("StockBalanceDao");
+    }
+
+    public static StockInDao createStockInDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (StockInDao) bf.getBean("StockInDao");
+    }
+
+    public static StockInventoryDao createStockInventoryDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (StockInventoryDao) bf.getBean("StockInventoryDao");
+    }
+
+    public static StockOpnameDao createStockOpnameDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (StockOpnameDao) bf.getBean("StockOpnameDao");
+    }
+
+    public static StockOutDao createStockOutDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (StockOutDao) bf.getBean("StockOutDao");
+    }
+
+    public static WarehouseDao createWarehouseDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (WarehouseDao) bf.getBean("WarehouseDao");
+    }
+
+    public static WsDao createWsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (WsDao) bf.getBean("WsDao");
+    }
+
+    public static SwsDao createSwsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (SwsDao) bf.getBean("SwsDao");
+    }
+
+    public static SwsDtlDao createSwsDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (SwsDtlDao) bf.getBean("SwsDtlDao");
+    }
+
+    public static BorDao createBorDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (BorDao) bf.getBean("BorDao");
+    }
+
+    public static BorDtlDao createBorDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (BorDtlDao) bf.getBean("BorDtlDao");
+    }
+
+    public static DrDao createDrDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (DrDao) bf.getBean("DrDao");
+    }
+
+    public static DrDtlDao createDrDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (DrDtlDao) bf.getBean("DrDtlDao");
+    }
+
+    public static EdsDao createEdsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (EdsDao) bf.getBean("EdsDao");
+    }
+
+    public static TsDao createTsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (TsDao) bf.getBean("TsDao");
+    }
+
+    public static PrsDao createPrsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PrsDao) bf.getBean("PrsDao");
+    }
+
+    public static PrsDetailDao createPrsDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PrsDetailDao) bf.getBean("PrsDetailDao");
+    }
+
+    public static CanvassingDao createCanvassingDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (CanvassingDao) bf.getBean("CanvassingDao");
+    }
+
+    public static CanvassingDetailDao createCanvassingDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (CanvassingDetailDao) bf.getBean("CanvassingDetailDao");
+    }
+
+    public static AssignCanvasserDao createAssignCanvasserDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (AssignCanvasserDao) bf.getBean("AssignCanvasserDao");
+    }
+
+    public static ApprovalRangeDao createApprovalRangeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (ApprovalRangeDao) bf.getBean("ApprovalRangeDao");
+    }
+
+    public static BeritaAcaraDao createBeritaAcaraDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (BeritaAcaraDao) bf.getBean("BeritaAcaraDao");
+    }
+
+    public static FishDao createFishDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishDao) bf.getBean("FishDao");
+    }
+
+    public static FishTypeDao createFishTypeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishTypeDao) bf.getBean("FishTypeDao");
+    }
+
+    public static FishWeightTypeDao createFishWeightTypeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWeightTypeDao) bf.getBean("FishWeightTypeDao");
+    }
+
+    public static FishWsTypeDao createFishWsTypeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWsTypeDao) bf.getBean("FishWsTypeDao");
+    }
+
+    public static FishStorageDao createFishStorageDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishStorageDao) bf.getBean("FishStorageDao");
+    }
+
+    public static FishWsDao createFishWsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWsDao) bf.getBean("FishWsDao");
+    }
+
+    public static FishWsDetailDao createFishWsDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWsDetailDao) bf.getBean("FishWsDetailDao");
+    }
+
+    public static FishSpoilageDao createFishSpoilageDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishSpoilageDao) bf.getBean("FishSpoilageDao");
+    }
+
+    public static FishSupplierDao createFishSupplierDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishSupplierDao) bf.getBean("FishSupplierDao");
+    }
+
+    public static FishVesselDao createFishVesselDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishVesselDao) bf.getBean("FishVesselDao");
+    }
+
+    public static FishRrDao createFishRrDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishRrDao) bf.getBean("FishRrDao");
+    }
+
+    public static FishRrDetailDao createFishRrDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishRrDetailDao) bf.getBean("FishRrDetailDao");
+    }
+
+    public static FishBalanceDao createFishBalanceDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishBalanceDao) bf.getBean("FishBalanceDao");
+    }
+
+    public static FishWdsDao createFishWdsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWdsDao) bf.getBean("FishWdsDao");
+    }
+
+    public static FishWdsDetailDao createFishWdsDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWdsDetailDao) bf.getBean("FishWdsDetailDao");
+    }
+
+    public static FishTsDao createFishTsDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishTsDao) bf.getBean("FishTsDao");
+    }
+
+    public static FishTsDetailDao createFishTsDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishTsDetailDao) bf.getBean("FishTsDetailDao");
+    }
+
+    public static FishBalanceHistoryDao createFishBalanceHistoryDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishBalanceHistoryDao) bf.getBean("FishBalanceHistoryDao");
+    }
+
+    public static FishBadStockDao createFishBadStockDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishBadStockDao) bf.getBean("FishBadStockDao");
+    }
+
+    public static FishBadStockDetailDao createFishBadStockDetailDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishBadStockDetailDao) bf.getBean("FishBadStockDetailDao");
+    }
 
     /* FYA : 07 January 2014 */
     public static AssignCanvasserDtlDao createAssignCanvasserDtlDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (AssignCanvasserDtlDao) bf.getBean("AssignCanvasserDtlDao");
     }
-    
+
     public static AssignCanvassingDao createAssignCanvassingDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (AssignCanvassingDao) bf.getBean("AssignCanvassingDao");
     }
-    
+
     public static PurchaseDtlDao createPurchaseDtlDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PurchaseDtlDao) bf.getBean("PurchaseDtlDao");
     }
-    
+
     public static ReceiveReportDao createReceiveReportDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (ReceiveReportDao) bf.getBean("ReceiveReportDao");
     }
-    
+
     public static ReceiveReportDtlDao createReceiveReportDtlDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (ReceiveReportDtlDao) bf.getBean("ReceiveReportDtlDao");
     }
-    
+
     public static PtsDtlDao createPtsDtlDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (PtsDtlDao) bf.getBean( "PtsDtlDao" );
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PtsDtlDao) bf.getBean("PtsDtlDao");
     }
-    
+
     public static OfalDao createOfalDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (OfalDao) bf.getBean( "OfalDao" );
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (OfalDao) bf.getBean("OfalDao");
     }
-    
+
     public static OfalDtlDao createOfalDtlDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (OfalDtlDao) bf.getBean( "OfalDtlDao" );
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (OfalDtlDao) bf.getBean("OfalDtlDao");
     }
-    
+
     public static FishMealDao createFishMealDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (FishMealDao) bf.getBean( "FishMealDao" );
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishMealDao) bf.getBean("FishMealDao");
     }
-    
+
     public static FishMealDtlDao createFishMealDtlDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (FishMealDtlDao) bf.getBean( "FishMealDtlDao" );
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishMealDtlDao) bf.getBean("FishMealDtlDao");
     }
-    
+
     public static TsDtlDao createTsDtlDao() {
-        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
-        return (TsDtlDao) bf.getBean( "TsDtlDao" );
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (TsDtlDao) bf.getBean("TsDtlDao");
     }
-    
+
+    public static DistributorDao createDistributorDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (DistributorDao) bf.getBean("DistributorDao");
+    }
+
 }
