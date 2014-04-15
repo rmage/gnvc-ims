@@ -6,9 +6,9 @@
     </head>
     <body>
         <%
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            com.app.wms.engine.db.dto.ProductCategory dto = (com.app.wms.engine.db.dto.ProductCategory) m.get("dto");
-            String mode = (String) m.get("mode");
+            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            //com.app.wms.engine.db.dto.ProductCategory dto = (com.app.wms.engine.db.dto.ProductCategory) m.get("dto");
+            //String mode = (String) m.get("mode");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -16,9 +16,9 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="ProductCategory.htm" method="post">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%//=mode%>" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="id" value="<%= dto.getId()%>"/>
+                        <input type="hidden" name="id" value="${model.mode.id}"/>
                         <table class="collapse tblForm row-select">
                             <caption>Product Category - Detail</caption>
                             <tbody class="tbl-nohover">
@@ -26,7 +26,7 @@
                                     <td>Category Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="categoryCode" value="<%= dto.getCategoryCode()%>" size="30" readonly pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="categoryCode" value="${model.mode.categoryCode}" size="30" readonly pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -35,22 +35,11 @@
                                     <td>Category Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="categoryName" value="<%= dto.getCategoryName()%>" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="categoryName" value="${model.mode.categoryName}" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
-                                </tr>  
-                                <tr>
-                                    <td>Is Active</td>
-                                    <td>
-                                        <label>
-                                            <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-					</label>
-                                         <label>
-					    <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-                                        </label>
-                                    </td>
-                               </tr>                                    
+                                </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="2">

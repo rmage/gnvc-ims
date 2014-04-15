@@ -13,118 +13,58 @@
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <!--<form action="ApprovalRange.htm" method="post">
+                    <form action="Uom.htm" id="search" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search Approval Range</caption>
+                            <caption>Search Approval Range List</caption>
                             <tbody>
                                 <tr>
                                     <td width="20%">
-                                        User Name
-                                    </td>
-                                    <td>
-                                        <input type="text" name="username" value=""/>
-                                    </td>
-                                    <td>
                                         Role Code
                                     </td>
                                     <td>
-                                        <input type="text" name="rolecode" value="" />
+                                        <input type="text" name="role_code" value=""/>
+                                    </td>
+                                    <td>
+                                        From Amount
+                                    </td>
+                                    <td>
+                                        <input type="text" name="from_amount" value="" />
                                     </td>
                                     <td colspan="2">
                                     </td>
                                 </tr>
                                 <tr>
-                                   
+
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="4">
-                                    <span class="style1">
+                                    <span>
                                         <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
-                                     <label>
+                                    <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
                                 </td>
                                 <td></td>
                             </tfoot>
                         </table>
-                    </form>-->
-                    <table class="collapse tblForm row-select">
+                    </form>
+                    <table class="collapse tblForm row-select" id="list">
                         <caption>Approval Range - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="style1">No</td>
-                                <td class="style1">Action</td>
-                                <!--<td class="style1">User Name</td>-->
-                                <td class="style1">Role Code</td>
-                                <td class="style1">From Amount</td>
-                                <td class="style1">To Amount</td>
-                                <td class="style1">Is Active</td>
+                                <td>No</td>
+                                <td>Action</td>
+                                <td column="role_code">Role Code</td>
+                                <td column="from_amount">From Amount</td>
+                                <td>To Amount</td>
+                                <td>Is Active</td>
                             </tr>
                         </thead>
-                        <tbody id="main">
-                            <c:if test="${model.approvalrange!=null}">
-                                <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
-                                <c:forEach items="${model.approvalrange}" var="app">
-                                    <tr class="ganjil">
-                                        <td class="center" width="1%">
-                                            <c:out value="${nomor}" />
-                                            <c:set scope="page" value="${nomor+1}" var="nomor"/>
-                                        </td>
-                                        <c:url value="ApprovalRange.htm" var="urlEdit">
-                                            <c:param name="id" value="${app.id}"/>
-                                            <c:param name="page" value="${model.page}" />
-                                            <c:param name="mode" value="edit"/>
-                                        </c:url>
-                                        <%--<c:url value="ApprovalRange.htm" var="urlDelete">
-                                            <c:param name="id" value="${app.id}"/>
-                                            <c:param name="page" value="${model.page}" />
-                                            <c:param name="action" value="inactivate"/>
-                                        </c:url>--%>
-                                        <td class="center" width="5%">
-                                            <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a>
-                                            <%--<a href='<c:out value="${urlDelete}"/>'>
-                                                <img src="resources/images/delete.gif" width="16" height="16" /></a>--%>
-                                        </td>
-                                        <!--<td class="style1"><c:out value="${app.username}"/></td>-->
-                                        <td class="style1"><c:out value="${app.roleCode}"/></td>
-                                        <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${app.fromAmount}" /></td>
-                                        <td class="style1"><fmt:formatNumber type="currency" currencySymbol="" value="${app.toAmount}" /></td>
-                                        <td class="center"><c:out value="${app.isActive}"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                          <tr>
-                                <td colspan="10">
-                                    <span class="style1">
-                                        <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="ApprovalRange.htm?page=<c:out value="${model.page-1}" />">
-                                                &lt;
-                                            </a>
-                                        </c:if>
-                                        &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="ApprovalRange.htm?page=<c:out value="${model.page+1}" />">
-											&gt;
-						    				</a>
-										</c:if>
-				    				</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-
-                            <td colspan="10">
-                                <span class="style1">
-                                   
-                                </span>
-                            </td>
-                        </tfoot>
-
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
-
                 </div>
             </div>
             <div class="span-24 last border-top">
@@ -148,10 +88,12 @@
                     $('.tab').show();
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
             });
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'u:d');
         </script>
-        
+
     </body>
 
 </html>

@@ -8,9 +8,9 @@
     </head>
     <body>
         <%            
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
-            String mode = (String) m.get("mode");
+            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            //com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
+            //String mode = (String) m.get("mode");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -20,9 +20,9 @@
 
                 <div class="box">
                     <form action="Product.htm" method="post">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%//=mode%>" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="productId" value="<%= dto.getProductId()%>"/>
+                        <input type="hidden" name="productId" value="${model.mode.productId}"/>
                         <table class="collapse tblForm row-select">
                             <caption>Product - Update</caption>
                             <tbody class="tbl-nohover">
@@ -32,7 +32,7 @@
                                     <td>Bar Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="autofocus" name="barcode" value="<%=dto.getBarCode() != null ? dto.getBarCode() : ""%>" size="30" maxlength="30"/>
+                                            <input type="text" id="autofocus" name="barcode" value="${model.mode.barCode}" size="30" maxlength="30"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -41,14 +41,14 @@
                                     <td>Item Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="productCode" readonly value="<%=dto.getProductCode() != null ? dto.getProductCode() : ""%>" size="30" />
+                                            <input type="text" name="productCode" readonly value="${model.mode.productCode}" size="30" />
                                         </label>
                                         <label>*</label>
                                     </td>
                                     <td>Item Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="productName" value="<%=dto.getProductName() != null ? dto.getProductName() : ""%>" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="productName" value="${model.mode.productName}" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -58,13 +58,13 @@
                                     <td>Brand Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="brand" name="brand" value="<%=dto.getBrandName() != null ? dto.getBrandName() : ""%>" size="30" />
+                                            <input type="text" id="brand" name="brand" value="${model.mode.brandName}" size="30" />
                                         </label>
                                     </td>
                                     <td>Description</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="description" value="<%=dto.getProductDescription() != null ? dto.getProductDescription() : ""%>" size="30" />
+                                            <input type="text" name="description" value="${model.mode.productDescription}" size="30" />
                                         </label>
                                     </td>
                                 </tr>
@@ -72,20 +72,14 @@
                                     <td>Category</td>
                                     <td>
                                         <label>
-                                            <select id="category" name="category" required="true">
-                                                <c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
-                                                    <option value="<c:out value='${droplist.categoryCode}'/>"  <c:if test="${droplist.categoryCode == model.dto.productCategory}">selected="true"</c:if>>
-                                                        <c:out value="${droplist.categoryName}" />
-                                                    </option> 
-                                                </c:forEach>
-                                            </select>
+                                            <input type="text" name="category" value="${model.mode.productCategory}" size="30"/>
                                         </label>
                                         <label>*</label>
                                     </td>
                                     <td>Item Color</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="color" value="<%=dto.getProductColor() != null ? dto.getProductColor() : ""%>" size="30" />
+                                            <input type="text" name="color" value="${model.mode.productColor}" size="30" />
                                         </label>
                                     </td>
                                 </tr>
@@ -93,13 +87,7 @@
                                     <td>Unit of Measurement (UoM)</td>
                                     <td>
                                         <label>
-                                            <select name="uom" required="true">
-                                                <c:forEach var="droplist" items="${requestScope.model.dropListUOM}">
-                                                    <option value="${droplist.uomName}" <c:if test="${droplist.uomName == model.dto.uom}">selected="true"</c:if>>
-                                                        ${droplist.uomName}
-                                                    </option> 
-                                                </c:forEach>
-                                            </select>
+                                            <input type="text" name="color" value="${model.mode.uom}"/>
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -114,7 +102,7 @@
                                     <td>Buyer</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="buyer" name="buyer" value="<%=dto.getProductColor() != null ? dto.getProductColor() : ""%>" size="30" />
+                                            <input type="text" id="buyer" name="buyer" value="${model.mode.buyer}" size="30" />
                                         </label>
                                     </td>
                                 </tr>
@@ -122,15 +110,15 @@
                                     <td>Pack Style</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="packstyle" name="packstyle" value="<%=dto.getPackstyle() != null ? dto.getPackstyle() : ""%>" size="30" />
+                                            <input type="text" id="packstyle" name="packstyle" value="${model.mode.packstyle}" size="30" />
                                         </label>
                                     </td>
                                     <td>Pack Size</td>
                                     <td>
                                         <select name="packsize">
-                                            <option value="" <c:if test="${'' == model.dto.packsize}">selected="true"</c:if>></option>
-                                            <option value="603" <c:if test="${'603' == model.dto.packsize}">selected="true"</c:if>>603</option>
-                                            <option value="307" <c:if test="${'307' == model.dto.packsize}">selected="true"</c:if>>307</option>
+                                            <option value="" <c:if test="${'' == model.mode.packsize}">selected="true"</c:if>></option>
+                                            <option value="603" <c:if test="${'603' == model.mode.packsize}">selected="true"</c:if>>603</option>
+                                            <option value="307" <c:if test="${'307' == model.mode.packsize}">selected="true"</c:if>>307</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -138,29 +126,16 @@
                                         <td>LID</td>
                                         <td>
                                             <label>
-                                                <input type="text" id="lid" name="lid" value="<%=dto.getLid() != null ? dto.getLid() : ""%>" size="30" />
+                                                <input type="text" id="lid" name="lid" value="${model.mode.lid}" size="30" />
                                         </label>
                                     </td>
                                     <td>NW / DW-PW</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="nwdwpw" name="nwdwpw" value="<%=dto.getNwdwpw() != null ? dto.getNwdwpw() : ""%>" size="30" />
+                                            <input type="text" id="nwdwpw" name="nwdwpw" value="${model.mode.nwdwpw}" size="30" />
                                         </label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Is Active</td>
-                                    <td>
-                                        <label>
-                                            <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-                                        </label>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                               	</tr>
                             </tbody>
                             <tfoot>
                             <td colspan="5">

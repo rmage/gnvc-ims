@@ -18,6 +18,7 @@ import com.app.wms.web.util.AppConstant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 public class UomController extends MultiActionController {
 
@@ -31,14 +32,14 @@ public class UomController extends MultiActionController {
      */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-        	HashMap m =  null;
+            HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
                 m = this.getModelByPrimaryKey(request);
                 m.put("mode", "edit");
                 return new ModelAndView("1_setup/UOMEdit", "model", m);
             } else {
-            	UomDao dao = DaoFactory.createUomDao();
+                UomDao dao = DaoFactory.createUomDao();
                 List<Uom> list = dao.findAll();
                 m = this.getModelByPrimaryKey(request);
                 m.put("uoms", list);
@@ -63,7 +64,7 @@ public class UomController extends MultiActionController {
      */
     public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-           
+
             UomDao dao = DaoFactory.createUomDao();
 
             List<Uom> dto = dao.findAll();
@@ -86,7 +87,7 @@ public class UomController extends MultiActionController {
      */
     public ModelAndView findWhereUomCodeEquals(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            
+
             java.lang.String puomCode = request.getParameter("uomCode");
 
             UomDao dao = DaoFactory.createUomDao();
@@ -111,7 +112,7 @@ public class UomController extends MultiActionController {
      */
     public ModelAndView findWhereNameEquals(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-           
+
             java.lang.String pname = request.getParameter("name");
 
             UomDao dao = DaoFactory.createUomDao();
@@ -143,7 +144,7 @@ public class UomController extends MultiActionController {
             UomDao dao = DaoFactory.createUomDao();
 
             // execute the finder
-            List<Uom> dto = dao.findWhereCreatedByEquals(pcreatedBy+"");
+            List<Uom> dto = dao.findWhereCreatedByEquals(pcreatedBy + "");
 
             return new ModelAndView("UomResult", "result", dto);
         } catch (Throwable e) {
@@ -197,7 +198,7 @@ public class UomController extends MultiActionController {
             UomDao dao = DaoFactory.createUomDao();
 
             // execute the finder
-            List<Uom> dto = dao.findWhereUpdatedByEquals(pupdatedBy+"");
+            List<Uom> dto = dao.findWhereUpdatedByEquals(pupdatedBy + "");
 
             return new ModelAndView("UomResult", "result", dto);
         } catch (Throwable e) {
@@ -243,7 +244,7 @@ public class UomController extends MultiActionController {
 
             String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
-            	Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
 
@@ -285,7 +286,7 @@ public class UomController extends MultiActionController {
      */
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    	boolean isCreate = true;
+        boolean isCreate = true;
         String strError = "";
         Date now = new Date();
         String mode = request.getParameter("mode");
@@ -300,29 +301,29 @@ public class UomController extends MultiActionController {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             String userId = "";
             if (lu == null) {
-    			HashMap m = new HashMap();
+                HashMap m = new HashMap();
                 String msg = "You haven't login or your session has been expired! Please do login again";
                 m.put("msg", msg);
                 return new ModelAndView("login", "model", m);
-            }else{
-            	userId = lu.getUserId();
+            } else {
+                userId = lu.getUserId();
             }
-            
+
             UomDao dao = DaoFactory.createUomDao();
-           
+
             if (isCreate) {
                 dto = new Uom();
             } else {
-            	Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
-            
+
             String puomCode = request.getParameter("uomCode");
             String puomName = request.getParameter("uomName");
             String remarks = request.getParameter("remarks");
-            
+
             List<Uom> tmp = dao.findWhereUomCodeEquals(puomCode);
-            
+
             if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getUomCode().equals(puomCode))) {
                 strError += "UoM code already exists. Please try a different values" + AppConstant.EOL;
             }
@@ -338,13 +339,14 @@ public class UomController extends MultiActionController {
                 dto.setIsActive(request.getParameter("isActive"));
                 dto.setCreatedBy(userId);
                 dto.setCreatedDate(now);
+            } else {
+
+                dto.setUomCode(puomCode);
+                dto.setUomName(puomName);
+                dto.setRemarks(remarks);
+                dto.setIsActive("Y");
             }
 
-            dto.setUomCode(puomCode);
-            dto.setUomName(puomName);
-            dto.setRemarks(remarks);
-            dto.setIsActive(request.getParameter("isActive"));
-            
             if (isCreate) {
                 UomPk up = dao.insert(dto);
                 dto.setId(up.getId());
@@ -361,33 +363,33 @@ public class UomController extends MultiActionController {
             HashMap m = this.getModelByPrimaryKey(request);
             m.put("mode", mode);
             m.put("msg", errorMsg);
-            System.out.println("exception >"+errorMsg);
+            System.out.println("exception >" + errorMsg);
             return new ModelAndView(isCreate ? "1_setup/UOMAdd" : "1_setup/UOMEdit", "model", m);
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             String errorMsg = e.getMessage();
             HashMap m = this.getModelByPrimaryKey(request);
             m.put("mode", mode);
             m.put("msg", errorMsg);
-            System.out.println("exception >>"+errorMsg);
+            System.out.println("exception >>" + errorMsg);
             return new ModelAndView(isCreate ? "1_setup/UOMAdd" : "1_setup/UOMEdit", "model", m);
-        
+
         }
 
     }
 
-    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        java.lang.String id = request.getParameter("id");
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        java.lang.String id = request.getParameter("key");
 
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String pcreatedBy = "";
         if (lu == null) {
-			HashMap m = new HashMap();
+            HashMap m = new HashMap();
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	pcreatedBy = lu.getUserId();
+        } else {
+            pcreatedBy = lu.getUserId();
         }
 
         UomDao dao = DaoFactory.createUomDao();
@@ -404,17 +406,15 @@ public class UomController extends MultiActionController {
         List<Uom> list = dao.findAll();
 
         HashMap m = new HashMap();
-
-
         m.put("uoms", list);
-        m.put("totalRows", 0); 
+        m.put("totalRows", 0);
 
-        return new ModelAndView("1_setup/UOMList", "model", m);
+        return new ModelAndView("redirect:Uom.htm");
     }
-    
+
     public void getUnique(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, UomDaoException {
-        
+            throws IOException, UomDaoException {
+
         PrintWriter pw = response.getWriter();
         String uniCode = request.getParameter("term");
         UomDao uomDao = DaoFactory.createUomDao();
@@ -425,5 +425,39 @@ public class UomController extends MultiActionController {
             pw.print("{\"status\": true}");
         }
     }
-    
+
+    //Modified 11 April 2014
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        UomDao distDao = DaoFactory.createUomDao();
+
+        pw.print("{\"maxpage\": " + distDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Uom> ps = distDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (Uom x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getUomCode() + "\", ");
+            pw.print("\"3\": \"" + x.getUomName() + "\", ");
+            pw.print("\"4\": \"" + x.getRemarks() + "\", ");
+            pw.print("\"5\": \"" + x.getIsActive() + "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+
+    //14 April 2014
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        UomDao uomDao = DaoFactory.createUomDao();
+        Uom dto = uomDao.findId(id);
+
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/UOMEdit", "model", map);
+    }
 }

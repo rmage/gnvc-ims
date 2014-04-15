@@ -21,18 +21,21 @@ import com.app.wms.engine.db.dto.UserRole;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class ApprovalRangeController extends MultiActionController {
+
     /**
      * Method 'findByPrimaryKey'
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
      * @return ModelAndView
      */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {   
+        try {
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -47,12 +50,12 @@ public class ApprovalRangeController extends MultiActionController {
 
         } catch (Throwable e) {
             e.printStackTrace();
-            return new ModelAndView( "Error", "th", e );
-        }		
+            return new ModelAndView("Error", "th", e);
+        }
     }
-	
+
     private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try{
+        try {
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -75,24 +78,24 @@ public class ApprovalRangeController extends MultiActionController {
             ApprovalRange a = new ApprovalRange();
             a.setUsername(request.getParameter("username"));
             a.setRoleCode(request.getParameter("rolecode"));
-            
+
             ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
-            List<ApprovalRange> listSearchPage = dao.findApprovalRangePaging(a,page);
-            int total = 2000; 
+            List<ApprovalRange> listSearchPage = dao.findApprovalRangePaging(a, page);
+            int total = 2000;
             m.put("approvalrange", listSearchPage);
             m.put("totalRows", total);
             m.put("page", page);
             m.put("paging", paging);
 
             return m;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw e;
-        }		
+        }
     }
-	
+
     private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
         try {
-            ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();	
+            ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
             ApprovalRange dto = new ApprovalRange();
 
             String mode = request.getParameter("mode");
@@ -100,10 +103,10 @@ public class ApprovalRangeController extends MultiActionController {
                 Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
-            if (dto.getUsername() == null) {	 
+            if (dto.getUsername() == null) {
                 dto.setUsername("");
             }
-         
+
             //edit
             HashMap m = new HashMap();
             m.put("dto", dto);
@@ -113,45 +116,42 @@ public class ApprovalRangeController extends MultiActionController {
             throw e;
         }
     }
-	
-	
-	/**
-	 * Method 'findAll'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
-			List<ApprovalRange> dto = dao.findAll();
-			
-			return new ModelAndView( "1_setup/AppRangeList", "model", dto);
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    /**
+     * Method 'findAll'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
+            List<ApprovalRange> dto = dao.findAll();
+
+            return new ModelAndView("1_setup/AppRangeList", "model", dto);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
+        }
+
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String createdBy = "";
         if (lu == null) {
-			HashMap m = new HashMap();
+            HashMap m = new HashMap();
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	createdBy = (String)lu.getUserId();
+        } else {
+            createdBy = (String) lu.getUserId();
         }
-       
+
         ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer id = Integer.parseInt(request.getParameter("key"));
         ApprovalRange dto = dao.findByPrimaryKey(id);
         if (dto != null) {
             dto.setIsActive(AppConstant.STATUS_FALSE);
@@ -164,44 +164,41 @@ public class ApprovalRangeController extends MultiActionController {
         HashMap m = this.searchAndPaging(request, response);
         return new ModelAndView("1_setup/AppRangeList", "model", m);
     }
-	
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		Map map = new HashMap();
-		map = this.getModelByPrimaryKey(request);
-		map.put("mode", "create");		
-		
-		ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
-		
-		return new ModelAndView( "1_setup/AppRangeAdd", "model", map);
-	}
 
-	
-	/**
-	 * Method 'save'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception
-    {
+    /**
+     * Method 'create'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map map = new HashMap();
+        map = this.getModelByPrimaryKey(request);
+        map.put("mode", "create");
 
-      boolean isCreate = true;
-      String strError = "";
-      Date now = new Date();
-      java.lang.String mode = request.getParameter("mode");
-      ApprovalRange dto = null;
-      try {
+        ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
+
+        return new ModelAndView("1_setup/AppRangeAdd", "model", map);
+    }
+
+    /**
+     * Method 'save'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        boolean isCreate = true;
+        String strError = "";
+        Date now = new Date();
+        java.lang.String mode = request.getParameter("mode");
+        ApprovalRange dto = null;
+        try {
             if (mode.equalsIgnoreCase("create")) {
                 isCreate = true;
             } else {
@@ -210,10 +207,10 @@ public class ApprovalRangeController extends MultiActionController {
 
             ApprovalRangeDao dao = DaoFactory.createApprovalRangeDao();
             if (isCreate) {
-                    dto = new ApprovalRange();
+                dto = new ApprovalRange();
             } else {
-                  Integer id = Integer.parseInt(request.getParameter("id"));
-                  dto = dao.findByPrimaryKey(id);
+                Integer id = Integer.parseInt(request.getParameter("id"));
+                dto = dao.findByPrimaryKey(id);
             }
 
 //            String userName = request.getParameter("username");
@@ -223,7 +220,6 @@ public class ApprovalRangeController extends MultiActionController {
 //            if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getUsername().equals(userName))) {
 //                strError += "User Name already exists. Please try a different values" + AppConstant.EOL;
 //            }
-          
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             String userId = "";
             if (lu == null) {
@@ -231,8 +227,8 @@ public class ApprovalRangeController extends MultiActionController {
                 String msg = "You haven't login or your session has been expired! Please do login again";
                 m.put("msg", msg);
                 return new ModelAndView("login", "model", m);
-            }else{
-                    userId = (String)lu.getUserId();
+            } else {
+                userId = (String) lu.getUserId();
             }
 
             if (isCreate) {
@@ -242,9 +238,9 @@ public class ApprovalRangeController extends MultiActionController {
 
             dto.setUsername(null);
             dto.setRoleCode(roleCode);
-            dto.setFromAmount(new BigDecimal (request.getParameter("fromamount").replaceAll(",", "")));
-            dto.setToAmount(new BigDecimal (request.getParameter("toamount").replaceAll(",", "")));
-            dto.setIsActive(request.getParameter("isActive"));
+            dto.setFromAmount(new BigDecimal(request.getParameter("fromamount").replaceAll(",", "")));
+            dto.setToAmount(new BigDecimal(request.getParameter("toamount").replaceAll(",", "")));
+            dto.setIsActive("Y");
             dto.setIsDelete("N");
             dto.setUpdatedBy(userId);
             dto.setUpdatedDate(new java.util.Date());
@@ -255,9 +251,7 @@ public class ApprovalRangeController extends MultiActionController {
 
             if (isCreate) {
                 dao.insert(dto);
-            } 
-
-            else {
+            } else {
                 dto.setUpdatedBy(userId);
                 dto.setUpdatedDate(new java.util.Date());
                 dao.update(dto.createPk(), dto);
@@ -265,20 +259,54 @@ public class ApprovalRangeController extends MultiActionController {
 
             return new ModelAndView("1_setup/AppRangeView", "dto", dto);
 
-      } catch (Exception e) {
-    	  e.printStackTrace();
-          String errorMsg = e.getMessage();
-          HashMap m = this.getModelByPrimaryKey(request);
-          m.put("mode", mode);
-          m.put("msg", errorMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            String errorMsg = e.getMessage();
+            HashMap m = this.getModelByPrimaryKey(request);
+            m.put("mode", mode);
+            m.put("msg", errorMsg);
 
-          if (isCreate) {
-              return new ModelAndView("1_setup/AppRangeAdd", "model", m);
-          } else {
-              return new ModelAndView("1_setup/AppRangeEdit", "model", m);
-          }
-      }
-      
-  }
-	
+            if (isCreate) {
+                return new ModelAndView("1_setup/AppRangeAdd", "model", m);
+            } else {
+                return new ModelAndView("1_setup/AppRangeEdit", "model", m);
+            }
+        }
+
+    }
+
+    //Modified 14 April 2014
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        ApprovalRangeDao approvalRangeDao = DaoFactory.createApprovalRangeDao();
+
+        pw.print("{\"maxpage\": " + approvalRangeDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<ApprovalRange> ps = approvalRangeDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (ApprovalRange x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getRoleCode() + "\", ");
+            pw.print("\"3\": \"" + x.getFromAmount() + "\", ");
+            pw.print("\"4\": \"" + x.getToAmount() + "\", ");
+            pw.print("\"5\": \"" + x.getIsActive() + "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+
+    //Modified 15 April 2014
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        ApprovalRangeDao rangeDao = DaoFactory.createApprovalRangeDao();
+        ApprovalRange dto = rangeDao.findId(id);
+
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/AppRangeEdit", "model", map);
+    }
 }

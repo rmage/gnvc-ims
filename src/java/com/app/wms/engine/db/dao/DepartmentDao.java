@@ -4,6 +4,7 @@ import com.app.wms.engine.db.dao.DepartmentDao;
 import com.app.wms.engine.db.dto.Department;
 import com.app.wms.engine.db.dto.DepartmentPk;
 import com.app.wms.engine.db.exceptions.DepartmentDaoException;
+import java.math.BigDecimal;
 
 import java.util.Date;
 import java.util.List;
@@ -90,4 +91,8 @@ public interface DepartmentDao
 	
 	public List<Department> findDepartmentPaging(Department d,int page) throws DepartmentDaoException;
 
+        //Modified 10 April 2014
+        public int ajaxMaxPage(String where, BigDecimal show);
+        public List<Department> ajaxSearch(String where, String order, int page, int show);
+        public Department findId(int id);
 }

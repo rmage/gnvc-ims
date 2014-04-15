@@ -208,7 +208,7 @@ public class ProductController extends MultiActionController
 	
     public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HashMap m = new HashMap();
-        String productId = request.getParameter("productId");
+        String productId = request.getParameter("key");
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         
         String createdBy = "";
@@ -224,7 +224,7 @@ public class ProductController extends MultiActionController
         Product dto = dao.findByPrimaryKey(productId);
         if (dto != null) {
             dto.setIsActive(AppConstant.STATUS_FALSE);
-            dto.setIsDelete("N");
+            dto.setIsDelete("Y");
             dto.setUpdatedBy(createdBy);
             dto.setUpdatedDate(new java.util.Date());
             dao.update(dto.createPk(), dto);
@@ -366,7 +366,7 @@ public class ProductController extends MultiActionController
             String brand = request.getParameter("brand");
             //String productColor = request.getParameter("color");
             //String productDescription = request.getParameter("description");
-            String pisActive = request.getParameter("isActive");
+            String pisActive = "Y";
             String uom = request.getParameter("uom");
             //String supplier = request.getParameter("supplierName");
             //String buyer = request.getParameter("buyer");
@@ -471,7 +471,7 @@ public class ProductController extends MultiActionController
         for (Product x : ps) {
             if (b) 
                 pw.print(",");
-            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("{\"1\": \"" + x.getProductId()+ "\", ");
             pw.print("\"2\": \"" + x.getProductCode()+ "\", ");
             pw.print("\"3\": \"" + x.getProductName()+ "\", ");
             pw.print("\"4\": \"" + x.getProductCategory()+ "\", ");
@@ -483,7 +483,7 @@ public class ProductController extends MultiActionController
     }
     
     public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
-        Integer id = Integer.parseInt(request.getParameter("key"));
+        String id = request.getParameter("key");
         ProductDao productDao = DaoFactory.createProductDao();
         Product dto = productDao.findId(id);
         

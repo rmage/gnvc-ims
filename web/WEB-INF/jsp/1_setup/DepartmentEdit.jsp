@@ -7,13 +7,12 @@
         <%@include file="../metaheader.jsp" %>
     </head>    
     <body>
-        <%
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            Department dto = (Department) m.get("dto");
-            String mode = (String) m.get("mode");
-            String departmentCode = (String) dto.getDepartmentCode();
-            String departmentName = (String) dto.getDepartmentName();
-            String id = Integer.toString(dto.getId());
+        <%            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            //Department dto = (Department) m.get("dto");
+            //String mode = (String) m.get("mode");
+            //String departmentCode = (String) dto.getDepartmentCode();
+            //String departmentName = (String) dto.getDepartmentName();
+            //String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -21,9 +20,9 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="Department.htm" method="post">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%//=mode%>" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="id" value="<%=id%>"/>
+                        <input type="hidden" name="id" value="${model.mode.id}"/>
 
                         <table class="collapse tblForm row-select">
                             <caption>Department - Detail</caption>
@@ -32,7 +31,7 @@
                                     <td>Department Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="departmentCode" value="<%=departmentCode%>" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" readonly />
+                                            <input type="text" class="shorttext" name="departmentCode" value="${model.mode.departmentCode}" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" readonly />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -41,32 +40,21 @@
                                     <td>Department Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="departmentName"  value="<%=departmentName%>" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="departmentName"  value="${model.mode.departmentName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Is Active</td>
-                                    <td>
-                                        <label>
-                                            <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-                                        </label>
-                                   </td>
-                               	</tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="2">
-                                    <span>
-                                        <label>
-                                            <input type="submit" name="btnSave" id="btnSave" value="Save" />
-                                        </label>
-                                    </span>
-                                    <input type="button" name="button" id="btnBack" value="Back" />
-                                </td>
+                            <td colspan="2">
+                                <span>
+                                    <label>
+                                        <input type="submit" name="btnSave" id="btnSave" value="Save" />
+                                    </label>
+                                </span>
+                                <input type="button" name="button" id="btnBack" value="Back" />
+                            </td>
                             </tfoot>
                         </table>
                     </form>

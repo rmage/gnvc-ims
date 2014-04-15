@@ -3,6 +3,7 @@ package com.app.wms.engine.db.dao;
 import com.app.wms.engine.db.dao.ApprovalRangeDao;
 import com.app.wms.engine.db.dto.ApprovalRange;
 import com.app.wms.engine.db.dto.ApprovalRangePk;
+import com.app.wms.engine.db.dto.Uom;
 import com.app.wms.engine.db.exceptions.ApprovalRangeDaoException;
 
 import java.math.BigDecimal;
@@ -102,4 +103,8 @@ public interface ApprovalRangeDao
 	
 	public List<ApprovalRange> findApprovalRangeRoleCode(String departmentCode, BigDecimal total, BigDecimal from, BigDecimal to) throws ApprovalRangeDaoException;
 
+        //Modified 14 April 2014
+        public int ajaxMaxPage(String where, BigDecimal show);
+        public List<ApprovalRange> ajaxSearch(String where, String order, int page, int show);
+        public ApprovalRange findId(int id);
 }

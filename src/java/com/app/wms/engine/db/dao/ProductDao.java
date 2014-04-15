@@ -247,5 +247,5 @@ public interface ProductDao {
     //Modified 9 April 2014
     public int ajaxMaxPage(String where, BigDecimal show);
     public List<Product> ajaxSearch(String where, String order, int page, int show);
-    public Product findId(int id);
+    public Product findId(String id);
 }

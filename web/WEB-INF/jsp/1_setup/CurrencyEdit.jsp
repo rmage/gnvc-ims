@@ -7,14 +7,13 @@
     </head>
 
     <body>
-        <%            
-        java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            Currency dto = (Currency) m.get("dto");
-            String mode = (String) m.get("mode");
-            String currencyCode = (String) dto.getCurrencyCode();
-            String currencyName = (String) dto.getCurrencyName();
-            String currencySymbol = (String) dto.getCurrencySymbol();
-            String id = Integer.toString(dto.getId());
+        <%            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            //Currency dto = (Currency) m.get("dto");
+            //String mode = (String) m.get("mode");
+            //String currencyCode = (String) dto.getCurrencyCode();
+            //String currencyName = (String) dto.getCurrencyName();
+            //String currencySymbol = (String) dto.getCurrencySymbol();
+            //String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -24,9 +23,9 @@
 
                 <div class="box">
                     <form action="Currency.htm" method="post">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%//=mode%>" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="id" value="<%=id%>"/>
+                        <input type="hidden" name="id" value="${model.mode.id}"/>
 
                         <table class="collapse tblForm row-select">
                             <caption>Currency - Detail</caption>
@@ -35,7 +34,7 @@
                                     <td>Currency Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="code" value="<%=currencyCode%>" maxlength="10" size="12" readonly />
+                                            <input type="text" class="shorttext" name="code" value="${model.mode.currencyCode}" maxlength="10" size="12" readonly />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -44,7 +43,7 @@
                                     <td>Currency Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="name"  value="<%=currencyName%>" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="name"  value="${model.mode.currencyName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -53,23 +52,11 @@
                                     <td>Currency Symbol</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="symbol"  value="<%=currencySymbol%>" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="symbol"  value="${model.mode.currencySymbol}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>Is Active</td>
-                                    <td>
-                                        <label>
-                                            <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-                                        </label>
-                                    </td>
-                               	</tr>
-                            </tbody>
+                                </tr></tbody>
                             <tfoot>
                             <td colspan="2">
                                 <span>

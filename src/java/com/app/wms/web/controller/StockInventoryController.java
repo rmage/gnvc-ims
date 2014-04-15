@@ -101,4 +101,29 @@ public class StockInventoryController extends MultiActionController {
         
     }
     
+    //Modified 15 April 2014
+//    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        Boolean b = Boolean.FALSE;
+//        PrintWriter pw = response.getWriter();
+//
+//        StockInventoryDao distDao = DaoFactory.createStockInventoryDao();
+//
+//        pw.print("{\"maxpage\": " + distDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+//        List<StockInventory> ps = distDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+//        for (StockInventory x : ps) {
+//            if (b) {
+//                pw.print(",");
+//            }
+//            pw.print("{\"1\": \"" + x.getId() + "\", ");
+//            pw.print("\"2\": \"" + x.getProductCode()+ "\", ");
+//            pw.print("\"3\": \"" + x.getDistributorName() + "\", ");
+//            pw.print("\"4\": \"" + x.getDistributorAddress() + "\", ");
+//            pw.print("\"5\": \"" + x.getFax() + "\", ");
+//            pw.print("\"6\": \"" + x.getEmail() + "\", ");
+//            pw.print("\"7\": \"" + x.getTelephone() + "\"}");
+//
+//            b = Boolean.TRUE;
+//        }
+//        pw.print("]}");
+//    }
 }

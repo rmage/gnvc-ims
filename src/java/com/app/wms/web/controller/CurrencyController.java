@@ -161,7 +161,7 @@ public class CurrencyController extends MultiActionController {
             dto.setCurrencyCode(code);
             dto.setCurrencyName(name);
             dto.setCurrencySymbol(symbol);
-            dto.setIsActive(request.getParameter("isActive"));
+            dto.setIsActive("Y");
 
             if (strError.length() > 0) {
                 throw new Exception(strError);
@@ -190,9 +190,9 @@ public class CurrencyController extends MultiActionController {
         }
     }
 
-    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer id = Integer.parseInt(request.getParameter("key"));
 
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String pcreatedBy = "";
@@ -238,5 +238,39 @@ public class CurrencyController extends MultiActionController {
         } else {
             pw.print("{\"status\": true}");
         }
+    }
+    
+    //Modified 11 April
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        CurrencyDao distDao = DaoFactory.createCurrencyDao();
+
+        pw.print("{\"maxpage\": " + distDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Currency> ps = distDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (Currency x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getCurrencyCode()+ "\", ");
+            pw.print("\"3\": \"" + x.getCurrencyName()+ "\", ");
+            pw.print("\"4\": \"" + x.getCurrencySymbol()+ "\", ");
+            pw.print("\"5\": \"" + x.getIsActive()+ "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+    
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
+        Currency dto = currencyDao.findId(id);
+        
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/CurrencyEdit","model",map);
     }
 }

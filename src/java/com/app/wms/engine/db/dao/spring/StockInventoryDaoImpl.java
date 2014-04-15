@@ -419,5 +419,22 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
             "INSERT INTO inventory..stock_inventory_log VALUES(?, ?, GETDATE());" , qty, name, productCode, productCode, "updated by " + name + " from value " + initQty + 
             " with value " + qty);
     }
-        
+      
+    //Modified 14 April 2014
+    public int ajaxMaxPage(String where, BigDecimal show){
+        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty()? "WHERE is_active='Y'" : where + " AND is_active='Y'"), show);
+    }
+    
+    public List<StockInventory> ajaxSearch(String where, String order, int page, int show){
+        return jdbcTemplate.query("DECLARE @page INT, @show INT "
+                + "SELECT @page=?, @show=? "
+                + "SELECT * FROM ("
+                + "SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date, ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY id" : order) + ") row FROM " + getTableName() + " " + (where.isEmpty()? "WHERE is_active='Y'" : where + " AND is_active='Y'")
+                + ") list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", this, page, show);
+    }
+    
+    public StockInventory findId(int id){
+        List<StockInventory> stockInventorys = jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE id=?", this, id);
+        return stockInventorys.isEmpty() ? null : stockInventorys.get(0);
+    }
 }

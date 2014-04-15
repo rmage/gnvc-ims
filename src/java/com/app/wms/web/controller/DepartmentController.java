@@ -17,6 +17,7 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 
 public class DepartmentController extends MultiActionController {
 
@@ -143,7 +144,7 @@ public class DepartmentController extends MultiActionController {
 
     }
 
-    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String createdBy = "";
         if (lu == null) {
@@ -157,7 +158,7 @@ public class DepartmentController extends MultiActionController {
 
         DepartmentDao dao = DaoFactory.createDepartmentDao();
 
-        Integer id = Integer.parseInt(request.getParameter("id"));
+        Integer id = Integer.parseInt(request.getParameter("key"));
         Department dto = dao.findByPrimaryKey(id);
         if (dto != null) {
             dto.setIsActive(AppConstant.STATUS_FALSE);
@@ -244,7 +245,7 @@ public class DepartmentController extends MultiActionController {
 
             dto.setDepartmentCode(departmentCode);
             dto.setDepartmentName(departmentName);
-            dto.setIsActive(request.getParameter("isActive"));
+            dto.setIsActive("Y");
             dto.setIsDelete("N");
             dto.setUpdatedBy(userId);
             dto.setUpdatedDate(new java.util.Date());
@@ -294,5 +295,38 @@ public class DepartmentController extends MultiActionController {
         } else {
             pw.print("{\"status\": true}");
         }
+    }
+    
+    //Modified 10 April 2014
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        DepartmentDao deptDao = DaoFactory.createDepartmentDao();
+
+        pw.print("{\"maxpage\": " + deptDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Department> ps = deptDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (Department x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getId()+ "\", ");
+            pw.print("\"2\": \"" + x.getDepartmentCode()+ "\", ");
+            pw.print("\"3\": \"" + x.getDepartmentName()+ "\", ");
+            pw.print("\"4\": \"" + x.getIsActive()+ "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+    
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
+        Department dto = departmentDao.findId(id);
+        
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/DepartmentEdit","model",map);
     }
 }

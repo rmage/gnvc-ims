@@ -17,73 +17,57 @@
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <table class="collapse tblForm row-select"> 
+                    <form action="Uom.htm" id="search" method="post">
+                        <table class="collapse tblForm row-select">
+                            <caption>Search UOM</caption>
+                            <tbody>
+                                <tr>
+                                    <td width="20%">
+                                        UOM Code
+                                    </td>
+                                    <td>
+                                        <input type="text" name="uom_code" value=""/>
+                                    </td>
+                                    <td>
+                                        UOM Name
+                                    </td>
+                                    <td>
+                                        <input type="text" name="uom_name" value="" />
+                                    </td>
+                                    <td colspan="2">
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                            <td colspan="4">
+                                <span>
+                                    <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+                                </span>
+                                <label>
+                                    <input type="button" name="button" id="btnAdd" value="Add" />
+                                </label>
+                            </td>
+                            <td></td>
+                            </tfoot>
+                        </table>
+                    </form>
+                    <table class="collapse tblForm row-select" id="list"> 
                         <caption>Unit of Measurement - Search Result</caption>
                         <thead>
                             <tr>
-                                <td class="style1">No</td>
-                                <td class="style1">Action</td>
-                                <td class="style1">UoM Code</td>
-                                <td class="style1">UoM Name</td>
-                                <td class="style1">Remarks</td>
-                                <td class="style1">Is Active</td>
+                                <td>No</td>
+                                <td>Action</td>
+                                <td column="uom_code">UoM Code</td>
+                                <td column="uom_name">UoM Name</td>
+                                <td>Remarks</td>
+                                <td>Is Active</td>
                             </tr>
                         </thead>
-                        <tbody id="main">
-                            <c:if test="${model.uoms!=null}">
-                                <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
-                                <c:forEach items="${model.uoms}" var="uom">
-                                    <tr class="ganjil">
-                                        <td class="center" width="1%">
-                                            <c:out value="${nomor}" />
-                                            <c:set scope="page" value="${nomor+1}" var="nomor"/>
-                                        </td>
-                                        <c:url value="Uom.htm" var="urlEdit">
-                                            <c:param name="id" value="${uom.id}"/>
-                                            <c:param name="uomCode" value="${uom.uomCode}"/>
-                                            <c:param name="uomName" value="${uom.uomName}"/>
-                                            <c:param name="mode" value="edit"/>
-                                        </c:url>
-                                        <c:url value="Uom.htm" var="urlDelete">
-                                            <c:param name="id" value="${uom.id}"/>
-                                            <c:param name="uomCode" value="${uom.uomCode}"/>
-                                            <c:param name="uomName" value="${uom.uomName}"/>
-                                            <c:param name="action" value="inactivate" />
-                                        </c:url>
-                                        <td class="center" width="5%"><a href='<c:out value="${urlEdit}"/>'><img src="resources/images/edit.gif" width="16" height="16" /></a><a href='<c:out value="${urlDelete}"/>'><img src="resources/images/delete.gif" width="16" height="16" /></a></td>
-                                        <td class="style1"><c:out value="${uom.uomCode}"/></td>
-                                        <td class="style1"><c:out value="${uom.uomName}"/></td>
-                                        <td class="style1"><c:out value="${uom.remarks}"/></td>
-                                        <td class="center"><c:out value="${uom.isActive}"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                            <tr>
-                                <td colspan="5">
-                                    <span class="style1">
-                                        <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="Uom.htm?page=<c:out value="${model.page-1}" />">
-                                                &lt;
-                                            </a>
-                                        </c:if>
-                                        &nbsp;page: <c:out value="${model.page}" />&nbsp;
-                                        <c:if test="${model.page < model.totalRows/model.paging}">
-                                            <a href="Uom.htm?page=<c:out value="${model.page+1}" />">
-                                                &gt;
-                                            </a>
-                                        </c:if>
-                                    </span>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                        <td colspan="10">
-                            <span class="style1">
-                                <input type="button" name="button" id="btnAdd" value="Add" />
-                            </span>
-                        </td>
-                        </tfoot>
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>
@@ -118,6 +102,8 @@
                     }
                 });
             });
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'u:d');
         </script>
     </body>
 </html>

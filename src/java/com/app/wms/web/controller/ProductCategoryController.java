@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.*;
 import java.math.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -29,8 +31,8 @@ public class ProductCategoryController extends MultiActionController {
      * @return ModelAndView
      */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	try {
-            
+        try {
+
             HashMap m = null;
             final String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
@@ -42,16 +44,15 @@ public class ProductCategoryController extends MultiActionController {
                 return new ModelAndView("1_setup/ProductCategoryList", "model", m);
             }
 
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
         }
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
 
     }
-    
+
     private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try{
+        try {
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -75,9 +76,9 @@ public class ProductCategoryController extends MultiActionController {
             p.setCategoryCode(request.getParameter("categoryCode"));
             p.setCategoryName(request.getParameter("categoryName"));
             ProductCategoryDao dao = DaoFactory.createProductCategoryDao();
-            List<ProductCategory> listSearchPage = dao.findProductCategoryPaging(p,page);
-            
-            int total = 2000; 
+            List<ProductCategory> listSearchPage = dao.findProductCategoryPaging(p, page);
+
+            int total = 2000;
             m.put("productcategory", listSearchPage);
             m.put("totalRows", total);
             m.put("page", page);
@@ -85,11 +86,11 @@ public class ProductCategoryController extends MultiActionController {
 
             return m;
 
-		}catch (Exception e){
-			throw e;
-		}
-		
-	}
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
 
     /**
      * Method 'findAll'
@@ -187,7 +188,7 @@ public class ProductCategoryController extends MultiActionController {
             ProductCategoryDao dao = DaoFactory.createProductCategoryDao();
 
             // execute the finder
-            List<ProductCategory> dto =null;
+            List<ProductCategory> dto = null;
 
             return new ModelAndView("ProductCategoryResult", "result", dto);
         } catch (Throwable e) {
@@ -287,7 +288,7 @@ public class ProductCategoryController extends MultiActionController {
 
             String mode = request.getParameter("mode");
             if (mode != null && mode.equals("edit")) {
-            	Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
 
@@ -337,7 +338,7 @@ public class ProductCategoryController extends MultiActionController {
         java.lang.String mode = request.getParameter("mode");
         ProductCategory dto = null;
         try {
-           
+
             if (mode.equalsIgnoreCase("create")) {
                 isCreate = true;
             } else {
@@ -348,56 +349,56 @@ public class ProductCategoryController extends MultiActionController {
             if (isCreate) {
                 dto = new ProductCategory();
             } else {
-            	Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
 
             String categoryCode = request.getParameter("categoryCode");
             String categoryName = request.getParameter("categoryName");
-            
+
             List<ProductCategory> tmp = dao.findWhereCategoryCodeEquals(categoryCode);
             if ((isCreate && tmp != null && tmp.size() > 0) || (!isCreate && tmp != null && tmp.size() > 0 && !tmp.get(0).getCategoryCode().equals(categoryCode))) {
                 strError += "ProductCategory code already exists. Please try a different values" + AppConstant.EOL;
             }
-            
+
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             String userId = "";
             if (lu == null) {
-    			HashMap m = new HashMap();
+                HashMap m = new HashMap();
                 String msg = "You haven't login or your session has been expired! Please do login again";
                 m.put("msg", msg);
                 return new ModelAndView("login", "model", m);
-            }else{
-            	userId = (String)lu.getUserId();
+            } else {
+                userId = (String) lu.getUserId();
             }
 
             if (isCreate) {
-            	 dto.setCreatedBy(userId);
-                 dto.setCreatedDate(now);
+                dto.setCreatedBy(userId);
+                dto.setCreatedDate(now);
             }
 
             dto.setCategoryCode(categoryCode);
             dto.setCategoryName(categoryName);
             dto.setIsActive("Y");
             dto.setIsDelete("N");
-            
+
             if (strError.length() > 0) {
                 throw new Exception(strError);
             }
-            
+
             if (isCreate) {
                 ProductCategoryPk cpk = dao.insert(dto);
                 dto.setId(cpk.getId());
             } else {
-               dto.setUpdatedBy(userId);
-               dto.setUpdatedDate(now);
-               dao.update(dto.createPk(), dto);
+                dto.setUpdatedBy(userId);
+                dto.setUpdatedDate(now);
+                dao.update(dto.createPk(), dto);
             }
 
             return new ModelAndView("1_setup/ProductCategoryView", "dto", dto);
 
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             String errorMsg = e.getMessage();
             HashMap m = this.getModelByPrimaryKey(request);
             m.put("mode", mode);
@@ -407,11 +408,11 @@ public class ProductCategoryController extends MultiActionController {
         }
 
     }
-    
-    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        Integer id = Integer.parseInt(request.getParameter("id"));
-        
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        Integer id = Integer.parseInt(request.getParameter("key"));
+
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String pcreatedBy = "";
         if (lu == null) {
@@ -419,7 +420,7 @@ public class ProductCategoryController extends MultiActionController {
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        } else{
+        } else {
             pcreatedBy = lu.getUserId();
         }
 
@@ -438,29 +439,61 @@ public class ProductCategoryController extends MultiActionController {
 
         HashMap m = new HashMap();
         m.put("productcategory", list);
-        m.put("totalRows", 0); 
+        m.put("totalRows", 0);
 
         return new ModelAndView("1_setup/ProductCategoryList", "model", m);
     }
-    
-     public void getUnique (HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
-     
-             PrintWriter pw = response.getWriter();
-              String uniCategoryCode = request.getParameter("term");
-              System.out.println("term: "+uniCategoryCode);
-              
-               ProductCategoryDao productcategoryDao = DaoFactory.createProductCategoryDao();
-               
-                //  pw.print("[");
-              List<ProductCategory> cr = productcategoryDao.findByCode(uniCategoryCode);
-              System.out.println("data: "+cr);
-                if(cr.isEmpty()) {
-                    pw.print("{\"status\": true}");
-                }else{
-                    pw.print("{\"status\": false}");
-                }
+
+    public void getUnique(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        PrintWriter pw = response.getWriter();
+        String uniCategoryCode = request.getParameter("term");
+        System.out.println("term: " + uniCategoryCode);
+
+        ProductCategoryDao productcategoryDao = DaoFactory.createProductCategoryDao();
+
+        //  pw.print("[");
+        List<ProductCategory> cr = productcategoryDao.findByCode(uniCategoryCode);
+        System.out.println("data: " + cr);
+        if (cr.isEmpty()) {
+            pw.print("{\"status\": true}");
+        } else {
+            pw.print("{\"status\": false}");
+        }
 //                pw.print("]");
-     }
-		
+    }
+
+    //Modified 10 April 2014
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        ProductCategoryDao pcDao = DaoFactory.createProductCategoryDao();
+
+        pw.print("{\"maxpage\": " + pcDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<ProductCategory> ps = pcDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (ProductCategory x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getCategoryCode()+ "\", ");
+            pw.print("\"3\": \"" + x.getCategoryName()+ "\", ");
+            pw.print("\"4\": \"" + x.getIsActive()+ "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+    
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        ProductCategoryDao categoryDao = DaoFactory.createProductCategoryDao();
+        ProductCategory dto = categoryDao.findId(id);
+        
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/ProductCategoryEdit","model",map);
+    }
 }

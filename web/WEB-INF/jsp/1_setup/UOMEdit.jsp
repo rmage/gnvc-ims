@@ -9,10 +9,10 @@
     </head>
     <body>
         <%            
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            Uom dto = (Uom) m.get("dto");
-            String mode = (String) m.get("mode");
-            String id = Integer.toString(dto.getId());
+            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            //Uom dto = (Uom) m.get("dto");
+            //String mode = (String) m.get("mode");
+            //String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -20,9 +20,9 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="Uom.htm" method="post">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%//=mode%>" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="id" value="<%=id%>"/>
+                        <input type="hidden" name="id" value="${model.mode.id}"/>
 
                         <table class="collapse tblForm row-select">
                             <caption>UOM - Detail</caption>
@@ -31,7 +31,7 @@
                                     <td>UoM Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="uomCode" value="<%= dto.getUomCode()%>" size="30" readonly />
+                                            <input type="text" class="shorttext" name="uomCode" value="${model.mode.uomCode}" size="30" readonly />
                                         </label>
                                     </td>
                                 </tr>
@@ -39,7 +39,7 @@
                                     <td>UoM Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="uomName" value="<%= dto.getUomName()%>" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="uomName" value="${model.mode.uomName}" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -48,21 +48,10 @@
                                     <td>Remarks</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="remarks" value="<%= dto.getRemarks()%>" size="30" />
+                                            <input type="text" class="shorttext" name="remarks" value="${model.mode.remarks}" size="30" />
                                         </label>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>Is Active</td>
-                                    <td>
-                                        <label>
-                                            <input type="radio" name="isActive" value="Y" <% if (dto.getIsActive().equalsIgnoreCase("Y")) {%> checked="checked" <% }%> /> Y
-                                        </label>
-                                        <label>
-                                            <input type="radio" name="isActive" value="N" <% if (dto.getIsActive().equalsIgnoreCase("N")) {%> checked="checked" <% }%> /> N
-                                        </label>
-                                    </td>
-                               	</tr>
                             </tbody>
                             <tfoot>
                             <td colspan="2">

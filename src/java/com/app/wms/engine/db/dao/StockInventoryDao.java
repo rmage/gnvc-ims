@@ -112,4 +112,9 @@ public interface StockInventoryDao
         
     /* added by FYA */
     public void updateBalance(String productCode, BigDecimal qty, String name, BigDecimal initQty);
+    
+    //Modified 14 April 2014
+    public int ajaxMaxPage(String where, BigDecimal show);
+    public List<StockInventory> ajaxSearch(String where, String order, int page, int show);
+    public StockInventory findId(int id);
 }
