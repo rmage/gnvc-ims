@@ -11,6 +11,12 @@ public class Ts implements Serializable {
     
     private String tsInfo;
     
+    private String tsTo;
+    
+    private String tsModule;
+    
+    private String tsType;
+    
     private int swsCode;
     
     private String notedBy;
@@ -164,6 +170,30 @@ public class Ts implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getTsTo() {
+        return tsTo;
+    }
+
+    public void setTsTo(String tsTo) {
+        this.tsTo = tsTo;
+    }
+
+    public String getTsModule() {
+        return tsModule;
+    }
+
+    public void setTsModule(String tsModule) {
+        this.tsModule = tsModule;
+    }
+
+    public String getTsType() {
+        return tsType;
+    }
+
+    public void setTsType(String tsType) {
+        this.tsType = tsType;
     }
 
 }

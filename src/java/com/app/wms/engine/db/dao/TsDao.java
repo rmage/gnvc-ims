@@ -12,6 +12,6 @@ public interface TsDao {
 
     public List<Sws> findWhereNotInTs();
     
-    public List<Ts> findAll();
+    public List<Ts> findAll(String module);
     
 }

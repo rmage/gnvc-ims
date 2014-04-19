@@ -31,6 +31,9 @@ public class TsDaoImpl extends AbstractDAO
         t.setTsCode(rs.getInt("ts_code"));
         t.setTsDate(rs.getDate("ts_date"));
         t.setTsInfo(rs.getString("ts_info"));
+        t.setTsTo(rs.getString("ts_to"));
+        t.setTsModule(rs.getString("ts_module"));
+        t.setTsType(rs.getString("ts_type"));
         t.setSwsCode(rs.getInt("sws_code"));
         t.setNotedBy(rs.getString("noted_by"));
         t.setNotedDate(rs.getDate("noted_date"));
@@ -47,8 +50,8 @@ public class TsDaoImpl extends AbstractDAO
     }
     
     public void insert(Ts t) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-            t.getTsCode(), t.getTsDate(), t.getTsInfo(), t.getSwsCode(), null, null, null, null, null, null, t.getCreatedBy(),
+        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+            t.getTsCode(), t.getTsDate(), t.getTsInfo(), t.getTsTo(), t.getTsModule(), t.getTsType(), t.getSwsCode(), null, null, null, null, null, null, t.getCreatedBy(),
             t.getCreatedDate(), null, null);
     }
     
@@ -62,8 +65,8 @@ public class TsDaoImpl extends AbstractDAO
             new SwsDaoImpl());
     }
     
-    public List<Ts> findAll() {
-        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " ORDER BY created_date DESC", this);
+    public List<Ts> findAll(String module) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE ts_module = ? ORDER BY created_date DESC", this, module);
     }
 
 }

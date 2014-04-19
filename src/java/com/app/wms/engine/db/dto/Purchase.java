@@ -7,6 +7,8 @@ public class Purchase implements Serializable {
     
     private int poCode;
     
+    private int rateId;
+    
     private Date poDate;
     
     private String supplierCode;
@@ -172,6 +174,14 @@ public class Purchase implements Serializable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public int getRateId() {
+        return rateId;
+    }
+
+    public void setRateId(int rateId) {
+        this.rateId = rateId;
     }
 
 }

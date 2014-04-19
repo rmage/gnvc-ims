@@ -1,5 +1,6 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.ProductPriceDao;
 import com.app.wms.engine.db.dao.PrsDetailDao;
@@ -10,6 +11,7 @@ import com.app.wms.engine.db.dao.ReceiveReportDtlDao;
 import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
+import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.ProductPrice;
 import com.app.wms.engine.db.dto.PrsDetail;
@@ -84,6 +86,7 @@ public class ReceiveReportController extends MultiActionController {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
             /* DAO | Define needed dao here */
+            CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
             PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
             PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
             PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
@@ -103,6 +106,9 @@ public class ReceiveReportController extends MultiActionController {
             rr.setCreatedBy(lu.getUserId());
             rr.setCreatedDate(new Date());
             receiveReportDao.insert(rr);
+            
+            // get currency rate
+            CurrencyRate cr = currencyRateDao.findByPurchase(Integer.parseInt(master[2]));
             
             // get sub total and quantity
             Purchase p = purchaseDao.findByPo(String.valueOf(rr.getPoCode()));
@@ -132,10 +138,10 @@ public class ReceiveReportController extends MultiActionController {
                 PrsDetail prd = prsDetailDao.findByPrsProduct(pd.getPrsNumber(), rrd.getProductCode());
                 ProductPrice pp = productPriceDao.findByProduct(rrd.getProductCode());
                 
-                // FIXME: FYA | Only Support IDR not check PO Currency
+                // FIXME: FYA | [--Only-Support-IDR-not-check-PO-Currency-x>
                 StockInventory si = stockInventoryDao.findWhereProductCodeEquals(rrd.getProductCode()).get(0);
                 pp.setUnitPrice( (pp.getUnitPrice()
-                    .multiply( si.getBalance() ).setScale(2, RoundingMode.HALF_EVEN)).add( (pd.getSubTotal()
+                    .multiply( si.getBalance() ).setScale(2, RoundingMode.HALF_EVEN)).add( ((pd.getSubTotal().multiply(cr.getRateValue()).setScale(2))
                     .divide(prd.getQty(), 2, RoundingMode.HALF_EVEN))
                     .multiply(new BigDecimal(rrd.getQtyGood())).setScale(2, RoundingMode.HALF_EVEN) )
                     .divide( si.getBalance().add(new BigDecimal(rrd.getQtyGood())), 2, RoundingMode.HALF_EVEN ));

@@ -1,6 +1,7 @@
 package com.app.wms.web.controller;
 
 import com.app.wms.engine.db.dao.CurrencyDao;
+import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.PrsDao;
 import com.app.wms.engine.db.dao.PrsDetailDao;
@@ -10,6 +11,7 @@ import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.AssignCanvassing;
 import com.app.wms.engine.db.dto.Currency;
+import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsDetail;
@@ -109,13 +111,18 @@ public class PurchaseController extends MultiActionController {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             
             /* DAO | Define needed dao here */
+            CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
             PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
             PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
             
             /* TRANSACTION | Something complex here */
+            // get currency rate
+            CurrencyRate cr = currencyRateDao.findByCurrency(master[6]);
+            
             // insert master purchase order
             Purchase p = new Purchase();
             p.setPoCode(Integer.parseInt(master[0]));
+            p.setRateId(cr.getRateId());
             p.setPoDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
             p.setSupplierCode(master[2]);
             p.setDiscount(Integer.parseInt(master[3]));

@@ -48,8 +48,8 @@ public class PurchaseDaoImpl extends AbstractDAO
     }
     
     public void insert(Purchase p) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            p.getPoCode(), p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getCurrency(), 
+        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            p.getPoCode(), p.getRateId(), p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getCurrency(), 
             p.getRemarks(), "N", null, null, p.getCreatedBy(), p.getCreatedDate(), null, null);
     }
     

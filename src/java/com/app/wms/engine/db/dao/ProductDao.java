@@ -241,6 +241,8 @@ public interface ProductDao {
     public Product findByPrimaryKey(String productId) throws ProductDaoException;
 
     public List<Product> findWhereProductNameEquals(String productName, int limit);
+    
+    public List<Product> findWhereProductNameEquals(String productName, String type, int limit);
 
     public List<Product> findWhereBrandNameEquals(String brandName, int limit);
 

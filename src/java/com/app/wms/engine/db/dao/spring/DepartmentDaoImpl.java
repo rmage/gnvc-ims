@@ -178,7 +178,7 @@ public class DepartmentDaoImpl extends AbstractDAO implements ParameterizedRowMa
     @Transactional
     public List<Department> findWhereDepartmentNameEquals(String departmentName) throws DepartmentDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE department_name = ? ORDER BY department_name", this, departmentName);
+            return jdbcTemplate.query("SELECT id, department_code, department_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE department_name LIKE ? ORDER BY department_name", this, "%" + departmentName + "%");
         } catch (Exception e) {
             throw new DepartmentDaoException("Query failed", e);
         }

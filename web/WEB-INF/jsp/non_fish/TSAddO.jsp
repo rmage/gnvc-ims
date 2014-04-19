@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Transfer Slip</title>
+        <title>IMS - New Transfer Slip Others</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -21,11 +21,11 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="TransferSlip.htm" id="tsForm" method="post">
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="type"value="NORMAL" />
-                        <input type="hidden" name="module" value="NF" />
+                        <input name="action" type="hidden" value="save" />
+                        <input type="hidden" name="type"value="<%= request.getParameter("type") %>" />
+                        <input type="hidden" name="module" value="<%= request.getParameter("module") %>" />
                         <table class="collapse tblForm row-select">
-                            <caption>Header</caption>
+                            <caption>Header Others</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
@@ -34,8 +34,10 @@
                                     <td><input id="tsDate" name="tsDate" size="10" type="text" required="true" /></td>
                                 </tr>
                                 <tr>
+                                    <td>To</td>
+                                    <td><input id="tsTo" name="tsTo" size="40" type="text" /></td>
                                     <td>Remarks</td>
-                                    <td colspan="3"><textarea name="tsInfo"></textarea></td>
+                                    <td><textarea name="tsInfo"></textarea></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -48,28 +50,18 @@
                             </tfoot>
                         </table>
                         <table class="collapse tblForm row-select">
-                            <caption>Detail</caption>
+                            <caption>Detail Others</caption>
                             <thead>
                                 <tr>
-                                    <td style="width: 100px;">Select SWS</td>
-                                    <td colspan="6">
-                                        <select id="swsCode" name="swsCode" required="true">
-                                            <option value="">-- Please select SWS Number --</option>
-                                            <c:forEach items="${model.s}" var="x">
-                                                <option value="${x.swsCode}">
-                                                    <fmt:formatDate pattern="dd/MM/yyyy" value="${x.swsDate}" /> :: 
-                                                    ${x.departmentCode} :: ${x.swsCode}
-                                                </option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
+                                    <td style="width: 100px;">Select Item</td>
+                                    <td colspan="6"><input id="itemCode" size="50" type="text" /></td>
                                 </tr>
                                 <tr>
                                     <td>No</td>
                                     <td>Item Name</td>
                                     <td>Item Code</td>
                                     <td>Type</td>
-                                    <td>Quantity Request</td>
+                                    <td>Stock on Hand</td>
                                     <td>Quantity Out</td>
                                     <td>Uom</td>
                                 </tr>
@@ -90,32 +82,36 @@
         <script>
             /* BIND | element event */
             $('#tsDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
-            $('#swsCode').bind('change', function() {
-                if($('#swsCode').val() === '') {
-                    $('#main').html(null);
-                    return;
+            $('.delete').live('click', function() { $(this).parent().parent().remove(); });
+            
+            $('#tsTo').autocomplete({
+                source: '?action=getDepartment',
+                minLength: 2,
+                select: function( event, ui ) { $('#tsTo').val(ui.item.department); return false; }
+            }).data( 'autocomplete' )._renderItem = function( ul, item ) {
+                return $( '<li>' )
+                    .data( "item", item ) 
+                    .append( '<a><b>' + item.department + '</b></a></li>' )
+                    .appendTo( ul );
+            };
+            
+            $('#itemCode').autocomplete({
+                source: '?action=getProduct&module=<%= request.getParameter("module") %>',
+                minLength: 2,
+                select: function( event, ui ) {
+                    $('#main').append('<tr><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' + 
+                        '<input name="item" type="hidden" value="' + ui.item.itemCode + '" />' + ui.item.itemCode + '</td><td>' + ui.item.itemName + '</td><td>' + ui.item.type + '</td><td>' + numberWithCommas(ui.item.soh) + 
+                        '</td><td><input name="qty" pattern="[0-9]{1,}" size="3" type="text" style="font-size: smaller;" required="true" /></td><td>' + ui.item.uom + '</td></tr>');
+                    $('#main tr:last input[type="text"]').focus();
+                    $('#itemCode').val(null);
                 }
-                
-                $(this).attr('disabled', true);
-                $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif" style="vertical-align: middle; background-color: rgb(255, 255, 255); border-radius: 4px; padding: 2.5px;" />');
-                
-                $.ajax({
-                    url: 'TransferSlip.htm',
-                    data: {action: 'getSwsDetail', key: $(this).val()},
-                    dataType: 'json',
-                    success: function(json) {
-                        $('#main').html(null);
-                        for(var i = 0; i < json.length; i++) {
-                            $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].itemName + '</td><td><input name="item" type="hidden" value="' + json[i].itemCode + '" />' + json[i].itemCode + 
-                                '</td><td>' + json[i].type + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td><input name="qty" pattern="[0-9]{1,}" type="text" required="true" /></td><td>' + json[i].uom + '</td></tr>');
-                        }
-                    },
-                    complete: function() {
-                        $('#load').remove();
-                        $('#swsCode').attr('disabled', false);  
-                    }
-                });
-            });
+            }).data( 'autocomplete' )._renderItem = function( ul, item ) {
+                return $( '<li>' )
+                    .data( "item", item ) 
+                    .append( '<a><b>' + item.itemCode + ' : ' + item.itemName + 
+                    '</b><br /> Stock on Hand : ' + item.soh + '</a></li>' )
+                    .appendTo( ul );
+            };
             
             function numberWithCommas(x) {
                 var parts = x.toString().split(".");

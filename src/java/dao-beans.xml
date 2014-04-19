@@ -9,7 +9,7 @@
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 	<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/inventory;instance=sqlexpress" />
+        <property name="url" value="jdbc:jtds:sqlserver://7.35.130.2:1433/inventory" />
         <!--<property name="url" value="jdbc:jtds:sqlserver://192.168.0.213:1433/inventory" />-->
         <property name="username" value="sa" />
         <property name="password" value="sa" />
@@ -377,6 +377,9 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="DistributorDao" class="com.app.wms.engine.db.dao.spring.DistributorDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="CurrencyRateDao" class="com.app.wms.engine.db.dao.spring.CurrencyRateDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

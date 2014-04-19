@@ -816,6 +816,15 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         return jdbcTemplate.query("SELECT TOP(:limit) product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName()
                 + " WHERE product_name LIKE :productName AND is_active = 'Y' ORDER BY product_name", this, hm);
     }
+    
+    public List<Product> findWhereProductNameEquals(String productName, String type, int limit) {
+        HashMap hm = new HashMap();
+        hm.put("productName", "%" + productName + "%");
+        hm.put("productCategory", "FG");
+        hm.put("limit", limit);
+        return jdbcTemplate.query("SELECT TOP(:limit) product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName()
+                + " WHERE product_name LIKE :productName AND product_category " + (type.equals("NF") ? "NOT " : "") + " IN (:productCategory) AND is_active = 'Y' ORDER BY product_name", this, hm);
+    }
 
     public List<Product> findWhereBrandNameEquals(String brandName, int limit) {
         HashMap hm = new HashMap();

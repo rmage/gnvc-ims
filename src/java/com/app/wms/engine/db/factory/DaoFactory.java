@@ -833,5 +833,10 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (DistributorDao) bf.getBean("DistributorDao");
     }
+    
+    public static CurrencyRateDao createCurrencyRateDao() {
+        BeanFactory bf = new XmlBeanFactory( new ClassPathResource("dao-beans.xml") );
+        return (CurrencyRateDao) bf.getBean( "CurrencyRateDao" );
+    }
 
 }

@@ -34,7 +34,8 @@
                                 <tr>
                                     <td colspan="2">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('TransferSlip.htm?action=create');" />
+                                        <select id="type"><option value="NORMAL">Normal</option><option value="OTHERS">Others</option><option value="BAD_STOCKS">Bad Stocks</option></select>
+                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('TransferSlip.htm?action=create&module=<%= request.getParameter("module") %>&type=' + document.getElementById('type').value);" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -48,6 +49,7 @@
                                 <td style="width: 50px">Action</td>
                                 <td>TS Number</td>
                                 <td>TS Date</td>
+                                <td>TS Type</td>
                                 <td>Sws Number</td>
                                 <td>Info</td>
                             </tr>
@@ -66,7 +68,8 @@
                                         </td>
                                         <td>${x.tsCode}</td>
                                         <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.tsDate}" /></td>
-                                        <td>${x.swsCode}</td>
+                                        <td>${x.tsType}</td>
+                                        <td>${x.swsCode == 0 ? '-' : x.swsCode}</td>
                                         <td>${x.tsInfo}</td>
                                     </tr>
                                 </c:forEach>
@@ -74,7 +77,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     <c:if test="${model.page !=null && model.page > 1}">
                                         <a href="TransferSlip.htm?page=<c:out value="${model.page-1}" />">&lt</a>
                                     </c:if>
