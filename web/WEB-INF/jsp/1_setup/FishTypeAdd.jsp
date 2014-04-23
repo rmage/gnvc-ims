@@ -85,7 +85,7 @@
                     location.href = 'FishType.htm';
                 });
             });       
-            $(function() {
+//            $(function() {
                 $('#code').bind('blur', function() {
                   var $o = $(this);
                    if (!$o.val()) return;
@@ -106,7 +106,7 @@
                        }
                 });
             });
-        });
+//        });
         </script>                                
     </body>
 </html>

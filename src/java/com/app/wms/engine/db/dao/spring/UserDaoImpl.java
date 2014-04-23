@@ -51,7 +51,7 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     public UserPk insert(User dto) {
         jdbcTemplate.update("INSERT INTO " + getTableName() + " (  CODE, NAME, USERNAME, PASSWORD, "
                 + "ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, WH_CODE, CORP_ID ) "
-                + "VALUES (  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", dto.getCode(), dto.getName(), dto.getUsername(), EncryptionUtility.getEncrypted(dto.getPassword()), dto.getRoleCode(), dto.getEmail(), dto.getIsActive(), 
+                + "VALUES (  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", dto.getCode(), dto.getName(), dto.getUsername(), EncryptionUtility.getEncrypted(dto.getPassword()), dto.getRoleCode(), dto.getEmail(), dto.getIsActive(),
                 dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getWhCode(), dto.getCorpId());
         return dto.createPk();
     }
@@ -63,20 +63,20 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     public void update(UserPk pk, User dto) throws UserDaoException {
         jdbcTemplate.update("UPDATE " + getTableName() + " SET CODE = ?, NAME = ?, USERNAME = ?, PASSWORD = ?, "
                 + "ROLE_CODE = ?, EMAIL = ?, IS_ACTIVE = ?, CREATED_BY = ?, CREATED_DATE = ?, UPDATED_BY = ?, UPDATED_DATE = ?,  WH_CODE= ?, CORP_ID = ? "
-                + "WHERE USER_ID = ?", dto.getCode(), dto.getName(), dto.getUsername(), EncryptionUtility.getEncrypted(dto.getPassword()), 
-                dto.getRoleCode(), dto.getEmail(), dto.getIsActive(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(), 
-                dto.getWhCode(), dto.getCorpId(),pk.getUserId());
+                + "WHERE USER_ID = ?", dto.getCode(), dto.getName(), dto.getUsername(), EncryptionUtility.getEncrypted(dto.getPassword()),
+                dto.getRoleCode(), dto.getEmail(), dto.getIsActive(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(),
+                dto.getWhCode(), dto.getCorpId(), pk.getUserId());
     }
-    
+
     @Transactional
     public void updateInactivate(UserPk pk, User dto) throws UserDaoException {
         jdbcTemplate.update("UPDATE " + getTableName() + " SET CODE = ?, NAME = ?, USERNAME = ?, PASSWORD = ?, "
                 + "ROLE_CODE = ?, EMAIL = ?, IS_ACTIVE = ?, CREATED_BY = ?, CREATED_DATE = ?, UPDATED_BY = ?, UPDATED_DATE = ?,  WH_CODE= ?, CORP_ID = ? "
-                + "WHERE USER_ID = ?", dto.getCode(), dto.getName(), dto.getUsername(), dto.getPassword(), 
-                dto.getRoleCode(), dto.getEmail(), dto.getIsActive(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(), 
-                dto.getWhCode(), dto.getCorpId(),pk.getUserId());
+                + "WHERE USER_ID = ?", dto.getCode(), dto.getName(), dto.getUsername(), dto.getPassword(),
+                dto.getRoleCode(), dto.getEmail(), dto.getIsActive(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(),
+                dto.getWhCode(), dto.getCorpId(), pk.getUserId());
     }
-   
+
     /**
      * Deletes a single row in the USER table.
      */
@@ -121,7 +121,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'USER_ID = :userId'.
+     * Returns all rows from the USER table that match the criteria 'USER_ID =
+     * :userId'.
      */
     @Transactional
     public User findByPrimaryKey(String userId) throws UserDaoException {
@@ -195,7 +196,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'ROLE_CODE = :roleCode'.
+     * Returns all rows from the USER table that match the criteria 'ROLE_CODE =
+     * :roleCode'.
      */
     @Transactional
     public List<User> findByUserRole(String roleCode) throws UserDaoException {
@@ -220,7 +222,7 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
 //        dto.setUpdatedBy(rs.getString(11));
 //        dto.setUpdatedDate(rs.getTimestamp(12));
 //        dto.setCorpId(rs.getString(13));
-    
+
     @Transactional
     public List<User> findByUserName(String userName) throws UserDaoException {
         try {
@@ -233,7 +235,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'USER_ID = :userId'.
+     * Returns all rows from the USER table that match the criteria 'USER_ID =
+     * :userId'.
      */
     @Transactional
     public List<User> findWhereUserIdEquals(BigDecimal userId) throws UserDaoException {
@@ -246,7 +249,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'CODE = :code'.
+     * Returns all rows from the USER table that match the criteria 'CODE =
+     * :code'.
      */
     @Transactional
     public List<User> findWhereCodeEquals(String code) throws UserDaoException {
@@ -260,7 +264,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'NAME = :name'.
+     * Returns all rows from the USER table that match the criteria 'NAME =
+     * :name'.
      */
     @Transactional
     public List<User> findWhereNameEquals(String name) throws UserDaoException {
@@ -273,7 +278,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'USERNAME = :username'.
+     * Returns all rows from the USER table that match the criteria 'USERNAME =
+     * :username'.
      */
     @Transactional
     public List<User> findWhereUsernameEquals(String username) throws UserDaoException {
@@ -287,31 +293,31 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
 
     @Transactional
     public LoginUser findWhereUsernamePasswordEquals(String username, String password) throws UserDaoException {
-    
+
         LoginUser u = null;
-       
+
         try {
-        	 List<LoginUser> userList = jdbcTemplate.query(""
-        			 +"select "
-        			 +"u.user_id as user_id, "
-        			 +"u.username as username, u.password as password, "
-        			 +"u.role_code as role_code, "
-        			 +"ub.corp_id as corp_id, "
-        			 +"uc.wh_code as wh_code, "
-        			 +"ur.name as role_name, ur.role_level as role_level "                  
-        			 +"from dbo.[user] u, dbo.[user_role] ur, dbo.[corp_user] ub, dbo.[corp] uc " 
-        			 +"where u.role_code = ur.role_code and ub.user_id = u.user_id and ub.corp_id = uc.corp_id "
-        			 +"and u.is_active = 'Y' and u.username = ? and u.password=?", new LoginUserMap(), username, EncryptionUtility.getEncrypted(password));
-           
-        	 if (userList != null) {
+            List<LoginUser> userList = jdbcTemplate.query(""
+                    + "select "
+                    + "u.user_id as user_id, "
+                    + "u.username as username, u.password as password, "
+                    + "u.role_code as role_code, "
+                    + "ub.corp_id as corp_id, "
+                    + "uc.wh_code as wh_code, "
+                    + "ur.name as role_name, ur.role_level as role_level "
+                    + "from dbo.[user] u, dbo.[user_role] ur, dbo.[corp_user] ub, dbo.[corp] uc "
+                    + "where u.role_code = ur.role_code and ub.user_id = u.user_id and ub.corp_id = uc.corp_id "
+                    + "and u.is_active = 'Y' and u.username = ? and u.password=?", new LoginUserMap(), username, EncryptionUtility.getEncrypted(password));
+
+            if (userList != null) {
                 if (userList.size() == 1) {
                     u = userList.get(0);
-                } else if(userList.size() > 1){
+                } else if (userList.size() > 1) {
                     u = userList.get(0);
                     u.setCorpId("CORP001");
                 }
             }
-            
+
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }
@@ -319,7 +325,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'PASSWORD = :password'.
+     * Returns all rows from the USER table that match the criteria 'PASSWORD =
+     * :password'.
      */
     @Transactional
     public List<User> findWherePasswordEquals(String password) throws UserDaoException {
@@ -332,7 +339,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'ROLE_CODE = :roleCode'.
+     * Returns all rows from the USER table that match the criteria 'ROLE_CODE =
+     * :roleCode'.
      */
     @Transactional
     public List<User> findWhereRoleCodeEquals(String roleCode) throws UserDaoException {
@@ -345,7 +353,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'EMAIL = :email'.
+     * Returns all rows from the USER table that match the criteria 'EMAIL =
+     * :email'.
      */
     @Transactional
     public List<User> findWhereEmailEquals(String email) throws UserDaoException {
@@ -358,7 +367,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'IS_ACTIVE = :isActive'.
+     * Returns all rows from the USER table that match the criteria 'IS_ACTIVE =
+     * :isActive'.
      */
     @Transactional
     public List<User> findWhereIsActiveEquals(String isActive) throws UserDaoException {
@@ -371,7 +381,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'CREATED_BY = :createdBy'.
+     * Returns all rows from the USER table that match the criteria 'CREATED_BY
+     * = :createdBy'.
      */
     @Transactional
     public List<User> findWhereCreatedByEquals(BigDecimal createdBy) throws UserDaoException {
@@ -384,7 +395,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'CREATED_DATE = :createdDate'.
+     * Returns all rows from the USER table that match the criteria
+     * 'CREATED_DATE = :createdDate'.
      */
     @Transactional
     public List<User> findWhereCreatedDateEquals(Date createdDate) throws UserDaoException {
@@ -397,7 +409,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'UPDATED_BY = :updatedBy'.
+     * Returns all rows from the USER table that match the criteria 'UPDATED_BY
+     * = :updatedBy'.
      */
     @Transactional
     public List<User> findWhereUpdatedByEquals(BigDecimal updatedBy) throws UserDaoException {
@@ -410,7 +423,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns all rows from the USER table that match the criteria 'UPDATED_DATE = :updatedDate'.
+     * Returns all rows from the USER table that match the criteria
+     * 'UPDATED_DATE = :updatedDate'.
      */
     @Transactional
     public List<User> findWhereUpdatedDateEquals(Date updatedDate) throws UserDaoException {
@@ -423,7 +437,8 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     }
 
     /**
-     * Returns the rows from the USER table that matches the specified primary-key value.
+     * Returns the rows from the USER table that matches the specified
+     * primary-key value.
      */
     @Transactional
     public User findByPrimaryKey(UserPk pk) throws UserDaoException {
@@ -439,31 +454,29 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
         }
     }
 
-    
     @Transactional
     public List<User> findByCriteriaLimit(UserSearch criteria, int start, int end) throws UserDaoException {
-     
+
         if (criteria == null) {
-    
+
             System.out.println("Search User with no criteria");
-            criteria = new UserSearch(); 
+            criteria = new UserSearch();
         }
         try {
-        
-            criteria.setTableAlias("D"); 
-         
+
+            criteria.setTableAlias("D");
+
             HashMap ret = criteria.getCriteria();
             HashMap param = (HashMap) ret.get("parameter");
-            
-            String strQuery = "SELECT D.USER_ID, D.CODE, D.NAME, D.USERNAME," 
-            				  +"D.PASSWORD, D.ROLE_CODE, D.EMAIL, D.IS_ACTIVE, D.CREATED_BY,"
-            				  +"D.CREATED_DATE, D.UPDATED_BY, D.UPDATED_DATE, D.CORP_ID " 
-            				  +"FROM dbo.[user] D "
-            				  +"INNER JOIN USER_ROLE R ON D.ROLE_CODE=R.ROLE_CODE ";
 
-            
-            System.out.println("strQuery="+strQuery);
-            return jdbcTemplate.query(strQuery, this, param); 
+            String strQuery = "SELECT D.USER_ID, D.CODE, D.NAME, D.USERNAME,"
+                    + "D.PASSWORD, D.ROLE_CODE, D.EMAIL, D.IS_ACTIVE, D.CREATED_BY,"
+                    + "D.CREATED_DATE, D.UPDATED_BY, D.UPDATED_DATE, D.CORP_ID "
+                    + "FROM dbo.[user] D "
+                    + "INNER JOIN USER_ROLE R ON D.ROLE_CODE=R.ROLE_CODE ";
+
+            System.out.println("strQuery=" + strQuery);
+            return jdbcTemplate.query(strQuery, this, param);
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }
@@ -661,172 +674,190 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
             throw new UserDaoException("Query failed", e);
         }
     }
-    
+
     @Transactional
     public LoginUser findWhereLogin(String username, String password, String wh, String corp, String loginas) throws UserDaoException {
-    	System.out.println("username ="+username);
-    	System.out.println("password ="+password);
-    	System.out.println("wh ="+wh);
-    	System.out.println("corp ="+corp);
-    	System.out.println("loginas ="+loginas);
+        System.out.println("username =" + username);
+        System.out.println("password =" + password);
+        System.out.println("wh =" + wh);
+        System.out.println("corp =" + corp);
+        System.out.println("loginas =" + loginas);
         LoginUser u = null;
-        
+
         try {
-        	
-	        	if(loginas.equalsIgnoreCase("system")) {
-	       		 String query = ""
-	       			 +"select "
-	       			 +"u.user_id as user_id, " 
-	       			 +"u.username as username, u.password as password, "
-	       			 +"u.role_code as role_code, null as corp_id, null as wh_code, null as role_name, null as role_level "                
-	       			 +"from dbo.[user] u " 
-	       			 +"where  u.is_active = 'Y' and u.username = ? and u.password=?";
-	
-	       		 
-	       		 List<LoginUser> userList = jdbcTemplate.query(query, new LoginUserMap(), username, EncryptionUtility.getEncrypted(password));
-	       		 if (userList != null) {
-	                    if (userList.size() == 1) {
-	                        u = userList.get(0);  
-	                    }
-	       		 }
-	       		 return u;
-        	}
-        	
-        	 String query = ""
-        			 +"select "
-        			 +"u.user_id as user_id, " 
-        			 +"u.username as username, u.password as password, "
-        			 +"u.role_code as role_code, "
-        			 +"u.corp_id as corp_id, "
-        			 +"u.wh_code as wh_code, "
-        			 +"ur.name as role_name, ur.role_level as role_level "                  
-        			 +"from dbo.[user] u, dbo.[user_role] ur, dbo.[corp] uc " 
-        			 +"where u.role_code = ur.role_code "
-        			 +"and u.is_active = 'Y' and u.username = ? and u.password=? "
-        			 +"and u.wh_code=? and u.corp_id=? and uc.corp_id=?";
-        	 
-        	 System.out.println(query);
-        	 System.err.println(query);
-        	 
-			List<LoginUser> userList = jdbcTemplate.query(query, new LoginUserMap(), username, EncryptionUtility.getEncrypted(password), wh, corp, corp);
-           
-        	 if (userList != null) {
+
+            if (loginas.equalsIgnoreCase("system")) {
+                String query = ""
+                        + "select "
+                        + "u.user_id as user_id, "
+                        + "u.username as username, u.password as password, "
+                        + "u.role_code as role_code, null as corp_id, null as wh_code, null as role_name, null as role_level "
+                        + "from dbo.[user] u "
+                        + "where  u.is_active = 'Y' and u.username = ? and u.password=?";
+
+                List<LoginUser> userList = jdbcTemplate.query(query, new LoginUserMap(), username, EncryptionUtility.getEncrypted(password));
+                if (userList != null) {
+                    if (userList.size() == 1) {
+                        u = userList.get(0);
+                    }
+                }
+                return u;
+            }
+
+            String query = ""
+                    + "select "
+                    + "u.user_id as user_id, "
+                    + "u.username as username, u.password as password, "
+                    + "u.role_code as role_code, "
+                    + "u.corp_id as corp_id, "
+                    + "u.wh_code as wh_code, "
+                    + "ur.name as role_name, ur.role_level as role_level "
+                    + "from dbo.[user] u, dbo.[user_role] ur, dbo.[corp] uc "
+                    + "where u.role_code = ur.role_code "
+                    + "and u.is_active = 'Y' and u.username = ? and u.password=? "
+                    + "and u.wh_code=? and u.corp_id=? and uc.corp_id=?";
+
+            System.out.println(query);
+            System.err.println(query);
+
+            List<LoginUser> userList = jdbcTemplate.query(query, new LoginUserMap(), username, EncryptionUtility.getEncrypted(password), wh, corp, corp);
+
+            if (userList != null) {
                 if (userList.size() == 1) {
                     u = userList.get(0);
-                } else if(userList.size() > 1){
+                } else if (userList.size() > 1) {
                     u = userList.get(0);
 //                    u.setCorpId("CY-0001");
                 }
             }
-            
+
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }
         return u;
     }
-    
+
     public LoginUser findWhereLoginIMS(String username, String password) throws UserDaoException {
-    	LoginUser u = null;
-    	try {
+        LoginUser u = null;
+        try {
             String query = ""
-                +"select "
-                +"u.user_id as user_id, " 
-                +"u.username as username, " 
-                +"u.password as password, "
-                +"ur.role_code as role_code, "
-                +"ur.role_name as role_name, " 
-                +"ur.role_level as role_level, "       
-                +"ur.department_code as department_code " 
-                +"from dbo.[user] u, dbo.[user_role] ur " 
-                +"where u.role_code = ur.role_code "
-                +"and u.is_active = 'Y' and u.username = ? and u.password=? ";
-    	 
+                    + "select "
+                    + "u.user_id as user_id, "
+                    + "u.username as username, "
+                    + "u.password as password, "
+                    + "ur.role_code as role_code, "
+                    + "ur.role_name as role_name, "
+                    + "ur.role_level as role_level, "
+                    + "ur.department_code as department_code "
+                    + "from dbo.[user] u, dbo.[user_role] ur "
+                    + "where u.role_code = ur.role_code "
+                    + "and u.is_active = 'Y' and u.username = ? and u.password=? ";
+
             System.out.println(query);
             System.err.println(query);
-    	 
+
             List<LoginUser> userList = jdbcTemplate.query(query, new LoginUserMap(), username, EncryptionUtility.getEncrypted(password));
-       
+
             if (userList != null) {
                 if (userList.size() == 1) {
                     u = userList.get(0);
-                } else if(userList.size() > 1){
+                } else if (userList.size() > 1) {
                     u = userList.get(0);
                 }
-           }
-    		
-        } catch (DataAccessException e){
+            }
+
+        } catch (DataAccessException e) {
             e.printStackTrace();
-    	}
-    	return u;
+        }
+        return u;
     }
 
     @Override
     public List<User> findUserPaging(UserSearch c, int page) throws UserDaoException {
         try {
-                    StringBuffer sb = new StringBuffer();
+            StringBuffer sb = new StringBuffer();
             int i = page;
             Map map = new HashMap();
             map.put("i", i);
 
-            if(c == null){
-                    c = new UserSearch();
+            if (c == null) {
+                c = new UserSearch();
             }
 
             String userId = c.getCode();
-            String name   = c.getName();
+            String name = c.getName();
 
-            if(userId == null || name == null){
-                    userId = "%";
-                    name   = "%";
+            if (userId == null || name == null) {
+                userId = "%";
+                name = "%";
 
-                    sb.append("declare @Page int, @PageSize int "  
-                            +"set @Page = '"+i+"'; "  
-                            +"set @PageSize = 10; "  
-                            +"with PagedResult "  
-                            +"as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%"+userId+"%' and name like '%"+name+"%'" 
-                            +"and role_code not in ('SYSADMIN') and is_active = 'Y') " 
-                            +"select * from PagedResult where id between "  
-                            +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "  
-                            +"else @Page end and @PageSize * @Page");
+                sb.append("declare @Page int, @PageSize int "
+                        + "set @Page = '" + i + "'; "
+                        + "set @PageSize = 10; "
+                        + "with PagedResult "
+                        + "as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%" + userId + "%' and name like '%" + name + "%'"
+                        + "and role_code not in ('SYSADMIN') and is_active = 'Y') "
+                        + "select * from PagedResult where id between "
+                        + "case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                        + "else @Page end and @PageSize * @Page");
 
-            }
-            else
-            {
-                    sb.append("declare @Page int, @PageSize int "  
-                            +"set @Page = '"+i+"'; "  
-                            +"set @PageSize = 10; "  
-                            +"with PagedResult "  
-                            +"as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%"+userId+"%' and name like '%"+name+"%'" 
-                            +"and role_code not in ('SYS-ADMIN')) and is_active = 'Y' "
-                            +"select * from PagedResult where id between "  
-                            +"case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "  
-                            +"else @Page end and @PageSize * @Page");
+            } else {
+                sb.append("declare @Page int, @PageSize int "
+                        + "set @Page = '" + i + "'; "
+                        + "set @PageSize = 10; "
+                        + "with PagedResult "
+                        + "as (select ROW_NUMBER() over (order by user_id desc) as id, user_id, code, name, username, password, role_code, wh_code, corp_id, is_active from dbo.[user] where user_id like '%" + userId + "%' and name like '%" + name + "%'"
+                        + "and role_code not in ('SYS-ADMIN')) and is_active = 'Y' "
+                        + "select * from PagedResult where id between "
+                        + "case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
+                        + "else @Page end and @PageSize * @Page");
 
             }
 
-            return jdbcTemplate.query(sb.toString(),new UserListMap(),map);	
+            return jdbcTemplate.query(sb.toString(), new UserListMap(), map);
 
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }
-   }
-	
-	public List<User> findRoleCanvasser() throws UserDaoException {
-            try {
-               return jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, "
+    }
+
+    public List<User> findRoleCanvasser() throws UserDaoException {
+        try {
+            return jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, "
                     + "CREATED_DATE, UPDATED_BY, UPDATED_DATE, CORP_ID  FROM " + getTableName() + " WHERE ROLE_CODE = 'PRC.ST' ORDER BY USER_ID", this);
-           } catch (Exception e) {
-               throw new UserDaoException("Query failed", e);
-           }	
+        } catch (Exception e) {
+            throw new UserDaoException("Query failed", e);
         }
-	
-	public List<User> findUserRoleAppRange() throws UserDaoException {
-		 try {
-			 	return jdbcTemplate.query(" select user_id, code, name, username, password, role_code, email, is_active, created_by, created_date, updated_by, updated_date, corp_id "
-                + " from " + getTableName() + " where role_code not in (select role_code from user_role where role_code='SYS-ADMIN') ", this);
-	        } catch (Exception e) {
-	            throw new UserDaoException("Query failed", e);
-	        }
-	}
-	
+    }
+
+    public List<User> findUserRoleAppRange() throws UserDaoException {
+        try {
+            return jdbcTemplate.query(" select user_id, code, name, username, password, role_code, email, is_active, created_by, created_date, updated_by, updated_date, corp_id "
+                    + " from " + getTableName() + " where role_code not in (select role_code from user_role where role_code='SYS-ADMIN') ", this);
+        } catch (Exception e) {
+            throw new UserDaoException("Query failed", e);
+        }
+    }
+
+    //Modified 21 April 2014
+    public int ajaxMaxPage(String where, BigDecimal show) {
+        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE is_active='Y'" : where + " AND is_active='Y'"), show);
+    }
+
+    public List<User> ajaxSearch(String where, String order, int page, int show) {
+        return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize = ?; "
+                + "with PagedResult as (select ROW_NUMBER() over (" + (order.isEmpty() ? "ORDER BY id" : order) + ") as id, user_id, "
+                + "code, name, username, password, role_code, wh_code, corp_id, is_active, "
+                + "ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY id" : order) + ") row from dbo.[user] "
+                + (where.isEmpty() ? "where is_active='Y' " : where + " AND is_active='Y'") 
+                + "AND user_id like '%%%' and name like '%%%'and role_code not in ('SYSADMIN')) "
+                + "select * from PagedResult where id between case when @Page > 1 "
+                + "then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", new UserListMap(), page, show);
+    }
+
+    public User findId(String id) {
+        List<User> users = jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, WH_CODE, CORP_ID FROM " + getTableName() + " WHERE USER_ID = ?", this, id);
+        return users.isEmpty() ? null : users.get(0);
+    }
+
 }

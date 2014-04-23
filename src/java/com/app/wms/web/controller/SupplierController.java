@@ -285,8 +285,8 @@ public class SupplierController  extends MultiActionController {
                 dto.setUpdatedDate(new java.util.Date());
                 dao.update(dto.createPk(), dto);
             }
-
-            return new ModelAndView("1_setup/SupplierView", "dto", dto);
+//            return new ModelAndView("1_setup/SupplierView", "dto", dto);
+            return new ModelAndView("redirect:Supplier.htm");
         } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = e.getMessage();

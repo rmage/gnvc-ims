@@ -394,8 +394,8 @@ public class ProductCategoryController extends MultiActionController {
                 dto.setUpdatedDate(now);
                 dao.update(dto.createPk(), dto);
             }
-
-            return new ModelAndView("1_setup/ProductCategoryView", "dto", dto);
+//            return new ModelAndView("1_setup/ProductCategoryView", "dto", dto);
+            return new ModelAndView("redirect:ProductCategory.htm");
 
         } catch (Exception e) {
             e.printStackTrace();

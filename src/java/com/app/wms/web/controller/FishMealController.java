@@ -35,10 +35,16 @@ public class FishMealController extends MultiActionController {
         /* TRANSACTION | Something complex here */
         // set year
         int currYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
-        int[] years = new int[initYear - currYear + 1];
-        for(int i = initYear; i <= currYear; i++) {
-            years[i - currYear] = i;
-        } m.put("year", years);
+//        int[] years = new int[initYear - currYear + 1];
+//        for(int i = initYear; i <= currYear; i++) {
+//            years[i - currYear] = i;
+//        } 
+        int[] years = new int[currYear - initYear + 1];
+        for (int i = 0; i < years.length; i++) {
+            years[i] = currYear;
+            currYear--;
+        }
+        m.put("year", years);
         
         // set month
         String[][] month = { {"01", "January", "0"}, {"02", "February", "0"}, {"03", "March", "0"}, 

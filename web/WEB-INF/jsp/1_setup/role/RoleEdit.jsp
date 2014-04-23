@@ -6,15 +6,14 @@
         <title>IMS - Update User Role</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
-    
+
     <body>
-        <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            UserRole dto = (UserRole) m.get("dto");
-     		String mode = (String) m.get("mode");
-     		String roleCode = (String) dto.getRoleCode();
-     		String roleName = (String) dto.getRoleName();
-     		String id = Integer.toString(dto.getId());
+        <% //            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+//            UserRole dto = (UserRole) m.get("dto");
+//            String mode = (String) m.get("mode");
+//            String roleCode = (String) dto.getRoleCode();
+//            String roleName = (String) dto.getRoleName();
+//            String id = Integer.toString(dto.getId());
         %>
         <div class="container">
             <%@include file="../../header.jsp" %>
@@ -24,9 +23,9 @@
 
                 <div class="box">
                     <form action="UserRole.htm" method="post">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="id" value="<%=id%>"/>
+                        <input type="hidden" name="id" value="${model.mode.id}"/>
 
                         <table class="collapse tblForm row-select">
                             <caption>User Role - Detail</caption>
@@ -35,7 +34,7 @@
                                     <td class="style1">Role Code</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" class="shorttext" name="code" value="<%=roleCode%>" maxlength="10" size="12" />
+                                            <input type="text" class="shorttext" name="code" value="${model.mode.roleCode}" maxlength="10" size="12" />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -44,7 +43,7 @@
                                     <td class="style1">Role Name</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" class="shorttext" name="name"  value="<%=roleName%>" maxlength="25" size="30" />
+                                            <input type="text" class="shorttext" name="name"  value="${model.mode.roleName}" maxlength="25" size="30" />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -53,29 +52,22 @@
                                     <td class="style1">Department</td>
                                     <td class="style1">
                                         <label>
-	                                        <select name="departmentCode">
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListDepartment}">
-	                                        		  <option value="${droplist.departmentCode}" ${(droplist.departmentCode eq requestScope.model.departmentCode)? "selected": ""}>
-	                                        		  	${droplist.departmentCode} - ${droplist.departmentName}
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                        </select>
-                                    	</label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
-                                        <script>$('select[name="departmentCode"]').val('${model.dto.departmentCode}');</script>
-                                    </td>
-                                </tr>
-								<%-- 
-                                <tr>
-                                    <td class="style1">Role Level</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" class="shorttext" name="roleLevel" maxlength="2" size="2" />
+                                            <input type="text" class="shorttext" name="departmentCode"  value="${model.mode.departmentCode}" maxlength="25" size="30" />
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                 </tr>
-                               --%>
+                                <%-- 
+<tr>
+    <td class="style1">Role Level</td>
+    <td class="style1">
+        <label>
+            <input type="text" class="shorttext" name="roleLevel" maxlength="2" size="2" />
+        </label>
+        <label class="requiredfield" title="This Field Is Required!">*</label>
+    </td>
+</tr>
+                                --%>
                             </tbody>
                             <tfoot>
                                 <td colspan="2">

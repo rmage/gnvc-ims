@@ -11,8 +11,12 @@ import com.app.wms.engine.db.dao.*;
 import com.app.wms.engine.db.dto.*;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class UserRoleController extends MultiActionController
 {
@@ -121,7 +125,7 @@ public class UserRoleController extends MultiActionController
             if(isCreate){
                 dto = new UserRole();
             }else{
-                Integer id = Integer.parseInt(request.getParameter("id"));
+                Integer id = Integer.parseInt(request.getParameter("key"));
                 dto = dao.findByPrimaryKey(id);
             }
 
@@ -149,8 +153,8 @@ public class UserRoleController extends MultiActionController
             } else{
                 dao.update(dto.createPk(), dto);
             }
-
-            return new ModelAndView( "1_setup/role/RoleView", "dto", dto );
+//            return new ModelAndView( "1_setup/role/RoleView", "dto", dto );
+            return new ModelAndView("redirect:UserRole.htm");
         } catch (Exception e){
             e.printStackTrace();
             String errorMsg = e.getMessage();
@@ -166,15 +170,48 @@ public class UserRoleController extends MultiActionController
         }
     }
 
-    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         
         UserRoleDao userRoleDao = DaoFactory.createUserRoleDao();
-        UserRole ur = userRoleDao.findByPrimaryKey(Integer.parseInt(request.getParameter("id")));
+        UserRole ur = userRoleDao.findByPrimaryKey(Integer.parseInt(request.getParameter("key")));
         if(ur != null) {
             userRoleDao.delete(ur.createPk());
         }
         
         return findByPrimaryKey(request, response);
+    }
+    
+    //Modified 21 April 2014
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        UserRoleDao roleDao = DaoFactory.createUserRoleDao();
+
+        pw.print("{\"maxpage\": " + roleDao.ajaxMaxPage(new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<UserRole> ps = roleDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (UserRole x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
+            pw.print("\"2\": \"" + x.getRoleCode()+ "\", ");
+            pw.print("\"3\": \"" + x.getRoleName()+ "\", ");
+            pw.print("\"4\": \"" + x.getDepartmentCode()+ "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+    
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Integer id = Integer.parseInt(request.getParameter("key"));
+        UserRoleDao roleDao = DaoFactory.createUserRoleDao();
+        UserRole dto = roleDao.findId(id);
+        
+        Map map = new HashMap();
+        map.put("mode", dto);
+        return new ModelAndView("1_setup/role/RoleEdit","model",map);
     }
 }

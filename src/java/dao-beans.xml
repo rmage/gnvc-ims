@@ -382,4 +382,10 @@
     <bean id="CurrencyRateDao" class="com.app.wms.engine.db.dao.spring.CurrencyRateDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="FishOilDao" class="com.app.wms.engine.db.dao.spring.FishOilDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishOilDtlDao" class="com.app.wms.engine.db.dao.spring.FishOilDtlDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>

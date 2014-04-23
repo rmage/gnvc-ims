@@ -262,8 +262,8 @@ public class DepartmentController extends MultiActionController {
                 dto.setUpdatedDate(new java.util.Date());
                 dao.update(dto.createPk(), dto);
             }
-
-            return new ModelAndView("1_setup/DepartmentView", "dto", dto);
+            //return new ModelAndView("1_setup/DepartmentView", "dto", dto);
+            return new ModelAndView("redirect:Department.htm");
 
         } catch (Exception e) {
             e.printStackTrace();

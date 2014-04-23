@@ -155,4 +155,8 @@ public interface UserDao {
     
     public List<User> findUserRoleAppRange() throws UserDaoException;
 
+    //Modified 21 April 2014
+    public int ajaxMaxPage(String where, BigDecimal show);
+    public List<User> ajaxSearch(String where, String order, int page, int show);
+    public User findId(String id);
 }

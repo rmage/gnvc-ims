@@ -80,7 +80,7 @@ public class FishMealDtlDaoImpl extends AbstractDAO
             "WHERE f.fm_year = ? AND f.fm_month = ? ORDER BY fd.fm_date DESC", 
             this, year, month);
         
-        return fmds.get(0);
+        return fmds.isEmpty() ? null : fmds.get(0);
     }
     
     public List<FishMealDtl> findCurrentMonth(int year, int month, int endDate) {

@@ -157,9 +157,9 @@ public class FishSupplierController extends MultiActionController {
         List<FishSupplier> cr = fishsupplierDao.findByCode(uniCode);
         System.out.println("data: "+cr);
             if(cr.isEmpty()) {
-                pw.print("{\"status\": true}");
-            }else{
                 pw.print("{\"status\": false}");
+            }else{
+                pw.print("{\"status\": true}");
             }
 //                pw.print("]");
               

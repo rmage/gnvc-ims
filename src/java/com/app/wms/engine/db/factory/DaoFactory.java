@@ -839,4 +839,13 @@ public class DaoFactory {
         return (CurrencyRateDao) bf.getBean( "CurrencyRateDao" );
     }
 
+    public static FishOilDao createFishOilDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishOilDao) bf.getBean("FishOilDao");
+    }
+    
+    public static FishOilDtlDao createFishOilDtlDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishOilDtlDao) bf.getBean("FishOilDtlDao");
+    }
 }

@@ -355,8 +355,8 @@ public class UomController extends MultiActionController {
                 dto.setUpdatedDate(now);
                 dao.update(dto.createPk(), dto);
             }
-
-            return new ModelAndView("1_setup/UOMView", "dto", dto);
+//            return new ModelAndView("1_setup/UOMView", "dto", dto);
+            return new ModelAndView("redirect:Uom.htm");
 
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             String errorMsg = "Unique Key Constraint [UOM Code]!" + AppConstant.EOL;

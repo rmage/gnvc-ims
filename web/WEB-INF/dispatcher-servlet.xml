@@ -295,4 +295,7 @@
     <bean name="/CurrencyRate.htm" class="com.app.wms.web.controller.CurrencyRateController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FishOil.htm" class="com.app.wms.web.controller.FishOilController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

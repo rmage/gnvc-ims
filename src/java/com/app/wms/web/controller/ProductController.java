@@ -428,8 +428,8 @@ public class ProductController extends MultiActionController
 
                 daoinv.updateFromProduct(dtos.createPk(), dtos);
             }
-
-          return new ModelAndView("1_setup/ProductView", "dto", dto);
+//          return new ModelAndView("1_setup/ProductView", "dto", dto);
+            return new ModelAndView("redirect:Product.htm");
       } catch (Exception e) {
           e.printStackTrace();
           String errorMsg = e.getMessage();

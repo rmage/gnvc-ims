@@ -66,13 +66,7 @@
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>
-                        <tfoot>
-                        <td colspan="10">
-                            <span>
-                                <input type="button" name="button" id="btnAdd" value="Add" />
-                            </span>
-                        </td>
-                        </tfoot>
+                        <tfoot></tfoot>
                     </table>
 
                 </div>
