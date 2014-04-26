@@ -2,6 +2,7 @@ package com.app.wms.engine.db.dao;
 
 import com.app.wms.engine.db.dto.AssignCanvassing;
 import com.app.wms.engine.db.dto.Purchase;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PurchaseDao {
@@ -18,4 +19,7 @@ public interface PurchaseDao {
 
     public List<AssignCanvassing> findBySupplier(String supplierCode);
     
+    //Modified 23 April 2014
+    public int ajaxMaxPage(String where, BigDecimal show);
+    public List<Purchase> ajaxSearch(String where, String order, int page, int show);
 }

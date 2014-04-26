@@ -18,17 +18,17 @@
             <!-- include file header HERE -->
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-            
+
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="Purchase.htm" method="post">
+                    <form action="Purchase.htm" method="post" id="search">
                         <table class="collapse tblForm row-select">
                             <caption>Search</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">PO Number</td>
-                                    <td><input type="text" name="ponumber" /></td>
+                                    <td><input type="text" name="po_code" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -41,14 +41,14 @@
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
+                    <table class="collapse tblForm row-select" id="list">
                         <caption>List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td>PO Number</td>
-                                <td>Po Date</td>
+                                <td column="po_code">PO Number</td>
+                                <td column="po_date">Po Date</td>
                                 <td>Supplier Code</td>
                                 <td>Supplier Name</td>
                                 <td>Supplier Phone</td>
@@ -56,56 +56,12 @@
                                 <td>Approval</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:if test="${model.p != null}">
-                                <c:set scope="page" value="${((model.page-1) * model.paging) + 1}" var="no" />
-                                <c:forEach items="${model.p}" var="x" varStatus="i">
-                                    <c:set var="xx" value="${fn:split(x.supplierCode, ':')}" />
-                                    <tr class="ganjil">
-                                        <td>
-                                            ${no}
-                                            <c:set scope="page" value="${no + 1}" var="no"/>
-                                        </td>
-                                        <td>
-                                            <c:if test="${x.isApproved == 'N'}">
-                                                <a href="?action=approval&po=${x.poCode}"><img src="resources/images/checkmark.gif" title="Approve this Purchase Order" /></a>
-                                            </c:if>
-                                            <c:if test="${x.approvedDate != null}">
-                                                <a href="GenerateReport.htm?action=index&item=PPoForm&type=xls&params=${xx[0]}:${x.poCode}"><img src="resources/images/printxls.gif" title="Print PO Form (xls)" /></a>
-                                            </c:if>
-                                            <a href="GenerateReport.htm?action=index&item=CanvassingHistory&type=xls&params=${x.poCode}"><img src="resources/images/copy.png" title="Canvassing History (xls)" /></a>
-                                        </td>
-                                        <td><a class="d" href="#${x.poCode}">${x.poCode}</a></td>
-                                        <td><fmt:formatDate pattern="dd-MM-yyyy" value="${x.poDate}" /></a></td>
-                                        <td>${xx[0]}</td>
-                                        <td>${xx[1]}</td>
-                                        <td>${xx[2]}</td>
-                                        <td>${model.bd[i.index]}</td>
-                                        <td>
-                                            <c:if test="${x.approvedDate == null}">Waiting List ${x.approvedBy}</c:if>
-                                            <c:if test="${x.approvedDate != null}">By <b>${x.approvedBy}</b> at <fmt:formatDate pattern="dd-MM-yyyy" value="${x.approvedDate}" /></c:if>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="9">
-                                    <c:if test="${model.page !=null && model.page > 1}">
-                                        <a href="Purchase.htm?page=<c:out value="${model.page-1}" />">&lt</a>
-                                    </c:if>
-                                    &nbsp;page: ${model.page}&nbsp;
-                                    <c:if test="${model.page < model.totalRows/model.paging}">
-                                        <a href="Purchase.htm?page=<c:out value="${model.page+1}" />">&gt;</a>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </tfoot>
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>
-            
+
             <!-- footer HERE -->
             <div class="span-24 last border-top">
                 <div class="box">&copy; 2013 SPFI</div>
@@ -115,15 +71,17 @@
         <!-- javascript block HERE -->
         <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
-            $('.d').live('click', function(){
+            $('.d').live('click', function() {
                 fyaQPanel($(this).html());
             });
-            
+
             function fyaQPanel(p) {
-                if(p === 0) {
-                    $('#fyaQPanel').fadeOut(300, function(){ $('#fyaQPanel').html(null); });
+                if (p === 0) {
+                    $('#fyaQPanel').fadeOut(300, function() {
+                        $('#fyaQPanel').html(null);
+                    });
                 } else {
-                    $('#fyaQPanel').fadeIn(300, function(){
+                    $('#fyaQPanel').fadeIn(300, function() {
                         $('#fyaQPanel').html('<center><img src="resources/img/load-spin.gif" /></center>');
                         $.ajax({
                             url: 'Purchase.htm',
@@ -133,32 +91,34 @@
                                 $('#fyaQPanel').html(null);
                                 $('#fyaQPanel').append('<h6>PO Number : ' + p + '</h6><hr />');
                                 $('#fyaQPanel').append('<table><thead><tr><th>Item Name</th><th>Item Code</th><th>Department</th>' +
-                                    '<th>Quantity</th><th>Unit</th><th>Unit/Price</th><th>Amount</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
-                                for(var i = 0; i < json.length; i++) {
+                                        '<th>Quantity</th><th>Unit</th><th>Unit/Price</th><th>Amount</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
+                                for (var i = 0; i < json.length; i++) {
                                     $('#fyaQPanelBody').append('<tr><td>' + json[i].itemName + '</td><td>' + json[i].itemCode + '</td><td>' +
-                                        json[i].department + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td>' + json[i].uom + '</td><td>' +
-                                        numberWithCommas(json[i].price) + '</td><td>' + numberWithCommas(json[i].amount) + '</td></tr>');
+                                            json[i].department + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td>' + json[i].uom + '</td><td>' +
+                                            numberWithCommas(json[i].price) + '</td><td>' + numberWithCommas(json[i].amount) + '</td></tr>');
                                 }
                             },
                             complete: function() {
-                                if($('#fyaQPanel').html() === '')
+                                if ($('#fyaQPanel').html() === '')
                                     fyaQPanel(0);
                             }
                         });
-                    }); 
+                    });
                 }
             }
-            
+
             $('.box > table > tbody tr').each(function() {
                 var $o = $(this).find('td:eq(7)');
-                $o.html( numberWithCommas($o.html()) );
+                $o.html(numberWithCommas($o.html()));
             });
-            
+
             function numberWithCommas(x) {
                 var parts = x.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 return parts.join(".");
             }
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'R_Purchase_Print Purchase (xls)');
         </script>
     </body>
 </html>

@@ -25,12 +25,14 @@ import com.app.wms.engine.db.exceptions.PrsDetailDaoException;
 import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
 
 public class CanvassingAssignmentController extends MultiActionController {
 
     /**
      * Method 'findByPrimaryKey'
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
@@ -50,12 +52,12 @@ public class CanvassingAssignmentController extends MultiActionController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new ModelAndView( "Error", "th", e );
+            return new ModelAndView("Error", "th", e);
         }
     }
-	
+
     private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try{
+        try {
             HashMap m = new HashMap();
 
             Integer page = null;
@@ -81,37 +83,37 @@ public class CanvassingAssignmentController extends MultiActionController {
 
             AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
             AssignCanvasserDtlDao canvasserassignmentDetailDao = DaoFactory.createAssignCanvasserDtlDao();
-            List<AssignCanvasser> listSearchPage = dao.findCanvasserAssignPaging(c,page);
-            
+            List<AssignCanvasser> listSearchPage = dao.findCanvasserAssignPaging(c, page);
+
             UserDao userDao = DaoFactory.createUserDao();
             for (AssignCanvasser ca : listSearchPage) {
                 List<AssignCanvasserDtl> cds = canvasserassignmentDetailDao.findByPrsnumber(ca.getPrsnumber());
-                for(AssignCanvasserDtl cd : cds) {
+                for (AssignCanvasserDtl cd : cds) {
                     User u = userDao.findByPrimaryKey(cd.getUserId());
-                    
-                    if(ca.getCanvassername() != null) {
+
+                    if (ca.getCanvassername() != null) {
                         ca.setCanvassername(ca.getCanvassername() + " :: " + u.getName());
                     } else {
                         ca.setCanvassername(u.getName());
                     }
                 }
             }
-            
-            int total = 2000; 
+
+            int total = 2000;
             m.put("canvasserassignment", listSearchPage);
             m.put("totalRows", total);
             m.put("page", page);
             m.put("paging", paging);
 
             return m;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw e;
-        }		
+        }
     }
-	
+
     private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
         try {
-            AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();		
+            AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
             AssignCanvasser dto = new AssignCanvasser();
 
             String mode = request.getParameter("mode");
@@ -119,12 +121,12 @@ public class CanvassingAssignmentController extends MultiActionController {
                 Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
-         
+
             if (dto.getPrsnumber() == null) {
                 dto.setPrsnumber("");
                 dto.setCanvassername("");
             }
-         
+
             if (dto.getPrsnumber() != null || dto.getCanvassername() != null) {
                 dto.setPrsnumber(dto.getPrsnumber());
                 dto.setCanvassername(dto.getCanvassername());
@@ -136,7 +138,7 @@ public class CanvassingAssignmentController extends MultiActionController {
             PrsDao daoPrs = DaoFactory.createPrsDao();
             DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
             List<Prs> dropListPrs = daoPrs.findAllNotInCanvas();
-            for(Prs x : dropListPrs) {
+            for (Prs x : dropListPrs) {
                 List<Department> d = departmentDao.findWhereDepartmentCodeEquals(x.getDepartmentName());
                 x.setDepartmentName(d.isEmpty() ? "- department not found -" : d.get(0).getDepartmentName());
             }
@@ -151,39 +153,37 @@ public class CanvassingAssignmentController extends MultiActionController {
             throw e;
         }
     }
-	
-	/**
-	 * Method 'findAll'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();		
-		    List <AssignCanvasser> dto = dao.findAll();
-			return new ModelAndView( "1_setup/CanvasserAssignList", "model", dto);
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-	
-	public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    /**
+     * Method 'findAll'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+            List<AssignCanvasser> dto = dao.findAll();
+            return new ModelAndView("1_setup/CanvasserAssignList", "model", dto);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
+        }
+
+    }
+
+    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String createdBy = "";
         if (lu == null) {
-			HashMap m = new HashMap();
+            HashMap m = new HashMap();
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	createdBy = (String)lu.getUserId();
+        } else {
+            createdBy = (String) lu.getUserId();
         }
         AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
         Integer id = Integer.parseInt(request.getParameter("id"));
@@ -197,10 +197,10 @@ public class CanvassingAssignmentController extends MultiActionController {
         HashMap m = this.searchAndPaging(request, response);
         return new ModelAndView("1_setup/CanvasserAssignList", "model", m);
     }
-	
+
     /**
      * Method 'create'
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
@@ -209,27 +209,26 @@ public class CanvassingAssignmentController extends MultiActionController {
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map map = new HashMap();
         map = this.getModelByPrimaryKey(request);
-        map.put("mode", "create");		
+        map.put("mode", "create");
 
         return new ModelAndView("1_setup/CanvasserAssignAdd2", "model", map);
     }
 
-	
     /**
      * Method 'save'
-     * 
+     *
      * @param request
      * @param response
      * @throws Exception
      * @return ModelAndView
      */
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
-        throws Exception {
-        
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
         PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
         AssignCanvasserDao canvasserassignmentDao = DaoFactory.createAssignCanvasserDao();
         AssignCanvasserDtlDao canvasserassignmentDetailDao = DaoFactory.createAssignCanvasserDtlDao();
-        
+
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         AssignCanvasser dto = new AssignCanvasser();
 //        boolean isCreate = true;
@@ -244,19 +243,20 @@ public class CanvassingAssignmentController extends MultiActionController {
             c.setCreatedBy(lu.getUserId());
             c.setCreatedDate(new Date());
             canvasserassignmentDao.insert(c);
-            
+
             /* insert canvaser */
             int i = 0;
             String[] s = request.getParameterValues("userId");
             List<PrsDetail> pds = prsDetailDao.findWherePrsnumberEquals(c.getPrsnumber());
-            for(PrsDetail pd : pds) {
+            for (PrsDetail pd : pds) {
                 AssignCanvasserDtl cd = new AssignCanvasserDtl();
                 cd.setPrsNumber(pd.getPrsnumber());
                 cd.setProductCode(pd.getProductcode());
-                cd.setUserId(s[i]); i++;
+                cd.setUserId(s[i]);
+                i++;
                 canvasserassignmentDetailDao.insert(cd);
             }
-            
+
 //            if (mode.equalsIgnoreCase("create")) {
 //                isCreate = true;
 //            } else {
@@ -315,7 +315,6 @@ public class CanvassingAssignmentController extends MultiActionController {
 //                dto.setUpdatedDate(new java.util.Date());
 //                dao.update(dto.createPk(), dto);
 //            }
-
 //            return new ModelAndView("1_setup/CanvasserAssignView", "dto", dto);
             return findByPrimaryKey(request, response);
         } catch (Exception e) {
@@ -331,73 +330,107 @@ public class CanvassingAssignmentController extends MultiActionController {
 //                return new ModelAndView("1_setup/CanvasserAssignEdit", "model", m);
 //            }
             return findByPrimaryKey(request, response);
-        }  
+        }
     }
-	
+
     /* FYA : 07 January 2014 */
-    public void getPrs(HttpServletRequest request, HttpServletResponse response) 
-        throws PrsDetailDaoException, IOException, UserDaoException {
-        
+    public void getPrs(HttpServletRequest request, HttpServletResponse response)
+            throws PrsDetailDaoException, IOException, UserDaoException {
+
         String prsNo = request.getParameter("key");
-        
+
         /* get canvasser */
         UserDao daoUser = DaoFactory.createUserDao();
-        List <User> us = daoUser.findRoleCanvasser();
-        
+        List<User> us = daoUser.findRoleCanvasser();
+
         String canvasser = "<select name=\\\"userId\\\" required=\\\"true\\\"><option value=\\\"\\\">-- Pilih Canvasser --</option>";
-        for(User u : us) {
+        for (User u : us) {
             canvasser += "<option value=\\\"" + u.getUserId() + "\\\">" + u.getName() + "</option>";
         }
         canvasser += "</select>";
-        
+
         /* get prs detail */
         PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
         List<PrsDetail> pds = prsDetailDao.findWherePrsnumberEquals(prsNo);
-        
+
         String out = "[";
-        for(PrsDetail pd : pds) {
-            if(!out.equals("["))
+        for (PrsDetail pd : pds) {
+            if (!out.equals("[")) {
                 out += ",";
-            
+            }
+
             out += "{\"prsNo\": \"" + pd.getPrsnumber() + "\", "
-                + "\"itemCode\": \"" + pd.getProductcode() + "\", "
-                + "\"itemName\": \"" + pd.getProductname() + "\", "
-                + "\"quantity\": \"" + pd.getQty() + "\", "
-                + "\"canvasser\": \"" + canvasser + "\"}";
+                    + "\"itemCode\": \"" + pd.getProductcode() + "\", "
+                    + "\"itemName\": \"" + pd.getProductname() + "\", "
+                    + "\"quantity\": \"" + pd.getQty() + "\", "
+                    + "\"canvasser\": \"" + canvasser + "\"}";
         }
         out += "]";
         response.getWriter().print(out);
     }
-    
-    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
-        throws PrsDetailDaoException, UserDaoException, IOException {
-        
+
+    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response)
+            throws PrsDetailDaoException, UserDaoException, IOException {
+
         String prsNo = request.getParameter("key");
-        
+
         /* get prs detail */
         UserDao daoUser = DaoFactory.createUserDao();
         PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
         AssignCanvasserDtlDao canvasserassignmentDetailDao = DaoFactory.createAssignCanvasserDtlDao();
-        
+
         List<PrsDetail> pds = prsDetailDao.findWherePrsnumberEquals(prsNo);
         List<AssignCanvasserDtl> cds = canvasserassignmentDetailDao.findByPrsnumber(prsNo);
-        
+
         int i = 0;
         String out = "[";
-        for(PrsDetail pd : pds) {
-            if(!out.equals("["))
+        for (PrsDetail pd : pds) {
+            if (!out.equals("[")) {
                 out += ",";
-            
+            }
+
             User u = daoUser.findByPrimaryKey(cds.get(i).getUserId());
-            
+
             out += "{\"prsNo\": \"" + pd.getPrsnumber() + "\", "
-                + "\"itemCode\": \"" + pd.getProductcode() + "\", "
-                + "\"itemName\": \"" + pd.getProductname() + "\", "
-                + "\"quantity\": \"" + pd.getQty() + "\", "
-                + "\"canvasser\": \"" + u.getName() + "\"}"; i++;
+                    + "\"itemCode\": \"" + pd.getProductcode() + "\", "
+                    + "\"itemName\": \"" + pd.getProductname() + "\", "
+                    + "\"quantity\": \"" + pd.getQty() + "\", "
+                    + "\"canvasser\": \"" + u.getName() + "\"}";
+            i++;
         }
         out += "]";
         response.getWriter().print(out);
     }
-    
+
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException, UserDaoException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        AssignCanvasserDao dao = DaoFactory.createAssignCanvasserDao();
+        AssignCanvasserDtlDao canvasserassignmentDetailDao = DaoFactory.createAssignCanvasserDtlDao();
+        UserDao userDao = DaoFactory.createUserDao();
+
+        pw.print("{\"maxpage\": " + dao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<AssignCanvasser> ca = dao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (AssignCanvasser x : ca) {
+            List<AssignCanvasserDtl> cds = canvasserassignmentDetailDao.findByPrsnumber(x.getPrsnumber());
+            for (AssignCanvasserDtl cd : cds) {
+                User u = userDao.findByPrimaryKey(cd.getUserId());
+                if (x.getCanvassername() != null) {
+                    x.setCanvassername(x.getCanvassername() + " :: " + u.getName());
+                } else {
+                    x.setCanvassername(u.getName());
+                }
+            }
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + "\", ");
+            pw.print("\"2\": \"" + x.getPrsnumber() + "\", ");
+            pw.print("\"3\": \"" + x.getCanvassername() + "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
 }

@@ -18,7 +18,7 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="CanvassingAssignment.htm" method="post">
+                    <form action="CanvassingAssignment.htm" method="post" id="search">
                         <table class="collapse tblForm row-select">
                             <caption>Search</caption>
                             <tbody>
@@ -37,47 +37,18 @@
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
+                    <table class="collapse tblForm row-select" id="list">
                         <caption>List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td>Prs Number</td>
+                                <td column="prsnumber">Prs Number</td>
                                 <td>Canvasser Name</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:if test="${model.canvasserassignment != null}">
-                                <c:set scope="page" value="${((model.page-1) * model.paging) + 1}" var="no" />
-                                <c:forEach items="${model.canvasserassignment}" var="x">
-                                    <tr class="ganjil">
-                                        <td>
-                                            ${no}
-                                            <c:set scope="page" value="${no + 1}" var="no"/>
-                                        </td>
-                                        <td>
-                                            <!-- Image for action icon -->
-                                        </td>
-                                        <td><a class="d" href="#${x.prsnumber}">${x.prsnumber}</a></td>
-                                        <td>${x.canvassername}</td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="4">
-                                    <c:if test="${model.page !=null && model.page > 1}">
-                                        <a href="CanvassingAssignment.htm?page=<c:out value="${model.page-1}" />">&lt</a>
-                                    </c:if>
-                                    &nbsp;page: ${model.page}&nbsp;
-                                    <c:if test="${model.page < model.totalRows/model.paging}">
-                                        <a href="CanvassingAssignment.htm?page=<c:out value="${model.page+1}" />">&gt;</a>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </tfoot>
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>
@@ -124,6 +95,8 @@
                         }); 
                     }
                 }
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'),'');
             </script>
         </div>
     </body>

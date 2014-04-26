@@ -42,83 +42,54 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class PurchaseController extends MultiActionController {
-    
-    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) 
-        throws SupplierDaoException, UserDaoException, ApprovalRangeDaoException, UserRoleDaoException {
-        
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-        List<BigDecimal> bds = new ArrayList<BigDecimal>();
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-        
-        /* DAO | Define needed dao here */
-        PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
-        SupplierDao supplierDao = DaoFactory.createSupplierDao();
-        PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
-        
-        /* TRANSACTION | Something complex here */
-        List<Purchase> ps = purchaseDao.findAll();
-        for(Purchase x : ps) {
-            BigDecimal amount = BigDecimal.ZERO;
-            List<PurchaseDtl> pds = purchaseDtlDao.findByPo(x.getPoCode());
-            for(PurchaseDtl xx : pds) {
-                amount = amount.add(xx.getSubTotal());
-            } bds.add(amount);
-            
-            Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
-            x.setSupplierCode(s.getSupplierCode() + ":" + s.getSupplierName() + ":" + s.getTelephone());
-            if(x.getIsApproved().equals("N")) {
-                x.setIsApproved(FyaUtility.checkPOApprovalAuth(lu.getUserId(), amount));
-                x.setApprovedBy(FyaUtility.checkPOApprovalWait(amount, "name"));
-            }
-        }
-        m.put("p", ps);
-        m.put("bd", bds);
-        
-        return new ModelAndView("non_fish/POList", "model", m);
-        
+
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response)
+            throws SupplierDaoException, UserDaoException, ApprovalRangeDaoException, UserRoleDaoException {
+
+        return new ModelAndView("non_fish/POList");
+
     }
-    
-    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
-        throws SupplierDaoException, CurrencyDaoException {
-        
+
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response)
+            throws SupplierDaoException, CurrencyDaoException {
+
         /* DATA | get initial value */
         HashMap m = new HashMap();
-        
+
         /* DAO | Define needed dao here */
         CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
-        
+
         /* TRANSACTION | Something complex here */
         // get supplier list
         List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
         m.put("supplier", ss);
-        
+
         // get currency
         List<Currency> cs = currencyDao.findAll();
         m.put("c", cs);
-        
+
         return new ModelAndView("non_fish/POAdd", "model", m);
-        
+
     }
-    
+
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
-        
+
         try {
             /* DATA | get initial value */
             String[] master = request.getParameter("master").split(":", -1);
             String[] details = request.getParameterValues("detail");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            
+
             /* DAO | Define needed dao here */
             CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
             PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
             PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
-            
+
             /* TRANSACTION | Something complex here */
             // get currency rate
             CurrencyRate cr = currencyRateDao.findByCurrency(master[6]);
-            
+
             // insert master purchase order
             Purchase p = new Purchase();
             p.setPoCode(Integer.parseInt(master[0]));
@@ -133,9 +104,9 @@ public class PurchaseController extends MultiActionController {
             p.setCreatedBy(lu.getUserId());
             p.setCreatedDate(new Date());
             purchaseDao.insert(p);
-            
+
             // insert detail purchase order
-            for(String x : details) {
+            for (String x : details) {
                 String[] detail = x.split(":");
                 PurchaseDtl pd = new PurchaseDtl();
                 pd.setPoCode(p.getPoCode());
@@ -147,17 +118,17 @@ public class PurchaseController extends MultiActionController {
                 pd.setCreatedDate(new Date());
                 purchaseDtlDao.insert(pd);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return new ModelAndView("redirect:Purchase.htm");
-        
+
     }
-    
-    public ModelAndView approval(HttpServletRequest request, HttpServletResponse response) 
-        throws UserDaoException {
-        
+
+    public ModelAndView approval(HttpServletRequest request, HttpServletResponse response)
+            throws UserDaoException {
+
         /* DATA | get initial value */
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
@@ -168,7 +139,7 @@ public class PurchaseController extends MultiActionController {
         /* TRANSACTION | Something complex here */
         // get po data and approve it
         Purchase p = purchaseDao.findByPo(request.getParameter("po"));
-        if(p != null) {
+        if (p != null) {
             p.setIsApproved("Y");
             p.setApprovedBy(userDao.findByPrimaryKey(lu.getUserId()).getName());
             p.setApprovedDate(new Date());
@@ -176,14 +147,14 @@ public class PurchaseController extends MultiActionController {
             p.setUpdatedDate(new Date());
             purchaseDao.update(p);
         }
-        
+
         return new ModelAndView("redirect:Purchase.htm");
-        
+
     }
-    
-    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
-        throws IOException, NumberFormatException, ProductDaoException {
-        
+
+    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, NumberFormatException, ProductDaoException {
+
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
@@ -198,15 +169,16 @@ public class PurchaseController extends MultiActionController {
         /* TRANSACTION | Something complex here */
         pw.print("[");
         List<PurchaseDtl> pds = purchaseDtlDao.findByPo(poCode);
-        for(PurchaseDtl x : pds) {
-            if(b)
+        for (PurchaseDtl x : pds) {
+            if (b) {
                 pw.print(",");
-            
+            }
+
             Purchase pr = purchaseDao.findByPo(String.valueOf(x.getPoCode()));
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
             PrsDetail pd = prsDetailDao.findByPrsProduct(x.getPrsNumber(), x.getProductCode());
             AssignCanvassing ac = purchaseDao.findByPrsSupplierProduct(x.getPrsNumber(), pr.getSupplierCode(), x.getProductCode());
-            
+
             pw.print("{\"itemCode\": \"" + p.getProductCode() + "\", ");
             pw.print("\"itemName\": \"" + p.getProductName() + "\",");
             pw.print("\"department\": \"" + x.getDepartmentCode() + "\",");
@@ -214,31 +186,34 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"uom\": \"" + pd.getUomName() + "\",");
             pw.print("\"price\": \"" + ac.getUnitPrice() + "\",");
             pw.print("\"amount\": \"" + x.getSubTotal() + "\"}");
-            
+
             b = Boolean.TRUE;
-        } pw.print("]");
-        
-    } 
-    
-    public void getItems(HttpServletRequest request, HttpServletResponse response) 
-        throws IOException, ProductDaoException, PrsDaoException {
-        
+        }
+        pw.print("]");
+
+    }
+
+    public void getItems(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ProductDaoException, PrsDaoException {
+
         PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
         List<AssignCanvassing> acs = purchaseDao.findBySupplier(request.getParameter("key"));
-        
+
         Boolean b = Boolean.FALSE;
-        PrintWriter pw = response.getWriter(); pw.print("[");
+        PrintWriter pw = response.getWriter();
+        pw.print("[");
         PrsDao prsDao = DaoFactory.createPrsDao();
         ProductDao productDao = DaoFactory.createProductDao();
         PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
-        for(AssignCanvassing ac : acs) {
-            if(b)
+        for (AssignCanvassing ac : acs) {
+            if (b) {
                 pw.print(",");
-            
+            }
+
             Prs prs = prsDao.findByPrsnumberEquals(ac.getPrsNumber());
             Product p = productDao.findWhereProductCodeEquals(ac.getProductCode()).get(0);
             PrsDetail pd = prsDetailDao.findByPrsProduct(ac.getPrsNumber(), ac.getProductCode());
-            
+
             pw.print("{\"prsNumber\": \"" + ac.getPrsNumber() + "\", ");
             pw.print("\"itemCode\": \"" + p.getProductCode() + "\", ");
             pw.print("\"itemName\": \"" + p.getProductName() + "\", ");
@@ -247,10 +222,45 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"unit\": \"" + pd.getUomName() + "\", ");
             pw.print("\"price\": \"" + ac.getUnitPrice() + "\", ");
             pw.print("\"amount\": \"" + pd.getQty().multiply(ac.getUnitPrice()).setScale(2) + "\"}");
-            
+
             b = Boolean.TRUE;
-        } pw.print("]");
-        
+        }
+        pw.print("]");
+
     }
-    
+
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException, SupplierDaoException, ApprovalRangeDaoException, UserRoleDaoException, UserDaoException {
+        Boolean b = Boolean.FALSE;
+//        List<BigDecimal> bds = new ArrayList<BigDecimal>();
+        PrintWriter pw = response.getWriter();
+
+        PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
+        PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
+        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+
+        pw.print("{\"maxpage\": " + purchaseDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Purchase> ps = purchaseDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (Purchase x : ps) {
+            BigDecimal amount = BigDecimal.ZERO;
+            List<PurchaseDtl> pds = purchaseDtlDao.findByPo(x.getPoCode());
+            for (PurchaseDtl xx : pds) {
+                amount = amount.add(xx.getSubTotal());
+            }
+            Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getPoCode() + "\", ");
+            pw.print("\"2\": \"" + x.getPoCode() + "\", ");
+            pw.print("\"3\": \"" + x.getPoDate() + "\", ");
+            pw.print("\"4\": \"" + x.getSupplierCode() + "\", ");
+            pw.print("\"5\": \"" + s.getSupplierName() + "\", ");
+            pw.print("\"6\": \"" + s.getTelephone() + "\", ");
+            pw.print("\"7\": \"" + amount + "\", ");
+            pw.print("\"8\": \"" + (x.getIsApproved().equals("N") ? "Is not approved" : "Approved by " +x.getApprovedBy()) + "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
 }

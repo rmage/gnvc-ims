@@ -34,21 +34,22 @@ public class SupplierController  extends MultiActionController {
      * @return ModelAndView
      */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {   
-            HashMap m = null;
-            final String mode = request.getParameter("mode");
-            if (mode != null && mode.equals("edit")) {
-                m = this.getModelByPrimaryKey(request);
-                m.put("mode", "edit");
-                return new ModelAndView("1_setup/SupplierEdit", "model", m);
-            } else {
-                m = this.searchAndPaging(request, response);
-                return new ModelAndView("1_setup/SupplierList", "model", m);
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-            return new ModelAndView( "Error", "th", e );
-        }		
+//        try {   
+//            HashMap m = null;
+//            final String mode = request.getParameter("mode");
+//            if (mode != null && mode.equals("edit")) {
+//                m = this.getModelByPrimaryKey(request);
+//                m.put("mode", "edit");
+//                return new ModelAndView("1_setup/SupplierEdit", "model", m);
+//            } else {
+//                m = this.searchAndPaging(request, response);
+//                return new ModelAndView("1_setup/SupplierList", "model", m);
+//            }
+//        } catch (Throwable e) {
+//            e.printStackTrace();
+//            return new ModelAndView( "Error", "th", e );
+//        }	
+        return new ModelAndView("1_setup/SupplierList");
     }
 	
 	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
