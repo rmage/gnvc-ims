@@ -40,7 +40,7 @@ public class ReportFactory {
         reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("canvassingForm", new ReportModel("canvassingForm", false));
         reportTemplateMap.put("eds", new ReportModel("eds", false));
-        reportTemplateMap.put("FrozenFishStock", new ReportModel("FrozenFishStock"));
+        reportTemplateMap.put("FrozenFishStock", new ReportModel("FrozenFishStock1")); // add by edw
         reportTemplateMap.put("poConfirmatory", new ReportModel("poConfirmatory"));
         reportTemplateMap.put("poForm", new ReportModel("poForm", false));
         reportTemplateMap.put("poIssuedPerSupplier", new ReportModel("poIssuedPerSupplier"));
