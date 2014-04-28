@@ -148,6 +148,9 @@ public class FishRrDetailDaoImpl extends AbstractDAO implements
 				"FROM inventory..fish_rr_detail rrd " +
 				"WHERE rrd.rr_id=? " +
 				"GROUP BY rrd.fish_id";
+        
+        System.out.println("++++++ "+query);
+        System.out.println("++++++ "+rrId);
 		
 		List<FishRrDetail> resultList = jdbcTemplate.query(query, this, rrId);
 		return resultList;
