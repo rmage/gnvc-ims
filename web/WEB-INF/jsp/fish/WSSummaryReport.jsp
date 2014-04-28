@@ -18,13 +18,14 @@
                     dateFormat: "yy-mm-dd"
                 });
 
+                // added by edw -- adding report title
                 $('#btnGenerate').click(function() {
                     var type = $('#type').val();
                     var vesselId = $('#vesselId').val();
                     var dateShift = $('#dateShift').val();
                     var fishType = $('#fishType').val();
                     var params = vesselId + ":" + dateShift + ":" + fishType;
-                    var url = "GenerateReport.htm?action=index&type=" + type + "&item=FSummaryWSSlip" + "&params=" + params;
+                    var url = "GenerateReport.htm?action=index&type=" + type + "&item=FSummaryWSSlip" + "&params=" + params+"&fishType=" + fishType.toUpperCase();
 
                     location.href = url;
                 });
@@ -99,8 +100,8 @@
                                     <td>Fish Type</td>
                                     <td>
                                         <select id="fishType" name="fishType">
-                                            <option value="'WSHR','WSBR','WSL'">Fresh</option>
-                                            <option value="'WSBF','WSABF','WSNC'">Frozen</option>
+                                            <option value="fresh">Fresh</option>
+                                            <option value="frozen">Frozen</option>
                                         </select>
                                     </td>
                                 </tr>

@@ -22,8 +22,8 @@ import com.report.test.ReportFactory.Report;
 
 @SuppressWarnings({"rawtypes","unchecked"})
 public class GenerateReportController extends MultiActionController {
-	public static final Map<Report, Object> ListMap = new HashMap<Report, Object>();
-	public static final Map<Report, PostProcess> PostProcess = new HashMap<Report, PostProcess>();
+	public static Map<Report, Object> ListMap = new HashMap<Report, Object>();
+	public static Map<Report, PostProcess> PostProcess = new HashMap<Report, PostProcess>();
 	
 	static {
             ListMap.put(Report.FWS, 
@@ -84,7 +84,8 @@ public class GenerateReportController extends MultiActionController {
                 + "LEFT JOIN inventory..fish_supplier su ON su.id = fv.supplier_id "
                 + "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id "
                 + "LEFT JOIN inventory..fish_ws_type fwt ON fwt.id = ws.ws_type_id "
-                + "WHERE ws.vessel_id = ? AND ws.date_shift = ? AND fwt.code in (?) "
+                + "WHERE ws.vessel_id = ? AND replace(convert(varchar, ws.date_shift, 111), '/', '-') = ? " 
+                + "AND (fwt.code = 'WSBF' OR fwt.code = 'WSABF' OR fwt.code = 'WSNC') "
             );
                 
             ListMap.put(Report.FSpoilagereport, 
@@ -777,14 +778,65 @@ public class GenerateReportController extends MultiActionController {
 			Object o = ListMap.get(reportType);
 			if(o == null)	return null;
 			if(o instanceof String){
+                            
+                                String paramString = params.get("params").toString();
+                            
+                                // added by edw, override FSummaryWSSlip
+                                if(reportType.toString().equals("FSummaryWSSlip")) {
+                                    o =  "SELECT ws.ws_no, su.name AS supplier_name, fv.name AS boat_name,"
+                                        + "fv.batch_no, replace(convert(varchar, ws.date_shift, 111), '/', '-') as date_shift, ws.time_shift, f.code AS type, wsd.total_weight AS data,"
+                                        + "(SELECT ISNULL(SUM(fs.cooked_weight), 0.00)FROM inventory..fish_spoilage fs "
+                                        + "WHERE fs.vessel_id = ws.vessel_id AND fs.fish_id = wsd.fish_id "
+                                        + "AND fs.date_shift = ws.date_shift) AS spoilage "
+                                        + "FROM inventory..fish_ws_detail wsd "
+                                        + "LEFT JOIN inventory..fish_ws ws ON ws.id = wsd.ws_id "
+                                        + "LEFT JOIN inventory..fish_vessel fv ON fv.id = ws.vessel_id "
+                                        + "LEFT JOIN inventory..fish_supplier su ON su.id = fv.supplier_id "
+                                        + "LEFT JOIN inventory..fish f ON f.id = wsd.fish_id "
+                                        + "LEFT JOIN inventory..fish_ws_type fwt ON fwt.id = ws.ws_type_id "
+                                        + "WHERE ws.vessel_id = ? AND replace(convert(varchar, ws.date_shift, 111), '/', '-') = ? " ;
+
+                                    if(paramString.contains(":frozen")) {
+                                        o = o+"AND (\n" +
+                                                "        fwt.code = 'WSBF'\n" +
+                                                "     OR fwt.code = 'WSABF'\n" +
+                                                "     OR fwt.code = 'WSNC'\n" +
+                                                "    ) "
+                                                ;  
+                                        paramString = paramString.replace(":frozen", "");
+                                    }
+                                    else if(paramString.contains(":fresh")){
+                                        o = o+"AND (\n" +
+                                                "        fwt.code = 'WSHR'\n" +
+                                                "     OR fwt.code = 'WSBR'\n" +
+                                                "     OR fwt.code = 'WSL'\n" +
+                                                "    ) "
+                                                ;
+                                        paramString = paramString.replace(":fresh", "");
+                                    }
+                                }
+                                // end of added by edw
+                            
 				Connection conn = new ctrlKoneksiDB().openConnection();
 				JDBCExecutor jdbc = new JDBCExecutor(conn);
-				List<ResultSetRow> list = params.containsKey("params")?jdbc.execQuery(o.toString(), ((Object[])params.get("params").toString().split(":"))):jdbc.execQuery(o.toString());
+                                
+                                System.out.println("disini >>>> "+o.toString());
+                                
+                                if(params.containsKey("params"))
+                                    testQuery(o.toString(), ((Object[])paramString.split(":")));
+                                
+				List<ResultSetRow> list = params.containsKey("params")?jdbc.execQuery(o.toString(), ((Object[])paramString.split(":"))):jdbc.execQuery(o.toString());
 				for(int x = 0; x < list.size(); ++x){
 					ResultSetRow r = list.get(x);
 					if(!r.containsKey("index"))	r.put("index", x+1);
 				}
 				conn.close();
+                                
+                                System.out.println("size list >>>> "+list.size());
+                                for (ResultSetRow resultSetRow : list) {
+                                    System.out.println("disiini >>> "+resultSetRow.toString());
+                                }
+                                
 				return list;
 			} else if(o instanceof String[]){
 				Connection conn = new ctrlKoneksiDB().openConnection();
@@ -811,4 +863,11 @@ public class GenerateReportController extends MultiActionController {
 			}
 		}
 	}
+        
+        private void testQuery(String sql, Object... bindVariableValues) {
+            for (Object object : bindVariableValues) {
+                sql = sql.replaceFirst("\\?", object.toString());
+            }
+            System.out.println("==== this is my sql >>>> "+sql);
+        }
 }
