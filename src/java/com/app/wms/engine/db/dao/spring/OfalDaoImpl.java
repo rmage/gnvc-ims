@@ -31,6 +31,7 @@ public class OfalDaoImpl extends AbstractDAO
         o.setOfalLabelNw(rs.getString("ofal_labelnw"));
         o.setOfalLabelDw(rs.getString("ofal_labeldw"));
         o.setBorCode(rs.getString("bor_code"));
+        o.setBorId(rs.getInt("bor_id"));
         o.setOfalShipment(rs.getString("ofal_shipment"));
         o.setPreparedBy(rs.getString("prepared_by"));
         o.setPreparedDate(rs.getDate("prepared_date"));
@@ -49,8 +50,8 @@ public class OfalDaoImpl extends AbstractDAO
     }
     
     public int insert(Ofal o) {
-        return jdbcTemplate.queryForInt("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @@IDENTITY;",
-            o.getOfalLabelNw(), o.getOfalLabelDw(), o.getBorCode(), o.getOfalShipment(), null, null, null, null, null, null, null, null,
+        return jdbcTemplate.queryForInt("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); SELECT @@IDENTITY;",
+            o.getOfalLabelNw(), o.getOfalLabelDw(), o.getBorCode(), o.getBorId(), o.getOfalShipment(), null, null, null, null, null, null, null, null,
             o.getCreatedBy(), o.getCreatedDate(), null, null);
     }
     

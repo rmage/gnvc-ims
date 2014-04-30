@@ -148,8 +148,7 @@
                     $('#itemCode').html(ui.item.itemCode);
                     $('#itemName').html(ui.item.itemName);
                     $('#pack').html(ui.item.style + ' / ' + ui.item.size);
-                    
-                    return false;
+                    $('#brandName').autocomplete("destroy");
                 }
             }).data( 'autocomplete' )._renderItem = function( ul, item ) {
                 return $( '<li>' )
@@ -164,7 +163,7 @@
                     $('#poster').append('<input name="master" type="hidden" value="' + $('#ptsCode').val() + ':' + $('#ptsDate').val() + 
                         ':' + $('#canCode').val() + ':' + $('#cs').val() + ':' + $('#location').val() + ':' + $('#itemCode').html() + ':' + $('#reff').val() + 
                         ':' + $('#coeFlk').val() + ':' + $('#coeNw').val() + ':' + $('#coeDw').val() + ':' + $('#coePw').val() + 
-                        ':' + $('#qadReleaseTo').val() + ':' + $('#qadRemarks').val() + '" />');
+                        ':' + $('#qadReleaseTo').val() + ':' + $('#qadRemarks').val() + ':' + $('#brandName').val() + '" />');
                     
                     var i = 0;
                     $('#main tr').each(function() {
@@ -218,38 +217,6 @@
                         $(this).datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
                 });
             }
-//            $('#swsCode').bind('change', function() {
-//                if($('#swsCode').val() === '') {
-//                    $('#main').html(null);
-//                    return;
-//                }
-//                
-//                $(this).attr('disabled', true);
-//                $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif" style="vertical-align: middle; background-color: rgb(255, 255, 255); border-radius: 4px; padding: 2.5px;" />');
-//                
-//                $.ajax({
-//                    url: 'Pts.htm',
-//                    data: {action: 'getSwsDetail', key: $(this).val()},
-//                    dataType: 'json',
-//                    success: function(json) {
-//                        $('#main').html(null);
-//                        for(var i = 0; i < json.length; i++) {
-//                            $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].itemName + '</td><td>' + json[i].itemCode + 
-//                                '</td><td>' + json[i].type + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td>' + json[i].uom + '</td></tr>');
-//                        }
-//                    },
-//                    complete: function() {
-//                        $('#load').remove();
-//                        $('#swsCode').attr('disabled', false);  
-//                    }
-//                });
-//            });
-//            
-//            function numberWithCommas(x) {
-//                var parts = x.toString().split(".");
-//                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-//                return parts.join(".");
-//            }
 
         </script>
     </body>

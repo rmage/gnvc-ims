@@ -12,4 +12,8 @@ public interface DistributorDao {
     public int ajaxMaxPage(String where, BigDecimal show);
     public List<Distributor> ajaxSearch(String where, String order, int page, int show);
     public Distributor findId(int id);
+    
+    public Distributor findByCode(String code);
+    
+    public List<Distributor> findByName(String name);
 }

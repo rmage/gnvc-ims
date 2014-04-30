@@ -12,6 +12,7 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,11 +65,14 @@ public class OfalController extends MultiActionController {
         OfalDtlDao ofalDtlDao = DaoFactory.createOfalDtlDao();
 
         /* TRANSACTION | Something complex here */
+        String[] bor = master[2].split("_", -1);
+        
         // insert ofal
         Ofal o = new Ofal();
         o.setOfalLabelNw(master[0]);
         o.setOfalLabelDw(master[1]);
-        o.setBorCode(master[2]);
+        o.setBorCode(bor[0]);
+        o.setBorId(Integer.parseInt(bor[1]));
         o.setOfalShipment(master[3]);
         o.setCreatedBy(lu.getUserId());
         o.setCreatedDate(new Date());
@@ -76,9 +80,11 @@ public class OfalController extends MultiActionController {
         
         // insert ofal detail
         for(String x : detail) {
+            String[] d = x.split("-");
             OfalDtl od = new OfalDtl();
             od.setOfalId(o.getOfalId());
-            od.setPtsCode(Integer.parseInt(x));
+            od.setPtsCode(Integer.parseInt(d[0]));
+            od.setQty(new BigDecimal(d[1]));
             od.setCreatedBy(lu.getUserId());
             od.setCreatedDate(new Date());
             ofalDtlDao.insert(od);
@@ -104,18 +110,17 @@ public class OfalController extends MultiActionController {
         pw.print("[");
         List<OfalDtl> ods = ofalDtlDao.findByOfal(ofalId);
         for(OfalDtl x : ods) {
-            if(b)
-                pw.print(",");
-            
-            Pts p = ptsDao.findByPts(x.getPtsCode());
-            pw.print("{\"ptsCode\": \"" + p.getPtsCode() + "\", ");
-            pw.print("\"ptsDate\": \"" + new SimpleDateFormat("dd/MM/yyyy").format(p.getPtsDate()) + "\",");
-            pw.print("\"canCode\": \"" + p.getPtsCanCode() + "\",");
-            pw.print("\"qty\": \"" + p.getPtsCs() + "\",");
-            pw.print("\"location\": \"" + p.getPtsLocation() + "\",");
-            pw.print("\"remarks\": \"" + p.getQadRemarks() + "\"}");
-            
-            b = Boolean.TRUE;
+            if (x.getQty().compareTo(BigDecimal.ZERO) > 0) {
+                if(b) pw.print(",");
+                Pts p = ptsDao.findByPts(x.getPtsCode());
+                pw.print("{\"ptsCode\": \"" + p.getPtsCode() + "\", ");
+                pw.print("\"ptsDate\": \"" + new SimpleDateFormat("dd/MM/yyyy").format(p.getPtsDate()) + "\",");
+                pw.print("\"canCode\": \"" + p.getPtsCanCode() + "\",");
+                pw.print("\"qty\": \"" + x.getQty() + "\",");
+                pw.print("\"location\": \"" + p.getPtsLocation() + "\",");
+                pw.print("\"remarks\": \"" + p.getQadRemarks() + "\"}");
+                b = Boolean.TRUE;
+            }
         } pw.print("]");
         
     }
@@ -150,7 +155,7 @@ public class OfalController extends MultiActionController {
             }
             
             
-            pw.print("{\"idx\": \"" + i + "\", "); i++;
+            pw.print("{\"idx\": \"" + x.getId() + "\", "); i++;
             pw.print("\"buyer\": \"" + x.getBorBuyer() + "\", ");
             pw.print("\"packstyle\": \"" + x.getBorPackStyle() + "\",");
             pw.print("\"cansize\": \"" + cs + "\",");
@@ -173,13 +178,14 @@ public class OfalController extends MultiActionController {
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
-        String borCode = request.getParameter("term");
+        String borCode = request.getParameter("borCode");
+        String brandName = request.getParameter("brandName");
 
         /* DAO | Define needed dao here */
         PtsDao ptsDao = DaoFactory.createPtsDao();
 
         /* TRANSACTION | Something complex here */
-        List<Pts> ps = ptsDao.findByBorNotInOfal(borCode);
+        List<Pts> ps = ptsDao.findByBorNotInOfal(borCode, brandName);
         pw.print("[");
         for(Pts x : ps) {
             if(b)
@@ -187,7 +193,7 @@ public class OfalController extends MultiActionController {
             
             pw.print("{\"ptsCode\": \"" + x.getPtsCode() + "\", ");
             pw.print("\"borCode\": \"" + x.getBorCode() + "\",");
-            pw.print("\"ptsDate\": \"" + new SimpleDateFormat("mm/dd/yyyy").format(x.getPtsDate()) + "\",");
+            pw.print("\"ptsDate\": \"" + new SimpleDateFormat("MM/dd/yyyy").format(x.getPtsDate()) + "\",");
             pw.print("\"canCode\": \"" + x.getPtsCanCode() + "\",");
             pw.print("\"qty\": \"" + x.getPtsCs() + "\",");
             pw.print("\"location\": \"" + x.getPtsLocation() + "\",");
@@ -195,6 +201,33 @@ public class OfalController extends MultiActionController {
             
             b = Boolean.TRUE;
         } pw.print("]");
+        
+    }
+    
+    public void getPtsUnref (HttpServletRequest request, HttpServletResponse response) 
+        throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        int ptsCode = Integer.parseInt(request.getParameter("term"));
+        
+        /* DAO | Define needed dao here */
+        PtsDao ptsDao = DaoFactory.createPtsDao();
+        
+        /* TRANSACTION | Something complex here */
+        Pts p = ptsDao.findByPtsUnref(ptsCode);
+        if(p != null) {
+            pw.print("[{\"ptsCode\": \"" + p.getPtsCode() + "\", ");
+            pw.print("\"borCode\": \"" + p.getBorCode() + "\",");
+            pw.print("\"ptsDate\": \"" + new SimpleDateFormat("MM/dd/yyyy").format(p.getPtsDate()) + "\",");
+            pw.print("\"canCode\": \"" + p.getPtsCanCode() + "\",");
+            pw.print("\"qty\": \"" + p.getPtsCs() + "\",");
+            pw.print("\"location\": \"" + p.getPtsLocation() + "\",");
+            pw.print("\"remarks\": \"" + p.getQadRemarks() + "\"}]");
+        } else {
+            pw.print("{}");
+        }
         
     }
     

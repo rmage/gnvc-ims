@@ -102,7 +102,8 @@
             $('#drDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
             
             $('#itemName').autocomplete({
-                source: '?action=getProduct',
+                delay: 1000,
+                source: '?action=getProduct&type=<%= request.getParameter("type") %>',
                 minLength: 2,
                 select: function( event, ui ) {
                     $('#main').append('<tr><td><input class="btnDel ui-button ui-widget ui-state-default ui-corner-all" style="font-size: smaller;" type="button" value="Remove This" /></td>' +
@@ -118,28 +119,27 @@
                     .appendTo( ul );
             };
             
-            var supplierList = [
-                <c:forEach items="${model.supplier}" var="x">
-                    {
-                        label: '${x.supplierName}',
-                        code: '${x.supplierCode}'
-                    },
-                </c:forEach>
-            ];
             $('#drTo').autocomplete({ 
-                source: supplierList,
+                source: '?action=<%= request.getParameter("type").equals("NF") ? "getSupplier" : "getDistributor" %>',
+                minLength: 2,
                 select: function( event, ui ) {
-                    $('#drTo').val(ui.item.label);
-                    $('#drTo').data('supplierCode', ui.item.code);
+                    $('#drTo').val(ui.item.name);
+                    $('#drTo').data('code', ui.item.code);
                     return false;
                 }
-            });
+            }).data( 'autocomplete' )._renderItem = function( ul, item ) {
+                return $( '<li>' )
+                    .data( "item", item ) 
+                    .append( '<a><b>' + item.code + ' : ' + item.name +
+                    '</b><br /> Address : ' + item.address + '</a></li>' )
+                    .appendTo( ul );
+            };
             
             $('#drForm').bind('submit', function() {
                 if($('#main tr').length) {
                     $('#poster').append('<input name="master" type="hidden" value="' + $('#drCode').val() + ':' + $('#drDate').val() + ':' +
                         $('#drFrom').val() + ':' + $('#drFromLoc').val() + ':' + $('#drToLoc').val() + ':' + $('#drRemarks').val() + ':' +
-                        $('#drTo').data('supplierCode') + ':' + $('#orCode').val() + ':' + $('#dmCode').val() + '" />');
+                        $('#drTo').data('code') + ':' + $('#orCode').val() + ':' + $('#dmCode').val() + '" />');
                     
                     var i = 0;
                     $('#main tr').each(function() {
@@ -153,9 +153,7 @@
                 return false;
             });
 
-            $('.btnDel').live('click', function() {
-                $(this).parent().parent().remove();
-            });
+            $('.btnDel').live('click', function() { $(this).parent().parent().remove(); });
 
         </script>
     </body>

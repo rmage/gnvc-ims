@@ -63,6 +63,11 @@ public class DrDaoImpl extends AbstractDAO
             qty, productCode);
     }
     
+    public Dr findByCode(int code) {
+        List<Dr> ds = jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE dr_code = ?", this, code);
+        return ds.isEmpty() ? null : ds.get(0);
+    }
+    
     public List<Dr> findAll(String type) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE dr_type = ? ORDER BY created_date", this, type);
     }

@@ -193,7 +193,7 @@ public class SupplierDaoImpl extends AbstractDAO implements ParameterizedRowMapp
     @Transactional
     public List<Supplier> findWhereSupplierNameEquals(String supplierName) throws SupplierDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, supplier_code, supplier_name, supplier_address, telephone, fax, email, contact_person, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE supplier_name = ? ORDER BY supplier_name", this, supplierName);
+            return jdbcTemplate.query("SELECT id, supplier_code, supplier_name, supplier_address, telephone, fax, email, contact_person, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE supplier_name LIKE ? ORDER BY supplier_name", this, "%" + supplierName + "%");
         } catch (Exception e) {
             throw new SupplierDaoException("Query failed", e);
         }

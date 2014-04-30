@@ -12,9 +12,11 @@ public interface PtsDao {
     
     public Pts findByPts(int ptsCode);
     
+    public Pts findByPtsUnref(int ptsCode);
+    
     public List<Pts> findByBor(String borCode);
     
-    public List<Pts> findByBorNotInOfal(String borCode);
+    public List<Pts> findByBorNotInOfal(String borCode, String brandName);
     
     public List<Pts> findByUser(String userId);
     

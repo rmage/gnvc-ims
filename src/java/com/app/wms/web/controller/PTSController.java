@@ -39,7 +39,7 @@ public class PTSController extends MultiActionController {
         List<Pts> ps = ptsDao.findByUser(lu.getUserId());
         for(Pts x : ps) {
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
-            x.setProductCode(p.getBrandName() + " (" + p.getProductCode() + " - " + p.getProductName() + "):"
+            x.setProductCode(x.getBrandName() + " (" + p.getProductCode() + " - " + p.getProductName() + "):"
                 + p.getPackstyle() + " / " + p.getPacksize());
         } m.put("p", ps);
         
@@ -81,6 +81,7 @@ public class PTSController extends MultiActionController {
         p.setPtsCs(new BigDecimal(master[3]));
         p.setPtsLocation(master[4]);
         p.setProductCode(master[5]);
+        p.setBrandName(master[13]);
         p.setBorCode(master[6]);
         p.setCoeFlk(new BigDecimal(master[7]));
         p.setCoeNw(new BigDecimal(master[8]));
@@ -156,7 +157,7 @@ public class PTSController extends MultiActionController {
 
         /* TRANSACTION | Something complex here */
         pw.print("[");
-        List<Product> ps = productDao.findWhereBrandNameEquals(brandName, 5);
+        List<Product> ps = productDao.findWhereProductNameEquals(brandName, "FG", 5);
         for(Product x : ps) {
             if(b)
                 pw.print(",");
@@ -165,7 +166,7 @@ public class PTSController extends MultiActionController {
             pw.print("\"itemName\": \"" + x.getProductName() + "\",");
             pw.print("\"style\": \"" + x.getPackstyle() + "\",");
             pw.print("\"size\": \"" + x.getPacksize() + "\",");
-            pw.print("\"brand\": \"" + x.getBrandName() + "\"}");
+            pw.print("\"brand\": \"\"}");
             
             b = Boolean.TRUE;
         } pw.print("]");

@@ -10,6 +10,8 @@ public interface DrDao {
     
     public void updateStockInventory(String productCode, BigDecimal qty);
     
+    public Dr findByCode(int code);
+    
     public List<Dr> findAll(String type);
 
 }

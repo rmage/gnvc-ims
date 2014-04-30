@@ -33,10 +33,10 @@
 <script src="resources/js/grid.locale-en.js" type="text/javascript"></script>
 
 <style>
-   .ui-autocomplete-loading {
-       background: white url('resources/ui-anim_basic_16x16.gif') right center no-repeat;
-   }
-   .modal {
+    .ui-autocomplete-loading {
+        background: white url('resources/ui-anim_basic_16x16.gif') right center no-repeat;
+    }
+    .modal {
         display:    none;
         position:   fixed;
         z-index:    1000;
@@ -45,36 +45,40 @@
         height:     100%;
         width:      100%;
         background: rgba( 255, 255, 255, .8 ) 
-                    url('resources/img/loading.gif') 
-                    50% 50% 
-                    no-repeat;
-     }
+            url('resources/img/loading.gif') 
+            50% 50% 
+            no-repeat;
+    }
 
-     /* When the body has the loading class, we turn
-       the scrollbar off with overflow:hidden */
-     body.loading {
+    /* When the body has the loading class, we turn
+      the scrollbar off with overflow:hidden */
+    body.loading {
         overflow: hidden;   
-     }
+    }
 
-     /* Anytime the body has the loading class, our
-       modal element will be visible */
-     body.loading .modal {
+    /* Anytime the body has the loading class, our
+      modal element will be visible */
+    body.loading .modal {
         display: block;
-     }
+    }
 </style>
 
 <script>
-        $('.myhover').live("mouseenter", function() {$(this).css('background-color', '#EFEFEF');})
-                                .live("mouseleave", function() {$(this).css("background-color","");}); 
-                                
-        $("body").on({
-            ajaxStart: function() { 
-                $(this).addClass("loading"); 
-            },
-            ajaxStop: function() { 
-                $(this).removeClass("loading"); 
-            }    
-        });
+    $('.myhover').live("mouseenter", function() {
+        $(this).css('background-color', '#EFEFEF');
+    })
+    .live("mouseleave", function() {
+        $(this).css("background-color", "");
+    });
+
+    $("body").on({
+        ajaxStart: function() {
+            $(this).addClass("loading");
+        },
+        ajaxStop: function() {
+            $(this).removeClass("loading");
+        }
+    });
 </script>
 
 <!--
@@ -85,12 +89,14 @@
 
 <!-- integer validation 22 jan 2013 added by edw -->
 <script>
-     $(document).ready(function() {                 
+    $(document).ready(function() {
         $('.intValidate').live("keyup", function() {
-             var $th = $(this);
-            $th.val( $th.val().replace(/[^0-9]/g, function(str) { return ''; } ) );
+            var $th = $(this);
+            $th.val($th.val().replace(/[^0-9]/g, function(str) {
+                return '';
+            }));
         });
-     });   
+    });
 </script>
 
 <!-- delete confirmation -->
@@ -99,22 +105,22 @@
         $('.urlDelete').click(function(event) {
             event.preventDefault();
             var url = $(this).attr('href');
-            $("#delete-confirm").dialog({ 
-                width: 300, 
-                height: 150, 
-                position: "center", 
-                modal: true, 
+            $("#delete-confirm").dialog({
+                width: 300,
+                height: 150,
+                position: "center",
+                modal: true,
                 buttons: {
-                    "Cancel": function() {                                       
-                        $( this ).dialog( "close" );                                        
+                    "Cancel": function() {
+                        $(this).dialog("close");
                     },
                     "Ok": function() {
                         location.href = url;
                     }
                 },
-            title: 'Confirm' });
+                title: 'Confirm'});
         });
-    })
+    });
 </script>
 
 <!-- style for ajax detail panel -->

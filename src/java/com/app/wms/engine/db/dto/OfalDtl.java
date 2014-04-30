@@ -1,6 +1,7 @@
 package com.app.wms.engine.db.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class OfalDtl implements Serializable {
@@ -10,6 +11,8 @@ public class OfalDtl implements Serializable {
     private int ofalId;
     
     private int ptsCode;
+    
+    private BigDecimal qty;
     
     private String createdBy;
     
@@ -82,6 +85,14 @@ public class OfalDtl implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public BigDecimal getQty() {
+        return qty;
+    }
+
+    public void setQty(BigDecimal qty) {
+        this.qty = qty;
     }
     
 }

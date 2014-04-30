@@ -298,4 +298,7 @@
     <bean name="/FishOil.htm" class="com.app.wms.web.controller.FishOilController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/ReturnCargoDr.htm" class="com.app.wms.web.controller.ReturnCargoDrController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>
