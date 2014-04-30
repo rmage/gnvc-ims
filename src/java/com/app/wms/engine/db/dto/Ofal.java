@@ -13,6 +13,8 @@ public class Ofal implements Serializable {
     
     private String borCode;
     
+    private int borId;
+    
     private String ofalShipment;
     
     private String preparedBy;
@@ -182,6 +184,14 @@ public class Ofal implements Serializable {
 
     public void setOfalShipment(String ofalShipment) {
         this.ofalShipment = ofalShipment;
+    }
+
+    public int getBorId() {
+        return borId;
+    }
+
+    public void setBorId(int borId) {
+        this.borId = borId;
     }
     
 }

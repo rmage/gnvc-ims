@@ -118,7 +118,7 @@
                 return parts.join(".");
             }
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_Purchase_Print Purchase (xls)');
+            util.initListTable($('#list'), 'R_PPoForm_Print Purchase (xls)_3-1*R_CanvassingHistory_Canvassing History (xls)');
         </script>
     </body>
 </html>

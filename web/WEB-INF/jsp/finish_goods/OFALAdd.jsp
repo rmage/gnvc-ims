@@ -111,6 +111,9 @@
                             <caption>Detail</caption>
                             <thead>
                                 <tr>
+                                    <td colspan="8">Type PTS Number (to add another un-reference PTS): <input id="pts" size="6" type="text" /></td>
+                                </tr>
+                                <tr>
                                     <td>Action</td>
                                     <td>PTS Number</td>
                                     <td>Bor Number</td>
@@ -136,6 +139,24 @@
         <!-- javascript block HERE -->
         <script>
             /* BIND | element event */
+            $('#pts').autocomplete({
+                source: '?action=getPtsUnref',
+                minLength: 1,
+                delay: 2000,
+                select: function( event, ui ) {
+                    $('#main').append('<tr><td><input class="check" type="checkbox" /></td><td>' + ui.item.ptsCode + 
+                        '</td><td>' + ui.item.borCode  + '</td><td>' + ui.item.ptsDate + '</td><td>' + ui.item.canCode + 
+                        '</td><td><input type="text" value="' + ui.item.qty + '" /></td><td>' + ui.item.location + '</td><td>' + 
+                        ui.item.remarks + '</td></tr>');
+                }
+            }).data( 'autocomplete' )._renderItem = function( ul, item ) {
+                return $( '<li>' )
+                    .data( "item", item ) 
+                    .append( '<a><b>' + item.ptsCode + '</b><br /> Date : ' + item.ptsDate + 
+                    '<br /> Remarks : ' + item.remarks + '</a></li>' )
+                    .appendTo( ul );
+            };
+            
             $('#borCode').bind('keyup', function() { $('input[name="borCode"]').val(null); });
             
             $('#borCode').autocomplete({
@@ -154,17 +175,17 @@
                     $('#borCan').html(ui.item.cansize);
                     $('#borDw').html(ui.item.dw); $('#ofalDw').val(parseFloat(ui.item.dw));
                     $('#borMax').html(ui.item.max + 'CAN CODE');
-                    $('input[name="borCode"]').val($('#borCode').val() + '*' + ui.item.idx);
+                    $('input[name="borCode"]').val($('#borCode').val() + '_' + ui.item.idx);
                     
                     $.ajax({
                         url: 'Ofal.htm',
-                        data: {action: 'getPts', term: $('#borCode').val()},
+                        data: {action: 'getPts', borCode: $('#borCode').val(), brandName: ui.item.brand},
                         dataType: 'json',
                         success: function(json) {
                             for(var i = 0; i < json.length; i++) {
                                 $('#main').append('<tr><td><input class="check" type="checkbox" /></td><td>' + json[i].ptsCode + 
                                     '</td><td>' + json[i].borCode  + '</td><td>' + json[i].ptsDate + '</td><td>' + json[i].canCode + 
-                                    '</td><td>' + json[i].qty + '</td><td>' + json[i].location + '</td><td>' + json[i].remarks + '</td></tr>');
+                                    '</td><td><input type="text" value="' + json[i].qty + '" /></td><td>' + json[i].location + '</td><td>' + json[i].remarks + '</td></tr>');
                             }
                         }
                     });
@@ -197,7 +218,7 @@
                 $('.check:checked').each(function(i) {
                     if(i !== 0)
                         detail += ':';
-                    detail += $(this).parent().next().html();
+                    detail += $(this).parent().next().html() + '-' + $(this).parent().parent().find('input[type="text"]').val();
                 });
                 $('#poster').append('<input name="detail" type="hidden" value="' + detail + '" />');
                 $('#poster').submit();

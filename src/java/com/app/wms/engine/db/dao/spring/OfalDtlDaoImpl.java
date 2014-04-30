@@ -2,6 +2,7 @@ package com.app.wms.engine.db.dao.spring;
 
 import com.app.wms.engine.db.dao.OfalDtlDao;
 import com.app.wms.engine.db.dto.OfalDtl;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -30,6 +31,7 @@ public class OfalDtlDaoImpl extends AbstractDAO
         od.setId(rs.getInt("id"));
         od.setOfalId(rs.getInt("ofal_id"));
         od.setPtsCode(rs.getInt("pts_code"));
+        od.setQty(rs.getBigDecimal("qty"));
         od.setCreatedBy(rs.getString("created_by"));
         od.setCreatedDate(rs.getDate("created_date"));
         od.setUpdatedBy(rs.getString("updated_by"));
@@ -39,8 +41,8 @@ public class OfalDtlDaoImpl extends AbstractDAO
     }
     
     public void insert(OfalDtl od) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?)", 
-            od.getOfalId(), od.getPtsCode(), od.getCreatedBy(), od.getCreatedDate(), null, null);
+        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?)", 
+            od.getOfalId(), od.getPtsCode(), od.getQty(), od.getCreatedBy(), od.getCreatedDate(), null, null);
     }
     
     public List<OfalDtl> findByOfal(int ofalId) {

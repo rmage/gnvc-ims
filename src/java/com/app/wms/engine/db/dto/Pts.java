@@ -18,6 +18,8 @@ public class Pts implements Serializable {
     
     private String productCode;
     
+    private String brandName;
+    
     private String borCode;
     
     private BigDecimal coeFlk;
@@ -198,6 +200,14 @@ public class Pts implements Serializable {
 
     public void setPtsLocation(String ptsLocation) {
         this.ptsLocation = ptsLocation;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
     
 }

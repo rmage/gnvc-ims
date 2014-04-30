@@ -69,9 +69,15 @@ public class TransferSlipController extends MultiActionController {
                 return new ModelAndView("non_fish/TSAdd", "model", m);
             } else if (type.equals("OTHERS")) {
                 return new ModelAndView("non_fish/TSAddO", "model", m);
-            } else { return null; }
+            } else {
+                return null;
+            }
         } else {
-            return null;
+            if (type.equals("BAD_STOCKS")) {
+                return new ModelAndView("finish_goods/TSAddBS", "model", m);
+            } else {
+                return null;
+            }
         }
 //        if (request.getParameter("isNormal").equals("1")) {
 //            List<Sws> ss = tsDao.findWhereNotInTs();

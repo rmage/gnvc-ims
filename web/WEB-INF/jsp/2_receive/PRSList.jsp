@@ -155,9 +155,7 @@
 //            }
 //            
 //            $(function() {
-//                $('#btnAdd').click(function() {
-//                    location.href = 'PurchaseRequisition.htm?action=create';
-//                });
+                $('#btnAdd').click(function() { location.href = 'PurchaseRequisition.htm?action=create'; });
 //
 //                $('#btnEdit').click(function() {
 //                    location.href = '';

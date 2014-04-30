@@ -78,4 +78,14 @@ public class DistributorDaoImpl extends AbstractDAO
         List<Distributor> distributors = jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE id=?", this, id);
         return distributors.isEmpty() ? null : distributors.get(0);
     }
+    
+    public Distributor findByCode(String code) {
+        List<Distributor> ds = jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE distributor_code = ?", this, code);
+        return ds.isEmpty() ? null : ds.get(0);
+    }
+    
+    public List<Distributor> findByName(String name) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE distributor_name LIKE ?", this, "%" + name + "%");
+    }
+    
 }

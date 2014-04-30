@@ -1,10 +1,12 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.DistributorDao;
 import com.app.wms.engine.db.dao.DrDao;
 import com.app.wms.engine.db.dao.DrDtlDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
+import com.app.wms.engine.db.dto.Distributor;
 import com.app.wms.engine.db.dto.Dr;
 import com.app.wms.engine.db.dto.DrDtl;
 import com.app.wms.engine.db.dto.Product;
@@ -39,14 +41,20 @@ public class DeliveryController extends MultiActionController {
         /* DAO | Define needed dao here */
         DrDao drDao = DaoFactory.createDrDao();
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
+        DistributorDao distributorDao = DaoFactory.createDistributorDao();
 
         /* TRANSACTION | Something complex here */
         m.put("type", request.getParameter("type"));
         
         List<Dr> ds = drDao.findAll(request.getParameter("type"));
         for(Dr x : ds) {
-            Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
-            x.setSupplierCode(s.getSupplierName());
+            if (x.getDrType().equals("NF")) {
+                Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
+                x.setSupplierCode(s.getSupplierName());
+            } else {
+                Distributor d = distributorDao.findByCode(x.getSupplierCode());
+                x.setSupplierCode(d.getDistributorName());
+            }
         }
         m.put("d", ds);
         
@@ -61,13 +69,13 @@ public class DeliveryController extends MultiActionController {
         HashMap m = new HashMap();
 
         /* DAO | Define needed dao here */
-        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+//        SupplierDao supplierDao = DaoFactory.createSupplierDao();
         
         /* TRANSACTION | Something complex here */
         m.put("type", request.getParameter("type"));
         
-        List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
-        m.put("supplier", ss);
+//        List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
+//        m.put("supplier", ss);
         
         return new ModelAndView("finish_goods/DRAdd", "model", m);
         
@@ -167,7 +175,7 @@ public class DeliveryController extends MultiActionController {
         
         /* TRANSACTION | Something complex here */
         pw.print("[");
-        List<Product> ps = productDao.findWhereProductNameEquals(productName, 5);
+        List<Product> ps = productDao.findWhereProductNameEquals(productName, request.getParameter("type"), 5);
         for(Product x : ps) {
             if(b)
                 pw.print(",");
@@ -183,6 +191,56 @@ public class DeliveryController extends MultiActionController {
             b = Boolean.TRUE;
             
         } pw.print("]");
+        
+    }
+    
+    public void getSupplier (HttpServletRequest request, HttpServletResponse response) 
+        throws IOException, SupplierDaoException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        String supplierName = request.getParameter("term");
+        
+        /* DAO | Define needed dao here */
+        SupplierDao supplierDao = DaoFactory.createSupplierDao();
+        
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<Supplier> ss = supplierDao.findWhereSupplierNameEquals(supplierName);
+        for(Supplier x : ss) {
+            if(b) pw.print(",");
+            pw.print("{\"code\": \"" + x.getSupplierCode() + "\", ");
+            pw.print("\"name\": \"" + x.getSupplierName() + "\",");
+            pw.print("\"address\": \"" + x.getSupplierAddress() + "\"}");
+            b = Boolean.TRUE;
+        }
+        pw.print("]");
+        
+    }
+    
+    public void getDistributor (HttpServletRequest request, HttpServletResponse response) 
+        throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        String distributorName = request.getParameter("term");
+        
+        /* DAO | Define needed dao here */
+        DistributorDao distributorDao = DaoFactory.createDistributorDao();
+        
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<Distributor> ss = distributorDao.findByName(distributorName);
+        for(Distributor x : ss) {
+            if(b) pw.print(",");
+            pw.print("{\"code\": \"" + x.getDistributorCode() + "\", ");
+            pw.print("\"name\": \"" + x.getDistributorName() + "\",");
+            pw.print("\"address\": \"" + x.getDistributorAddress() + "\"}");
+            b = Boolean.TRUE;
+        }
+        pw.print("]");
         
     }
 

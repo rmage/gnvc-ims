@@ -99,7 +99,7 @@ var ajax = {
                 variable.listTable.find('#main').html('<tr><td colspan="' + variable.column + '" style="text-align: center;">' + variable.ajaxImageLoader + '</td></tr>');
             },
             success: function (data) {
-                var i, j, z, R, action = variable.action.split(':'), row = (((variable.page - 1) * variable.show) + 1), html, $main = variable.listTable.find('#main');
+                var i, j, k, x, y, z, R, Rs, params, action = variable.action.split(':'), row = (((variable.page - 1) * variable.show) + 1), html, $main = variable.listTable.find('#main');
                 $main.html('');
                 for (i = 0; i < data.data.length; i += 1) {
                     html = '<tr>';
@@ -122,8 +122,22 @@ var ajax = {
                                 default:
                                     // CHECK | report action here
                                     if (/^R/.test(action[z])) {
-                                        R = action[z].split('_');
-                                        html += '<span class="separator"></span><a href="GenerateReport.htm?action=index&item=' + R[1] + '&type=xls&params=' + data.data[i][j + 1] + '" onclick="return confirm(\'Continue to PRINT THIS ITEM : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/printxls.gif" title="' + R[2] + '" /></a>';
+                                        Rs = action[z].split('*');
+                                        for (x = 0; x < Rs.length; x += 1) {
+                                            if (x === 0) { html += '<span class="separator"></span>'; }
+                                            R = Rs[x].split('_');
+                                            if (!R[3]) {
+                                                params = data.data[i][j + 1];
+                                            } else {
+                                                params = '';
+                                                k = R[3].split('-');
+                                                for (y = 0; y < k.length; y += 1) {
+                                                    if (y !== 0) { params += ':'; }
+                                                    params += data.data[i][j + parseInt(k[y], 10)];
+                                                }
+                                            }
+                                            html += '<a href="GenerateReport.htm?action=index&item=' + R[1] + '&type=xls&params=' + params + '" onclick="return confirm(\'Continue to PRINT THIS ITEM : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/printxls.gif" title="' + R[2] + '" /></a> ';
+                                        }
                                     }
                                     break;
                                 }
@@ -131,7 +145,7 @@ var ajax = {
                             html += '</td>';
                             break;
                         case 2:
-                            html += '<td><a class="d" href="#">' + data.data[i][j] + '</a></td>';
+                            html += '<td><a class="d" href="#' + data.data[i][j] + '">' + data.data[i][j] + '</a></td>';
                             break;
                         default:
                             html += '<td>' + data.data[i][j] + '</td>';
