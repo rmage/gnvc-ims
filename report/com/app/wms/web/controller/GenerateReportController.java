@@ -203,7 +203,7 @@ public class GenerateReportController extends MultiActionController {
                 "SET @sDate = ? " +
                 "DECLARE @eDate DATETIME " +
                 "SET @eDate = ? " +
-                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty,  convert(NVARCHAR, @eDate, 106) as edate " + // added by edw
+                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty,  convert(NVARCHAR, @eDate, 106) as edate " + // added by edw, fixing date format on ms.sqlserver 2008
                 "FROM inventory..fish f " +
                 "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
                 "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
@@ -217,7 +217,7 @@ public class GenerateReportController extends MultiActionController {
                 "ORDER BY f.code",
 
                 "SELECT fv.name, SUM(fb.balance) qty " +
-                "FROM inventory..fish_balance fb " +
+                "FROM inventory..fish_balance fb " +   
                 "LEFT JOIN inventory..fish_vessel fv ON fb.vessel_id = fv.id " +
                 "WHERE fb.created_date >= ? AND fb.created_date <= ? " +
                 "GROUP BY fv.name"
