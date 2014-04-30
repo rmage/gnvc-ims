@@ -203,7 +203,7 @@ public class GenerateReportController extends MultiActionController {
                 "SET @sDate = ? " +
                 "DECLARE @eDate DATETIME " +
                 "SET @eDate = ? " +
-                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty, @eDate edate " +
+                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty,  convert(NVARCHAR, @eDate, 106) as edate " + // added by edw
                 "FROM inventory..fish f " +
                 "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
                 "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
@@ -843,6 +843,9 @@ public class GenerateReportController extends MultiActionController {
 				JDBCExecutor jdbc = new JDBCExecutor(conn);
 				int x = 0;
 				for(String s:(String[]) o){
+                                    
+                                    System.out.println("++++++ "+s.toString());
+                                    
 					String add = x > 0?""+x:"";
 					List<ResultSetRow> list = params.containsKey("params"+add)?jdbc.execQuery(s, ((Object[])params.get("params"+add).toString().split(":"))):
 							    (params.containsKey("params"))?jdbc.execQuery(s, ((Object[])params.get("params").toString().split(":"))):jdbc.execQuery(s);
