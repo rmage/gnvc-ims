@@ -222,6 +222,139 @@ public class GenerateReportController extends MultiActionController {
                 "WHERE fb.created_date >= ? AND fb.created_date <= ? " +
                 "GROUP BY fv.name"
             });
+            
+            ListMap.put(Report.FFrozenFishStockCS, new String[]{
+                "DECLARE @sDate DATETIME " +
+                "SET @sDate = ? " +
+                "DECLARE @eDate DATETIME " +
+                "SET @eDate = ? " +
+                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty,  convert(NVARCHAR, @eDate, 106) as edate " + // added by edw, fixing date format on ms.sqlserver 2008
+                "FROM inventory..fish f " +
+                "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
+                "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_rr_detail frd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_ws fw ON fwd.ws_id = fw.id " +
+                "LEFT JOIN inventory..fish_ws_type fwt ON fw.ws_type_id = fwt.id " +
+                "WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fw.storage_id = ? OR " +
+                "fwd.created_date >= @sDate AND fwd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fw.storage_id = ? OR " +
+                "frd.created_date >= @sDate AND frd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fw.storage_id = ? " +
+                "GROUP BY f.code " +
+                "ORDER BY f.code",
+
+                "SELECT fv.name, SUM(fb.balance) qty " +
+                "FROM inventory..fish_balance fb " +   
+                "LEFT JOIN inventory..fish_vessel fv ON fb.vessel_id = fv.id " +
+                "WHERE fb.created_date >= ? AND fb.created_date <= ? or (fv.code = ? or fv.code = ? or fv.code = ? ) " +
+                "GROUP BY fv.name"
+            });
+            
+            ListMap.put(Report.FFrozenFishStockBatchNo, new String[]{
+                "DECLARE @sDate DATETIME " +
+                "SET @sDate = ? " +
+                "DECLARE @eDate DATETIME " +
+                "SET @eDate = ? " +
+                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty,  convert(NVARCHAR, @eDate, 106) as edate " + // added by edw, fixing date format on ms.sqlserver 2008
+                "FROM inventory..fish f " +
+                "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
+                "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_rr_detail frd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_ws fw ON fwd.ws_id = fw.id " +
+                "LEFT JOIN inventory..fish_ws_type fwt ON fw.ws_type_id = fwt.id " +
+                " LEFT JOIN inventory..fish_vessel fv\n" +
+                "    ON\n" +
+                "        fw.vessel_id = fv.id " +
+                "WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fv.batch_no = ? OR " +
+                "fwd.created_date >= @sDate AND fwd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fv.batch_no = ? OR " +
+                "frd.created_date >= @sDate AND frd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fv.batch_no = ? " +
+                "GROUP BY f.code " +
+                "ORDER BY f.code",
+
+                "SELECT fv.name, SUM(fb.balance) qty " +
+                "FROM inventory..fish_balance fb " +   
+                "LEFT JOIN inventory..fish_vessel fv ON fb.vessel_id = fv.id " +
+                "WHERE fb.created_date >= ? AND fb.created_date <= ? or (fv.code = ? or fv.code = ? or fv.code = ? ) " +
+                "GROUP BY fv.name"
+            });
+            
+            ListMap.put(Report.FFrozenFishStockSupplier, new String[]{
+                "DECLARE @sDate DATETIME " +
+                "SET @sDate = ? " +
+                "DECLARE @eDate DATETIME " +
+                "SET @eDate = ? " +
+                "SELECT f.code, SUM(fb.balance) rqty, SUM(fwd.total_weight) wqty, SUM(frd.good_weight) eqty,  convert(NVARCHAR, @eDate, 106) as edate " + // added by edw, fixing date format on ms.sqlserver 2008
+                "FROM inventory..fish f " +
+                "LEFT JOIN inventory..fish_balance fb ON f.id = fb.fish_id " +
+                "LEFT JOIN inventory..fish_ws_detail fwd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_rr_detail frd ON f.id = fwd.fish_id " +
+                "LEFT JOIN inventory..fish_ws fw ON fwd.ws_id = fw.id " +
+                "LEFT JOIN inventory..fish_ws_type fwt ON fw.ws_type_id = fwt.id " +
+                " LEFT JOIN inventory..fish_vessel fv\n" +
+                "    ON\n" +
+                "        fw.vessel_id = fv.id " +
+                "WHERE  fb.created_date >= @sDate AND fb.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fv.batch_no = ? OR " +
+                "fwd.created_date >= @sDate AND fwd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fv.batch_no = ? OR " +
+                "frd.created_date >= @sDate AND frd.created_date <= @eDate AND fwt.code IN ('WSBF','WSABF','WSNC') AND fv.batch_no = ? " +
+                "GROUP BY f.code " +
+                "ORDER BY f.code",
+
+                "SELECT fv.name, SUM(fb.balance) qty " +
+                "FROM inventory..fish_balance fb " +   
+                "LEFT JOIN inventory..fish_vessel fv ON fb.vessel_id = fv.id " +
+                "WHERE fb.created_date >= ? AND fb.created_date <= ? or (fv.code = ? or fv.code = ? or fv.code = ? ) " +
+                "GROUP BY fv.name"
+            });
+            
+            ListMap.put(Report.FDailyInventoryFrozenFish,  // added by edw
+                "SELECT\n" +
+                "    dbo.fish_storage.code,\n" +
+                "    sum(dbo.fish_ws_detail.total_weight) as data,\n" +
+                "      dbo.fish.code as type\n" +
+                "FROM\n" +
+                "    dbo.fish_storage\n" +
+                "left JOIN dbo.fish_ws\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.fish_storage.id = dbo.fish_ws.storage_id\n" +
+                "    )\n" +
+                "left  JOIN dbo.fish_ws_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.fish_ws.id = dbo.fish_ws_detail.ws_id\n" +
+                "    ) \n" +
+                "left  JOIN dbo.fish\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.fish_ws_detail.fish_id = dbo.fish.id\n" +
+                "    ) \n" +
+                "where fish_storage.is_delete = 'N'\n" +
+                "group by dbo.fish_storage.code, dbo.fish.code"
+            );
+            
+            
+            ListMap.put(Report.FFrozenFishPerBatch,  // added by edw
+                "SELECT\n" +
+                "    dbo.fish_vessel.batch_no,\n" +
+                "    sum(dbo.fish_ws_detail.total_weight) as data,\n" +
+                "      dbo.fish.code as type\n" +
+                "FROM\n" +
+                "    dbo.fish_vessel\n" +
+                "left JOIN dbo.fish_ws\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.fish_vessel.id = dbo.fish_ws.vessel_id\n" +
+                "    )\n" +
+                "left  JOIN dbo.fish_ws_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.fish_ws.id = dbo.fish_ws_detail.ws_id\n" +
+                "    ) \n" +
+                "left  JOIN dbo.fish\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.fish_ws_detail.fish_id = dbo.fish.id\n" +
+                "    ) \n" +
+                "group by dbo.fish_vessel.batch_no, dbo.fish.code"
+            );
 		
             ListMap.put(Report.IMRR, 
 //                "select * " +
@@ -779,7 +912,7 @@ public class GenerateReportController extends MultiActionController {
 			if(o == null)	return null;
 			if(o instanceof String){
                             
-                                String paramString = params.get("params").toString();
+                                String paramString = params.containsKey("params")?params.get("params").toString():null;
                             
                                 // added by edw, override FSummaryWSSlip
                                 if(reportType.toString().equals("FSummaryWSSlip")) {

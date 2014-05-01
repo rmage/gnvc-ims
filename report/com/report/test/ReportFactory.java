@@ -18,7 +18,8 @@ public class ReportFactory {
         FWSHR, FWSBR, FWSABF, FWSNC, FWeightSlip,
         FWSNR, FWSL, FSummaryWSSlip,
         FSpoilagereport, FRR, FWS, 
-        FDR, FTS, FFrozenFishStock,
+        FDR, FTS, FFrozenFishStock, 
+        FFrozenFishStockCS, FFrozenFishStockBatchNo, FFrozenFishStockSupplier, FDailyInventoryFrozenFish, FFrozenFishPerBatch, // added by edw
         RPDailyProduction, FMDR, PPrsNotyetPO,
         PPoNotyetDeliveredCash, PPoNotyetDeliveredCredit, PPoRegisterPerPeriode,
         PPoIssuedPerSupplier, PPoIssuedPerItem, PPrsForm,
@@ -40,7 +41,14 @@ public class ReportFactory {
         reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("canvassingForm", new ReportModel("canvassingForm", false));
         reportTemplateMap.put("eds", new ReportModel("eds", false));
+        
         reportTemplateMap.put("FrozenFishStock", new ReportModel("FrozenFishStock1")); // add by edw
+        reportTemplateMap.put("FrozenFishStockCS", new ReportModel("FrozenFishStock2")); // add by edw
+        reportTemplateMap.put("FrozenFishStockBatchNo", new ReportModel("FrozenFishStock2")); // add by edw
+        reportTemplateMap.put("FrozenFishStockSupplier", new ReportModel("FrozenFishStock2")); // add by edw
+        reportTemplateMap.put("DailyInventoryFrozenFish", new ReportModel("DailyInventoryFrozenFish")); // add by edw
+        reportTemplateMap.put("FrozenFishPerBatch", new ReportModel("FrozenFishPerBatch")); // add by edw
+        
         reportTemplateMap.put("poConfirmatory", new ReportModel("poConfirmatory"));
         reportTemplateMap.put("poForm", new ReportModel("poForm", false));
         reportTemplateMap.put("poIssuedPerSupplier", new ReportModel("poIssuedPerSupplier"));
@@ -91,7 +99,14 @@ public class ReportFactory {
         reportMap.put(Report.FWS, reportTemplateMap.get("withdrawalSlip"));
         reportMap.put(Report.FDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.FTS, reportTemplateMap.get("transferSlip"));
-        reportMap.put(Report.FFrozenFishStock, reportTemplateMap.get("FrozenFishStock"));
+        
+        reportMap.put(Report.FFrozenFishStock, reportTemplateMap.get("FrozenFishStock")); // added by edw
+        reportMap.put(Report.FFrozenFishStockCS, reportTemplateMap.get("FrozenFishStockCS")); // added by edw
+        reportMap.put(Report.FFrozenFishStockBatchNo, reportTemplateMap.get("FrozenFishStockBatchNo")); // added by edw
+        reportMap.put(Report.FFrozenFishStockSupplier, reportTemplateMap.get("FrozenFishStockSupplier")); // added by edw
+        reportMap.put(Report.FDailyInventoryFrozenFish, reportTemplateMap.get("DailyInventoryFrozenFish")); // added by edw
+        reportMap.put(Report.FFrozenFishPerBatch, reportTemplateMap.get("FrozenFishPerBatch")); // added by edw
+        
         reportMap.put(Report.FMDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.PPrsNotyetPO, reportTemplateMap.get("prsNotyetPO"));
         reportMap.put(Report.PPoNotyetDeliveredCash, reportTemplateMap.get("poNotyetDeliveredCash"));
