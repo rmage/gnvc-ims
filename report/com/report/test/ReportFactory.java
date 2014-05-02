@@ -20,6 +20,7 @@ public class ReportFactory {
         FSpoilagereport, FRR, FWS, 
         FDR, FTS, FFrozenFishStock, 
         FFrozenFishStockCS, FFrozenFishStockBatchNo, FFrozenFishStockSupplier, FDailyInventoryFrozenFish, FFrozenFishPerBatch, // added by edw
+        FLaporanPemasukanBarangPerDokumenPabean, FLaporanPengeluaranBarangPerDokumenPabean,  // added by edw
         RPDailyProduction, FMDR, PPrsNotyetPO,
         PPoNotyetDeliveredCash, PPoNotyetDeliveredCredit, PPoRegisterPerPeriode,
         PPoIssuedPerSupplier, PPoIssuedPerItem, PPrsForm,
@@ -48,6 +49,8 @@ public class ReportFactory {
         reportTemplateMap.put("FrozenFishStockSupplier", new ReportModel("FrozenFishStock2")); // add by edw
         reportTemplateMap.put("DailyInventoryFrozenFish", new ReportModel("DailyInventoryFrozenFish")); // add by edw
         reportTemplateMap.put("FrozenFishPerBatch", new ReportModel("FrozenFishPerBatch")); // add by edw
+        reportTemplateMap.put("LaporanPemasukanBarangPerDokumenPabean", new ReportModel("LaporanPemasukanBarangPerDokumenPabean")); // add by edw
+        reportTemplateMap.put("LaporanPengeluaranBarangPerDokumenPabean", new ReportModel("LaporanPengeluaranBarangPerDokumenPabean")); // add by edw
         
         reportTemplateMap.put("poConfirmatory", new ReportModel("poConfirmatory"));
         reportTemplateMap.put("poForm", new ReportModel("poForm", false));
@@ -106,6 +109,8 @@ public class ReportFactory {
         reportMap.put(Report.FFrozenFishStockSupplier, reportTemplateMap.get("FrozenFishStockSupplier")); // added by edw
         reportMap.put(Report.FDailyInventoryFrozenFish, reportTemplateMap.get("DailyInventoryFrozenFish")); // added by edw
         reportMap.put(Report.FFrozenFishPerBatch, reportTemplateMap.get("FrozenFishPerBatch")); // added by edw
+        reportMap.put(Report.FLaporanPemasukanBarangPerDokumenPabean, reportTemplateMap.get("LaporanPemasukanBarangPerDokumenPabean")); // added by edw
+        reportMap.put(Report.FLaporanPengeluaranBarangPerDokumenPabean, reportTemplateMap.get("LaporanPengeluaranBarangPerDokumenPabean")); // added by edw
         
         reportMap.put(Report.FMDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.PPrsNotyetPO, reportTemplateMap.get("prsNotyetPO"));

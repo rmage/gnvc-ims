@@ -356,6 +356,77 @@ public class GenerateReportController extends MultiActionController {
                 "group by dbo.fish_vessel.batch_no, dbo.fish.code"
             );
 		
+            ListMap.put(Report.FLaporanPemasukanBarangPerDokumenPabean,  // added by edw 
+                "SELECT\n" +
+                "    dbo.rr.rr_from,\n" + " " +
+                "    dbo.product.product_code,\n" +
+                "    dbo.product.product_name,\n" +
+                "    dbo.rr_detail.uom,\n" +
+                "    dbo.rr_detail.qty_g,\n" +
+                "    dbo.product_price.unit_price\n" +
+                "FROM\n" +
+                "    dbo.rr\n" +
+                "INNER JOIN dbo.rr_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr.rr_code = dbo.rr_detail.rr_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr_detail.product_code = dbo.product.product_code\n" +
+                "    ) \n" +
+                "    \n" +
+                "INNER JOIN dbo.product_category\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_category = dbo.product_category.category_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_price\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_code = dbo.product_price.product_code\n" +
+                "    )\n" +
+                "where rr_date >= ? AND rr_date <= ? and product_category.category_code = ?"
+            );
+		
+            
+            ListMap.put(Report.FLaporanPengeluaranBarangPerDokumenPabean,  // added by edw 
+                "SELECT\n" +
+                "    dbo.dr_detail.dr_code,\n" +
+                "    dbo.supplier.supplier_name,\n" +
+                "    dbo.dr_detail.product_code,\n" +
+                "    dbo.product.product_name,\n" +
+                "    dbo.dr_detail.dr_qty,\n" +
+                "    dbo.dr_detail.dr_uom,\n" +
+                "    dbo.product_price.unit_price\n" +
+                "FROM\n" +
+                "    dbo.dr\n" +
+                "INNER JOIN dbo.dr_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.dr.dr_code = dbo.dr_detail.dr_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.supplier\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.dr.supplier_code = dbo.supplier.supplier_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.dr_detail.product_code = dbo.product.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_price\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.dr_detail.product_code = dbo.product_price.product_code\n" +
+                "    )\n" +
+                "WHERE dr_date >= ? AND dr_date <= ? and supplier.supplier_code= ? "
+            );
+		
+            
+            
             ListMap.put(Report.IMRR, 
 //                "select * " +
 //                "from goodreceive gr " +
