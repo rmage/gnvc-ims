@@ -20,7 +20,8 @@ public class ReportFactory {
         FSpoilagereport, FRR, FWS, 
         FDR, FTS, FFrozenFishStock, 
         FFrozenFishStockCS, FFrozenFishStockBatchNo, FFrozenFishStockSupplier, FDailyInventoryFrozenFish, FFrozenFishPerBatch, // added by edw
-        FLaporanPemasukanBarangPerDokumenPabean, FLaporanPengeluaranBarangPerDokumenPabean,  // added by edw
+        FLaporanPemasukanBarangPerDokumenPabean, FLaporanPengeluaranBarangPerDokumenPabean, FLaporanPengeluaranBahanBakuDanBahanPenolong, //added by edw
+        FLaporanPengeluaranMutasiBarangJadi, FLaporanPengeluaranMutasiBarangDanScrap, FLaporanPengeluaranMutasiMesin, // added by edw
         RPDailyProduction, FMDR, PPrsNotyetPO,
         PPoNotyetDeliveredCash, PPoNotyetDeliveredCredit, PPoRegisterPerPeriode,
         PPoIssuedPerSupplier, PPoIssuedPerItem, PPrsForm,
@@ -30,7 +31,10 @@ public class ReportFactory {
         FGPTS, FGOFAL, FGBOR,
         FGTS, FGEDS, FGBadStockReport,
         FGTunaVayaReport, Accounting, PPoNotyetDeliveredDP,
-        RRPeriode, PurchasedItems, PurchasedPerSupplier, TSPeriode, CanvassingHistory;
+        RRPeriode, PurchasedItems, PurchasedPerSupplier, TSPeriode, CanvassingHistory //,
+//        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
+//        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
+        ; 
     }
 	
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -51,6 +55,7 @@ public class ReportFactory {
         reportTemplateMap.put("FrozenFishPerBatch", new ReportModel("FrozenFishPerBatch")); // add by edw
         reportTemplateMap.put("LaporanPemasukanBarangPerDokumenPabean", new ReportModel("LaporanPemasukanBarangPerDokumenPabean")); // add by edw
         reportTemplateMap.put("LaporanPengeluaranBarangPerDokumenPabean", new ReportModel("LaporanPengeluaranBarangPerDokumenPabean")); // add by edw
+        reportTemplateMap.put("LaporanPengeluaranBahanBakuDanBahanPenolong", new ReportModel("LaporanPengeluaranBahanBakuDanBahanPenolong")); // add by edw
         
         reportTemplateMap.put("poConfirmatory", new ReportModel("poConfirmatory"));
         reportTemplateMap.put("poForm", new ReportModel("poForm", false));
@@ -111,6 +116,10 @@ public class ReportFactory {
         reportMap.put(Report.FFrozenFishPerBatch, reportTemplateMap.get("FrozenFishPerBatch")); // added by edw
         reportMap.put(Report.FLaporanPemasukanBarangPerDokumenPabean, reportTemplateMap.get("LaporanPemasukanBarangPerDokumenPabean")); // added by edw
         reportMap.put(Report.FLaporanPengeluaranBarangPerDokumenPabean, reportTemplateMap.get("LaporanPengeluaranBarangPerDokumenPabean")); // added by edw
+        reportMap.put(Report.FLaporanPengeluaranBahanBakuDanBahanPenolong, reportTemplateMap.get("LaporanPengeluaranBahanBakuDanBahanPenolong")); // added by edw
+        reportMap.put(Report.FLaporanPengeluaranMutasiBarangJadi, reportTemplateMap.get("LaporanPengeluaranMutasiBarangJadi")); // added by edw
+        reportMap.put(Report.FLaporanPengeluaranMutasiBarangDanScrap, reportTemplateMap.get("LaporanPengeluaranMutasiBarangDanScrap")); // added by edw
+        reportMap.put(Report.FLaporanPengeluaranMutasiMesin, reportTemplateMap.get("LaporanPengeluaranMutasiMesin")); // added by edw
         
         reportMap.put(Report.FMDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.PPrsNotyetPO, reportTemplateMap.get("prsNotyetPO"));

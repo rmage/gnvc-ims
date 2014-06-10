@@ -426,6 +426,196 @@ public class GenerateReportController extends MultiActionController {
             );
 		
             
+            ListMap.put(Report.FLaporanPengeluaranBahanBakuDanBahanPenolong,  // added by edw 
+                "DECLARE @DATE1 VARCHAR(10), @DATE2 VARCHAR(10)\n" +
+                "SET @DATE1 = ?\n" +
+                "SET @DATE2 = ?\n" +
+                "SELECT\n" +
+                "    \n" +
+                "    dbo.product.product_code,\n" +
+                "    dbo.product.product_name, \n" +
+                "    dbo.rr_detail.uom,\n" +
+                "    sum(dbo.rr_detail.qty_g) as qyt_g,\n" +
+                "    sum(dbo.ts_detail.qty) as qyt_a\n" +
+                "FROM\n" +
+                "    dbo.rr\n" +
+                "INNER JOIN dbo.rr_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr.rr_code = dbo.rr_detail.rr_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr_detail.product_code = dbo.product.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_category\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_category = dbo.product_category.category_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_price\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_code = dbo.product_price.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.ts_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.ts_detail.product_code = dbo.rr_detail.product_code\n" +
+                "    )\n" +
+                "WHERE\n" +
+                "rr_date >= @DATE1 and rr_date <= @DATE2 and ts_detail.created_date >= @DATE1 and ts_detail.created_date <= @DATE2 and\n" +
+                "    (\n" +
+                "        product_category.category_code = 'OS'\n" +
+                "     OR product_category.category_code = 'FS'\n" +
+                "    )\n" +
+                "group by product.product_code, product.product_name, rr_detail.uom"
+            );
+            
+            ListMap.put(Report.FLaporanPengeluaranMutasiBarangJadi,  // added by edw 
+                "DECLARE @DATE1 VARCHAR(10), @DATE2 VARCHAR(10)\n" +
+                "SET @DATE1 = ?\n" +
+                "SET @DATE2 = ?\n" +
+                "SELECT\n" +
+                "    \n" +
+                "    dbo.product.product_code,\n" +
+                "    dbo.product.product_name, \n" +
+                "    dbo.rr_detail.uom,\n" +
+                "    sum(dbo.rr_detail.qty_g) as qyt_g,\n" +
+                "    sum(dbo.ts_detail.qty) as qyt_a\n" +
+                "FROM\n" +
+                "    dbo.rr\n" +
+                "INNER JOIN dbo.rr_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr.rr_code = dbo.rr_detail.rr_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr_detail.product_code = dbo.product.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_category\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_category = dbo.product_category.category_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_price\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_code = dbo.product_price.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.ts_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.ts_detail.product_code = dbo.rr_detail.product_code\n" +
+                "    )\n" +
+                "WHERE\n" +
+                "rr_date >= @DATE1 and rr_date <= @DATE2 and ts_detail.created_date >= @DATE1 and ts_detail.created_date <= @DATE2 and\n" +
+                "    (\n" +
+                "        product_category.category_code = 'OS'\n" +
+                "     OR product_category.category_code = 'FS'\n" +
+                "    )\n" +
+                "group by product.product_code, product.product_name, rr_detail.uom"
+            );
+		
+            ListMap.put(Report.FLaporanPengeluaranMutasiBarangDanScrap,  // added by edw 
+                "DECLARE @DATE1 VARCHAR(10), @DATE2 VARCHAR(10)\n" +
+                "SET @DATE1 = ?\n" +
+                "SET @DATE2 = ?\n" +
+                "SELECT\n" +
+                "    \n" +
+                "    dbo.product.product_code,\n" +
+                "    dbo.product.product_name, \n" +
+                "    dbo.rr_detail.uom,\n" +
+                "    sum(dbo.rr_detail.qty_g) as qyt_g,\n" +
+                "    sum(dbo.ts_detail.qty) as qyt_a\n" +
+                "FROM\n" +
+                "    dbo.rr\n" +
+                "INNER JOIN dbo.rr_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr.rr_code = dbo.rr_detail.rr_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr_detail.product_code = dbo.product.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_category\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_category = dbo.product_category.category_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_price\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_code = dbo.product_price.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.ts_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.ts_detail.product_code = dbo.rr_detail.product_code\n" +
+                "    )\n" +
+                "WHERE\n" +
+                "rr_date >= @DATE1 and rr_date <= @DATE2 and ts_detail.created_date >= @DATE1 and ts_detail.created_date <= @DATE2 and\n" +
+                "    (\n" +
+                "        product_category.category_code = 'OS'\n" +
+                "     OR product_category.category_code = 'FS'\n" +
+                "    )\n" +
+                "group by product.product_code, product.product_name, rr_detail.uom"
+            );
+		
+            
+            ListMap.put(Report.FLaporanPengeluaranMutasiMesin,  // added by edw 
+                "DECLARE @DATE1 VARCHAR(10), @DATE2 VARCHAR(10)\n" +
+                "SET @DATE1 = ?\n" +
+                "SET @DATE2 = ?\n" +
+                "SELECT\n" +
+                "    \n" +
+                "    dbo.product.product_code,\n" +
+                "    dbo.product.product_name, \n" +
+                "    dbo.rr_detail.uom,\n" +
+                "    sum(dbo.rr_detail.qty_g) as qyt_g,\n" +
+                "    sum(dbo.ts_detail.qty) as qyt_a\n" +
+                "FROM\n" +
+                "    dbo.rr\n" +
+                "INNER JOIN dbo.rr_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr.rr_code = dbo.rr_detail.rr_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.rr_detail.product_code = dbo.product.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_category\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_category = dbo.product_category.category_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.product_price\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.product.product_code = dbo.product_price.product_code\n" +
+                "    )\n" +
+                "INNER JOIN dbo.ts_detail\n" +
+                "ON\n" +
+                "    (\n" +
+                "        dbo.ts_detail.product_code = dbo.rr_detail.product_code\n" +
+                "    )\n" +
+                "WHERE\n" +
+                "rr_date >= @DATE1 and rr_date <= @DATE2 and ts_detail.created_date >= @DATE1 and ts_detail.created_date <= @DATE2 and\n" +
+                "    (\n" +
+                "        product_category.category_code = 'OS'\n" +
+                "     OR product_category.category_code = 'FS'\n" +
+                "    )\n" +
+                "group by product.product_code, product.product_name, rr_detail.uom"
+            );
+		
+            
             
             ListMap.put(Report.IMRR, 
 //                "select * " +

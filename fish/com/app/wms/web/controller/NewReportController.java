@@ -312,7 +312,9 @@ public class NewReportController extends MultiActionController {
 		HashMap<String, Object> modelMap = new HashMap<String, Object>();
 		modelMap.put("item", item);
 		modelMap.put("params", params);
-		return new ModelAndView("fish/GeneralReport", "model", modelMap);
+                if(item.equalsIgnoreCase("custom"))
+                    return new ModelAndView("fish/GeneralReportCustom", "model", modelMap);
+                return new ModelAndView("fish/GeneralReport", "model", modelMap);
 	}
         
     public ModelAndView getPoNotYetDeliveredCash(HttpServletRequest request, HttpServletResponse response) 
