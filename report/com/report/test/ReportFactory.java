@@ -12,13 +12,15 @@ import net.sf.jett.jdbc.ResultSetRow;
 
 import com.report.test.ReportFactory.Report;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ReportFactory {
+
     public static enum Report {
+
         FWSHR, FWSBR, FWSABF, FWSNC, FWeightSlip,
         FWSNR, FWSL, FSummaryWSSlip,
-        FSpoilagereport, FRR, FWS, 
-        FDR, FTS, FFrozenFishStock, 
+        FSpoilagereport, FRR, FWS,
+        FDR, FTS, FFrozenFishStock,
         FFrozenFishStockCS, FFrozenFishStockBatchNo, FFrozenFishStockSupplier, FDailyInventoryFrozenFish, FFrozenFishPerBatch, // added by edw
         FLaporanPemasukanBarangPerDokumenPabean, FLaporanPengeluaranBarangPerDokumenPabean, FLaporanPengeluaranBahanBakuDanBahanPenolong, //added by edw
         FLaporanPengeluaranMutasiBarangJadi, FLaporanPengeluaranMutasiBarangDanScrap, FLaporanPengeluaranMutasiMesin, // added by edw
@@ -26,9 +28,9 @@ public class ReportFactory {
         PPoNotyetDeliveredCash, PPoNotyetDeliveredCredit, PPoRegisterPerPeriode,
         PPoIssuedPerSupplier, PPoIssuedPerItem, PPrsForm,
         PCanvassingForm, PPoForm, PPoConfirmatory,
-        PPoPerDepartment, IMRR, IMSWS,
+        PPoPerDepartment, IMRR, IMSWS, IMStockCardperItem,
         IMTS, IMDR, IMStockCardperCategory, IMStockCardTransactionReport,
-        FGPTS, FGOFAL, FGBOR,
+        FGPTS, FGOFAL, FGBOR, FGFM, FGFO, FGSC,
         FGTS, FGEDS, FGBadStockReport,
         FGTunaVayaReport, Accounting, PPoNotyetDeliveredDP,
         RRPeriode, PurchasedItems, PurchasedPerSupplier, TSPeriode, CanvassingHistory //,
@@ -36,17 +38,20 @@ public class ReportFactory {
 //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         ; 
     }
-	
+
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
     public static final Map<Report, ReportModel> reportMap = new HashMap<Report, ReportModel>();
     public static final Map<Report, ArrayList<String>> REPORT_COLUMN = new HashMap<Report, ArrayList<String>>();
     public static final HashSet<String> IGNORED_COLUMN = new HashSet<String>();
-	
+
     static {
+        reportTemplateMap.put("IMDR", new ReportModel("deliverReceipt", false));
+        reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));
+        
         reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("canvassingForm", new ReportModel("canvassingForm", false));
-        reportTemplateMap.put("eds", new ReportModel("eds", false));
-        
+        reportTemplateMap.put("FGEDS", new ReportModel("gnvEDS", false));
+
         reportTemplateMap.put("FrozenFishStock", new ReportModel("FrozenFishStock1")); // add by edw
         reportTemplateMap.put("FrozenFishStockCS", new ReportModel("FrozenFishStock2")); // add by edw
         reportTemplateMap.put("FrozenFishStockBatchNo", new ReportModel("FrozenFishStock2")); // add by edw
@@ -84,8 +89,9 @@ public class ReportFactory {
         reportTemplateMap.put("bookedOrderReport", new ReportModel("bookedOrderReport", false));
         reportTemplateMap.put("poIssuedPerItem", new ReportModel("poIssuedPerItem", false));
         reportTemplateMap.put("viandTunaInv", new ReportModel("viandTunaInv", false));
+        reportTemplateMap.put("IMStockCardperItem", new ReportModel("gnvStockCardIMperItem", false));
         reportTemplateMap.put("withdrawalSlip", new ReportModel("withdrawalSlip", false));
-        reportTemplateMap.put("badStockCard", new ReportModel("badStockCard", false));	
+        reportTemplateMap.put("badStockCard", new ReportModel("badStockCard", false));
         reportTemplateMap.put("IMStockCardperCategory", new ReportModel("gnvStockCardIM", false));
         reportTemplateMap.put("IMStockCardTransactionReport", new ReportModel("gnvTransactionReportIM", false));
         reportTemplateMap.put("RPDailyProduction", new ReportModel("gnvRenderingPlantIM", false));
@@ -94,7 +100,11 @@ public class ReportFactory {
         reportTemplateMap.put("PurchasedPerSupplier", new ReportModel("gnvPurchasedPerSupplier", false));
         reportTemplateMap.put("TSPeriode", new ReportModel("gnvTSPeriode", false));
         reportTemplateMap.put("CanvassingHistory", new ReportModel("gnvCanvassingHistory", false));
+        reportTemplateMap.put("FGFM", new ReportModel("gnvFishMeal", false));
+        reportTemplateMap.put("FGFO", new ReportModel("gnvFishOil", false));
 
+        reportMap.put(Report.FGSC, reportTemplateMap.get("FGSC"));
+        
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
         reportMap.put(Report.FWSBR, reportTemplateMap.get("wsbr"));
@@ -107,7 +117,7 @@ public class ReportFactory {
         reportMap.put(Report.FWS, reportTemplateMap.get("withdrawalSlip"));
         reportMap.put(Report.FDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.FTS, reportTemplateMap.get("transferSlip"));
-        
+
         reportMap.put(Report.FFrozenFishStock, reportTemplateMap.get("FrozenFishStock")); // added by edw
         reportMap.put(Report.FFrozenFishStockCS, reportTemplateMap.get("FrozenFishStockCS")); // added by edw
         reportMap.put(Report.FFrozenFishStockBatchNo, reportTemplateMap.get("FrozenFishStockBatchNo")); // added by edw
@@ -137,13 +147,14 @@ public class ReportFactory {
         reportMap.put(Report.IMRR, reportTemplateMap.get("receivingReportNF"));
         reportMap.put(Report.IMSWS, reportTemplateMap.get("withdrawalSlip"));
         reportMap.put(Report.IMTS, reportTemplateMap.get("transferSlipNF"));
+        reportMap.put(Report.IMStockCardperItem, reportTemplateMap.get("IMStockCardperItem"));
         reportMap.put(Report.IMStockCardperCategory, reportTemplateMap.get("IMStockCardperCategory"));
         reportMap.put(Report.IMStockCardTransactionReport, reportTemplateMap.get("IMStockCardTransactionReport"));
         reportMap.put(Report.FGPTS, reportTemplateMap.get("pts"));
         reportMap.put(Report.FGOFAL, reportTemplateMap.get("ofal"));
         reportMap.put(Report.FGBOR, reportTemplateMap.get("bookedOrderReport"));
         reportMap.put(Report.FGTS, reportTemplateMap.get("transferSlip"));
-        reportMap.put(Report.FGEDS, reportTemplateMap.get("eds"));
+        reportMap.put(Report.FGEDS, reportTemplateMap.get("FGEDS"));
 
         reportMap.put(Report.RPDailyProduction, reportTemplateMap.get("RPDailyProduction"));
         reportMap.put(Report.RRPeriode, reportTemplateMap.get("RRPeriode"));
@@ -155,55 +166,63 @@ public class ReportFactory {
         reportMap.put(Report.FWSL, reportTemplateMap.get("wshr"));
         reportMap.put(Report.FGBadStockReport, reportTemplateMap.get("badStockCard"));
         reportMap.put(Report.FGTunaVayaReport, reportTemplateMap.get("viandTunaInv"));
+        reportMap.put(Report.FGFM, reportTemplateMap.get("FGFM"));
+        reportMap.put(Report.FGFO, reportTemplateMap.get("FGFO"));
         reportMap.put(Report.Accounting, reportTemplateMap.get("stockCardReport"));
-        
 
         IGNORED_COLUMN.add("index");
-    }	
-	
-	public static void main(String [] str){
-		try {
-			String name = "wsnr";
-			OutputStream xls = new FileOutputStream("Report.xls");
-			OutputStream pdf = new FileOutputStream("Report.pdf");
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    }
 
-	public static byte[] getReportPDF(Report reportType, List data, Map map) throws Exception{
-		return reportMap.get(reportType).getReportPDF(data, map);
-	}
+    public static void main(String[] str) {
+        try {
+            String name = "wsnr";
+            OutputStream xls = new FileOutputStream("Report.xls");
+            OutputStream pdf = new FileOutputStream("Report.pdf");
 
-	public static byte[] getReportXLS(Report reportType, List data, Map map) throws Exception{
-		return reportMap.get(reportType).getReportXLS(data, map);
-	}
-	
-	public static byte[] getReportCSV(Report reportType, List data, Map map) throws Exception{
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static byte[] getReportPDF(Report reportType, List data, Map map) throws Exception {
+        return reportMap.get(reportType).getReportPDF(data, map);
+    }
+
+    public static byte[] getReportXLS(Report reportType, List data, Map map) throws Exception {
+        return reportMap.get(reportType).getReportXLS(data, map);
+    }
+
+    public static byte[] getReportCSV(Report reportType, List data, Map map) throws Exception {
 //		return reportMap.get(reportType).getReportCSV(data, map);
-    	String csv = "";
-    	List<ResultSetRow> m = (List<ResultSetRow>) data;
-    	if(m == null) m = (List<ResultSetRow>) map.get("data");
-    	List<String> column = REPORT_COLUMN.get(reportType);
-    	if(column ==  null){
-    		if(!m.isEmpty())	
-    			column = new ArrayList<String>(m.get(0).keySet());
-    	}
-		for(String c:column){
-			if(!IGNORED_COLUMN.contains(c))	csv += c+",";
-		}
-		csv += "\r\n";
-    	for(ResultSetRow r:m){
-    		for(String c:column){
-    			if(!IGNORED_COLUMN.contains(c))	csv += r.get(c)+",";
-    		}
-    		csv += "\r\n";
-    	}
-    	return csv.getBytes();
-	}
+        String csv = "";
+        List<ResultSetRow> m = (List<ResultSetRow>) data;
+        if (m == null) {
+            m = (List<ResultSetRow>) map.get("data");
+        }
+        List<String> column = REPORT_COLUMN.get(reportType);
+        if (column == null) {
+            if (!m.isEmpty()) {
+                column = new ArrayList<String>(m.get(0).keySet());
+            }
+        }
+        for (String c : column) {
+            if (!IGNORED_COLUMN.contains(c)) {
+                csv += c + ",";
+            }
+        }
+        csv += "\r\n";
+        for (ResultSetRow r : m) {
+            for (String c : column) {
+                if (!IGNORED_COLUMN.contains(c)) {
+                    csv += r.get(c) + ",";
+                }
+            }
+            csv += "\r\n";
+        }
+        return csv.getBytes();
+    }
 
-	public static byte[] getReportHTML(Report reportType, List data, HashMap<String, Object> map) {
-		return reportMap.get(reportType).getReportHTML(data, map);
-	}
+    public static byte[] getReportHTML(Report reportType, List data, HashMap<String, Object> map) {
+        return reportMap.get(reportType).getReportHTML(data, map);
+    }
 }
