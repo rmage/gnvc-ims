@@ -32,7 +32,7 @@
                                     <td>Distributor Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="distributorName"  value="${model.dist.distributorName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="distributorName"  value="${model.dist.distributorName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -41,7 +41,7 @@
                                     <td>Distributor Address</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="distributorAddress"  value="${model.dist.distributorAddress}" maxlength="55" size="55" pattern="^\S+[^'\x22]+\S" required="true" />
+                                            <input type="text" name="distributorAddress"  value="${model.dist.distributorAddress}" maxlength="55" size="55" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -74,7 +74,7 @@
                                     <td>Contact Person</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="contactPerson"  value="${model.dist.contactPerson}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="contactPerson"  value="${model.dist.contactPerson}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

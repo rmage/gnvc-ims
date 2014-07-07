@@ -36,6 +36,8 @@ public class ReportFactory {
         RRPeriode, PurchasedItems, PurchasedPerSupplier, TSPeriode, CanvassingHistory //,
 //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
 //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
+        //  Fish Module | Form and Report List
+        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard
         ; 
     }
 
@@ -45,6 +47,34 @@ public class ReportFactory {
     public static final HashSet<String> IGNORED_COLUMN = new HashSet<String>();
 
     static {
+        //  Fish Module | Form and Report List
+        reportTemplateMap.put("FishWSHR", new ReportModel("fish/wshr", false));
+        reportMap.put(Report.FishWSHR, reportTemplateMap.get("FishWSHR"));
+        reportTemplateMap.put("FishWSNC", new ReportModel("fish/wsnc", false));
+        reportMap.put(Report.FishWSNC, reportTemplateMap.get("FishWSNC"));
+        reportTemplateMap.put("FishWSBF", new ReportModel("fish/wsbf", false));
+        reportMap.put(Report.FishWSBF, reportTemplateMap.get("FishWSBF"));
+        reportTemplateMap.put("FishWSNR", new ReportModel("fish/wsnr", false));
+        reportMap.put(Report.FishWSNR, reportTemplateMap.get("FishWSNR"));
+        reportTemplateMap.put("FishWSABF", new ReportModel("fish/wsabf", false));
+        reportMap.put(Report.FishWSABF, reportTemplateMap.get("FishWSABF"));
+        reportTemplateMap.put("FishWSL", new ReportModel("fish/wsl", false));
+        reportMap.put(Report.FishWSL, reportTemplateMap.get("FishWSL"));
+        reportTemplateMap.put("FishSR", new ReportModel("fish/sr", false));
+        reportMap.put(Report.FishSR, reportTemplateMap.get("FishSR"));
+        reportTemplateMap.put("FishWssFresh", new ReportModel("fish/wssfresh", false));
+        reportMap.put(Report.FishWssFresh, reportTemplateMap.get("FishWssFresh"));
+        reportTemplateMap.put("FishWssFrozen", new ReportModel("fish/wssfrozen", false));
+        reportMap.put(Report.FishWssFrozen, reportTemplateMap.get("FishWssFrozen"));
+        reportTemplateMap.put("FishRR", new ReportModel("fish/rr", false));
+        reportMap.put(Report.FishRR, reportTemplateMap.get("FishRR"));
+        reportTemplateMap.put("FishSumPerSupp", new ReportModel("fish/sumpsupp", false));
+        reportMap.put(Report.FishSumPerSupp, reportTemplateMap.get("FishSumPerSupp"));
+        reportTemplateMap.put("FishSumPerCS", new ReportModel("fish/sumpcs", false));
+        reportMap.put(Report.FishSumPerCS, reportTemplateMap.get("FishSumPerCS"));
+        reportTemplateMap.put("FishStockCard", new ReportModel("fish/sc", false));
+        reportMap.put(Report.FishStockCard, reportTemplateMap.get("FishStockCard"));
+        
         reportTemplateMap.put("IMDR", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));
         

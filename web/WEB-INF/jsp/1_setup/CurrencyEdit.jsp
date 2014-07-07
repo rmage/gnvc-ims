@@ -43,7 +43,7 @@
                                     <td>Currency Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="name"  value="${model.mode.currencyName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="name"  value="${model.mode.currencyName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -52,7 +52,7 @@
                                     <td>Currency Symbol</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="symbol"  value="${model.mode.currencySymbol}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="symbol"  value="${model.mode.currencySymbol}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

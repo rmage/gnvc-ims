@@ -42,7 +42,7 @@
                                     <td>Description</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="description" value="<%=dto.getDescription()%>" size="30" pattern="^\S+[^'\x22]+\S" required="true" />
+                                            <input type="text" name="description" value="<%=dto.getDescription()%>" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

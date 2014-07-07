@@ -32,7 +32,7 @@
                                     <td>Department Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="departmentCode" id="departmentCode" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9]+\S" required="true"/>
+                                            <input type="text" name="departmentCode" id="departmentCode" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"/>
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -41,7 +41,7 @@
                                     <td>Department Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="departmentName" id="departmentName" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true"/>
+                                            <input type="text" name="departmentName" id="departmentName" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"/>
                                         </label>
                                         <label>*</label> 
                                     </td>

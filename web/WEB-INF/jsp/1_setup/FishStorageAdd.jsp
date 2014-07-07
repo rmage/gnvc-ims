@@ -53,7 +53,7 @@
                                     <td>Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="code" name="code" value="" size="30" pattern="^\S+[A-Za-z0-9]+\S" required="true"/>
+                                            <input type="text" id="code" name="code" value="" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"/>
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -62,7 +62,7 @@
                                     <td>Description</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="description" value="" size="30" pattern="^\S+[^'\x22]+\S" required="true"/>
+                                            <input type="text" name="description" value="" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"/>
                                         </label>
                                         <label>*</label>
                                     </td>

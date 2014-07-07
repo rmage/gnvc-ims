@@ -36,7 +36,7 @@
                                     <td>Category Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="categoryCode" id="category_code" value="" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="categoryCode" id="category_code" value="" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -45,7 +45,7 @@
                                     <td>Category Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="categoryName" value="" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="categoryName" value="" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

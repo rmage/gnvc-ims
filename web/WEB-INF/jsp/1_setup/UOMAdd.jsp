@@ -32,7 +32,7 @@
                                     <td>UoM Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="uomCode" name="uomCode" size="30" pattern="^\S+[A-Za-z0-9]+\S" required="true" />
+                                            <input type="text" id="uomCode" name="uomCode" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -41,7 +41,7 @@
                                     <td>UoM Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="uomName" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="uomName" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

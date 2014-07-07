@@ -8,70 +8,69 @@
         <title>IMS - Fish Transfer Slip List</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
-        	$(document).ready(function() {
-        		$('#btnCleanFilter').click(function() {
-        			location.href = "FishTs.htm";	
-        		});
-        		
-        		$('#queryTsDate').datepicker({                        
+            $(document).ready(function() {
+                $('#btnCleanFilter').click(function() {
+                    location.href = "FishTs.htm";
+                });
+
+                $('#queryTsDate').datepicker({
                     dateFormat: "dd/mm/yy"
-                });	
-        		
-        		$('#btnSearch').click(function() {
-        			var tsNo = $('#queryTsNo').val();
-        			var tsDate = $('#queryTsDate').val();
-                    if(tsDate != '') {
-                        location.href = "FishTs.htm?search=true&tsNo="+tsNo+"&tsDate="+tsDate;  
+                });
+
+                $('#btnSearch').click(function() {
+                    var tsNo = $('#queryTsNo').val();
+                    var tsDate = $('#queryTsDate').val();
+                    if (tsDate != '') {
+                        location.href = "FishTs.htm?search=true&tsNo=" + tsNo + "&tsDate=" + tsDate;
                     }
                     else {
-                        location.href = "FishTs.htm?search=true&tsNo="+tsNo;
+                        location.href = "FishTs.htm?search=true&tsNo=" + tsNo;
                     }
-        		});	
-        		
-				$('#btnAdd').click(function() {
-					location.href="FishTs.htm?action=create";
                 });
-			
+
+                $('#btnAdd').click(function() {
+                    location.href = "FishTs.htm?action=create";
+                });
+
                 $('#btnEdit').click(function() {
                     location.href = '';
                 });
 
                 $('.tab').hide();
-                
+
                 $('#btnEdit').click(function() {
                     $('.tab').show();
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
-			});
-        	
-        	function showDetails(selectedRow) {
-        		var title = 'TS Details: ' + selectedRow.innerHTML;
-        		var wsId = selectedRow.getAttribute('id');
-				$('#dtl-panel').fadeIn(500, function() {
-					$.ajax({
-	                    url: "FishTs.htm",
-	                    data: "action=ajaxDocument&tsId=" + wsId,
-	                    success: function(html){
-	                        $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
-	                        $('#dtl-panel').append(html);
-	                    },
-	                    error: function(jqXHR, textStatus){
-	                        $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
-	                        $('#dtl-panel').append(jqXHR + " - " + textStatus);
-	                    }
-	                });
-				});
-        	}
-		</script>
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
+            });
+
+            function showDetails(selectedRow) {
+                var title = 'TS Details: ' + selectedRow.innerHTML;
+                var wsId = selectedRow.getAttribute('id');
+                $('#dtl-panel').fadeIn(500, function() {
+                    $.ajax({
+                        url: "FishTs.htm",
+                        data: "action=ajaxDocument&tsId=" + wsId,
+                        success: function(html) {
+                            $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
+                            $('#dtl-panel').append(html);
+                        },
+                        error: function(jqXHR, textStatus) {
+                            $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
+                            $('#dtl-panel').append(jqXHR + " - " + textStatus);
+                        }
+                    });
+                });
+            }
+        </script>
     </head>
     <body>
-        <%
-        	com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch(); 
+        <%            com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch();
             if (request.getSession().getAttribute("FishRRDataSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishRRDataSearch");
             }
-            
+
             java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
@@ -81,7 +80,7 @@
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-			<div id="dtl-panel" class="div-dtl" style="width: 99%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
+            <div id="dtl-panel" class="div-dtl" style="width: 99%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishTs.htm" method="post">
@@ -107,20 +106,20 @@
                                 <tr></tr>
                             </tbody>
                             <tfoot>
-                            <tr>
-	                            <td colspan="4">
-	                                <span class="style1">
-	                                    <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
-	                                </span>
-	                                 <label>
-	                                    <input type="button" name="button" id="btnAdd" value="Add" />
-	                                </label>
-	                                <label>
-	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
-	                                </label>
-	                            </td>
-	                            <td></td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <span class="style1">
+                                            <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
+                                        </span>
+                                        <label>
+                                            <input type="button" name="button" id="btnAdd" value="Add" />
+                                        </label>
+                                        <label>
+                                            <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+                                        </label>
+                                    </td>
+                                    <td></td>
+                                </tr>
                             </tfoot>
                         </table>
                     </form>
@@ -147,49 +146,49 @@
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
-                                       
+
                                         <c:url value="FishTs.htm" var="urlEdit">
                                             <c:param name="wsDataId" value="${tsData.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="mode" value="edit"/>
                                         </c:url>
-                                       
+
                                         <c:url value="FishTs.htm" var="urlDelete">
                                             <c:param name="id" value="${tsData.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
-                                        
+
                                         <c:url value="GeneralReport.htm" var="urlReportXLS">
                                             <c:param name="tsId" value="${tsData.id}"/>
                                             <c:param name="format" value="xls" />
                                             <c:param name="action" value="getTsReportById"/>
                                         </c:url>
-                                        
+
                                         <c:url value="GeneralReport.htm" var="urlReportPDF">
                                             <c:param name="tsId" value="${tsData.id}"/>
                                             <c:param name="format" value="pdf" />
                                             <c:param name="action" value="getTsReportById"/>
                                         </c:url>
-                                        
+
                                         <c:url value="GenerateReport.htm" var="urlReportCSV">
                                             <c:param name="action" value="index"/>
                                             <c:param name="item" value="FTS" />
                                             <c:param name="type" value="csv" />
                                             <c:param name="params" value="${tsData.id}"/>
                                         </c:url>
-                                        
+
                                         <td class="left" width="10%">
-                                        <%-- 
-                                            <a href='<c:out value="${urlEdit}"/>'>
-                                                <img src="resources/images/edit.gif" width="16" height="16" /></a> --%>
-                                         
+                                            <%-- 
+                                                <a href='<c:out value="${urlEdit}"/>'>
+                                                    <img src="resources/images/edit.gif" width="16" height="16" /></a> --%>
+
                                             <a href='<c:out value="${urlReportPDF}"/>'>
-                                            	<img src="resources/images/print.jpg" width="16" height="16" alt="pdf" /></a>&nbsp;&nbsp;
+                                                <img src="resources/images/print.jpg" width="16" height="16" alt="pdf" /></a>&nbsp;&nbsp;
                                             <a href='<c:out value="${urlReportXLS}"/>'>
-                                            	<img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>&nbsp;&nbsp;
+                                                <img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>&nbsp;&nbsp;
                                             <a href='<c:out value="${urlReportCSV}"/>'>
-                                            	<img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                             <!-- <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
                                                 <img src="resources/images/delete.gif" width="16" height="16" /></a> -->
                                         </td>
@@ -202,7 +201,7 @@
                                     </tr>
                                 </c:forEach>
                             </c:if>
-                          <tr>
+                            <tr>
                                 <td colspan="10">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
@@ -211,12 +210,12 @@
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishTs.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
-											&gt;
-						    				</a>
-										</c:if>
-				    				</span>
+                                        <c:if test="${model.page < model.totalRows/model.paging}">
+                                            <a href="FishTs.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
+                                                &gt;
+                                            </a>
+                                        </c:if>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -224,7 +223,7 @@
 
                             <td colspan="10">
                                 <span class="style1">
-                                   
+
                                 </span>
                             </td>
                         </tfoot>

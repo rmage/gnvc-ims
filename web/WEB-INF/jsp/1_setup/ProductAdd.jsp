@@ -43,14 +43,14 @@
                                     <td>Item Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="productCode" name="productCode" value="<%=dto.getProductCode()%>" size="30" pattern="^\S+[A-Za-z0-9]+\S" required="true" />
+                                            <input type="text" id="productCode" name="productCode" value="<%=dto.getProductCode()%>" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
                                     <td>Item Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="productName" value="<%=dto.getProductName()%>" size="50" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="productName" value="<%=dto.getProductName()%>" size="50" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

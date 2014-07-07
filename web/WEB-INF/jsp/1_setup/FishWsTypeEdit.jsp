@@ -39,7 +39,7 @@
                                    <td>Code</td>
                                    <td>
                                         <label>
-                                            <input type="text" name="code" value="<%=dto.getCode()%>" size="30" required="true" readonly pattern="^\S+[A-Za-z0-9 ]+\S"/>
+                                            <input type="text" name="code" value="<%=dto.getCode()%>" size="30" required="true" readonly pattern="^\S+[A-Za-z0-9 ]{1,}"/>
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -48,7 +48,7 @@
                                     <td>Description</td>
                                         <td>
                                             <label>
-                                                <input type="text" name="description" value="<%=dto.getDescription()%>" size="50" required="true" pattern="^\S+[A-Za-z0-9 ]+\S"/>
+                                                <input type="text" name="description" value="<%=dto.getDescription()%>" size="50" required="true" pattern="^\S+[A-Za-z0-9 ]{1,}"/>
                                             </label>
                                             <label>*</label>
                                         </td>

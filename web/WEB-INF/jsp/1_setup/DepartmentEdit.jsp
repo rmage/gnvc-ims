@@ -31,7 +31,7 @@
                                     <td>Department Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="departmentCode" value="${model.mode.departmentCode}" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" readonly />
+                                            <input type="text" class="shorttext" name="departmentCode" value="${model.mode.departmentCode}" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" readonly />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -40,7 +40,7 @@
                                     <td>Department Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="departmentName"  value="${model.mode.departmentName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="departmentName"  value="${model.mode.departmentName}" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

@@ -30,7 +30,7 @@
                                     <td>Supplier Code</td>
                                     <td>
                                         <label>
-                                            <input type="text" id="supplierCode" name="supplierCode" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9]+\S" required="true" />
+                                            <input type="text" id="supplierCode" name="supplierCode" maxlength="10" size="12" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -39,7 +39,7 @@
                                     <td>Supplier Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="supplierName" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="supplierName" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -48,7 +48,7 @@
                                     <td>Supplier Address</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="supplierAddress" maxlength="55" size="55" pattern="^\S+[^'\x22]+\S" required="true" />
+                                            <input type="text" name="supplierAddress" maxlength="55" size="55" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -81,7 +81,7 @@
                                     <td>Contact Person</td>
                                     <td>
                                         <label>
-                                            <input type="text" class="shorttext" name="contactPerson" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" class="shorttext" name="contactPerson" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

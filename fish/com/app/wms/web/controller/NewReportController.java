@@ -74,6 +74,7 @@ public class NewReportController extends MultiActionController {
         } else if (format.equalsIgnoreCase("xls")) {
             data = new ReportModel("wsgeneral", false).getReportXLS(wsDetails, info);
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".xls");
+            response.setContentType("application/vnd.ms-excel");
         } else if (format.equalsIgnoreCase("csv")) {
             data = new ReportModel("wsgeneral", false).getReportCSV(wsDetails, info);
             response.setHeader("Content-disposition", "attachment; filename=" + filename + ".csv");
@@ -271,8 +272,9 @@ public class NewReportController extends MultiActionController {
             data = new ReportModel("spoilageReport", false).getReportPDF(fishSpoilages, info);
             response.setHeader("Content-disposition", "attachment; filename=fishSpoilage.pdf");
         } else if (format.equalsIgnoreCase("xls")) {
-            data = new ReportModel("spoilageReport", false).getReportXLS(fishSpoilages, info);
+            data = new ReportModel("fish/sr", false).getReportXLS(fishSpoilages, info);
             response.setHeader("Content-disposition", "attachment; filename=fishSpoilage.xls");
+            response.setContentType("application/vnd.ms-excel");
         } else if (format.equalsIgnoreCase("csv")) {
             data = new ReportModel("spoilageReport", false).getReportCSV(fishSpoilages, info);
             response.setHeader("Content-disposition", "attachment; filename=fishSpoilage.csv");
@@ -289,23 +291,24 @@ public class NewReportController extends MultiActionController {
 
         return new ModelAndView("fish/WSSummaryReport");
     }
-	
-	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) 
-			throws Exception {
-		
-		String item = request.getParameter("item");
-		String params = request.getParameter("params");
-		HashMap<String, Object> modelMap = new HashMap<String, Object>();
-		modelMap.put("item", item);
-		modelMap.put("params", params);
-                if(item.equalsIgnoreCase("custom"))
-                    return new ModelAndView("fish/GeneralReportCustom", "model", modelMap);
-                return new ModelAndView("fish/GeneralReport", "model", modelMap);
-	}
-        
-    public ModelAndView getPoNotYetDeliveredCash(HttpServletRequest request, HttpServletResponse response) 
-        throws UserDaoException {
-        
+
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        String item = request.getParameter("item");
+        String params = request.getParameter("params");
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+        modelMap.put("item", item);
+        modelMap.put("params", params);
+        if (item.equalsIgnoreCase("custom")) {
+            return new ModelAndView("fish/GeneralReportCustom", "model", modelMap);
+        }
+        return new ModelAndView("fish/GeneralReport", "model", modelMap);
+    }
+
+    public ModelAndView getPoNotYetDeliveredCash(HttpServletRequest request, HttpServletResponse response)
+            throws UserDaoException {
+
         /* DATA | get initial value */
         HashMap m = new HashMap();
 
@@ -412,7 +415,7 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("fish/IMStockCardperCategory", "model", m);
 
     }
-    
+
     public ModelAndView getIMStockCardperItem(HttpServletRequest request, HttpServletResponse response)
             throws ProductCategoryDaoException {
 
@@ -464,9 +467,22 @@ public class NewReportController extends MultiActionController {
     public ModelAndView getTSPeriode(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("non_fish/ReportTSPeriode");
     }
-    
-    public ModelAndView getFGStockCard (HttpServletRequest request, HttpServletResponse response) {
+
+    public ModelAndView getFGStockCard(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("finish_goods/StockCardFG");
+    }
+    
+    /* GNVS | New Fish Created Fish Inventory */
+    public ModelAndView getFishStockCard(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/FishStockCard");
+    }
+    
+    public ModelAndView getSummaryReportPerSupplier(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/FishSummaryPerSupplier");
+    }
+    
+    public ModelAndView getSummaryReportPerCS(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/FishSummaryPerCS");
     }
 
 }

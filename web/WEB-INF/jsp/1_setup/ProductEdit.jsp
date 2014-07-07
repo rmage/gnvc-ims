@@ -48,7 +48,7 @@
                                     <td>Item Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="productName" value="${model.mode.productName}" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="productName" value="${model.mode.productName}" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

@@ -30,7 +30,7 @@
                                     <td class="style1">Currency Code</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="code" name="code" maxlength="10" size="12" required="true" pattern="^\S+[A-Za-z0-9]+\S" />
+                                            <input type="text" id="code" name="code" maxlength="10" size="12" required="true" pattern="^\S+[A-Za-z0-9 ]{1,}" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -39,7 +39,7 @@
                                     <td class="style1">Currency Name</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="name" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="name" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -48,7 +48,7 @@
                                     <td class="style1">Currency Symbol</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="symbol" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                            <input type="text" name="symbol" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

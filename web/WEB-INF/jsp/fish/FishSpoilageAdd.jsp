@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS - New Fish Spoilage Report</title>
+        <title>IMS &there4; Fish Spoilage &there4; Create</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function() {
@@ -120,17 +120,17 @@
                     $('#dialog-spoilage').dialog('close');
                 });
 
-                $('#cookedWeight').keyup(function() {
-                    var spoilageWeight = $('#cookedWeight').val();
-                    var rawWeight = $('#rawWeight').val();
-                    $('#totalProcessed').val(rawWeight - spoilageWeight);
-                });
-
-                $('#rawWeight').keyup(function() {
-                    var spoilageWeight = $('#cookedWeight').val();
-                    var rawWeight = $('#rawWeight').val();
-                    $('#totalProcessed').val(rawWeight - spoilageWeight);
-                });
+//                $('#cookedWeight').keyup(function() {
+//                    var spoilageWeight = $('#cookedWeight').val();
+//                    var rawWeight = $('#rawWeight').val();
+//                    $('#totalProcessed').val(rawWeight - spoilageWeight);
+//                });
+//
+//                $('#rawWeight').keyup(function() {
+//                    var spoilageWeight = $('#cookedWeight').val();
+//                    var rawWeight = $('#rawWeight').val();
+//                    $('#totalProcessed').val(rawWeight - spoilageWeight);
+//                });
             });
 
             function addCommas(nStr) {
@@ -160,7 +160,7 @@
                         <input type="hidden" name="isActive" value="Y"/>
                         <input type="hidden" id="totalData" name="totalData" value="0"/>
                         <table class="collapse tblForm row-select">
-                            <caption>New Fish Spoilage Report</caption>
+                            <caption>Fish Spoilage &there4; Header</caption>
                             <tbody>
                                 <tr>
                                     <td width="30%">Date</td>
@@ -197,7 +197,7 @@
                         <a href="javascript:void(0)" id="addItem">Add Item</a><br /><br />
 
                         <table class="collapse tblForm row-select" id="main">
-                            <caption>Spoilage Fish</caption>
+                            <caption>Fish Spoilage &there4; Detail</caption>
                             <thead>
                                 <tr>
                                     <td class="style1">No.</td>
@@ -269,13 +269,13 @@
                                        size="30" class="validate[required] text-input"/></td>
                         </tr>
                         <tr>
-                            <td width="30%">Raw Weight</td>
+                            <td width="30%">Cooked Weight</td>
                             <td>:</td>
                             <td><input type="text" id="rawWeight" name="rawWeight" 
                                        value="0" size="30" class="validate[required] text-input"/> Kg</td>
                         </tr>
                         <tr>
-                            <td width="30%">Spoilage Weight</td>
+                            <td width="30%">Raw Weight</td>
                             <td>:</td>
                             <td><input type="text" id="cookedWeight" name="cookedWeight" 
                                        value="0" size="30" class="validate[required] text-input"/> Kg</td>
@@ -284,11 +284,10 @@
                             <td width="30%">Total Processed</td>
                             <td>:</td>
                             <td><input type="text" id="totalProcessed" name="totalProcessed" 
-                                       value="0" size="30" class="validate[required] text-input"
-                                       readonly="readonly"/> Kg</td>
+                                       value="0" size="30" class="validate[required] text-input"/> Kg</td>
                         </tr>
                         <tr>
-                            <td width="30%">Reason</td>
+                            <td width="30%">Reason for Rejection</td>
                             <td>:</td>
                             <td><textarea id="reason" name="reason" cols="20" rows="5"></textarea></td>
                         </tr>

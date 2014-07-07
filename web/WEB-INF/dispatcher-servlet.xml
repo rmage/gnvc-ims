@@ -301,4 +301,14 @@
     <bean name="/ReturnCargoDr.htm" class="com.app.wms.web.controller.ReturnCargoDrController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    
+    <!-- GNVS | New Concept of Finish Goods -->
+    <bean name="/PalletTransfer.htm" class="com.spfi.ims.controller.PalletTransferController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <!-- GNVS | New Fish Created Fish Inventory -->
+    <bean name="/FishReceivingReport.htm" class="com.spfi.ims.controller.ReceivingReportFishController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

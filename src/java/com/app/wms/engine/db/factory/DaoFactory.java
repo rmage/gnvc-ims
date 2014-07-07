@@ -1,6 +1,7 @@
 package com.app.wms.engine.db.factory;
 
 import com.app.wms.engine.db.dao.*;
+import com.spfi.ims.dao.*;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
@@ -847,5 +848,11 @@ public class DaoFactory {
     public static FishOilDtlDao createFishOilDtlDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FishOilDtlDao) bf.getBean("FishOilDtlDao");
+    }
+    
+    /* GNVS | New Concept of Finish Goods */
+    public static PalletTransferDao createPalletTransferDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (PalletTransferDao) bf.getBean("PalletTransferDao");
     }
 }

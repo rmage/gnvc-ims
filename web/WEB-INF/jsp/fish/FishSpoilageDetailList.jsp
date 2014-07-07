@@ -17,8 +17,8 @@
                     <td class="left">Catcher No.</td>
 			        <td class="left">Fish Type</td>
 			        <td class="left">Fish Name</td>
+			        <td class="left">Cooked Weight</td>
 			        <td class="left">Raw Weight</td>
-			        <td class="left">Spoilage Weight</td>
 			        <td class="left">Total Processed</td>
 			        <td class="left">Reason</td>
                     <td class="left">Action</td>

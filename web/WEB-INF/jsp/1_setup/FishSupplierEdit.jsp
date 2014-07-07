@@ -32,7 +32,7 @@
                                     <td>
                                         <label>
                                            <input type="text" name="code" id="code" size="30"                                                    
-                                                   value="<%=dto.getCode()%>" readonly pattern="^\S+[A-Za-z0-9 ]+\S" required="true" /> 
+                                                   value="<%=dto.getCode()%>" readonly pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" /> 
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -41,7 +41,7 @@
                                     <td>
                                         <label>                                                                                                                                                                             
                                             <input type="text" name="telp" id="telp" size="30"                                                    
-                                                   value="<%=dto.getTelephone()%>" pattern="^\S+[0-9]+\S" required="true" />
+                                                   value="<%=dto.getTelephone()%>" pattern="^\S+[0-9]" required="true" />
                                             <label>*</label>
                                             </select>                                                            
                                         </label>
@@ -53,7 +53,7 @@
                                     <td>
                                         <label>
                                             <input type="text" name="name" id="name" size="30"                                                    
-                                                   value="<%=dto.getName()%>" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                                   value="<%=dto.getName()%>" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -71,7 +71,7 @@
                                     <td>
                                         <label>
                                             <textarea type="text" name="address" id="address" rows="5" cols="40"                                                   
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" ><%=dto.getAddress()%></textarea>
+                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" ><%=dto.getAddress()%></textarea>
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -89,7 +89,7 @@
                                     <td>
                                         <label>
                                             <input type="text" name="cp" id="cp" size="30"                                                    
-                                                   value="<%=dto.getContactPerson()%>" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                                   value="<%=dto.getContactPerson()%>" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>

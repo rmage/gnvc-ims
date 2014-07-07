@@ -4,76 +4,76 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>IMS - New WS Data</title>
+        <title>IMS &there4; Weight Slip &there4; Create</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript">
-        	$(document).ready(function() {
-        		$('.numeric').on('input', function() {
-        			this.value = this.value.replace(/[^0-9.]/g,'');	
-        		});
-        		
-        		$('#batchNo').click(function() {
-					$("#dialog-ajaxSearch").dialog({ 
-						width: 500, 
-						height: 350, 
-						position: "center", 
-						modal: true, 
-						zindex: 9999, 
-						title: 'Select Batch Number' });
+            $(document).ready(function() {
+                $('.numeric').on('input', function() {
+                    this.value = this.value.replace(/[^0-9.]/g, '');
                 });
-        		
-        		$('#addItem').click(function() {
+
+                $('#batchNo').click(function() {
+                    $("#dialog-ajaxSearch").dialog({
+                        width: 500,
+                        height: 350,
+                        position: "center",
+                        modal: true,
+                        zindex: 9999,
+                        title: 'Select Batch Number'});
+                });
+
+                $('#addItem').click(function() {
                     $('#dialogMode').val('add');
-        			$("#dialog-add-item").dialog({ 
-    					width: 500, 
-    					height: 200, 
-    					position: "center", 
-    					modal: true, 
-    					zindex: 9999, 
-    					title: 'Add Item' 
-    				});
-        		});
-        		
-        		$('#btnItemSet').click(function() {
-        			var fishType = $('#fishType option:selected').html();
-        			var fishId = $('#fishType').val();
-        			var totalWeight = $('#totalWeight').val();
+                    $("#dialog-add-item").dialog({
+                        width: 500,
+                        height: 200,
+                        position: "center",
+                        modal: true,
+                        zindex: 9999,
+                        title: 'Add Item'
+                    });
+                });
+
+                $('#btnItemSet').click(function() {
+                    var fishType = $('#fishType option:selected').html();
+                    var fishId = $('#fishType').val();
+                    var totalWeight = $('#totalWeight').val();
                     var dialogMode = $('#dialogMode').val();
-                    
-                    if(dialogMode == 'add') {
+
+                    if (dialogMode == 'add') {
                         var rowCount = $('#main tr').length - 1;
-                        $("<tr class='ganjil'>" + 
-                                "<td class='style1'>"+rowCount+"</td>" +
-                                "<td id='fishType"+rowCount+"' class='center'>"+fishType+"</td>" +
-                                    "<input id='fishId"+rowCount+"' type='hidden' name='fishId"+rowCount+"' value='"+fishId+"' /></td>" +
-                                "<td id='totalWeightHTML"+rowCount+"' class='center'>"+addCommas(totalWeight)+"</td>" +
-                                    "<input id='totalWeight"+rowCount+"' type='hidden' name='totalWeight"+rowCount+"' value='"+totalWeight+"' /></td>" +
-                                "<td id='"+rowCount+"' class='center' onClick='editItem(this)'>Edit</td>" +
+                        $("<tr class='ganjil'>" +
+                                "<td class='style1'>" + rowCount + "</td>" +
+                                "<td id='fishType" + rowCount + "' class='center'>" + fishType + "</td>" +
+                                "<input id='fishId" + rowCount + "' type='hidden' name='fishId" + rowCount + "' value='" + fishId + "' /></td>" +
+                                "<td id='totalWeightHTML" + rowCount + "' class='center'>" + addCommas(totalWeight) + "</td>" +
+                                "<input id='totalWeight" + rowCount + "' type='hidden' name='totalWeight" + rowCount + "' value='" + totalWeight + "' /></td>" +
+                                "<td id='" + rowCount + "' class='center' onClick='editItem(this)'>Edit</td>" +
                                 "</tr>").appendTo("#main tbody");
 
-                        $('#totalData').val(rowCount);    
+                        $('#totalData').val(rowCount);
                     }
-                    else if(dialogMode == 'edit') {
+                    else if (dialogMode == 'edit') {
                         var editId = $('#editId').val();
-                        $('#fishId'+editId).val(fishId);
-                        $('#fishType'+editId).html(fishType);
-                        $('#totalWeight'+editId).val(totalWeight);
-                        $('#totalWeightHTML'+editId).html(addCommas(totalWeight));
+                        $('#fishId' + editId).val(fishId);
+                        $('#fishType' + editId).html(fishType);
+                        $('#totalWeight' + editId).val(totalWeight);
+                        $('#totalWeightHTML' + editId).html(addCommas(totalWeight));
                     }
-        			
+
                     $('#totalWeight').val(0);
-                	$('#dialog-add-item').dialog('close');
-        		});
-        		
-        		$('#wsNo').focus().on("blur",function() {
-        			var wsNo = $('#wsNo').val();
-        			$.ajax({
-        				url:"FishJson.htm?action=checkWsNo&query="+wsNo,
-        				dataType: 'json',
-        				success: function(data) {
-        					if(data.result) {
-        						$("#dialog-not-unique").dialog({
-                                    open: function () {
+                    $('#dialog-add-item').dialog('close');
+                });
+
+                $('#wsNo').focus().on("blur", function() {
+                    var wsNo = $('#wsNo').val();
+                    $.ajax({
+                        url: "FishJson.htm?action=checkWsNo&query=" + wsNo,
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.result) {
+                                $("#dialog-not-unique").dialog({
+                                    open: function() {
                                         $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
                                         $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
                                     },
@@ -82,66 +82,66 @@
                                     height: 120,
                                     modal: true,
                                     buttons: {
-                                        "Ok" : function () {
+                                        "Ok": function() {
                                             $(this).dialog("close");
                                             $('#wsNo').focus();
                                         }
                                     }
                                 });
-        					}
-        				}
-        			});
-        		});
-        		
-				$('#ajaxSearchBtn').click(function() {
-					var query = $('#query').val();
-					var ajaxUrl = 'FishJson.htm?action=findBatchNumber&query='+query
-					$("#list").jqGrid('setGridParam',{url:ajaxUrl,page:1}).trigger("reloadGrid");
-					$("#list").jqGrid({ 
-						url:ajaxUrl, 
-						datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-	                    colNames:['Vessel Id', 'Batch Number','Vessel Name', 'Supplier Name'], 
-	                    colModel:[ 
-								   {name:'vesselId',index:'vesselId',width:50},
-	                               {name:'batchNo',index:'batchNo',width:100}, 
-	                               {name:'vesselName',index:'vesselName',width:200},
-	                               {name:'supplierName',index:'supplierName',width:200}], 
-	                    sortname: 'batchNo',
-	                    rowNum:10, rowList:[10,20,30],
-	                    jsonReader:{repeatitems: false},
-	                    onSelectRow: function(ids){
-	                    	var localRowData = $(this).getRowData(ids);
-	                    	$('#batchNo').val(localRowData.batchNo);
-	                    	$('#supplierName').val(localRowData.supplierName);
-	                    	$('#vesselId').val(localRowData.vesselId);
-	                    	$('#dialog-ajaxSearch').dialog('close');
-	                    },
-	                    pager: '#pager', sortname: 'batchNo', viewrecords: true, sortorder: "desc"}
-					).trigger("reloadGrid"); 
-	               	
-					jQuery("#list").jqGrid('navGrid','#pager',{edit:false,add:false,del:false});
-				});
-        	});
-            
+                            }
+                        }
+                    });
+                });
+
+                $('#ajaxSearchBtn').click(function() {
+                    var query = $('#query').val();
+                    var ajaxUrl = 'FishJson.htm?action=findBatchNumber&query=' + query
+                    $("#list").jqGrid('setGridParam', {url: ajaxUrl, page: 1}).trigger("reloadGrid");
+                    $("#list").jqGrid({
+                        url: ajaxUrl,
+                        datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
+                        colNames: ['Vessel Id', 'Batch Number', 'Vessel Name', 'Supplier Name'],
+                        colModel: [
+                            {name: 'vesselId', index: 'vesselId', width: 50},
+                            {name: 'batchNo', index: 'batchNo', width: 100},
+                            {name: 'vesselName', index: 'vesselName', width: 200},
+                            {name: 'supplierName', index: 'supplierName', width: 200}],
+                        sortname: 'batchNo',
+                        rowNum: 10, rowList: [10, 20, 30],
+                        jsonReader: {repeatitems: false},
+                        onSelectRow: function(ids) {
+                            var localRowData = $(this).getRowData(ids);
+                            $('#batchNo').val(localRowData.batchNo);
+                            $('#supplierName').val(localRowData.supplierName);
+                            $('#vesselId').val(localRowData.vesselId);
+                            $('#dialog-ajaxSearch').dialog('close');
+                        },
+                        pager: '#pager', sortname: 'batchNo', viewrecords: true, sortorder: "desc"}
+                    ).trigger("reloadGrid");
+
+                    jQuery("#list").jqGrid('navGrid', '#pager', {edit: false, add: false, del: false});
+                });
+            });
+
             function editItem(selectedRow) {
                 var id = selectedRow.getAttribute('id');
-                var totalWeight = $('#totalWeight'+id).val();
-                var fishId = $('#fishId'+id).val();
-                
+                var totalWeight = $('#totalWeight' + id).val();
+                var fishId = $('#fishId' + id).val();
+
                 $('#editId').val(id);
                 $('#fishType').val(fishId);
                 $('#totalWeight').val(totalWeight);
                 $('#dialogMode').val('edit');
-                $("#dialog-add-item").dialog({ 
-                    width: 500, 
-                    height: 200, 
-                    position: "center", 
-                    modal: true, 
-                    zindex: 9999, 
-                    title: 'Edit Item' 
+                $("#dialog-add-item").dialog({
+                    width: 500,
+                    height: 200,
+                    position: "center",
+                    modal: true,
+                    zindex: 9999,
+                    title: 'Edit Item'
                 });
             }
-            
+
             function addCommas(nStr) {
                 nStr += '';
                 x = nStr.split('.');
@@ -149,7 +149,7 @@
                 x2 = x.length > 1 ? '.' + x[1] : '';
                 var rgx = /(\d+)(\d{3})/;
                 while (rgx.test(x1)) {
-                        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+                    x1 = x1.replace(rgx, '$1' + ',' + '$2');
                 }
                 return x1 + x2;
             }
@@ -157,8 +157,7 @@
     </head>
 
     <body>
-        <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
             java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
         %>
@@ -170,46 +169,46 @@
 
                 <div class="box">
                     <form action="FishWs.htm" method="post" id="addForm">
-                    	<input type="hidden" name="mode" value="<%=mode%>" />
+                        <input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" id="vesselId" name="vesselId" value="" />
                         <input type="hidden" id="totalData" name="totalData" value="0" />
                         <input type="hidden" name="isActive" value="Y"/>
 
                         <table class="collapse tblForm row-select">
-                            <caption>Weight Slip - WS</caption>
+                            <caption>Weight Slip &there4; Header</caption>
                             <tbody class="tbl-nohover">
-                            	<tr class="detail_genap">
+                                <tr class="detail_genap">
                                     <td></td>
                                     <td width="20%">WS Type</td>
                                     <td class="style1">
                                         <label>
-                                            <select name="wsTypeId">
-                                            	<c:forEach items="${model.wsTypes}" var="wsType">
-                                            		<option value="${wsType.id}">
-                                            			<c:out value="${wsType.code}" />
-                                            		</option>
-                                            	</c:forEach>
+                                            <select id="wsTypeId" name="wsTypeId">
+                                                <c:forEach items="${model.wsTypes}" var="wsType">
+                                                    <option value="${wsType.id}">
+                                                        <c:out value="${wsType.code}" />
+                                                    </option>
+                                                </c:forEach>
                                             </select>
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>
-                                  	<td></td>
+                                    <td></td>
                                     <td width="20%">Fish Storage</td>
                                     <td class="style1">
                                         <label>                                                                                                                                                                             
-                                            <select name="storageId">
-                                            	<option value="0">-- NONE --</option>
-                                            	<c:forEach items="${model.fishStorages}" var="fishStorage">
-                                            		<option value="${fishStorage.id}">
-                                            			<c:out value="${fishStorage.code}" />
-                                            		</option>
-                                            	</c:forEach>
+                                            <select id="storageId" name="storageId" onchange="this.selectedIndex = 0;">
+                                                <option value="0">-- NONE --</option>
+                                                <c:forEach items="${model.fishStorages}" var="fishStorage">
+                                                    <option value="${fishStorage.id}">
+                                                        <c:out value="${fishStorage.code}" />
+                                                    </option>
+                                                </c:forEach>
                                             </select>                                                            
                                         </label>
                                     </td>
-                               	 </tr>
-                            	 <tr class="detail_genap">
+                                </tr>
+                                <tr class="detail_genap">
                                     <td></td>
                                     <td width="20%">WS No</td>
                                     <td class="style1">
@@ -227,9 +226,9 @@
                                                    value="<%=dateFormat.format(new Date())%>" />                                                            
                                         </label>
                                     </td>
-                                   
-                               	 </tr>
-                               	 <tr class="detail_genap">
+
+                                </tr>
+                                <tr class="detail_genap">
                                     <td></td>
                                     <td width="20%">Batch No</td>
                                     <td class="style1">
@@ -240,19 +239,19 @@
                                             <img width="16" height="16" src="resources/images/search.png" alt="Search Product" />
                                         </label>
                                     </td>
-                                  	<td></td>
+                                    <td></td>
                                     <td width="20%">Time Shift</td>
                                     <td class="style1">
                                         <label>    
-                                        	<select name="timeShift">
-                                        		<option value="07-15">07:00 - 15:00</option>
-                                        		<option value="15-23">15:00 - 23:00</option>
-                                        		<option value="23-07">23:00 - 07:00</option>
-                                        	</select>                                                           
+                                            <select name="timeShift">
+                                                <option value="07-15">07:00 - 15:00</option>
+                                                <option value="15-23">15:00 - 23:00</option>
+                                                <option value="23-07">23:00 - 07:00</option>
+                                            </select>                                                           
                                         </label>
                                     </td>
-                               	 </tr>
-                                 <tr class="detail_genap">
+                                </tr>
+                                <tr class="detail_genap">
                                     <td></td>
                                     <td width="20%">Supplier Name</td>
                                     <td class="style1">
@@ -262,11 +261,11 @@
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>
-                                  	<td></td>
                                     <td></td>
                                     <td></td>
-                               	 </tr>
-                               	 <tr class="detail_genap">
+                                    <td></td>
+                                </tr>
+                                <tr class="detail_genap">
                                     <td></td>
                                     <td width="20%">Regu</td>
                                     <td class="style1">
@@ -276,24 +275,25 @@
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>
-                                  	<td></td>
                                     <td></td>
                                     <td></td>
-                               	 </tr>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
-                        
+
                         <a href="javascript:void(0)" id="addItem">Add Item</a><br /><br />
-                        
+
                         <table id="main" class="collapse tblForm row-select ui-widget-content">
-                        	<thead>
-                        		<tr>
-                        			<td class="center">No.</td>
-                        			<td class="center">Fish Type</td>
-                        			<td class="center">Total Weight</td>
+                            <caption>Weight Slip &there4; Detail</caption>
+                            <thead>
+                                <tr>
+                                    <td class="center">No.</td>
+                                    <td class="center">Fish Type</td>
+                                    <td class="center">Total Weight</td>
                                     <td class="center">Action</td>
-                        		</tr>
-                        	</thead>
+                                </tr>
+                            </thead>
                             <tbody class="tbl-nohover">
                             </tbody>
                             <tfoot class="ui-widget-header">
@@ -312,70 +312,70 @@
                     </form>
                 </div>
             </div>
-            
+
             <div id="dialog-add-item" style="display:none;z-index:1;">
                 <input type="hidden" id="dialogMode" value="" />
                 <input type="hidden" id="editId" value="" />
-	            <table class="collapse tblForm row-select">
-		            <tbody class="tbl-nohover">
-		            	 <tr class="detail_genap">
-		            	 	<td width="15px"></td>
-		                    <td width="20%">Fish Type</td>
-		                    <td class="style1">
-		                        <label>
-		                            <select id="fishType" name="fishId">
-		                            	<c:forEach items="${model.fishes}" var="fish">
-		                            		<option value="${fish.id}">
-		                            			<c:out value="${fish.code}" />
-		                            		</option>
-		                            	</c:forEach>
-		                            </select>
-		                            <label class="requiredfield" title="This Field Is Required!">*</label>
-		                        </label>
-		                    </td>
-		               	 </tr>
-		               	 <tr>
-		               	 <td width="15px"></td>
-		               	 <td width="20%">Total Weight</td>
-		                    <td class="style1">
-		                        <label>                                                                                                                                                                             
-		                            <input type="text" id="totalWeight" name="totalWeight" size="10" id="fishTotalWeight" value="" 
-		                            class="validate[required] text-input numeric" /> Kg 
-		                            <label class="requiredfield" title="This Field Is Required!">*</label>                                                           
-		                        </label>
-		                    </td> 
-		               	 </tr>
-		            </tbody>
-		            <tfoot class="ui-widget-header">
-	                    <tr><td colspan="7">
-	                            <label>
-	                                <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
-	                                       role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-	                                       name="btnSave" id="btnItemSet" value="Set" class="simpan" />
-	                            </label>
-	                        </td>
-	                    </tr>
-                  </tfoot>
-	        	</table>
+                <table class="collapse tblForm row-select">
+                    <tbody class="tbl-nohover">
+                        <tr class="detail_genap">
+                            <td width="15px"></td>
+                            <td width="20%">Fish Type</td>
+                            <td class="style1">
+                                <label>
+                                    <select id="fishType" name="fishId">
+                                        <c:forEach items="${model.fishes}" var="fish">
+                                            <option value="${fish.id}">
+                                                <c:out value="${fish.code}" />
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                    <label class="requiredfield" title="This Field Is Required!">*</label>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="15px"></td>
+                            <td width="20%">Total Weight</td>
+                            <td class="style1">
+                                <label>                                                                                                                                                                             
+                                    <input type="text" id="totalWeight" name="totalWeight" size="10" id="fishTotalWeight" value="" 
+                                           class="validate[required] text-input numeric" /> Kg 
+                                    <label class="requiredfield" title="This Field Is Required!">*</label>                                                           
+                                </label>
+                            </td> 
+                        </tr>
+                    </tbody>
+                    <tfoot class="ui-widget-header">
+                        <tr><td colspan="7">
+                                <label>
+                                    <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
+                                           role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
+                                           name="btnSave" id="btnItemSet" value="Set" class="simpan" />
+                                </label>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
             <div id="dialog-ajaxSearch" title="Batch Number Search" style="display:none;z-index:1;">
-	        	<label>Batch Number</label>
-	        	<label>:</label>
-	        	<input type="text" id="query" size="30" class="text-input"/>
-	        	<input type="button" id="ajaxSearchBtn" style="font-size: smaller;" aria-disabled="false"                                                    
-	                                                   role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-	                                                   name="btnBatchNumSearch" id="btnSave" value="Search" class="search" />
-	        	<table id="list"></table> 
-	            <div id="pager"></div> 
-        	</div>
-        	
+                <label>Batch Number</label>
+                <label>:</label>
+                <input type="text" id="query" size="30" class="text-input"/>
+                <input type="button" id="ajaxSearchBtn" style="font-size: smaller;" aria-disabled="false"                                                    
+                       role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
+                       name="btnBatchNumSearch" id="btnSave" value="Search" class="search" />
+                <table id="list"></table> 
+                <div id="pager"></div> 
+            </div>
+
             <div class="span-24 last border-top">
                 <div class="box">
                     &copy; 2013 SPFI
                 </div>
             </div>
         </div>
-        
+
         <script type="text/javascript">
             $(function() {
                 $('#btnBack').click(function() {
@@ -383,8 +383,8 @@
                     return false;
                 });
 
-                $('#dateShift').datepicker({                        
-                    dateFormat: "dd/mm/yy"                        
+                $('#dateShift').datepicker({
+                    dateFormat: "dd/mm/yy"
                 });
             });
         </script>
@@ -395,49 +395,58 @@
                 });
             });
 
-            $("#btnSave").click(function () {                         
+            $("#btnSave").click(function() {
 
                 //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
+                if (!$("#addForm").validationEngine('validate')) {
                     $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
+                        open: function() {
+                            $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+                            $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+                        },
+                        title: 'Incomplete Form',
+                        resizable: false,
+                        height: 120,
+                        modal: true,
+                        buttons: {
+                            "Ok": function() {
+                                $(this).dialog("close");
                             }
-                        });
+                        }
+                    });
                     return false;
-                 }
-                
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
+                }
+
+                $("#dialog-confirm").dialog({width: 300, height: 150, position: "center", modal: true,
                     buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
+                        "Cancel": function() {
+                            $(this).dialog("close");
                         },
                         "Save": function() {
                             $("form#addForm").submit();
                         }
                     },
-                    zindex: 1, title: 'Confirm' });
+                    zindex: 1, title: 'Confirm'});
 
+            });
+            
+            $('#wsTypeId').bind('change', function() {
+                if($(this).find('option:selected').html().trim() === 'WSNC') {
+                    $('#storageId').attr('onchange', '');
+                } else {
+                    $('#storageId').attr('onchange', 'this.selectedIndex = 0;');
+                    $('#storageId option:eq(0)').prop('selected', true);
+                }
             });
         </script>
         <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
             Save data?
         </div>
-        
+
         <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
             Please to fill mandatory data
         </div>
-        
+
         <div id="dialog-not-unique" title="incomplete" style="display:none;z-index:1;">
             "WS No." is not unique
         </div>      

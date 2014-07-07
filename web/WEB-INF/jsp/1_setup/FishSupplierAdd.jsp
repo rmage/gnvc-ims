@@ -31,7 +31,7 @@
                                     <td>
                                         <label>
                                            <input type="text" name="code" id="code" size="30"                                                    
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -40,7 +40,7 @@
                                     <td>
                                         <label>                                                                                                                                                                             
                                             <input type="text" name="telp" id="code" size="30"                                                    
-                                                   value="" pattern="^\S+[0-9]+\S" required="true" />
+                                                   value="" pattern="^\S+[0-9]" required="true" />
                                             <label>*</label>
                                             </select>                                                            
                                         </label>
@@ -52,7 +52,7 @@
                                     <td>
                                         <label>
                                             <input type="text" name="name" id="name" size="30"                                                    
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]+\S" required="true" />
+                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -60,7 +60,7 @@
                                     <td>Fax</td>
                                     <td>
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="fax" size="25" id="fax" value="" pattern="^\S+[0-9]+\S" />                                                          
+                                            <input type="text" name="fax" size="25" id="fax" value="" pattern="^\S+[0-9]" />                                                          
                                         </label>
                                     </td>
                                	 </tr>
@@ -70,7 +70,7 @@
                                     <td>
                                         <label>
                                             <textarea type="text" name="address" id="address" rows="5" cols="40"                                                   
-                                                      value="" pattern="^\S+[A-Za-z0-9 ]+\S" required="true"/></textarea>
+                                                      value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"/></textarea>
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -88,7 +88,7 @@
                                     <td>
                                         <label>
                                             <input type="text" name="cp" id="cp" size="30"                                                    
-                                                   value="" pattern="^\S+[A-Za-z0-9]+\S" required="true" />
+                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>

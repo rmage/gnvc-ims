@@ -7,28 +7,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS - Generate Report</title>
+        <title>IMS &there4; Weight Slip Summary</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function() {
 
                 $('#addForm').validationEngine('attach');
 
-                $('#dateShift').datepicker({
-                    dateFormat: "yy-mm-dd"
-                });
+                $('#dateShiftF').datepicker({ dateFormat: "yy-mm-dd" });
+                $('#dateShiftT').datepicker({ dateFormat: "yy-mm-dd" });
 
                 // added by edw -- adding report title
-                $('#btnGenerate').click(function() {
-                    var type = $('#type').val();
-                    var vesselId = $('#vesselId').val();
-                    var dateShift = $('#dateShift').val();
-                    var fishType = $('#fishType').val();
-                    var params = vesselId + ":" + dateShift + ":" + fishType;
-                    var url = "GenerateReport.htm?action=index&type=" + type + "&item=FSummaryWSSlip" + "&params=" + params+"&fishType=" + fishType.toUpperCase();
-
-                    location.href = url;
-                });
+//                $('#btnGenerate').click(function() {
+//                    var type = $('#type').val();
+//                    var vesselId = $('#vesselId').val();
+//                    var dateShift = $('#dateShift').val();
+//                    var fishType = $('#fishType').val();
+//                    var params = vesselId + ":" + dateShift + ":" + fishType;
+//                    var url = "GenerateReport.htm?action=index&type=" + type + "&item=FSummaryWSSlip" + "&params=" + params + "&fishType=" + fishType.toUpperCase();
+//
+//                    location.href = url;
+//                });
 
                 $('#batchNo').click(function() {
                     $("#dialog-ajaxSearch").dialog({
@@ -82,10 +81,10 @@
             <div id="content" style="display: none" class="span-24 last">
 
                 <div class="box">
-                    <form action="FishReport.htm" method="post" name="form" id="addForm">
+                    <form action="FishReport.htm" method="post" name="form" id="wssForm">
                         <input type="hidden" name="vesselId" id="vesselId" value="0" />
                         <table class="collapse tblForm row-select">
-                            <caption>Generate WSSummary Report</caption>
+                            <caption>Weight Slip Summary &there4; Generate</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
                                     <td class="style1">Batch No.</td>
@@ -100,18 +99,16 @@
                                     <td>Fish Type</td>
                                     <td>
                                         <select id="fishType" name="fishType">
-                                            <option value="fresh">Fresh</option>
-                                            <option value="frozen">Frozen</option>
+                                            <option value="FishWssFresh">FRESH</option>
+                                            <option value="FishWssFrozen">FROZEN</option>
                                         </select>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="style1">Date Shift</td>
                                     <td class="style1">
-                                        <label>
-                                            <input type="text" id="dateShift" name="dateShift" 
-                                                   value="<%=df.format(new Date())%>" size="30" class="text-input"/>
-                                        </label>
+                                        From: <input type="text" id="dateShiftF" name="dateShift" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                        To: <input type="text" id="dateShiftT" name="dateShift" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -119,7 +116,7 @@
                                     <td class="style1">
                                         <select id="type" name="type">
                                             <option value="pdf">PDF</option>
-                                            <option value="xls">XLS</option>
+                                            <option value="xls" selected="selected">XLS</option>
                                             <option value="csv">CSV</option>
                                         </select>
                                     </td>
@@ -134,7 +131,7 @@
                             <tfoot class="ui-widget-header">
                                 <tr><td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false" 
+                                            <input type="submit" style="font-size: smaller;" aria-disabled="false" 
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnGenerate" id="btnGenerate" value="Generate Report" class="save" />
                                         </label>
@@ -160,6 +157,13 @@
                     &copy; 2013 SPFI
                 </div>
             </div>
-        </div>                                     
+        </div>
+        <script>
+            $('#wssForm').bind('submit', function() {
+                window.location = 'GenerateReport.htm?action=index&item=' + $('#fishType').val() + '&type=' + $('#type').val() + 
+                        '&params=' + $('#batchNo').val() + ':' + $('#dateShiftF').val() + ':' + $('#dateShiftT').val() + ':' + $('#fishType option:selected').html();
+                return false;
+            });
+        </script>
     </body>
 </html>
