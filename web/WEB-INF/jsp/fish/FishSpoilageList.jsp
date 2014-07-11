@@ -162,15 +162,9 @@
                                                         '${spoilageData.dateShift}', '${spoilageData.timeShift}')"><c:out value="${spoilageData.vessel.batchNo}"/></a></td>
                                         <td class="left"><c:out value="${spoilageData.dateShift}"/></td>
                                         <td class="left"><c:out value="${spoilageData.timeShift}"/></td>
-                                        <td class="right"><fmt:formatNumber type="number" 
-                                                          maxFractionDigits="2" minFractionDigits="2"
-                                                          value="${spoilageData.rawWeight}"></fmt:formatNumber></td>
-                                        <td class="right"><fmt:formatNumber type="number" 
-                                                          maxFractionDigits="2" minFractionDigits="2"
-                                                          value="${spoilageData.cookedWeight}"></fmt:formatNumber></td>
-                                        <td class="right"><fmt:formatNumber type="number" 
-                                                          maxFractionDigits="2" minFractionDigits="2"
-                                                          value="${spoilageData.totalProcessed}"></fmt:formatNumber></td>
+                                        <td class="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${spoilageData.cookedWeight}"></fmt:formatNumber></td>
+                                        <td class="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${spoilageData.rawWeight}"></fmt:formatNumber></td>
+                                        <td class="right"><fmt:formatNumber type="number" maxFractionDigits="2" minFractionDigits="2" value="${spoilageData.totalProcessed}"></fmt:formatNumber></td>
                                         </tr>
                                 </c:forEach>
                             </c:if>

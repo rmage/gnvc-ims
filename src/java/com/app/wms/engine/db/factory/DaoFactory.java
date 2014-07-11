@@ -855,4 +855,15 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (PalletTransferDao) bf.getBean("PalletTransferDao");
     }
+    
+    /* GNVS | Fish Module */
+    public static BrineFreezingDao createBrineFreezingDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (BrineFreezingDao) bf.getBean("BrineFreezingDao");
+    }
+    
+    public static AirBlastFreezingDao createAirBlastFreezingDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (AirBlastFreezingDao) bf.getBean("AirBlastFreezingDao");
+    }
 }

@@ -142,7 +142,7 @@ public class FishSpoilageDataController extends MultiActionController {
             int vesselId = Integer.valueOf(request.getParameter("vesselId"));
 
             for (int i = 1; i <= totalData; i++) {
-                String catcherNo = request.getParameter("catcherNo" + i);
+                String area = request.getParameter("area" + i);
                 int fishId = Integer.valueOf(request.getParameter("fishId" + i));
                 Double cookedWeight = Double.valueOf(request.getParameter("cookedWeight" + i));
                 Double rawWeight = Double.valueOf(request.getParameter("rawWeight" + i));
@@ -150,7 +150,7 @@ public class FishSpoilageDataController extends MultiActionController {
                 String reason = request.getParameter("reason" + i);
 
                 FishSpoilage dto = new FishSpoilage();
-                dto.setCatcherNo(catcherNo);
+                dto.setCatcherNo(area);
                 dto.setDateShift(dateShift);
                 dto.setTimeShift(timeShift);
                 dto.setVesselId(vesselId);

@@ -115,6 +115,15 @@
                             $('#supplierName').val(localRowData.supplierName);
                             $('#vesselId').val(localRowData.vesselId);
                             $('#dialog-ajaxSearch').dialog('close');
+                            
+                            if(localRowData.batchNo.slice(-1) === 'F') {
+                                $('#wsTypeId').find('option:contains(WSNR), option:contains(WSNC)').attr('disabled', true);
+                                $('#wsTypeId').find('option:contains(WSHR), option:contains(WSBF), option:contains(WSABF), option:contains(WSL)').attr('disabled', false);
+                            } else {
+                                $('#wsTypeId').find('option:contains(WSNR), option:contains(WSNC)').attr('disabled', false);
+                                $('#wsTypeId').find('option:contains(WSHR), option:contains(WSBF), option:contains(WSABF), option:contains(WSL)').attr('disabled', true);
+                            }
+                            $('#wsTypeId').val(-1);
                         },
                         pager: '#pager', sortname: 'batchNo', viewrecords: true, sortorder: "desc"}
                     ).trigger("reloadGrid");
@@ -185,9 +194,7 @@
                                         <label>
                                             <select id="wsTypeId" name="wsTypeId">
                                                 <c:forEach items="${model.wsTypes}" var="wsType">
-                                                    <option value="${wsType.id}">
-                                                        <c:out value="${wsType.code}" />
-                                                    </option>
+                                                    <option value="${wsType.id}" disabled="disabled">${wsType.code}</option>
                                                 </c:forEach>
                                             </select>
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
@@ -429,9 +436,9 @@
                     zindex: 1, title: 'Confirm'});
 
             });
-            
+
             $('#wsTypeId').bind('change', function() {
-                if($(this).find('option:selected').html().trim() === 'WSNC') {
+                if ($(this).find('option:selected').html().trim() === 'WSNC') {
                     $('#storageId').attr('onchange', '');
                 } else {
                     $('#storageId').attr('onchange', 'this.selectedIndex = 0;');

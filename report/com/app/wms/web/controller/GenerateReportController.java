@@ -157,6 +157,13 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FishSumPerSupp, "EXEC RPT_FR_SUMMARY_PER_SUPPLIER ?");
         ListMap.put(Report.FishSumPerCS, "EXEC RPT_FR_SUMMARY_PER_COLDSTORAGE ?");
         ListMap.put(Report.FishStockCard, "EXEC RPT_FR_STOCK_CARD ?");
+        ListMap.put(Report.FishTS, "EXEC PRT_F_TRANSFER_SLIP ?");
+        ListMap.put(Report.FishBF, "EXEC PRT_F_BRINE_FREEZING ?");
+        ListMap.put(Report.FishABF, "EXEC PRT_F_AIR_BLAST_FREEZING ?");
+        ListMap.put(Report.FishSumPerSuppActual, "EXEC RPT_FR_SUMMARY_PER_SUPPLIER_ACTUAL ?");
+        ListMap.put(Report.FishSumPerCSActual, "EXEC RPT_FR_SUMMARY_PER_COLDSTORAGE_ACTUAL ?");
+        ListMap.put(Report.FishStockCardActual, "EXEC RPT_FR_STOCK_CARD_ACTUAL ?");
+        ListMap.put(Report.FishWDS, "EXEC PRT_F_WITHDRAWAL ?");
         //  ***END*** | Fish Module | Form and Report List
 
         ListMap.put(Report.FWS,

@@ -28,6 +28,7 @@
                         <input type="hidden" name="action" value="save" />
                     </form>
                     <form id="rrForm" method="post">
+                        <input type="hidden" id="type" />
                         <input id="dateFrom" type="hidden" name="dateFrom" value="<%=cDateH%>" />
                         <input id="dateTo" type="hidden" name="dateTo" value="<%=cDateH%>" />
                         <table class="collapse tblForm row-select">
@@ -66,10 +67,10 @@
                             <thead>
                                 <tr>
                                     <td colspan="6">
-                                        <select id="type">
+<!--                                        <select id="type">
                                             <option>FRESH</option>
                                             <option>FROZEN</option>
-                                        </select>
+                                        </select>-->
                                         <input id="getWs" type="button" value="Get Weight Slip" readonly="readonly" />
                                     </td>
                                 </tr>
@@ -101,10 +102,18 @@
             $('#dateShiftT').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#dateTo", altFormat: "yy-mm-dd"});
             $('#batchNo').autocomplete({
                 source: '?action=getBatchInfo',
-                minLength: 8,
+                minLength: 3,
                 select: function(event, ui) {
+                    $('#batchNo').val(ui.item.batchNo);
                     $('#info').html(ui.item.boat + ' / ' + ui.item.supplier);
                     $('#dateShiftF').focus();
+                    
+                    if(ui.item.batchNo.slice(-1) === 'F') {
+                        $('#type').val('FRESH');
+                    } else {
+                        $('#type').val('FROZEN');
+                    }
+                    
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {

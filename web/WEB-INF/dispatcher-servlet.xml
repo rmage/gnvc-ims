@@ -307,8 +307,14 @@
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
-    <!-- GNVS | New Fish Created Fish Inventory -->
-    <bean name="/FishReceivingReport.htm" class="com.spfi.ims.controller.ReceivingReportFishController">
+    <!-- GNVS | Fish Module -->
+    <bean name="/FishReceivingReport.htm" class="com.spfi.ims.controller.FishReceivingReportController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/BrineFreezing.htm" class="com.spfi.ims.controller.FishBrineFreezingController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AirBlastFreezing.htm" class="com.spfi.ims.controller.FishAirBlastFreezingController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
 </beans>

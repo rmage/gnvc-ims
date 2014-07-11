@@ -182,8 +182,10 @@ public class FishWsController extends MultiActionController {
                     FishWSType wsTypesFrz = wsTypeDao.findTypeCodeById(wsTypeId.intValue());
                     String wsTypeFrozen = wsTypesFrz.getCode();
                     FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
-                    FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(vesselId, dto.getStorageId(),
-                            wsDetail.getFishId());
+                    FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(vesselId, dto.getStorageId(), wsDetail.getFishId());
+                    
+                    /* GNVS | Actual Balance */
+                    FishBalance fishBalanceActual = fishBalanceDao.findUniqueFishBalanceActual(vesselId, dto.getStorageId(), wsDetail.getFishId());
 
                     if (wsTypeFrozen.equalsIgnoreCase("WSBF") || wsTypeFrozen.equalsIgnoreCase("WSABF")
                             || wsTypeFrozen.equalsIgnoreCase("WSNC")) {
@@ -224,6 +226,46 @@ public class FishWsController extends MultiActionController {
 
                         FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
                         balanceHistoryDao.insert(fishBalanceHistory);
+                        
+                        /* GNVS | Actual Balance */
+                        if(wsTypeFrozen.equalsIgnoreCase("WSNC")) {
+                            if (fishBalanceActual != null) {
+                                Double balance = fishBalanceActual.getBalance();
+                                fishBalanceActual.setBalance(balance + wsDetail.getTotalWeight());
+                                fishBalanceActual.setUpdatedDate(new Date());
+                                fishBalanceActual.setUpdatedBy(user.getUserId());
+                                fishBalanceDao.updateActual(fishBalanceActual.getId(), fishBalanceActual);
+                            } else {
+                                fishBalanceActual = new FishBalance();
+                                fishBalanceActual.setVesselId(vesselId);
+                                fishBalanceActual.setStorageId(dto.getStorageId());
+                                fishBalanceActual.setFishId(wsDetail.getFishId());
+                                fishBalanceActual.setBalance(wsDetail.getTotalWeight());
+                                fishBalanceActual.setCreatedDate(new Date());
+                                fishBalanceActual.setCreatedBy(user.getUserId());
+                                fishBalanceActual.setIsActive("Y");
+                                fishBalanceActual.setIsDelete("N");
+                                int balanceId = fishBalanceDao.insertActual(fishBalanceActual);
+                                fishBalanceActual = fishBalanceDao.findByPrimaryKeyActual(balanceId);
+                            }
+
+                            //insert balance history actual
+                            Double currentBalanceActual = fishBalanceActual.getBalance();
+                            FishBalanceHistory fishBalanceHistoryActual = new FishBalanceHistory();
+                            fishBalanceHistoryActual.setDocNo(wsNo);
+                            fishBalanceHistoryActual.setBatchNo(fishBalanceActual.getVessel().getBatchNo());
+                            fishBalanceHistoryActual.setFishType(fishBalanceActual.getFish().getCode());
+                            fishBalanceHistoryActual.setStorage(fishBalanceActual.getStorageId() == 0 ? "FROZEN" : fishBalanceActual.getStorage().getCode());
+                            fishBalanceHistoryActual.setQtyIn(wsDetail.getTotalWeight());
+                            fishBalanceHistoryActual.setQtyOut(Double.valueOf("0"));
+                            fishBalanceHistoryActual.setBalance(currentBalanceActual);
+                            fishBalanceHistoryActual.setCreatedDate(new Date());
+                            fishBalanceHistoryActual.setCreatedBy(user.getUserId());
+                            fishBalanceHistoryActual.setIsActive("Y");
+                            fishBalanceHistoryActual.setIsDelete("N");
+
+                            balanceHistoryDao.insertActual(fishBalanceHistoryActual);
+                        }
                     }
                 }
             }

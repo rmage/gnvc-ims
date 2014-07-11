@@ -60,6 +60,15 @@
                             $('#vesselId').val(localRowData.vesselId);
                             $('#batchNo').val(localRowData.batchNo);
                             $('#dialog-ajaxSearch').dialog('close');
+                            
+                            // auto select type of document weight slip
+                            if(localRowData.batchNo.slice(-1) === 'F') {
+                                $('#fishType').val('FishWssFresh');
+                                $('#fishTypeHTML').val('FRESH');
+                            } else {
+                                $('#fishType').val('FishWssFrozen');
+                                $('#fishTypeHTML').val('FROZEN');
+                            }
                         },
                         pager: '#pager', sortname: 'batchNo', viewrecords: true, sortorder: "desc"}
                     ).trigger("reloadGrid");
@@ -83,6 +92,8 @@
                 <div class="box">
                     <form action="FishReport.htm" method="post" name="form" id="wssForm">
                         <input type="hidden" name="vesselId" id="vesselId" value="0" />
+                        <input type="hidden" id="fishType" name="fishType" value="" />
+                        <input type="hidden" id="fishTypeHTML" name="fishTypeHTML" value="" />
                         <table class="collapse tblForm row-select">
                             <caption>Weight Slip Summary &there4; Generate</caption>
                             <tbody class="tbl-nohover">                          
@@ -95,7 +106,7 @@
                                         </label>
                                     </td>
                                 </tr>
-                                <tr>
+<!--                                <tr>
                                     <td>Fish Type</td>
                                     <td>
                                         <select id="fishType" name="fishType">
@@ -103,12 +114,12 @@
                                             <option value="FishWssFrozen">FROZEN</option>
                                         </select>
                                     </td>
-                                </tr>
+                                </tr>-->
                                 <tr>
                                     <td class="style1">Date Shift</td>
                                     <td class="style1">
-                                        From: <input type="text" id="dateShiftF" name="dateShift" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
-                                        To: <input type="text" id="dateShiftT" name="dateShift" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                        From: <input type="text" id="dateShiftF" name="dateShift" value="<%=df.format(new Date())%>" size="10" class="text-input"/>
+                                        To: <input type="text" id="dateShiftT" name="dateShift" value="<%=df.format(new Date())%>" size="10" class="text-input"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -161,7 +172,7 @@
         <script>
             $('#wssForm').bind('submit', function() {
                 window.location = 'GenerateReport.htm?action=index&item=' + $('#fishType').val() + '&type=' + $('#type').val() + 
-                        '&params=' + $('#batchNo').val() + ':' + $('#dateShiftF').val() + ':' + $('#dateShiftT').val() + ':' + $('#fishType option:selected').html();
+                        '&params=' + $('#batchNo').val() + ':' + $('#dateShiftF').val() + ':' + $('#dateShiftT').val() + ':' + $('#fishTypeHTML').val();
                 return false;
             });
         </script>

@@ -234,7 +234,7 @@ public class FishRrDaoImpl extends AbstractDAO implements
     }
     
     public List<Map<String, Object>> getBatchInfo(String batchNo) {
-        return jdbcTemplate.queryForList("SELECT fv.batch_no, fs.name as supplier, fv.name as boat FROM fish_vessel fv INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id WHERE fv.batch_no = ?", batchNo);
+        return jdbcTemplate.queryForList("SELECT fv.batch_no, fs.name as supplier, fv.name as boat FROM fish_vessel fv INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id WHERE fv.batch_no LIKE '%" + batchNo + "%'");
     }
     
     public List<Map<String, Object>> getWeightSlip(String batchNo, String dateFrom, String dateTo, String type) {

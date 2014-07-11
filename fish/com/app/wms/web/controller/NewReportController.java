@@ -484,5 +484,17 @@ public class NewReportController extends MultiActionController {
     public ModelAndView getSummaryReportPerCS(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishSummaryPerCS");
     }
+    
+    public ModelAndView getFishStockCardActual(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/FishStockCardActual");
+    }
+    
+    public ModelAndView getSummaryReportPerSupplierActual(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/FishSummaryPerSupplierActual");
+    }
+    
+    public ModelAndView getSummaryReportPerCSActual(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/FishSummaryPerCSActual");
+    }
 
 }

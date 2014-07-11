@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-public class ReceivingReportFishController extends MultiActionController {
+public class FishReceivingReportController extends MultiActionController {
 
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         /* DATA | get initial value */

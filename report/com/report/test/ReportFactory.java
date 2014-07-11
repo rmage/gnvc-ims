@@ -37,7 +37,7 @@ public class ReportFactory {
 //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
 //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         //  Fish Module | Form and Report List
-        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard
+        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS
         ; 
     }
 
@@ -74,6 +74,20 @@ public class ReportFactory {
         reportMap.put(Report.FishSumPerCS, reportTemplateMap.get("FishSumPerCS"));
         reportTemplateMap.put("FishStockCard", new ReportModel("fish/sc", false));
         reportMap.put(Report.FishStockCard, reportTemplateMap.get("FishStockCard"));
+        reportTemplateMap.put("FishTS", new ReportModel("fish/ts", false));
+        reportMap.put(Report.FishTS, reportTemplateMap.get("FishTS"));
+        reportTemplateMap.put("FishBF", new ReportModel("fish/bf", false));
+        reportMap.put(Report.FishBF, reportTemplateMap.get("FishBF"));
+        reportTemplateMap.put("FishABF", new ReportModel("fish/abf", false));
+        reportMap.put(Report.FishABF, reportTemplateMap.get("FishABF"));
+        reportTemplateMap.put("FishSumPerSuppActual", new ReportModel("fish/sumpsuppa", false));
+        reportMap.put(Report.FishSumPerSuppActual, reportTemplateMap.get("FishSumPerSuppActual"));
+        reportTemplateMap.put("FishSumPerCSActual", new ReportModel("fish/sumpcsa", false));
+        reportMap.put(Report.FishSumPerCSActual, reportTemplateMap.get("FishSumPerCSActual"));
+        reportTemplateMap.put("FishStockCardActual", new ReportModel("fish/sca", false));
+        reportMap.put(Report.FishStockCardActual, reportTemplateMap.get("FishStockCardActual"));
+        reportTemplateMap.put("FishWDS", new ReportModel("fish/wds", false));
+        reportMap.put(Report.FishWDS, reportTemplateMap.get("FishWDS"));
         
         reportTemplateMap.put("IMDR", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));

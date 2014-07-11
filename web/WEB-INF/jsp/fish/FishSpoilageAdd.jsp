@@ -92,7 +92,7 @@
                 $('#btnSetItem').click(function() {
                     var fishId = $('#fishId').val();
                     var fishType = $('#fishId option:selected').html();
-                    var catcherNo = $('#catcherNo').val();
+                    var area = $('#area').val();
                     var rawWeight = $('#rawWeight').val();
                     var cookedWeight = $('#cookedWeight').val();
                     var totalProcessed = $('#totalProcessed').val();
@@ -102,8 +102,8 @@
 
                     $("<tr class='ganjil'>" +
                             "<td class='center'>" + rowCount + "</td>" +
-                            "<td class='center'>" + catcherNo + "</td>" +
-                            "<input id='catcherNo" + rowCount + "' type='hidden' name='catcherNo" + rowCount + "' value='" + catcherNo + "' />" + "</td>" +
+                            "<td class='center'>" + area + "</td>" +
+                            "<input id='area" + rowCount + "' type='hidden' name='area" + rowCount + "' value='" + area + "' />" + "</td>" +
                             "<td id='fishType" + rowCount + "' class='style1'>" + fishType + "</td>" +
                             "<input id='fishId" + rowCount + "' type='hidden' name='fishId" + rowCount + "' value='" + fishId + "' />" + "</td>" +
                             "<td class='right'>" + addCommas(cookedWeight) + "</td>" +
@@ -119,18 +119,13 @@
                     $('#totalData').val(rowCount);
                     $('#dialog-spoilage').dialog('close');
                 });
+                
+                $('#area').bind('change', function() { $('#cookedWeight').trigger('keyup'); });
 
-//                $('#cookedWeight').keyup(function() {
-//                    var spoilageWeight = $('#cookedWeight').val();
-//                    var rawWeight = $('#rawWeight').val();
-//                    $('#totalProcessed').val(rawWeight - spoilageWeight);
-//                });
-//
-//                $('#rawWeight').keyup(function() {
-//                    var spoilageWeight = $('#cookedWeight').val();
-//                    var rawWeight = $('#rawWeight').val();
-//                    $('#totalProcessed').val(rawWeight - spoilageWeight);
-//                });
+                $('#cookedWeight').keyup(function() {
+                    var multiplier = {SKINNING: 2.0, LOINING: 2.75, RECEIVING: 1.0, PACKING: 2.75};
+                    $('#rawWeight').val((multiplier[$('#area').val()] * $('#cookedWeight').val()).toFixed(2));
+                });
             });
 
             function addCommas(nStr) {
@@ -201,9 +196,9 @@
                             <thead>
                                 <tr>
                                     <td class="style1">No.</td>
-                                    <td class="center">Catcher No.</td>
+                                    <td class="center">Area</td>
                                     <td class="center">Fish Type</td>
-                                    <td class="center">Spoilage Weight</td>
+                                    <td class="center">Cooked Weight</td>
                                     <td class="center">Raw Weight</td>
                                     <td class="center">Total Processed</td>
                                     <td class="center">Reason</td>
@@ -263,22 +258,28 @@
                             </td>
                         </tr>
                         <tr>
-                            <td width="30%">Catcher No.</td>
+                            <td width="30%">Area </td>
                             <td>:</td>
-                            <td><input type="text" id="catcherNo" name="catcherNo" value="" 
-                                       size="30" class="validate[required] text-input"/></td>
+                            <td>
+                                <select id="area" name="area">
+                                    <option>SKINNING</option>
+                                    <option>LOINING</option>
+                                    <option>RECEIVING</option>
+                                    <option>PACKING</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <td width="30%">Cooked Weight</td>
                             <td>:</td>
-                            <td><input type="text" id="rawWeight" name="rawWeight" 
+                            <td><input type="text" id="cookedWeight" name="cookedWeight" 
                                        value="0" size="30" class="validate[required] text-input"/> Kg</td>
                         </tr>
                         <tr>
                             <td width="30%">Raw Weight</td>
                             <td>:</td>
-                            <td><input type="text" id="cookedWeight" name="cookedWeight" 
-                                       value="0" size="30" class="validate[required] text-input"/> Kg</td>
+                            <td><input type="text" id="rawWeight" name="rawWeight" 
+                                       value="0" size="30" class="validate[required] text-input" readonly="readonly"/> Kg</td>
                         </tr>
                         <tr>
                             <td width="30%">Total Processed</td>

@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>IMS - Fish Transfer Slip List</title>
+        <title>IMS &there4; Transfer Slip</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
             $(document).ready(function() {
@@ -85,7 +85,7 @@
                 <div class="box">
                     <form action="FishTs.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search Fish Transfer Slip</caption>
+                            <caption>Transfer Slip &there4; Search</caption>
                             <tbody>
                                 <tr>
                                     <td width="20%">
@@ -124,7 +124,7 @@
                         </table>
                     </form>
                     <table class="collapse tblForm row-select">
-                        <caption>Fish Transfer Slip - Search Result</caption>
+                        <caption>Transfer Slip &there4; List</caption>
                         <thead>
                             <tr>
                                 <td class="left">No</td>
@@ -159,38 +159,9 @@
                                             <c:param name="action" value="inactivate"/>
                                         </c:url>
 
-                                        <c:url value="GeneralReport.htm" var="urlReportXLS">
-                                            <c:param name="tsId" value="${tsData.id}"/>
-                                            <c:param name="format" value="xls" />
-                                            <c:param name="action" value="getTsReportById"/>
-                                        </c:url>
-
-                                        <c:url value="GeneralReport.htm" var="urlReportPDF">
-                                            <c:param name="tsId" value="${tsData.id}"/>
-                                            <c:param name="format" value="pdf" />
-                                            <c:param name="action" value="getTsReportById"/>
-                                        </c:url>
-
-                                        <c:url value="GenerateReport.htm" var="urlReportCSV">
-                                            <c:param name="action" value="index"/>
-                                            <c:param name="item" value="FTS" />
-                                            <c:param name="type" value="csv" />
-                                            <c:param name="params" value="${tsData.id}"/>
-                                        </c:url>
-
                                         <td class="left" width="10%">
-                                            <%-- 
-                                                <a href='<c:out value="${urlEdit}"/>'>
-                                                    <img src="resources/images/edit.gif" width="16" height="16" /></a> --%>
-
-                                            <a href='<c:out value="${urlReportPDF}"/>'>
-                                                <img src="resources/images/print.jpg" width="16" height="16" alt="pdf" /></a>&nbsp;&nbsp;
-                                            <a href='<c:out value="${urlReportXLS}"/>'>
+                                            <a href='GenerateReport.htm?action=index&type=xls&item=FishTS&params=${tsData.id}'>
                                                 <img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>&nbsp;&nbsp;
-                                            <a href='<c:out value="${urlReportCSV}"/>'>
-                                                <img src="resources/images/csv.png" width="16" height="16" alt="csv" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <!-- <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
-                                                <img src="resources/images/delete.gif" width="16" height="16" /></a> -->
                                         </td>
                                         <td class="left"><a id="${tsData.id}" onclick="showDetails(this)"><c:out value="${tsData.tsNo}"/></a></td>
                                         <td class="left"><c:out value="${tsData.withdrawalSlip.wdsNo}"/></td>
