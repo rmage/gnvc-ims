@@ -140,7 +140,7 @@ public class LoginController implements Controller {
 		try{
                     //  XXX : FYA | Database Connection Setting
                     Class.forName("net.sourceforge.jtds.jdbc.Driver");
-                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://192.168.11.253:1433/inventory","sa","qts1n@r");
+                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://7.51.9.228:1433/inventory","sa","qts1n@r");
 //                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://7.35.130.2:1433/inventory","sa","sa");
 //                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://192.168.0.231:1433/inventory","sa","sa");
                     return connect;

@@ -65,7 +65,7 @@
                     $('#dialog-add-item').dialog('close');
                 });
 
-                $('#wsNo').focus().on("blur", function() {
+                $('#wsNo').on("blur", function() {
                     var wsNo = $('#wsNo').val();
                     $.ajax({
                         url: "FishJson.htm?action=checkWsNo&query=" + wsNo,
@@ -189,15 +189,13 @@
                             <tbody class="tbl-nohover">
                                 <tr class="detail_genap">
                                     <td></td>
-                                    <td width="20%">WS Type</td>
+                                    <td width="20%">Batch No</td>
                                     <td class="style1">
                                         <label>
-                                            <select id="wsTypeId" name="wsTypeId">
-                                                <c:forEach items="${model.wsTypes}" var="wsType">
-                                                    <option value="${wsType.id}" disabled="disabled">${wsType.code}</option>
-                                                </c:forEach>
-                                            </select>
+                                            <input type="text" name="batchNo" id="batchNo" size="30"                                                    
+                                                   readonly="readonly"  value="" class="validate[required] text-input" />
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
+                                            <img width="16" height="16" src="resources/images/search.png" alt="Search Product" />
                                         </label>
                                     </td>
                                     <td></td>
@@ -217,11 +215,11 @@
                                 </tr>
                                 <tr class="detail_genap">
                                     <td></td>
-                                    <td width="20%">WS No</td>
+                                    <td width="20%">Supplier Name</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="wsNo" id="wsNo" size="30"                                                    
-                                                   value="" class="validate[required] text-input numeric" />
+                                            <input type="text" name="supplierName" id="supplierName" size="30"                                                    
+                                                   readonly="readonly" value="" class="validate[required] text-input" />
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>
@@ -237,13 +235,12 @@
                                 </tr>
                                 <tr class="detail_genap">
                                     <td></td>
-                                    <td width="20%">Batch No</td>
+                                    <td width="20%">WS No</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="batchNo" id="batchNo" size="30"                                                    
-                                                   readonly="readonly"  value="" class="validate[required] text-input" />
+                                            <input type="text" name="wsNo" id="wsNo" size="30"                                                    
+                                                   value="" class="validate[required] text-input numeric" />
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
-                                            <img width="16" height="16" src="resources/images/search.png" alt="Search Product" />
                                         </label>
                                     </td>
                                     <td></td>
@@ -260,11 +257,14 @@
                                 </tr>
                                 <tr class="detail_genap">
                                     <td></td>
-                                    <td width="20%">Supplier Name</td>
+                                    <td width="20%">WS Type</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="supplierName" id="supplierName" size="30"                                                    
-                                                   readonly="readonly" value="" class="validate[required] text-input" />
+                                            <select id="wsTypeId" name="wsTypeId">
+                                                <c:forEach items="${model.wsTypes}" var="wsType">
+                                                    <option value="${wsType.id}" disabled="disabled">${wsType.code}</option>
+                                                </c:forEach>
+                                            </select>
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>

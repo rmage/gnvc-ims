@@ -866,4 +866,15 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (AirBlastFreezingDao) bf.getBean("AirBlastFreezingDao");
     }
+    
+    public static FishReclassificationDao createFishReclassificationDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishReclassificationDao) bf.getBean("FishReclassificationDao");
+    }
+    
+    public static FishMovingDao createFishMovingDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishMovingDao) bf.getBean("FishMovingDao");
+    }
+    
 }

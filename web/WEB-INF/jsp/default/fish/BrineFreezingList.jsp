@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Receiving</title>
+        <title>IMS &therefore; Brine Freezing</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>

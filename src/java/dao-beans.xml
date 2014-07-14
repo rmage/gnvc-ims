@@ -9,7 +9,7 @@
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 	<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://192.168.11.253:1433/inventory" />
+        <property name="url" value="jdbc:jtds:sqlserver://7.51.9.228:1433/inventory" />
         <!-- ravindo|<property name="url" value="jdbc:jtds:sqlserver://7.35.130.2:1433/inventory" />-->
         <!--<property name="url" value="jdbc:jtds:sqlserver://192.168.0.213:1433/inventory" />-->
         <property name="username" value="sa" />
@@ -400,6 +400,12 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="AirBlastFreezingDao" class="com.spfi.ims.dao.AirBlastFreezingDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishReclassificationDao" class="com.spfi.ims.dao.FishReclassificationDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FishMovingDao" class="com.spfi.ims.dao.FishMovingDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

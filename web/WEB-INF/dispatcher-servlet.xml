@@ -317,4 +317,10 @@
     <bean name="/AirBlastFreezing.htm" class="com.spfi.ims.controller.FishAirBlastFreezingController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FishReclassification.htm" class="com.spfi.ims.controller.FishReclassificationController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FishMoving.htm" class="com.spfi.ims.controller.FishMovingController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

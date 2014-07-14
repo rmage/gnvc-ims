@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Air Blast Freezing</title>
+        <title>IMS &therefore; Fish Reclassification</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>
@@ -13,38 +13,32 @@
                 <div class="box">
                     <form action="FishReceivingReport.htm" id="search" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Air Blast Freezing &therefore; Search</caption>
+                            <caption>Fish Reclassification &therefore; Search</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">ABF Number</td>
-                                    <td><input type="text" name="abf_no" /></td>
+                                    <td style="width: 200px;">FR Number</td>
+                                    <td><input type="text" name="fr_code" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <input type="button" value="Add" name="btnAdd" onclick="location.replace('AirBlastFreezing.htm?action=create');" />
+                                        <input type="button" value="Add" name="btnAdd" onclick="location.replace('FishReclassification.htm?action=create');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </form>
                     <table class="collapse tblForm row-select" id="list">
-                        <caption>Air Blast Freezing &therefore; List</caption>
+                        <caption>Fish Reclassification &therefore; List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td column="bf_no">Number</td>
-                                <td column="bf_date">Date</td>
-                                <td>WS Number</td>
-                                <td>Supplier</td>
-                                <td>Batch Number</td>
-                                <td>Regu</td>
-                                <td>Time Shift</td>
-                                <td>Time Start</td>
-                                <td>Time Finish</td>
+                                <td column="fr_code">Number</td>
+                                <td column="fr_date">Date</td>
+                                <td>Creator</td>
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>
@@ -61,7 +55,7 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishABF_Air Blast Freezing Report (xls)');
+            util.initListTable($('#list'), 'R_FishRECC_Fish Reclassification Report (xls)');
         </script>
         
     </body>

@@ -45,8 +45,7 @@ public class FishBrineFreezingController extends MultiActionController {
         return new ModelAndView("default/fish/BrineFreezingAdd", "model", model);
     }
     
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse
-            response) {
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
         try {
             /* DATA | get initial value */
             String[] header = request.getParameter("header").split(":", -1);
