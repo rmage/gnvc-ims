@@ -166,6 +166,8 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FishWDS, "EXEC PRT_F_WITHDRAWAL ?");
         ListMap.put(Report.FishRECC, "EXEC PRT_F_RECLASSIFICATION ?");
         ListMap.put(Report.FishFMov, "EXEC PRT_F_FISH_MOVING ?");
+        ListMap.put(Report.FishWsSF, "EXEC PRT_WEIGHT_SLIP_SUMMARY ?");
+        ListMap.put(Report.FishWsSZ, "EXEC PRT_WEIGHT_SLIP_SUMMARY ?");
         //  ***END*** | Fish Module | Form and Report List
 
         ListMap.put(Report.FWS,

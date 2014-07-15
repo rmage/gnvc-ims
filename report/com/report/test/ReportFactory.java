@@ -37,7 +37,7 @@ public class ReportFactory {
 //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
 //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         //  Fish Module | Form and Report List
-        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov
+        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
         ; 
     }
 
@@ -92,6 +92,10 @@ public class ReportFactory {
         reportMap.put(Report.FishRECC, reportTemplateMap.get("FishRECC"));
         reportTemplateMap.put("FishFMov", new ReportModel("fish/fm", false));
         reportMap.put(Report.FishFMov, reportTemplateMap.get("FishFMov"));
+        reportTemplateMap.put("FishWsSF", new ReportModel("fish/wssfreshl", false));
+        reportMap.put(Report.FishWsSF, reportTemplateMap.get("FishWsSF"));
+        reportTemplateMap.put("FishWsSZ", new ReportModel("fish/wssfrozenl", false));
+        reportMap.put(Report.FishWsSZ, reportTemplateMap.get("FishWsSZ"));
         
         reportTemplateMap.put("IMDR", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));

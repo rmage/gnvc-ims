@@ -408,4 +408,7 @@
     <bean id="FishMovingDao" class="com.spfi.ims.dao.FishMovingDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="FishWsSummaryDao" class="com.spfi.ims.dao.FishWsSummaryDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
 </beans>

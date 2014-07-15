@@ -877,4 +877,9 @@ public class DaoFactory {
         return (FishMovingDao) bf.getBean("FishMovingDao");
     }
     
+    public static FishWsSummaryDao createFishWsSummaryDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishWsSummaryDao) bf.getBean("FishWsSummaryDao");
+    }
+    
 }

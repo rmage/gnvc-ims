@@ -323,4 +323,7 @@
     <bean name="/FishMoving.htm" class="com.spfi.ims.controller.FishMovingController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FishWsSummary.htm" class="com.spfi.ims.controller.FishWsSummaryController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>
