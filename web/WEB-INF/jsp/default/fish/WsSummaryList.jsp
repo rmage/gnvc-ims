@@ -63,13 +63,14 @@
 
             // change current printout destination
             $('#main tr td:nth-child(2) a[href^="GenerateReport.htm"]').live('mouseenter', function() {
-                var type = $(this).parent().parent().find('td:eq(5)').html().slice(-1);
-                if (type === 'F') {
-                    $(this).attr('href', $(this).attr('href').replace('FishWsS', 'FishWsSF'));
-                } else if (type === 'Z') {
-                    $(this).attr('href', $(this).attr('href').replace('FishWsS', 'FishWsSZ'));
+                if ($(this).attr('href').indexOf('FishWsSF') === -1 && $(this).attr('href').indexOf('FishWsSZ') === -1) {
+                    var type = $(this).parent().parent().find('td:eq(5)').html().slice(-1);
+                    if (type === 'F') {
+                        $(this).attr('href', $(this).attr('href').replace('FishWsS', 'FishWsSF'));
+                    } else if (type === 'Z') {
+                        $(this).attr('href', $(this).attr('href').replace('FishWsS', 'FishWsSZ'));
+                    }
                 }
-                $(this).unbind('mouseenter');
             });
         </script>
 

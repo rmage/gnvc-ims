@@ -67,10 +67,10 @@
                             <thead>
                                 <tr>
                                     <td colspan="6">
-<!--                                        <select id="type">
-                                            <option>FRESH</option>
-                                            <option>FROZEN</option>
-                                        </select>-->
+                                        <!--                                        <select id="type">
+                                                                                    <option>FRESH</option>
+                                                                                    <option>FROZEN</option>
+                                                                                </select>-->
                                         <input id="getWs" type="button" value="Get Weight Slip" readonly="readonly" />
                                     </td>
                                 </tr>
@@ -107,13 +107,13 @@
                     $('#batchNo').val(ui.item.batchNo);
                     $('#info').html(ui.item.boat + ' / ' + ui.item.supplier);
                     $('#dateShiftF').focus();
-                    
-                    if(ui.item.batchNo.slice(-1) === 'F') {
+
+                    if (ui.item.batchNo.slice(-1) === 'F') {
                         $('#type').val('FRESH');
                     } else {
                         $('#type').val('FROZEN');
                     }
-                    
+
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
@@ -162,11 +162,13 @@
                 });
             });
             $('#rrForm').bind('submit', function() {
-                $('#poster').append('<input type="hidden" name="data" value="' + 
-                        $('#rrNo').val()    + ':' + $('#rrDate').val()          + ':' + $('#batchNo').val() + ':' + $('#dateFrom').val() + ':' +
-                        $('#dateTo').val()  + ':' + $('#getWs').data('type')    + ':' + $('#wsNo').val()    +
-                '" />');
-                $('#poster').submit();
+                if ($('#wsNo').val() !== '') {
+                    $('#poster').append('<input type="hidden" name="data" value="' +
+                            $('#rrNo').val() + ':' + $('#rrDate').val() + ':' + $('#batchNo').val() + ':' + $('#dateFrom').val() + ':' +
+                            $('#dateTo').val() + ':' + $('#getWs').data('type') + ':' + $('#wsNo').val() +
+                            '" />');
+                    $('#poster').submit();
+                }
                 return false;
             });
         </script>
