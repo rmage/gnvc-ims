@@ -65,12 +65,12 @@
                             data: {action: 'getFishType', term: $('#batchNo').val()},
                             dataType: 'json',
                             success: function(data) {
-                                
+
                                 var options = '';
-                                for (var i = 0; i < data.length; i++){
-                                    options += '<option value="' + data[i].id + '">' +data[i].code + ' ' +data[i].description+ '</option>';
+                                for (var i = 0; i < data.length; i++) {
+                                    options += '<option value="' + data[i].id + '">' + data[i].code + ' ' + data[i].description + '</option>';
                                 }
-                                
+
                                 $('#fishId').html(options);
                             }
                         });
@@ -119,8 +119,10 @@
                     $('#totalData').val(rowCount);
                     $('#dialog-spoilage').dialog('close');
                 });
-                
-                $('#area').bind('change', function() { $('#cookedWeight').trigger('keyup'); });
+
+                $('#area').bind('change', function() {
+                    $('#cookedWeight').trigger('keyup');
+                });
 
                 $('#cookedWeight').keyup(function() {
                     var multiplier = {SKINNING: 2.0, LOINING: 2.75, RECEIVING: 1.0, PACKING: 2.75};
@@ -172,6 +174,11 @@
                                                 <option value="07-15">07:00 - 15:00</option>
                                                 <option value="15-23">15:00 - 23:00</option>
                                                 <option value="23-07">23:00 - 07:00</option>
+                                                <option value="07-12">07:00 - 12:00</option>
+                                                <option value="12-17">12:00 - 17:00</option>
+                                                <option value="17-23">17:00 - 23:00</option>
+                                                <option value="08-14">08:00 - 14:00</option>
+                                                <option value="08-16">08:00 - 16:00</option>
                                             </select>                                                         
                                         </label>
                                     </td>
@@ -249,8 +256,8 @@
                                     <select id="fishId" name="fishId">
                                         <%--<c:forEach items="${model.fishDataList}" var="fish">--%>
                                             <!--<option value="${fish.id}">-->
-                                                <%--<c:out value="${fish.code} - ${fish.fishType.description}" />--%>
-                                            <!--</option>-->
+                                        <%--<c:out value="${fish.code} - ${fish.fishType.description}" />--%>
+                                        <!--</option>-->
                                         <%--</c:forEach>--%>
                                     </select>
                                     <label>*</label>

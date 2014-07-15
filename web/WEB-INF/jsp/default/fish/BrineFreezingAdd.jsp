@@ -65,6 +65,11 @@
                                             <option value="07-15">07:00 - 15:00</option>
                                             <option value="15-23">15:00 - 23:00</option>
                                             <option value="23-07">23:00 - 07:00</option>
+                                            <option value="07-12">07:00 - 12:00</option>
+                                            <option value="12-17">12:00 - 17:00</option>
+                                            <option value="17-23">17:00 - 23:00</option>
+                                            <option value="08-14">08:00 - 14:00</option>
+                                            <option value="08-16">08:00 - 16:00</option>
                                         </select>
                                         Time Start <input id="timeStart" type="text" size="5" /> Time Finish <input id="timeFinish" type="text" size="5" />
                                     </td>
@@ -150,7 +155,7 @@
                             $('#bfDetail').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].fish + '</td><td>' + json[i].weight + '</td><td><input type="text" size="6" value="0.00" required="required" pattern="^\\d+(\\.\\d{2})?$" title="###0.00" /></td></tr>');
                             $('#bfDetail tr:last-child').data('fishid', json[i].fishid);
                         }
-                        if(json.length > 0) {
+                        if (json.length > 0) {
                             $('#wsId').val(json[0].wsid);
                         } else {
                             $('#batchNo').trigger('click');
@@ -173,7 +178,7 @@
                     $('#bfDetail tr').each(function() {
                         $('#poster').append('<input type="hidden" name="detail" value="' + $(this).data('fishid') + ':' + $(this).find('input').val() + '" />');
                     });
-                    
+
                     $('#poster').submit();
                 }
                 return false;

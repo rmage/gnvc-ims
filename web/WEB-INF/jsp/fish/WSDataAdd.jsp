@@ -115,8 +115,8 @@
                             $('#supplierName').val(localRowData.supplierName);
                             $('#vesselId').val(localRowData.vesselId);
                             $('#dialog-ajaxSearch').dialog('close');
-                            
-                            if(localRowData.batchNo.slice(-1) === 'F') {
+
+                            if (localRowData.batchNo.slice(-1) === 'F') {
                                 $('#wsTypeId').find('option:contains(WSNR), option:contains(WSNC)').attr('disabled', true);
                                 $('#wsTypeId').find('option:contains(WSHR), option:contains(WSBF), option:contains(WSABF), option:contains(WSL)').attr('disabled', false);
                             } else {
@@ -251,6 +251,11 @@
                                                 <option value="07-15">07:00 - 15:00</option>
                                                 <option value="15-23">15:00 - 23:00</option>
                                                 <option value="23-07">23:00 - 07:00</option>
+                                                <option value="07-12">07:00 - 12:00</option>
+                                                <option value="12-17">12:00 - 17:00</option>
+                                                <option value="17-23">17:00 - 23:00</option>
+                                                <option value="08-14">08:00 - 14:00</option>
+                                                <option value="08-16">08:00 - 16:00</option>
                                             </select>                                                           
                                         </label>
                                     </td>
