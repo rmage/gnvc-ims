@@ -174,16 +174,18 @@ public class PriceAssignmentController extends MultiActionController {
         response.getWriter().print(out);
     }
 
-    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException, ProductDaoException, SupplierDaoException {
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException, ProductDaoException, SupplierDaoException {
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         
         ProductDao productDao = DaoFactory.createProductDao();
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
         AssignCanvassingDao assignCanvassingDao = DaoFactory.createAssignCanvassingDao();
-        pw.print("{\"maxpage\": " + assignCanvassingDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show")), lu.getUserId()) + ",\"data\": [");
-        List<AssignCanvassing> acs = assignCanvassingDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show")), lu.getUserId());
+        pw.print("{\"maxpage\": " + assignCanvassingDao.ajaxMaxPagePA(request.getParameter("where"), new BigDecimal(request.getParameter("show")), lu.getUserId()) + ",\"data\": [");
+        List<AssignCanvassing> acs = assignCanvassingDao.ajaxSearchPA(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show")), lu.getUserId());
         for (AssignCanvassing x : acs) {
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
             Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
@@ -193,7 +195,7 @@ public class PriceAssignmentController extends MultiActionController {
             pw.print("\"2\": \"" + x.getPrsNumber() + "\", ");
             pw.print("\"3\": \"" + x.getSupplierCode() + "\", ");
             pw.print("\"4\": \"" + s.getSupplierName() + "\", ");
-            pw.print("\"5\": \"" + x.getUpdatedDate() + "\", ");
+            pw.print("\"5\": \"" + (x.getUpdatedDate() == null ? "" : sdf.format(x.getUpdatedDate())) + "\", ");
             pw.print("\"6\": \"" + x.getProductCode() + "\", ");
             pw.print("\"7\": \"" + p.getProductName() + "\"}");
             b = Boolean.TRUE;

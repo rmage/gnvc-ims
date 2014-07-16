@@ -95,11 +95,19 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
     }
 
     //Modified 24 April 2014
-    public int ajaxMaxPage(String where, BigDecimal show, String userId) {
+    public int ajaxMaxPageSA(String where, BigDecimal show, String userId) {
+        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE created_by = ?" : where + " AND created_by = ?"), show, userId);
+    }
+
+    public List<AssignCanvassing> ajaxSearchSA(String where, String order, int page, int show, String userId) {
+        return jdbcTemplate.query("EXEC PRC_SUPPLIER_ASSIGNMENT_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
+    }
+    
+    public int ajaxMaxPagePA(String where, BigDecimal show, String userId) {
         return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE unit_price IS NOT NULL AND created_by = ?" : where + " AND unit_price IS NOT NULL AND created_by = ?"), show, userId);
     }
 
-    public List<AssignCanvassing> ajaxSearch(String where, String order, int page, int show, String userId) {
-        return jdbcTemplate.query("DECLARE @page INT, @show INT SELECT @page=?, @show=? SELECT * FROM (SELECT MAX(id) as id, prsnumber, productcode, supplier_code, MAX(unit_price) as unit_price, MAX([top]) as [top], MAX(top_desc) as top_desc, MAX(tod) as tod, MAX(wp) as wp, MAX(is_selected) as is_selected, MAX(created_by) as created_by, MAX(created_date) as created_date, MAX(updated_by) as updated_by, MAX(updated_date) as updated_date, ROW_NUMBER() OVER (ORDER BY max(id)) row FROM " + getTableName() + " " + (where.isEmpty()? "WHERE unit_price IS NOT NULL and created_by=?" : where + " AND unit_price IS NOT NULL and created_by=?") +" GROUP BY prsnumber, productcode, supplier_code) list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", this, page, show, userId);
+    public List<AssignCanvassing> ajaxSearchPA(String where, String order, int page, int show, String userId) {
+        return jdbcTemplate.query("EXEC PRC_PRICE_ASSIGNMENT_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
     }
 }

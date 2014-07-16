@@ -824,7 +824,7 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     public List<User> findRoleCanvasser() throws UserDaoException {
         try {
             return jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, "
-                    + "CREATED_DATE, UPDATED_BY, UPDATED_DATE, CORP_ID  FROM " + getTableName() + " WHERE ROLE_CODE = 'PRC.ST' ORDER BY USER_ID", this);
+                    + "CREATED_DATE, UPDATED_BY, UPDATED_DATE, CORP_ID  FROM " + getTableName() + " WHERE ROLE_CODE = '7050.STA' ORDER BY USER_ID", this);
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }

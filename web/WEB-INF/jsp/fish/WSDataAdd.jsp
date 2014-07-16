@@ -41,7 +41,7 @@
                     var dialogMode = $('#dialogMode').val();
 
                     if (dialogMode == 'add') {
-                        var rowCount = $('#main tr').length - 1;
+                        var rowCount = $('#main tr').length - 2;
                         $("<tr class='ganjil'>" +
                                 "<td class='style1'>" + rowCount + "</td>" +
                                 "<td id='fishType" + rowCount + "' class='center'>" + fishType + "</td>" +
@@ -63,6 +63,7 @@
 
                     $('#totalWeight').val(0);
                     $('#dialog-add-item').dialog('close');
+                    wsTotalWeight();
                 });
 
                 $('#wsNo').on("blur", function() {
@@ -309,7 +310,13 @@
                             <tbody class="tbl-nohover">
                             </tbody>
                             <tfoot class="ui-widget-header">
-                                <tr><td colspan="7">
+                                <tr>
+                                    <th colspan="2"><b style="float: right;">Total Weight</b></th>
+                                    <th id="wsTotalWeight" style="text-align: center;"></th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
@@ -319,7 +326,8 @@
                                             <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnBack" id="btnBack" value="Back" class="cancel" />
                                         </label>
                                     </td>
-                                </tr></tfoot>
+                                </tr>
+                            </tfoot>
                         </table>
                     </form>
                 </div>
@@ -450,6 +458,22 @@
                     $('#storageId option:eq(0)').prop('selected', true);
                 }
             });
+
+            // keyboard shortcut on add item
+            $(document).bind('keydown', function(e) {
+                if (e.keyCode === 107 && e.altKey) {
+                    $('#addItem').trigger('click');
+                }
+            });
+
+            // total weight in list
+            function wsTotalWeight() {
+                var totalWeight = 0.0;
+                $('#main tbody tr').each(function() {
+                    totalWeight = totalWeight + parseFloat($(this).find('td:eq(2)').html().split(',').join(''));
+                });
+                $('#wsTotalWeight').html('<b>' + addCommas(totalWeight.toFixed(2)) + '</b>');
+            }
         </script>
         <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
             Save data?

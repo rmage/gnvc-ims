@@ -32,16 +32,16 @@
                                     <td>
                                         <input type="text" name="podate" value="" id="podate"/>
                                     </td>
-                                    
+
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <td colspan="6">
                                     <span class="style1">
                                         <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
-                                    	<label>
-                                        <input type="button" name="button" id="btnAdd" value="Add" />
-                                    	</label>
+                                        <label>
+                                            <input type="button" name="button" id="btnAdd" value="Add" />
+                                        </label>
                                     </span>
                                 </td>
                             </tfoot>
@@ -112,68 +112,68 @@
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-										    <a href="Purchase.htm?page=<c:out value="${model.page+1}" />">
-												&gt;
-										    </a>
-										</c:if>
-				    				</span>
+                                        <c:if test="${model.page < model.totalRows/model.paging}">
+                                            <a href="Purchase.htm?page=<c:out value="${model.page+1}" />">
+                                                &gt;
+                                            </a>
+                                        </c:if>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <td colspan="10">
                                 <span class="style1">
-                               
+
                                 </span>
                             </td>
                         </tfoot>
                     </table>
-                     <div id="ab_dialog" style="display: none">
-                    	<span id="ab_dialog_doc"></span>: Are you sure?
-                	 </div>
-                	 
-                        <script>
-                            $('.mark').click(function(){
-                                var code = $(this).attr('code');
-                                $('#ab_dialog_doc').html($(this).attr('code'));
-                                $('#ab_dialog').dialog({
-                                    buttons: {
-                                        "Close": function() {
-                                            $(this).dialog("close");
-                                        },
-                                        "Ok": function() {
-                                            window.location.href = 'Purchase.htm?action=approvedPO&purchaseNo=' + code;
-                                        }
+                    <div id="ab_dialog" style="display: none">
+                        <span id="ab_dialog_doc"></span>: Are you sure?
+                    </div>
+
+                    <script>
+                        $('.mark').click(function() {
+                            var code = $(this).attr('code');
+                            $('#ab_dialog_doc').html($(this).attr('code'));
+                            $('#ab_dialog').dialog({
+                                buttons: {
+                                    "Close": function() {
+                                        $(this).dialog("close");
                                     },
-                                    modal: true,
-                                    width: 500,
-                                    height: 150,
-                                    'title': 'PO Approved'
-                                });
+                                    "Ok": function() {
+                                        window.location.href = 'Purchase.htm?action=approvedPO&purchaseNo=' + code;
+                                    }
+                                },
+                                modal: true,
+                                width: 500,
+                                height: 150,
+                                'title': 'PO Approved'
                             });
-                        </script>
-                        
-                        <script>
-                            $('.markb').click(function(){
-                                var code = $(this).attr('code');
-                                $('#ab_dialog_doc').html($(this).attr('code'));
-                                $('#ab_dialog').dialog({
-                                    buttons: {
-                                        "Close": function() {
-                                            $(this).dialog("close");
-                                        },
-                                        "Ok": function() {
-                                            window.location.href = 'Purchase.htm?action=cancelPO&purchaseNo=' + code;
-                                        }
+                        });
+                    </script>
+
+                    <script>
+                        $('.markb').click(function() {
+                            var code = $(this).attr('code');
+                            $('#ab_dialog_doc').html($(this).attr('code'));
+                            $('#ab_dialog').dialog({
+                                buttons: {
+                                    "Close": function() {
+                                        $(this).dialog("close");
                                     },
-                                    modal: true,
-                                    width: 500,
-                                    height: 150,
-                                    'title': 'PO Cancel'
-                                });
+                                    "Ok": function() {
+                                        window.location.href = 'Purchase.htm?action=cancelPO&purchaseNo=' + code;
+                                    }
+                                },
+                                modal: true,
+                                width: 500,
+                                height: 150,
+                                'title': 'PO Cancel'
                             });
-                        </script>
+                        });
+                    </script>
 
                 </div>
             </div>
@@ -183,7 +183,7 @@
                 </div>
             </div>
         </div>
-                                                                                
+
         <script type="text/javascript">
             $(function() {
                 $('#btnAdd').click(function() {
@@ -193,9 +193,9 @@
                 $('#btnEdit').click(function() {
                     location.href = '';
                 });
-                
+
                 $('#btnPrintAll').click(function() {
-                    window.location  = '<c:out value="${urlPrintAll}"/>';
+                    window.location = '<c:out value="${urlPrintAll}"/>';
                 });
 
                 $('.tab').hide();
@@ -203,15 +203,15 @@
                     $('.tab').show();
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
-              
-                
-                $('#podate').datepicker({                        
-                    dateFormat: "dd/mm/yy"                        
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
+
+
+                $('#podate').datepicker({
+                    dateFormat: "dd/mm/yy"
                 });
-              
+
             });
         </script>
-      
+
     </body>
 </html>

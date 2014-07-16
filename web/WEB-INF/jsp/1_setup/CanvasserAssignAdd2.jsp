@@ -84,6 +84,7 @@
                         data: {action: 'getPrs', key: $(this).val()},
                         dataType: 'json',
                         success: function(json) {
+                            $('#canvasser').html('');
                             for(var i = 0; i < json.length; i++) {
                                 $('#canvasser').append('<tr><td>' + json[i].prsNo + '</td><td>' + json[i].itemCode 
                                     + '</td><td>' + json[i].itemName + '</td><td>' + json[i].quantity 

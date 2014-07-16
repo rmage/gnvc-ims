@@ -183,7 +183,7 @@ public class FishWsController extends MultiActionController {
                     String wsTypeFrozen = wsTypesFrz.getCode();
                     FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
                     FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(vesselId, dto.getStorageId(), wsDetail.getFishId());
-                    
+
                     /* GNVS | Actual Balance */
                     FishBalance fishBalanceActual = fishBalanceDao.findUniqueFishBalanceActual(vesselId, dto.getStorageId(), wsDetail.getFishId());
 
@@ -226,9 +226,9 @@ public class FishWsController extends MultiActionController {
 
                         FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
                         balanceHistoryDao.insert(fishBalanceHistory);
-                        
+
                         /* GNVS | Actual Balance */
-                        if(wsTypeFrozen.equalsIgnoreCase("WSNC")) {
+                        if (wsTypeFrozen.equalsIgnoreCase("WSNC")) {
                             if (fishBalanceActual != null) {
                                 Double balance = fishBalanceActual.getBalance();
                                 fishBalanceActual.setBalance(balance + wsDetail.getTotalWeight());

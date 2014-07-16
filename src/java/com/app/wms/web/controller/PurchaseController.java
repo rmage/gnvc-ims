@@ -230,9 +230,12 @@ public class PurchaseController extends MultiActionController {
     }
 
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException, SupplierDaoException, ApprovalRangeDaoException, UserRoleDaoException, UserDaoException {
+        String isApproved = "Y";
         Boolean b = Boolean.FALSE;
 //        List<BigDecimal> bds = new ArrayList<BigDecimal>();
         PrintWriter pw = response.getWriter();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
         PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
         PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
@@ -250,6 +253,10 @@ public class PurchaseController extends MultiActionController {
             if (b) {
                 pw.print(",");
             }
+            if(x.getIsApproved().equals("N")) {
+                isApproved = FyaUtility.checkPOApprovalAuth(lu.getUserId(), amount);
+                x.setApprovedBy(FyaUtility.checkPOApprovalWait(amount, "name"));
+            }
             pw.print("{\"1\": \"" + x.getPoCode() + "\", ");
             pw.print("\"2\": \"" + x.getPoCode() + "\", ");
             pw.print("\"3\": \"" + x.getPoDate() + "\", ");
@@ -257,7 +264,8 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"5\": \"" + s.getSupplierName() + "\", ");
             pw.print("\"6\": \"" + s.getTelephone() + "\", ");
             pw.print("\"7\": \"" + amount + "\", ");
-            pw.print("\"8\": \"" + (x.getIsApproved().equals("N") ? "Is not approved" : "Approved by " +x.getApprovedBy()) + "\"}");
+            pw.print("\"8\": \"" + (x.getIsApproved().equals("N") ? (isApproved.equals("Y") ? "Waiting for " + x.getApprovedBy() + " approval!" : "Approve : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Approve this Purchase Order\\\" /></a>" ) : 
+                    "Approved by <b>" + x.getApprovedBy() + "</b> at " + sdf.format(x.getApprovedDate())) + "\"}");
 
             b = Boolean.TRUE;
         }

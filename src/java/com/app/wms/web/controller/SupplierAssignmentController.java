@@ -137,17 +137,19 @@ public class SupplierAssignmentController extends MultiActionController {
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        
         ProductDao productDao = DaoFactory.createProductDao();
         AssignCanvassingDao assignCanvassingDao = DaoFactory.createAssignCanvassingDao();
-        pw.print("{\"maxpage\": " + assignCanvassingDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show")), lu.getUserId()) + ",\"data\": [");
-        List<AssignCanvassing> acs = assignCanvassingDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show")), lu.getUserId());
+        pw.print("{\"maxpage\": " + assignCanvassingDao.ajaxMaxPageSA(request.getParameter("where"), new BigDecimal(request.getParameter("show")), lu.getUserId()) + ",\"data\": [");
+        List<AssignCanvassing> acs = assignCanvassingDao.ajaxSearchSA(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show")), lu.getUserId());
         for (AssignCanvassing x : acs) {
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
             if(b)
                 pw.print(",");
             pw.print("{\"1\": \"" + "\", ");
             pw.print("\"2\": \"" + x.getPrsNumber() + "\", ");
-            pw.print("\"3\": \"" + x.getUpdatedDate() + "\", ");
+            pw.print("\"3\": \"" + (x.getUpdatedDate() == null ? "" : sdf.format(x.getUpdatedDate())) + "\", ");
             pw.print("\"4\": \"" + x.getProductCode() + "\", ");
             pw.print("\"5\": \"" + p.getProductName() + "\"}");
             b = Boolean.TRUE;

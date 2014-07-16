@@ -14,57 +14,57 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class FyaUtility {
-    
-    public static String checkPOApprovalAuth(String userId, BigDecimal amount) 
-        throws ApprovalRangeDaoException, UserRoleDaoException, UserDaoException {
-        
+
+    public static String checkPOApprovalAuth(String userId, BigDecimal amount)
+            throws ApprovalRangeDaoException, UserRoleDaoException, UserDaoException {
+
         /* DATA | get initial value */
         String isApproved = "Y";
-        
+
         /* DAO | Define needed dao here */
         UserDao userDao = DaoFactory.createUserDao();
-        
+
         /* TRANSACTION | Something complex here */
         // compare login user role
         User u = userDao.findByPrimaryKey(userId);
         String x = checkPOApprovalWait(amount, "code");
-         if(x.equals(u.getRoleCode()))
+        if (x.equals(u.getRoleCode())) {
             isApproved = "N";
-        else if(u.getRoleCode().contains("MGR") && x.contains("MGR")) {
+        } else if (u.getRoleCode().contains("MAN") && x.contains("MAN")) {
             isApproved = "N";
         }
-        
+
         return isApproved;
-        
+
     }
-    
-    public static String checkPOApprovalWait(BigDecimal amount, String type) 
-        throws ApprovalRangeDaoException, UserRoleDaoException {
-        
+
+    public static String checkPOApprovalWait(BigDecimal amount, String type)
+            throws ApprovalRangeDaoException, UserRoleDaoException {
+
         /* DATA | get initial value */
         String wait = "";
-        
+
         /* DAO | Define needed dao here */
         UserRoleDao userRoleDao = DaoFactory.createUserRoleDao();
         ApprovalRangeDao approvalRangeDao = DaoFactory.createApprovalRangeDao();
-        
+
         /* TRANSACTION | Something complex here */
         // get approval range and compare it with current amount
         List<ApprovalRange> ars = approvalRangeDao.findAll();
-        for(ApprovalRange x : ars) {
-            if(x.getFromAmount().compareTo(amount) < 1) {
+        for (ApprovalRange x : ars) {
+            if (x.getFromAmount().compareTo(amount) < 1) {
                 wait = x.getRoleCode();
                 break;
             }
         }
-        
-        if(type.equals("name")) {
+
+        if (type.equals("name")) {
             UserRole ur = userRoleDao.findWhereRoleCodeEquals(wait).get(0);
             wait = ur.getRoleName();
         }
-        
+
         return wait;
-        
+
     }
-    
+
 }
