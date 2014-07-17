@@ -140,7 +140,7 @@ public class CanvassingAssignmentController extends MultiActionController {
             List<Prs> dropListPrs = daoPrs.findAllNotInCanvas();
             for (Prs x : dropListPrs) {
                 List<Department> d = departmentDao.findWhereDepartmentCodeEquals(x.getDepartmentName());
-                x.setDepartmentName(d.isEmpty() ? "- department not found -" : d.get(0).getDepartmentName());
+                x.setDepartmentName("[" + x.getDepartmentName() + "] " + (d.isEmpty() ? "data missing" : d.get(0).getDepartmentName()));
             }
 
             HashMap m = new HashMap();
