@@ -1396,7 +1396,7 @@ public class GenerateReportController extends MultiActionController {
                 //                "LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
                 //                "LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
                 //                "LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
-                "SELECT p.po_code, p.po_date, p.discount, p.pph, p.ppn, p.currency, p.remarks, s.supplier_code, s.supplier_name, "
+                "SELECT prs.id as prsid, p.po_code, p.po_date, p.discount, p.pph, p.ppn, p.currency, p.remarks, s.supplier_code, s.supplier_name, "
                 + "s.supplier_address, acp.unit_price, p.approved_by, p.approved_date, p.created_date, u.name, "
                 + "pr.product_name, pr.product_code, pd.department_code, prs.qty, prs.uom_name, pd.sub_total, acp.top_desc "
                 + "FROM po_detail pd "
@@ -1489,7 +1489,7 @@ public class GenerateReportController extends MultiActionController {
                 //                "FROM inventory..prs " +
                 //                "LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
                 //                "WHERE prsd.prsnumber = ?"
-                "SELECT prs.prsnumber, CONVERT(VARCHAR(10), prs.prsdate, 103) as prsdate, prsd.productcode, "
+                "SELECT prsd.id as prsdid, prs.prsnumber, CONVERT(VARCHAR(10), prs.prsdate, 103) as prsdate, prsd.productcode, "
                 + "prsd.productname, prsd.qty, prsd.uom_name, prs.department_name, prs.remarks, "
                 + "CONVERT(VARCHAR(20), prs.requestdate, 106)as requestdate, u.name "
                 + "FROM inventory..prs LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber "
