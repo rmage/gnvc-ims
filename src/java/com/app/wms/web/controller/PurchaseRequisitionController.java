@@ -207,11 +207,11 @@ public class PurchaseRequisitionController extends ReportManagerController {
 		
 		LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 		String roleCode = lu.getRoleCode();
-		String role = roleCode.substring(0, 2);
+		String role = roleCode.substring(0, 4);
 		
 		PrsDao dao = DaoFactory.createPrsDao();
-		List<Prs> s = dao.findAll();
-		Integer size = s.size()+1;
+//		List<Prs> s = dao.findAll();
+		Integer size = dao.prsCount() + 1;
 		String year = new SimpleDateFormat("yy").format(new Date());
 		String tail = ("0000000"+size).substring(("0000000"+size).length()-7);
 		

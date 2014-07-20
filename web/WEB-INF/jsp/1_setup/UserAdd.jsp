@@ -5,49 +5,48 @@
     <head>
         <title>IMS - New User</title>
         <%@include file="../metaheader.jsp" %>
-        
+
         <script>
-                $(document).ready(function() {
-                    
+            $(document).ready(function() {
+
+                $.ajax({
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#warehouse').find('option').remove();
+                        $.each(data.wh, function(k, v) {
+                            $('#warehouse').append('<option value="' + v.whCode + '">' + v.whCode + '</option>');
+                        });
+                    },
+                    url: 'index.htm?action=getWarehouse&corpid=' + $("select#corporate").val()
+                });
+
+
+                $('#corporate').change(function(event) {
+                    var corporate = $("select#corporate").val();
+
                     $.ajax({
                         dataType: 'json',
                         success: function(data) {
-                                $('#warehouse').find('option').remove();
-                                $.each(data.wh, function(k,v){                                                         
-                                    $('#warehouse').append('<option value="'+v.whCode+'">'+v.whCode+'</option>');
-                                });
-                            },
-                            url: 'index.htm?action=getWarehouse&corpid='+$("select#corporate").val()
-                    });     
-                    
-                    
-                    $('#corporate').change(function(event) {
-                        var corporate=$("select#corporate").val();
-                        
-                        $.ajax({
-                        dataType: 'json',
-                        success: function(data) {
-                                $('#warehouse').find('option').remove();
-                                $.each(data.wh, function(k,v){                                                         
-                                    $('#warehouse').append('<option value="'+v.whCode+'">'+v.whCode+'</option>');
-                                });
-                            },
-                            url: 'index.htm?action=getWarehouse&corpid='+corporate
-                        });                                                		        
+                            $('#warehouse').find('option').remove();
+                            $.each(data.wh, function(k, v) {
+                                $('#warehouse').append('<option value="' + v.whCode + '">' + v.whCode + '</option>');
+                            });
+                        },
+                        url: 'index.htm?action=getWarehouse&corpid=' + corporate
                     });
-                });          
-		</script>
+                });
+            });
+        </script>
     </head>
     <%--
         Document   : UserAdd
     --%>
 
     <body>
-        <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-      		com.app.wms.engine.db.dto.User dto = (com.app.wms.engine.db.dto.User) m.get("dto");
-            List<Corporate> corporates =  (List<Corporate>)m.get("corporates");
-      		String mode = (String) m.get("mode");
+        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+            com.app.wms.engine.db.dto.User dto = (com.app.wms.engine.db.dto.User) m.get("dto");
+            List<Corporate> corporates = (List<Corporate>) m.get("corporates");
+            String mode = (String) m.get("mode");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -65,58 +64,8 @@
                         <table class="collapse tblForm row-select">
                             <caption>User - Detail</caption>
                             <tbody class="tbl-nohover">
-                            <%-- 
-                            	<tr>
-                                 	<td class="style1">&nbsp;</td>
-                                    <td class="style1">Corporate Id</td>
-                                    <td class="style1">
-                                        <select name="corpId" id="corporate">
-                                            <c:forEach items="${model.corporates}" var="corporate">
-                                                <option value="<c:out value="${corporate.id}" />">
-                                                    <c:out value="${corporate.id}" />
-                                                </option>
-                                            </c:forEach>
-                                        </select>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
-                                    </td>
-                                </tr>
-                            
-                            	<tr>
-                            	 <td class="style1">&nbsp;</td>
-                                 <td class="style1">Warehouse Id</td>
-								    <td class="style1">
-								    		
-								    
-	                                        <select name="whCode" id="warehouse">
-	                                        --%>
-	                                        	<%--
-	                                        	<c:forEach var="droplist" items="${requestScope.model.dropListWarehouse}">
-	                                        		  <option value="${droplist.whCode}" ${(droplist.whCode eq requestScope.model.whCode)? "selected": ""}>
-	                                        		  	${droplist.whCode}
-	                                        		  </option> 
-	                                        	</c:forEach>
-	                                            --%>
-	                            <%-- 
-	                                        </select>
-	                                        <label class="requiredfield" title="This Field Is Required!">*</label>
-                            		</td>
-                                </tr>
-                                
-                                --%>
-                                <%-- 
                                 <tr>
-                                	<td class="style1">&nbsp;</td>
-                                    <td class="style1">Code</td>
-                                    <td class="style1">
-                                        <label>
-                                            <input type="text" class="shorttext" name="code" value="<%= dto.getCode()%>" size="30" />
-                                        </label>
-                                        <label class="requiredfield" title="This Field Is Required!">*</label>
-                                    </td>
-                                </tr>
-                                --%>
-                                <tr>
-                                	<td class="style1">&nbsp;</td>
+                                    <td class="style1">&nbsp;</td>
                                     <td class="style1">Name</td>
                                     <td class="style1">
                                         <label>
@@ -127,7 +76,7 @@
                                 </tr>
 
                                 <tr>
-                                	<td class="style1">&nbsp;</td>
+                                    <td class="style1">&nbsp;</td>
                                     <td class="style1">Username</td>
                                     <td class="style1">
                                         <label>
@@ -137,7 +86,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">&nbsp;</td>
+                                    <td class="style1">&nbsp;</td>
                                     <td class="style1">Password</td>
                                     <td class="style1">
                                         <label>
@@ -147,7 +96,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">&nbsp;</td>
+                                    <td class="style1">&nbsp;</td>
                                     <td class="style1">Password Verification</td>
                                     <td class="style1">
                                         <label>
@@ -157,7 +106,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">&nbsp;</td>
+                                    <td class="style1">&nbsp;</td>
                                     <td class="style1">Role</td>
                                     <td class="style1">
                                         <select name="roleCode" id="roleCode">
@@ -171,7 +120,7 @@
                                 </tr>
 
                                 <tr>
-                                	<td class="style1">&nbsp;</td>
+                                    <td class="style1">&nbsp;</td>
                                     <td  class="style1">Email</td>
                                     <td width="75%" class="style1">
                                         <label>
@@ -180,8 +129,8 @@
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                 </tr>
-                                        
-                                        
+
+
                             </tbody>
                             <tfoot>
                                 <td colspan="2">

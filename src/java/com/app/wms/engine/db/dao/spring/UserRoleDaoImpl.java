@@ -125,7 +125,7 @@ public class UserRoleDaoImpl extends AbstractDAO implements ParameterizedRowMapp
     public List<UserRole> findAll() throws UserRoleDaoException {
         try {
             return jdbcTemplate.query("SELECT a.id, role_code, role_name, role_level, b.department_name FROM " + getTableName()
-                    + " a LEFT JOIN department b ON b.department_code = a.department_code where role_code not in ('SYSADMIN') ORDER BY a.id", this);
+                    + " a LEFT JOIN department b ON b.department_code = a.department_code where role_code not in ('SYSADMIN') AND b.is_active = 'Y' ORDER BY a.role_name", this);
         } catch (Exception e) {
             throw new UserRoleDaoException("Query failed", e);
         }

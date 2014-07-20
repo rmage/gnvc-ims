@@ -107,6 +107,8 @@ public interface PrsDao
         
         public List<Prs> fyaFindByCanvaser(String prsNo, String userId);
         
+        public int prsCount();
+        
         // DAO | for filtering, paging, and sorting
         public int ajaxMaxPage(String deptId, String where, BigDecimal show);
         

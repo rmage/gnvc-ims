@@ -24,7 +24,7 @@ public class AirBlastFreezingDaoImpl extends AbstractDAO implements AirBlastFree
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
             return jdbcTemplate.queryForInt("EXEC F_ABF_MAX_PAGE ?, ?", show, where);
-        } catch(DataAccessException e) {
+        } catch(Exception e) {
             e.printStackTrace();
             return 1;
         }
