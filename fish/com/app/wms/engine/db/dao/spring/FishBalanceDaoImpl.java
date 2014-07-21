@@ -233,7 +233,7 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
     
     public List<FishBalance> getWithdrawableFish(int vesselId) {
         String query = "SELECT * FROM inventory..fish_balance_actual "
-                + " WHERE vessel_id = ? AND balance > 0";
+                + " WHERE vessel_id = ? AND balance IS NOT NULL";
         List<FishBalance> resultList = jdbcTemplate.query(query, this, vesselId);
 
         return resultList;

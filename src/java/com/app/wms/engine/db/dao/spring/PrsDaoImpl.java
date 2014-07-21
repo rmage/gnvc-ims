@@ -449,16 +449,25 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
         }
     }
     
-    public List<Prs> ajaxSearch(String deptId, String where, String order, int page, int show) {
+    public List<Map<String, Object>> ajaxSearch(String deptId, String where, String order, int page, int show) {
         try {
-            return jdbcTemplate.query("DECLARE @page INT, @show INT " +
+            return jdbcTemplate.queryForList("DECLARE @page INT, @show INT " +
                 "SELECT @page = ?, @show = ? " +
                 "SELECT * FROM ( " +
-                "   SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved, ROW_NUMBER() OVER(" + (order.isEmpty() ? "ORDER BY id DESC" : order) + ") row FROM prs " + (where.isEmpty() ? "WHERE department_name = ?" : where + " AND department_name = ?") +
-                ") list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", this, page, show, deptId);
+                "   SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved, approved_by, approved_date, ROW_NUMBER() OVER(" + (order.isEmpty() ? "ORDER BY id DESC" : order) + ") row FROM prs " + (where.isEmpty() ? "WHERE department_name = ?" : where + " AND department_name = ?") +
+                ") list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", page, show, deptId);
         } catch(DataAccessException e) {
             e.printStackTrace();
-            return new ArrayList<Prs>();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
+    public List<Map<String, Object>> ajaxReadDetail(String prsNo) {
+        try {
+            return jdbcTemplate.queryForList("EXEC PRC_REQUISITION_GET_DETAIL ?", prsNo);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
         }
     }
 

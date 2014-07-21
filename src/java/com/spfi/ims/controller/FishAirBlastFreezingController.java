@@ -66,8 +66,8 @@ public class FishAirBlastFreezingController extends MultiActionController {
             abf.setBatchNo(header[4]);
             abf.setRegu(header[5]);
             abf.setTimeShift(header[6]);
-            abf.setTimeStart(header[7] + ":" + header[8]);
-            abf.setTimeFinish(header[9] + ":" + header[10]);
+            abf.setTimeStart(header[7]);
+            abf.setTimeFinish(header[8]);
             abf.setCreatedBy(lu.getUserId());
             abf.setId(abfDao.insertH(abf));
             

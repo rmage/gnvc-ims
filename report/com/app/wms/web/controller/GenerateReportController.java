@@ -29,127 +29,127 @@ public class GenerateReportController extends MultiActionController {
     static {
         //  Fish Module | Form and Report List
         ListMap.put(Report.FishWSHR,
-                "SELECT " +
-                "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, " +
-                "	fs.name as supplier_name, " +
-                "	fv.batch_no, fv.name as boat_name, " +
-                "	fwsd.total_weight, " +
-                "	ft.code as fish_type, " +
-                "	fwt.code as fish_weight " +
-                "FROM fish_ws fws " +
-                "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id " +
-                "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id " +
-                "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id " +
-                "	INNER JOIN fish f ON f.id = fwsd.fish_id " +
-                "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
-                "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
-                "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSHR' " +
-                "ORDER BY fish_type"
+                "SELECT "
+                + "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, "
+                + "	fs.name as supplier_name, "
+                + "	fv.batch_no, fv.name as boat_name, "
+                + "	fwsd.total_weight, "
+                + "	ft.code as fish_type, "
+                + "	fwt.code as fish_weight "
+                + "FROM fish_ws fws "
+                + "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id "
+                + "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id "
+                + "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id "
+                + "	INNER JOIN fish f ON f.id = fwsd.fish_id "
+                + "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSHR' "
+                + "ORDER BY fish_type"
         );
         ListMap.put(Report.FishWSNC,
-                "SELECT " +
-                "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, " +
-                "	fs.name as supplier_name, " +
-                "	fv.batch_no, fv.name as boat_name, " +
-                "	fwsd.total_weight, " +
-                "	ft.code as fish_type, " +
-                "	fwt.code as fish_weight " +
-                "FROM fish_ws fws " +
-                "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id " +
-                "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id " +
-                "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id " +
-                "	INNER JOIN fish f ON f.id = fwsd.fish_id " +
-                "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
-                "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
-                "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSNC' " +
-                "ORDER BY fish_type"
+                "SELECT "
+                + "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, "
+                + "	fs.name as supplier_name, "
+                + "	fv.batch_no, fv.name as boat_name, "
+                + "	fwsd.total_weight, "
+                + "	ft.code as fish_type, "
+                + "	fwt.code as fish_weight "
+                + "FROM fish_ws fws "
+                + "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id "
+                + "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id "
+                + "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id "
+                + "	INNER JOIN fish f ON f.id = fwsd.fish_id "
+                + "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSNC' "
+                + "ORDER BY fish_type"
         );
         ListMap.put(Report.FishWSBF,
-                "SELECT " +
-                "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, " +
-                "	fs.name as supplier_name, " +
-                "	fv.batch_no, fv.name as boat_name, " +
-                "	fwsd.total_weight, " +
-                "	ft.code as fish_type, " +
-                "	fwt.code as fish_weight " +
-                "FROM fish_ws fws " +
-                "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id " +
-                "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id " +
-                "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id " +
-                "	INNER JOIN fish f ON f.id = fwsd.fish_id " +
-                "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
-                "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
-                "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSBF' " +
-                "ORDER BY fish_type"
+                "SELECT "
+                + "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, "
+                + "	fs.name as supplier_name, "
+                + "	fv.batch_no, fv.name as boat_name, "
+                + "	fwsd.total_weight, "
+                + "	ft.code as fish_type, "
+                + "	fwt.code as fish_weight "
+                + "FROM fish_ws fws "
+                + "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id "
+                + "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id "
+                + "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id "
+                + "	INNER JOIN fish f ON f.id = fwsd.fish_id "
+                + "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSBF' "
+                + "ORDER BY fish_type"
         );
         ListMap.put(Report.FishWSNR,
-                "SELECT " +
-                "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, " +
-                "	fs.name as supplier_name, " +
-                "	fv.batch_no, fv.name as boat_name, " +
-                "	fwsd.total_weight, " +
-                "	ft.code as fish_type, " +
-                "	fwt.code as fish_weight " +
-                "FROM fish_ws fws " +
-                "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id " +
-                "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id " +
-                "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id " +
-                "	INNER JOIN fish f ON f.id = fwsd.fish_id " +
-                "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
-                "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
-                "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSNR' " +
-                "ORDER BY fish_type"
+                "SELECT "
+                + "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, "
+                + "	fs.name as supplier_name, "
+                + "	fv.batch_no, fv.name as boat_name, "
+                + "	fwsd.total_weight, "
+                + "	ft.code as fish_type, "
+                + "	fwt.code as fish_weight "
+                + "FROM fish_ws fws "
+                + "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id "
+                + "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id "
+                + "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id "
+                + "	INNER JOIN fish f ON f.id = fwsd.fish_id "
+                + "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSNR' "
+                + "ORDER BY fish_type"
         );
         ListMap.put(Report.FishWSABF,
-                "SELECT " +
-                "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, " +
-                "	fs.name as supplier_name, " +
-                "	fv.batch_no, fv.name as boat_name, " +
-                "	fwsd.total_weight, " +
-                "	ft.code as fish_type, " +
-                "	fwt.code as fish_weight " +
-                "FROM fish_ws fws " +
-                "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id " +
-                "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id " +
-                "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id " +
-                "	INNER JOIN fish f ON f.id = fwsd.fish_id " +
-                "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
-                "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
-                "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSABF' " +
-                "ORDER BY fish_type"
+                "SELECT "
+                + "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, "
+                + "	fs.name as supplier_name, "
+                + "	fv.batch_no, fv.name as boat_name, "
+                + "	fwsd.total_weight, "
+                + "	ft.code as fish_type, "
+                + "	fwt.code as fish_weight "
+                + "FROM fish_ws fws "
+                + "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id "
+                + "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id "
+                + "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id "
+                + "	INNER JOIN fish f ON f.id = fwsd.fish_id "
+                + "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSABF' "
+                + "ORDER BY fish_type"
         );
         ListMap.put(Report.FishWSL,
-                "SELECT " +
-                "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, " +
-                "	fs.name as supplier_name, " +
-                "	fv.batch_no, fv.name as boat_name, " +
-                "	fwsd.total_weight, " +
-                "	ft.code as fish_type, " +
-                "	fwt.code as fish_weight " +
-                "FROM fish_ws fws " +
-                "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id " +
-                "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id " +
-                "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id " +
-                "	INNER JOIN fish f ON f.id = fwsd.fish_id " +
-                "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
-                "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
-                "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSL' " +
-                "ORDER BY fish_type"
+                "SELECT "
+                + "	fws.ws_no, DATENAME(dw, fws.date_shift) day_shift, CONVERT(varchar(12), fws.date_shift, 107) date_shift, fws.time_shift, fws.regu, "
+                + "	fs.name as supplier_name, "
+                + "	fv.batch_no, fv.name as boat_name, "
+                + "	fwsd.total_weight, "
+                + "	ft.code as fish_type, "
+                + "	fwt.code as fish_weight "
+                + "FROM fish_ws fws "
+                + "	INNER JOIN fish_ws_type fwst ON fwst.id = fws.ws_type_id "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fws.vessel_id "
+                + "	INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id "
+                + "	INNER JOIN fish_ws_detail fwsd ON fwsd.ws_id = fws.id "
+                + "	INNER JOIN fish f ON f.id = fwsd.fish_id "
+                + "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fws.id = ? AND fws.is_active = 'Y' AND fwst.code = 'WSL' "
+                + "ORDER BY fish_type"
         );
         ListMap.put(Report.FishSR,
-                "SELECT fs.catcher_no, CONVERT(VARCHAR(11), fs.date_shift, 106) as date_shift, fs.time_shift, fs.cooked_weight, fs.raw_weight, fs.total_processed, fs.reason, " +
-                "	fv.batch_no, " +
-                "	f.code as fish " +
-                "FROM fish_spoilage fs " +
-                "	INNER JOIN fish_vessel fv ON fv.id = fs.vessel_id " +
-                "	INNER JOIN fish f ON f.id = fs.fish_id " +
-                "WHERE fs.vessel_id = ? AND fs.date_shift = ? AND fs.time_shift = ? AND fs.is_active='Y'"
+                "SELECT fs.catcher_no, CONVERT(VARCHAR(11), fs.date_shift, 106) as date_shift, fs.time_shift, fs.cooked_weight, fs.raw_weight, fs.total_processed, fs.reason, "
+                + "	fv.batch_no, "
+                + "	f.code as fish "
+                + "FROM fish_spoilage fs "
+                + "	INNER JOIN fish_vessel fv ON fv.id = fs.vessel_id "
+                + "	INNER JOIN fish f ON f.id = fs.fish_id "
+                + "WHERE fs.vessel_id = ? AND fs.date_shift = ? AND fs.time_shift = ? AND fs.is_active='Y'"
         );
         ListMap.put(Report.FishWssFresh, "EXEC RPT_WEIGHT_SLIP_SUMMARY ?, ?, ?, ?");
         ListMap.put(Report.FishWssFrozen, "EXEC RPT_WEIGHT_SLIP_SUMMARY ?, ?, ?, ?");
@@ -1490,10 +1490,9 @@ public class GenerateReportController extends MultiActionController {
                 //                "LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
                 //                "WHERE prsd.prsnumber = ?"
                 "SELECT prsd.id as prsdid, prs.prsnumber, CONVERT(VARCHAR(10), prs.prsdate, 103) as prsdate, prsd.productcode, "
-                + "prsd.productname, prsd.qty, prsd.uom_name, prs.department_name, prs.remarks, "
-                + "CONVERT(VARCHAR(20), prs.requestdate, 106)as requestdate, u.name "
+                + "prsd.productname, prsd.qty, ISNULL(prsd.prs_soh, 0) as soh, prsd.uom_name, prs.department_name, prs.remarks, "
+                + "CONVERT(VARCHAR(20), prs.requestdate, 106)as requestdate, prs.createdby "
                 + "FROM inventory..prs LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber "
-                + "LEFT JOIN \"user\" u ON u.user_id = prs.createdby "
                 + "WHERE prs.prsnumber = ?"
         );
         ListMap.put(Report.PCanvassingForm,

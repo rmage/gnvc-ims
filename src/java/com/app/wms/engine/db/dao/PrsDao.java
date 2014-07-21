@@ -7,6 +7,7 @@ import com.app.wms.engine.db.exceptions.PrsDaoException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface PrsDao
 {
@@ -112,6 +113,8 @@ public interface PrsDao
         // DAO | for filtering, paging, and sorting
         public int ajaxMaxPage(String deptId, String where, BigDecimal show);
         
-        public List<Prs> ajaxSearch(String deptId, String where, String order, int page, int show);
+        public List<Map<String, Object>> ajaxSearch(String deptId, String where, String order, int page, int show);
+        
+        public List<Map<String, Object>> ajaxReadDetail(String prsNo);
         
 }

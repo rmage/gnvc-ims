@@ -65,8 +65,8 @@ public class FishBrineFreezingController extends MultiActionController {
             bf.setBatchNo(header[4]);
             bf.setRegu(header[5]);
             bf.setTimeShift(header[6]);
-            bf.setTimeStart(header[7] + ":" + header[8]);
-            bf.setTimeFinish(header[9] + ":" + header[10]);
+            bf.setTimeStart(header[7]);
+            bf.setTimeFinish(header[8]);
             bf.setCreatedBy(lu.getUserId());
             bf.setId(bfDao.insertH(bf));
             

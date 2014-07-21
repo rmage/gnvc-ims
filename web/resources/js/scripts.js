@@ -145,7 +145,7 @@ var ajax = {
                             html += '</td>';
                             break;
                         case 2:
-                            html += '<td><a class="d" href="#' + data.data[i][j] + '">' + data.data[i][j] + '</a></td>';
+                            html += '<td><a class="d" href="#' + data.data[i][j] + '#r" onclick="tableListModalCaller()">' + data.data[i][j] + '</a></td>';
                             break;
                         default:
                             html += '<td>' + data.data[i][j] + '</td>';

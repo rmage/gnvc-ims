@@ -3,422 +3,398 @@ package com.app.wms.engine.db.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Prs implements Serializable
-{
-	/** 
-	 * This attribute maps to the column id in the prs table.
-	 */
-	protected int id;
+public class Prs implements Serializable {
 
-	/** 
-	 * This attribute maps to the column prsnumber in the prs table.
-	 */
-	protected String prsnumber;
+    /**
+     * This attribute maps to the column id in the prs table.
+     */
+    protected int id;
 
-	/** 
-	 * This attribute maps to the column prsdate in the prs table.
-	 */
-	protected Date prsdate;
+    /**
+     * This attribute maps to the column prsnumber in the prs table.
+     */
+    protected String prsnumber;
 
-	/** 
-	 * This attribute maps to the column requestdate in the prs table.
-	 */
-	protected Date requestdate;
+    /**
+     * This attribute maps to the column prsdate in the prs table.
+     */
+    protected Date prsdate;
 
-	/** 
-	 * This attribute maps to the column deliverydate in the prs table.
-	 */
-	protected Date deliverydate;
+    /**
+     * This attribute maps to the column requestdate in the prs table.
+     */
+    protected Date requestdate;
 
-	/** 
-	 * This attribute maps to the column poreferensi in the prs table.
-	 */
-	protected String poreferensi;
+    /**
+     * This attribute maps to the column deliverydate in the prs table.
+     */
+    protected Date deliverydate;
 
-	/** 
-	 * This attribute maps to the column remarks in the prs table.
-	 */
-	protected String remarks;
+    /**
+     * This attribute maps to the column poreferensi in the prs table.
+     */
+    protected String poreferensi;
 
-	/** 
-	 * This attribute maps to the column createdby in the prs table.
-	 */
-	protected String createdby;
+    /**
+     * This attribute maps to the column remarks in the prs table.
+     */
+    protected String remarks;
 
-	/** 
-	 * This attribute maps to the column department_name in the prs table.
-	 */
-	protected String departmentName;
+    /**
+     * This attribute maps to the column createdby in the prs table.
+     */
+    protected String createdby;
 
-	/** 
-	 * This attribute maps to the column supplier_name in the prs table.
-	 * 
-	 */
-	protected String isApproved;
-	
-	protected String approvedBy;
-	
-	protected Date approvedDate;
-	
-	protected CanvassingDetail canvassingDetail;
+    /**
+     * This attribute maps to the column department_name in the prs table.
+     */
+    protected String departmentName;
 
-	/**
-	 * Method 'Prs'
-	 * 
-	 */
-	public Prs()
-	{
-	}
+    /**
+     * This attribute maps to the column supplier_name in the prs table.
+     *
+     */
+    protected String isApproved;
 
-	public String getApprovedBy() {
-		return approvedBy;
-	}
+    protected String approvedBy;
 
-	public void setApprovedBy(String approvedBy) {
-		this.approvedBy = approvedBy;
-	}
+    protected Date approvedDate;
 
-	public Date getApprovedDate() {
-		return approvedDate;
-	}
+    protected CanvassingDetail canvassingDetail;
 
-	public void setApprovedDate(Date approvedDate) {
-		this.approvedDate = approvedDate;
-	}
+    /**
+     * Method 'Prs'
+     *
+     */
+    public Prs() {
+    }
 
-	public String getIsApproved() {
-		return isApproved;
-	}
+    public String getApprovedBy() {
+        return approvedBy;
+    }
 
-	public void setIsApproved(String isApproved) {
-		this.isApproved = isApproved;
-	}
+    public void setApprovedBy(String approvedBy) {
+        this.approvedBy = approvedBy;
+    }
 
-	public CanvassingDetail getCanvassingDetail() {
-		return canvassingDetail;
-	}
+    public Date getApprovedDate() {
+        return approvedDate;
+    }
 
-	public void setCanvassingDetail(CanvassingDetail canvassingDetail) {
-		this.canvassingDetail = canvassingDetail;
-	}
+    public void setApprovedDate(Date approvedDate) {
+        this.approvedDate = approvedDate;
+    }
 
-	/**
-	 * Method 'getId'
-	 * 
-	 * @return int
-	 */
-	public int getId()
-	{
-		return id;
-	}
+    public String getIsApproved() {
+        return isApproved;
+    }
 
-	/**
-	 * Method 'setId'
-	 * 
-	 * @param id
-	 */
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+    public void setIsApproved(String isApproved) {
+        this.isApproved = isApproved;
+    }
 
-	/**
-	 * Method 'getPrsnumber'
-	 * 
-	 * @return String
-	 */
-	public String getPrsnumber()
-	{
-		return prsnumber;
-	}
+    public CanvassingDetail getCanvassingDetail() {
+        return canvassingDetail;
+    }
 
-	/**
-	 * Method 'setPrsnumber'
-	 * 
-	 * @param prsnumber
-	 */
-	public void setPrsnumber(String prsnumber)
-	{
-		this.prsnumber = prsnumber;
-	}
+    public void setCanvassingDetail(CanvassingDetail canvassingDetail) {
+        this.canvassingDetail = canvassingDetail;
+    }
 
-	/**
-	 * Method 'getPrsdate'
-	 * 
-	 * @return Date
-	 */
-	public Date getPrsdate()
-	{
-		return prsdate;
-	}
+    /**
+     * Method 'getId'
+     *
+     * @return int
+     */
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Method 'setPrsdate'
-	 * 
-	 * @param prsdate
-	 */
-	public void setPrsdate(Date prsdate)
-	{
-		this.prsdate = prsdate;
-	}
+    /**
+     * Method 'setId'
+     *
+     * @param id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	/**
-	 * Method 'getRequestdate'
-	 * 
-	 * @return Date
-	 */
-	public Date getRequestdate()
-	{
-		return requestdate;
-	}
+    /**
+     * Method 'getPrsnumber'
+     *
+     * @return String
+     */
+    public String getPrsnumber() {
+        return prsnumber;
+    }
 
-	/**
-	 * Method 'setRequestdate'
-	 * 
-	 * @param requestdate
-	 */
-	public void setRequestdate(Date requestdate)
-	{
-		this.requestdate = requestdate;
-	}
+    /**
+     * Method 'setPrsnumber'
+     *
+     * @param prsnumber
+     */
+    public void setPrsnumber(String prsnumber) {
+        this.prsnumber = prsnumber;
+    }
 
-	/**
-	 * Method 'getDeliverydate'
-	 * 
-	 * @return Date
-	 */
-	public Date getDeliverydate()
-	{
-		return deliverydate;
-	}
+    /**
+     * Method 'getPrsdate'
+     *
+     * @return Date
+     */
+    public Date getPrsdate() {
+        return prsdate;
+    }
 
-	/**
-	 * Method 'setDeliverydate'
-	 * 
-	 * @param deliverydate
-	 */
-	public void setDeliverydate(Date deliverydate)
-	{
-		this.deliverydate = deliverydate;
-	}
+    /**
+     * Method 'setPrsdate'
+     *
+     * @param prsdate
+     */
+    public void setPrsdate(Date prsdate) {
+        this.prsdate = prsdate;
+    }
 
-	/**
-	 * Method 'getPoreferensi'
-	 * 
-	 * @return String
-	 */
-	public String getPoreferensi()
-	{
-		return poreferensi;
-	}
+    /**
+     * Method 'getRequestdate'
+     *
+     * @return Date
+     */
+    public Date getRequestdate() {
+        return requestdate;
+    }
 
-	/**
-	 * Method 'setPoreferensi'
-	 * 
-	 * @param poreferensi
-	 */
-	public void setPoreferensi(String poreferensi)
-	{
-		this.poreferensi = poreferensi;
-	}
+    /**
+     * Method 'setRequestdate'
+     *
+     * @param requestdate
+     */
+    public void setRequestdate(Date requestdate) {
+        this.requestdate = requestdate;
+    }
 
-	/**
-	 * Method 'getRemarks'
-	 * 
-	 * @return String
-	 */
-	public String getRemarks()
-	{
-		return remarks;
-	}
+    /**
+     * Method 'getDeliverydate'
+     *
+     * @return Date
+     */
+    public Date getDeliverydate() {
+        return deliverydate;
+    }
 
-	/**
-	 * Method 'setRemarks'
-	 * 
-	 * @param remarks
-	 */
-	public void setRemarks(String remarks)
-	{
-		this.remarks = remarks;
-	}
+    /**
+     * Method 'setDeliverydate'
+     *
+     * @param deliverydate
+     */
+    public void setDeliverydate(Date deliverydate) {
+        this.deliverydate = deliverydate;
+    }
 
-	/**
-	 * Method 'getCreatedby'
-	 * 
-	 * @return String
-	 */
-	public String getCreatedby()
-	{
-		return createdby;
-	}
+    /**
+     * Method 'getPoreferensi'
+     *
+     * @return String
+     */
+    public String getPoreferensi() {
+        return poreferensi;
+    }
 
-	/**
-	 * Method 'setCreatedby'
-	 * 
-	 * @param createdby
-	 */
-	public void setCreatedby(String createdby)
-	{
-		this.createdby = createdby;
-	}
+    /**
+     * Method 'setPoreferensi'
+     *
+     * @param poreferensi
+     */
+    public void setPoreferensi(String poreferensi) {
+        this.poreferensi = poreferensi;
+    }
 
-	/**
-	 * Method 'getDepartmentName'
-	 * 
-	 * @return String
-	 */
-	public String getDepartmentName()
-	{
-		return departmentName;
-	}
+    /**
+     * Method 'getRemarks'
+     *
+     * @return String
+     */
+    public String getRemarks() {
+        return remarks;
+    }
 
-	/**
-	 * Method 'setDepartmentName'
-	 * 
-	 * @param departmentName
-	 */
-	public void setDepartmentName(String departmentName)
-	{
-		this.departmentName = departmentName;
-	}
+    /**
+     * Method 'setRemarks'
+     *
+     * @param remarks
+     */
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
 
+    /**
+     * Method 'getCreatedby'
+     *
+     * @return String
+     */
+    public String getCreatedby() {
+        return createdby;
+    }
 
-	/**
-	 * Method 'equals'
-	 * 
-	 * @param _other
-	 * @return boolean
-	 */
-	public boolean equals(Object _other)
-	{
-		if (_other == null) {
-			return false;
-		}
-		
-		if (_other == this) {
-			return true;
-		}
-		
-		if (!(_other instanceof Prs)) {
-			return false;
-		}
-		
-		final Prs _cast = (Prs) _other;
-		if (id != _cast.id) {
-			return false;
-		}
-		
-		if (prsnumber == null ? _cast.prsnumber != prsnumber : !prsnumber.equals( _cast.prsnumber )) {
-			return false;
-		}
-		
-		if (prsdate == null ? _cast.prsdate != prsdate : !prsdate.equals( _cast.prsdate )) {
-			return false;
-		}
-		
-		if (requestdate == null ? _cast.requestdate != requestdate : !requestdate.equals( _cast.requestdate )) {
-			return false;
-		}
-		
-		if (deliverydate == null ? _cast.deliverydate != deliverydate : !deliverydate.equals( _cast.deliverydate )) {
-			return false;
-		}
-		
-		if (poreferensi == null ? _cast.poreferensi != poreferensi : !poreferensi.equals( _cast.poreferensi )) {
-			return false;
-		}
-		
-		if (remarks == null ? _cast.remarks != remarks : !remarks.equals( _cast.remarks )) {
-			return false;
-		}
-		
-		if (createdby == null ? _cast.createdby != createdby : !createdby.equals( _cast.createdby )) {
-			return false;
-		}
-		
-		if (departmentName == null ? _cast.departmentName != departmentName : !departmentName.equals( _cast.departmentName )) {
-			return false;
-		}
-		
-		return true;
-	}
+    /**
+     * Method 'setCreatedby'
+     *
+     * @param createdby
+     */
+    public void setCreatedby(String createdby) {
+        this.createdby = createdby;
+    }
 
-	/**
-	 * Method 'hashCode'
-	 * 
-	 * @return int
-	 */
-	public int hashCode()
-	{
-		int _hashCode = 0;
-		_hashCode = 29 * _hashCode + id;
-		if (prsnumber != null) {
-			_hashCode = 29 * _hashCode + prsnumber.hashCode();
-		}
-		
-		if (prsdate != null) {
-			_hashCode = 29 * _hashCode + prsdate.hashCode();
-		}
-		
-		if (requestdate != null) {
-			_hashCode = 29 * _hashCode + requestdate.hashCode();
-		}
-		
-		if (deliverydate != null) {
-			_hashCode = 29 * _hashCode + deliverydate.hashCode();
-		}
-		
-		if (poreferensi != null) {
-			_hashCode = 29 * _hashCode + poreferensi.hashCode();
-		}
-		
-		if (remarks != null) {
-			_hashCode = 29 * _hashCode + remarks.hashCode();
-		}
-		
-		if (createdby != null) {
-			_hashCode = 29 * _hashCode + createdby.hashCode();
-		}
-		
-		if (departmentName != null) {
-			_hashCode = 29 * _hashCode + departmentName.hashCode();
-		}
-		
-		return _hashCode;
-	}
+    /**
+     * Method 'getDepartmentName'
+     *
+     * @return String
+     */
+    public String getDepartmentName() {
+        return departmentName;
+    }
 
-	/**
-	 * Method 'createPk'
-	 * 
-	 * @return PrsPk
-	 */
-	public PrsPk createPk()
-	{
-		return new PrsPk(id);
-	}
+    /**
+     * Method 'setDepartmentName'
+     *
+     * @param departmentName
+     */
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
 
-	/**
-	 * Method 'toString'
-	 * 
-	 * @return String
-	 */
-	public String toString()
-	{
-		StringBuffer ret = new StringBuffer();
-		ret.append( "com.app.wms.engine.db.dto.Prs: " );
-		ret.append( "id=" + id );
-		ret.append( ", prsnumber=" + prsnumber );
-		ret.append( ", prsdate=" + prsdate );
-		ret.append( ", requestdate=" + requestdate );
-		ret.append( ", deliverydate=" + deliverydate );
-		ret.append( ", poreferensi=" + poreferensi );
-		ret.append( ", remarks=" + remarks );
-		ret.append( ", createdby=" + createdby );
-		ret.append( ", departmentName=" + departmentName );
-		ret.append( ", isApproved=" + isApproved );
-		ret.append( ", approvedBy=" + approvedBy );
-		ret.append( ", approvedDate=" + approvedDate );
-		return ret.toString();
-	}
+    /**
+     * Method 'equals'
+     *
+     * @param _other
+     * @return boolean
+     */
+    public boolean equals(Object _other) {
+        if (_other == null) {
+            return false;
+        }
+
+        if (_other == this) {
+            return true;
+        }
+
+        if (!(_other instanceof Prs)) {
+            return false;
+        }
+
+        final Prs _cast = (Prs) _other;
+        if (id != _cast.id) {
+            return false;
+        }
+
+        if (prsnumber == null ? _cast.prsnumber != prsnumber : !prsnumber.equals(_cast.prsnumber)) {
+            return false;
+        }
+
+        if (prsdate == null ? _cast.prsdate != prsdate : !prsdate.equals(_cast.prsdate)) {
+            return false;
+        }
+
+        if (requestdate == null ? _cast.requestdate != requestdate : !requestdate.equals(_cast.requestdate)) {
+            return false;
+        }
+
+        if (deliverydate == null ? _cast.deliverydate != deliverydate : !deliverydate.equals(_cast.deliverydate)) {
+            return false;
+        }
+
+        if (poreferensi == null ? _cast.poreferensi != poreferensi : !poreferensi.equals(_cast.poreferensi)) {
+            return false;
+        }
+
+        if (remarks == null ? _cast.remarks != remarks : !remarks.equals(_cast.remarks)) {
+            return false;
+        }
+
+        if (createdby == null ? _cast.createdby != createdby : !createdby.equals(_cast.createdby)) {
+            return false;
+        }
+
+        if (departmentName == null ? _cast.departmentName != departmentName : !departmentName.equals(_cast.departmentName)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Method 'hashCode'
+     *
+     * @return int
+     */
+    public int hashCode() {
+        int _hashCode = 0;
+        _hashCode = 29 * _hashCode + id;
+        if (prsnumber != null) {
+            _hashCode = 29 * _hashCode + prsnumber.hashCode();
+        }
+
+        if (prsdate != null) {
+            _hashCode = 29 * _hashCode + prsdate.hashCode();
+        }
+
+        if (requestdate != null) {
+            _hashCode = 29 * _hashCode + requestdate.hashCode();
+        }
+
+        if (deliverydate != null) {
+            _hashCode = 29 * _hashCode + deliverydate.hashCode();
+        }
+
+        if (poreferensi != null) {
+            _hashCode = 29 * _hashCode + poreferensi.hashCode();
+        }
+
+        if (remarks != null) {
+            _hashCode = 29 * _hashCode + remarks.hashCode();
+        }
+
+        if (createdby != null) {
+            _hashCode = 29 * _hashCode + createdby.hashCode();
+        }
+
+        if (departmentName != null) {
+            _hashCode = 29 * _hashCode + departmentName.hashCode();
+        }
+
+        return _hashCode;
+    }
+
+    /**
+     * Method 'createPk'
+     *
+     * @return PrsPk
+     */
+    public PrsPk createPk() {
+        return new PrsPk(id);
+    }
+
+    /**
+     * Method 'toString'
+     *
+     * @return String
+     */
+    public String toString() {
+        StringBuffer ret = new StringBuffer();
+        ret.append("com.app.wms.engine.db.dto.Prs: ");
+        ret.append("id=" + id);
+        ret.append(", prsnumber=" + prsnumber);
+        ret.append(", prsdate=" + prsdate);
+        ret.append(", requestdate=" + requestdate);
+        ret.append(", deliverydate=" + deliverydate);
+        ret.append(", poreferensi=" + poreferensi);
+        ret.append(", remarks=" + remarks);
+        ret.append(", createdby=" + createdby);
+        ret.append(", departmentName=" + departmentName);
+        ret.append(", isApproved=" + isApproved);
+        ret.append(", approvedBy=" + approvedBy);
+        ret.append(", approvedDate=" + approvedDate);
+        return ret.toString();
+    }
 
 }

@@ -5,6 +5,16 @@
     <head>
         <title>IMS - Purchase Requisition List</title>
         <%@include file="../metaheader.jsp" %>
+        <script>
+            Object.kColumnSize = function(obj) {
+                var size = 0, key;
+                for (key in obj) {
+                    if (obj.hasOwnProperty(key))
+                        size++;
+                }
+                return size;
+            };
+        </script>
     </head>
 
     <body>
@@ -58,7 +68,8 @@
                                 <td column="prsdate">PRS Date</td>  
                                 <td>Charge to Department</td> 
                                 <td>Date Needed</td>
-                                <!--<td>Status Approved</td>-->
+                                <td>Creator</td>
+                                <td>Approval</td>
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>
@@ -155,7 +166,9 @@
 //            }
 //            
 //            $(function() {
-                $('#btnAdd').click(function() { location.href = 'PurchaseRequisition.htm?action=create'; });
+            $('#btnAdd').click(function() {
+                location.href = 'PurchaseRequisition.htm?action=create';
+            });
 //
 //                $('#btnEdit').click(function() {
 //                    location.href = '';
@@ -178,9 +191,69 @@
 //                });
 //
 //            });
-            $('#prsdate').datepicker({ dateFormat: "dd/mm/yy" });
+            $('#prsdate').datepicker({dateFormat: "dd/mm/yy"});
             util.initSearchForm($('#search'));
             util.initListTable($('#list'), 'u:d:R_PPrsForm_Print Purchase Requisition Slip (xls)');
+            tableListAction(800);
+
+            function tableListModalCaller() {
+                $('#imsModal').dialog('open');
+            }
+            /* concept of view data */
+            function tableListAction(w) {
+                if (!$('#imsModal').length)
+                    $('body').append('<div id="imsModal" title="Title"></div>');
+
+                $(function() {
+                    $("#imsModal").dialog({
+                        modal: true,
+                        autoOpen: false,
+                        resizable: false,
+                        width: w,
+                        height: 398,
+                        minHeight: 396,
+                        maxWidth: 1000,
+                        buttons: {
+                            OK: function() {
+                                $(this).dialog("close");
+                            }
+                        },
+                        create: function() {
+                            $(this).css("maxHeight", 400);
+                        },
+                        open: function() {
+                            $('#imsModal').dialog("option", "title", "Title").html(variable.ajaxImageLoader);
+                            setTimeout(function() {
+                                var s = window.location.href.split('#');
+                                if (s[2] === 'r') {
+                                    $.ajax({
+                                        url: '?',
+                                        data: {action: 'ajaxReadDetail', term: s[1]},
+                                        dataType: 'json',
+                                        success: function(json) {
+                                            var html = '';
+                                            $("#imsModal").dialog("option", "title", "Purchase Requisition &therefore; Detail &therefore; " + s[1]);
+                                            html += '<table class="collapse tblForm row-select ui-widget-content"><thead>';
+                                            for (var i = 0; i < json.length; i++) {
+                                                if (i === 1)
+                                                    html += '</thead><tbody>';
+                                                html += '<tr>';
+                                                for (var j = 0; j < Object.kColumnSize(json[i]); j++) {
+                                                    html += '<td class="' + (i === 0 ? 'ui-state-default' : '') + '">' + json[i][j + 1] + '</td>';
+                                                }
+                                                html += '</tr>';
+                                            }
+                                            html += '<tbody></table>';
+                                            console.log(html);
+                                            $('#imsModal').html(html);
+                                        }
+                                    });
+                                }
+                            }, 300);
+                        }
+                    });
+                });
+            }
         </script>
 
     </body>
