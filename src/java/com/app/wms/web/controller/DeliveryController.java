@@ -4,6 +4,7 @@ import com.app.wms.engine.db.dao.DistributorDao;
 import com.app.wms.engine.db.dao.DrDao;
 import com.app.wms.engine.db.dao.DrDtlDao;
 import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dto.Distributor;
@@ -82,7 +83,7 @@ public class DeliveryController extends MultiActionController {
     }
     
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
-        throws ParseException, NumberFormatException {
+        throws ParseException, NumberFormatException, StockInventoryDaoException {
         
         /* DATA | get initial value */
         String type = request.getParameter("type");
@@ -93,6 +94,8 @@ public class DeliveryController extends MultiActionController {
         /* DAO | Define needed dao here */
         DrDao drDao = DaoFactory.createDrDao();
         DrDtlDao drDtlDao = DaoFactory.createDrDtlDao();
+        StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
+        StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
 
         /* TRANSACTION | Something complex here */
         // insert master delivery receipt
@@ -122,6 +125,10 @@ public class DeliveryController extends MultiActionController {
             dd.setCreatedBy(lu.getUserId());
             dd.setCreatedDate(new Date());
             drDtlDao.insert(dd);
+            
+            // stock balance history for stock card
+            StockInventory si = stockInventoryDao.findWhereProductCodeEquals(dd.getProductCode()).get(0);
+            stockBalanceDao.insertOrUpdate(dd.getProductCode(), new Date(), si.getBalance(), dd.getDrQty(), 23);
             
             // update stock inventory
             drDao.updateStockInventory(dd.getProductCode(), dd.getDrQty());

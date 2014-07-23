@@ -47,8 +47,9 @@ public class StockBalanceDaoImpl extends AbstractDAO
     public void insertOrUpdate(String productCode, Date date, BigDecimal begin, BigDecimal qty, int mode) {
         /*
          *  please see mode for multiply support stock card
-         *  10   :   Receive Report
-         *  20   :   Transfer Slip
+         *  10  :   Receive Report
+         *  20  :   Transfer Slip Normal
+         *  21  :   Transfer Slip Others   
          */
         String q = "";
         String i = "";
@@ -60,6 +61,14 @@ public class StockBalanceDaoImpl extends AbstractDAO
             case 20: {
                 q = "qty_out1 = qty_out1 + @QTY, [end] = [end] - @QTY";
                 i = "0, 0, 0, @QTY, 0, 0, " + begin.subtract(qty);
+            } break;
+            case 21: {
+                q = "qty_out2 = qty_out2 + @QTY, [end] = [end] - @QTY";
+                i = "0, 0, 0, 0, @QTY, 0, " + begin.subtract(qty);
+            } break;
+            case 23: {
+                q = "qty_out3 = qty_out3 + @QTY, [end] = [end] - @QTY";
+                i = "0, 0, 0, 0, 0, @QTY, " + begin.subtract(qty);
             } break;
         }
         jdbcTemplate.update("DECLARE @PRODUCT VARCHAR(30), @DATE DATE, @QTY NUMERIC(18,2) \n" +

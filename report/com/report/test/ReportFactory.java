@@ -156,6 +156,7 @@ public class ReportFactory {
         reportTemplateMap.put("FGFO", new ReportModel("gnvFishOil", false));
 
         reportMap.put(Report.FGSC, reportTemplateMap.get("FGSC"));
+        reportMap.put(Report.IMDR, reportTemplateMap.get("IMDR"));
         
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
