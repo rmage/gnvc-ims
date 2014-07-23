@@ -138,7 +138,7 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
     @Transactional
     public List<ProductCategory> findAll() throws ProductCategoryDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY id", this);
+            return jdbcTemplate.query("SELECT id, category_code, category_name, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY category_name", this);
         } catch (Exception e) {
             throw new ProductCategoryDaoException("Query failed", e);
         }

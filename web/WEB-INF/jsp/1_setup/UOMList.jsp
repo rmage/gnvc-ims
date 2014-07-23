@@ -22,35 +22,23 @@
                             <caption>Search UOM</caption>
                             <tbody>
                                 <tr>
-                                    <td width="20%">
-                                        UOM Code
-                                    </td>
-                                    <td>
-                                        <input type="text" name="uom_code" value=""/>
-                                    </td>
-                                    <td>
-                                        UOM Name
-                                    </td>
-                                    <td>
-                                        <input type="text" name="uom_name" value="" />
-                                    </td>
-                                    <td colspan="2">
-                                    </td>
-                                </tr>
-                                <tr>
-
+                                    <td>UOM Code</td>
+                                    <td><input type="text" name="uom_code" value=""/></td>
+                                    <td>UOM Name</td>
+                                    <td><input type="text" name="uom_name" value="" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                            <td colspan="4">
-                                <span>
-                                    <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
-                                </span>
-                                <label>
-                                    <input type="button" name="button" id="btnAdd" value="Add" />
-                                </label>
-                            </td>
-                            <td></td>
+                                <tr>
+                                    <td colspan="4">
+                                        <span>
+                                            <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
+                                        </span>
+                                        <label>
+                                            <input type="button" name="button" id="btnAdd" value="Add" onclick="window.location.replace('Uom.htm?action=create')" />
+                                        </label>
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </form>
@@ -58,8 +46,8 @@
                         <caption>Unit of Measurement - Search Result</caption>
                         <thead>
                             <tr>
-                                <td>No</td>
-                                <td>Action</td>
+                                <td style="width: 15px">No</td>
+                                <td style="width: 75px">Action</td>
                                 <td column="uom_code">UoM Code</td>
                                 <td column="uom_name">UoM Name</td>
                                 <td>Remarks</td>
@@ -79,29 +67,6 @@
         </div>
 
         <script type="text/javascript">
-            $(function() {
-                $('#btnAdd').click(function() {
-                    location.href = 'Uom.htm?action=create';
-                });
-
-                $('#btnEdit').click(function() {
-                    location.href = '';
-                });
-
-                $('.tab').hide();
-                $('#btnEdit').click(function() {
-                    $('.tab').show();
-                });
-
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
-                // adjust width for tables //
-                $('.tblForm tbody').each(function() {
-                    if ($(this).attr('id') != 'main') {
-                        $(this).find('td:eq(0)').css('width', '1%').next().addClass('span-5');
-                        $(this).find('.checkbox').addClass('span-2');
-                    }
-                });
-            });
             util.initSearchForm($('#search'));
             util.initListTable($('#list'), 'u:d');
         </script>

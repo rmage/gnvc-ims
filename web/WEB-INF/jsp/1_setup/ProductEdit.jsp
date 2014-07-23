@@ -3,15 +3,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS - Update Product</title>
+        <title>IMS &therefore; Product &therefore; Update</title>
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
-        <%            
-            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            //com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
-            //String mode = (String) m.get("mode");
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
@@ -20,132 +15,57 @@
 
                 <div class="box">
                     <form action="Product.htm" method="post">
-                        <input type="hidden" name="mode" value="<%//=mode%>" />
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="productId" value="${model.mode.productId}"/>
+                        <input type="hidden" name="action" value="saveUpdate" />
+                        <input type="hidden" name="productId" value="${model.p.productId}"/>
                         <table class="collapse tblForm row-select">
-                            <caption>Product - Update</caption>
-                            <tbody class="tbl-nohover">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>Bar Code</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="autofocus" name="barcode" value="${model.mode.barCode}" size="30" maxlength="30"/>
-                                        </label>
-                                    </td>
-                                </tr>
-
+                            <caption>Product &therefore; Information</caption>
+                            <tbody>
                                 <tr>
                                     <td>Item Code</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="productCode" readonly value="${model.mode.productCode}" size="30" />
-                                        </label>
-                                        <label>*</label>
-                                    </td>
+                                    <td><input type="text" id="itemCode" name="itemCode" readonly="readonly" required="required" pattern="[^&quot;]{1,}" value="${model.p.productCode}" /> *</td>
                                     <td>Item Name</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="productName" value="${model.mode.productName}" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
-                                        </label>
-                                        <label>*</label>
-                                    </td>
+                                    <td><input type="text" id="itemName" name="itemname" size="50" required="required" pattern="[^&quot;]{1,}" value="${model.p.productName}" /> *</td>
                                 </tr>
-
                                 <tr>
-                                    <td>Brand Name</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="brand" name="brand" value="${model.mode.brandName}" size="30" />
-                                        </label>
-                                    </td>
                                     <td>Description</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="description" value="${model.mode.productDescription}" size="30" />
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
+                                    <td><input type="text" id="itemDescription" name="itemDescription" size="50" pattern="[^&quot;]{1,}" value="${model.p.productDescription}" /></td>
                                     <td>Category</td>
                                     <td>
-                                        <label>
-                                            <input type="text" name="category" value="${model.mode.productCategory}" size="30"/>
-                                        </label>
-                                        <label>*</label>
-                                    </td>
-                                    <td>Item Color</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="color" value="${model.mode.productColor}" size="30" />
-                                        </label>
+                                        <select id="category" name="category" required="required">
+                                            <c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
+                                                <option value="<c:out value='${droplist.categoryCode}'/>"  <c:if test="${droplist.categoryCode == model.p.productCategory}">selected="true"</c:if>>
+                                                    <c:out value="${droplist.categoryName}" />
+                                                </option> 
+                                            </c:forEach>
+                                        </select> *
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Unit of Measurement (UoM)</td>
+                                    <td>Unit of Measurement</td>
                                     <td>
-                                        <label>
-                                            <input type="text" name="color" value="${model.mode.uom}"/>
-                                        </label>
-                                        <label>*</label>
+                                        <select name="uom" required="required">
+                                            <c:forEach var="droplist" items="${requestScope.model.dropListUOM}">
+                                                <option value="${droplist.uomName}" <c:if test="${droplist.uomName == model.p.uom}">selected="true"</c:if>>
+                                                    ${droplist.uomName}
+                                                </option> 
+                                            </c:forEach>
+                                        </select> *
                                     </td>
-                                    <td><b>Upload</b></td>
-                                    <td>
-                                        <a href="javascript:void(0)" id="uploadlink"> Upload Products</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Supplier Name</td>
                                     <td></td>
-                                    <td>Buyer</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="buyer" name="buyer" value="${model.mode.buyer}" size="30" />
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Pack Style</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="packstyle" name="packstyle" value="${model.mode.packstyle}" size="30" />
-                                        </label>
-                                    </td>
-                                    <td>Pack Size</td>
-                                    <td>
-                                        <select name="packsize">
-                                            <option value="" <c:if test="${'' == model.mode.packsize}">selected="true"</c:if>></option>
-                                            <option value="603" <c:if test="${'603' == model.mode.packsize}">selected="true"</c:if>>603</option>
-                                            <option value="307" <c:if test="${'307' == model.mode.packsize}">selected="true"</c:if>>307</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>LID</td>
-                                        <td>
-                                            <label>
-                                                <input type="text" id="lid" name="lid" value="${model.mode.lid}" size="30" />
-                                        </label>
-                                    </td>
-                                    <td>NW / DW-PW</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="nwdwpw" name="nwdwpw" value="${model.mode.nwdwpw}" size="30" />
-                                        </label>
-                                    </td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                            <td colspan="5">
-                                <span>
-                                    <label>
-                                        <input type="submit" name="btnSave" id="btnSave" value="Save" />
-                                    </label>
-                                    <input type="button" name="button" id="btnBack" value="Back" />
-                                </span>
-                            </td>
+                                <tr>
+                                    <td colspan="4">
+                                        <span>
+                                            <label>
+                                                <input type="submit" name="btnSave" id="btnSave" value="Update" />
+                                            </label>
+                                            <input type="button" name="button" id="btnBack" value="Back" onclick="windows.location.replace('Product.htm')" />
+                                        </span>
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </form>
@@ -157,37 +77,5 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            $(function() {
-                $('#btnBack').click(function() {
-                    location.href = 'Product.htm';
-                });
-            });
-        </script>
-
-        <script language="JavaScript">
-            function cek() {
-                if (form.length.value == "" || form.width.value == "" || form.height.value == "") {
-                    alert("data empty");
-                    exit;
-                }
-            }
-            function kali() {
-                cek();
-                a = eval(form.length.value);
-                b = eval(form.width.value);
-                c = eval(form.height.value);
-                d = a * b * c
-                form.volumeMatrix.value = d;
-            }
-        </script>
-
-        <script type="text/javascript">
-            function formfocus() {
-                document.getElementById('autofocus').focus();
-            }
-            window.onload = formfocus;
-
-        </script>
     </body>
 </html>

@@ -135,7 +135,7 @@ public class UomDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Uo
     @Transactional
     public List<Uom> findAll() throws UomDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, uom_code, uom_name, remarks, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY id", this);
+            return jdbcTemplate.query("SELECT id, uom_code, uom_name, remarks, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY uom_name", this);
         } catch (Exception e) {
             throw new UomDaoException("Query failed", e);
         }

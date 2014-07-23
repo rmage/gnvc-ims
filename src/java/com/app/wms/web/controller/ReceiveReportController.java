@@ -91,7 +91,7 @@ public class ReceiveReportController extends MultiActionController {
             PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
             PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
             StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
-            ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
+            // average price in different module | ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
             ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
             StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
             ReceiveReportDtlDao receiveReportDtlDao = DaoFactory.createReceiveReportDtlDao();
@@ -108,7 +108,7 @@ public class ReceiveReportController extends MultiActionController {
             receiveReportDao.insert(rr);
             
             // get currency rate
-            CurrencyRate cr = currencyRateDao.findByPurchase(Integer.parseInt(master[2]));
+            // average price in different module | CurrencyRate cr = currencyRateDao.findByPurchase(Integer.parseInt(master[2]));
             
             // get sub total and quantity
             Purchase p = purchaseDao.findByPo(String.valueOf(rr.getPoCode()));
@@ -135,19 +135,20 @@ public class ReceiveReportController extends MultiActionController {
                         pd = xx; break;
                     }
                 }
-                PrsDetail prd = prsDetailDao.findByPrsProduct(pd.getPrsNumber(), rrd.getProductCode());
-                ProductPrice pp = productPriceDao.findByProduct(rrd.getProductCode());
+                // average price in different module | PrsDetail prd = prsDetailDao.findByPrsProduct(pd.getPrsNumber(), rrd.getProductCode());
+                // average price in different module | ProductPrice pp = productPriceDao.findByProduct(rrd.getProductCode());
                 
                 // FIXME: FYA | [--Only-Support-IDR-not-check-PO-Currency-x>
                 StockInventory si = stockInventoryDao.findWhereProductCodeEquals(rrd.getProductCode()).get(0);
-                pp.setUnitPrice( (pp.getUnitPrice()
-                    .multiply( si.getBalance() ).setScale(2, RoundingMode.HALF_EVEN)).add( ((pd.getSubTotal().multiply(cr.getRateValue()).setScale(2))
-                    .divide(prd.getQty(), 2, RoundingMode.HALF_EVEN))
-                    .multiply(new BigDecimal(rrd.getQtyGood())).setScale(2, RoundingMode.HALF_EVEN) )
-                    .divide( si.getBalance().add(new BigDecimal(rrd.getQtyGood())), 2, RoundingMode.HALF_EVEN ));
-                pp.setUpdatedBy(lu.getUserId());
-                pp.setUpdatedDate(new Date());
-                productPriceDao.update(pp, 1, new BigDecimal(rrd.getQtyGood()));
+                
+                // average price in different module | pp.setUnitPrice( (pp.getUnitPrice()
+                // average price in different module |     .multiply( si.getBalance() ).setScale(2, RoundingMode.HALF_EVEN)).add( ((pd.getSubTotal().multiply(cr.getRateValue()).setScale(2))
+                // average price in different module |     .divide(prd.getQty(), 2, RoundingMode.HALF_EVEN))
+                // average price in different module |     .multiply(new BigDecimal(rrd.getQtyGood())).setScale(2, RoundingMode.HALF_EVEN) )
+                // average price in different module |     .divide( si.getBalance().add(new BigDecimal(rrd.getQtyGood())), 2, RoundingMode.HALF_EVEN ));
+                // average price in different module | pp.setUpdatedBy(lu.getUserId());
+                // average price in different module | pp.setUpdatedDate(new Date());
+                // average price in different module | productPriceDao.update(pp, 1, new BigDecimal(rrd.getQtyGood()));
                 
                 // stock balance history for stock card
                 stockBalanceDao.insertOrUpdate(rrd.getProductCode(), new Date(), si.getBalance(), new BigDecimal(rrd.getQtyGood()), 10);

@@ -64,7 +64,7 @@
                                 <tr>
                                     <td colspan="6">
                                         <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('Delivery.htm');" />
+                                        <input type="reset" value="Cancel" onclick="window.location.replace('Delivery.htm?type=${model.type}');" />
                                     </td>
                                 </tr>
                             </tfoot>

@@ -3,12 +3,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS - New Product</title>
+        <title>IMS &therefore; Product &therefore; Create</title>
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
-        <%            
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             com.app.wms.engine.db.dto.Product dto = (com.app.wms.engine.db.dto.Product) m.get("dto");
             String mode = (String) m.get("mode");
         %>
@@ -21,146 +20,43 @@
 
                 <div class="box">
                     <form action="Product.htm" method="post" name="form" id="addForm">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="isActive" value="Y"/>
-                        <input type="hidden" name="productId" value="<%= dto.getProductId()%>"/>
                         <table class="collapse tblForm row-select">
-                            <caption>Product - Add</caption>
-                            <tbody class="tbl-nohover">
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td><b>Bar Code</b></td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="autofocus" name="barcode" value="<%=dto.getBarCode()%>" size="30" maxlength="30"/>
-                                        </label>
-                                    </td>
-                                </tr>
-
+                            <caption>Product &therefore; Information</caption>
+                            <tbody>
                                 <tr>
                                     <td>Item Code</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="productCode" name="productCode" value="<%=dto.getProductCode()%>" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
-                                        </label>
-                                        <label>*</label>
-                                    </td>
+                                    <td><input type="text" id="itemCode" name="itemCode" required="required" pattern="[^&quot;]{1,}" /> *</td>
                                     <td>Item Name</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="productName" value="<%=dto.getProductName()%>" size="50" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
-                                        </label>
-                                        <label>*</label>
-                                    </td>
+                                    <td><input type="text" id="itemName" name="itemname" size="50" required="required" pattern="[^&quot;]{1,}" /> *</td>
                                 </tr>
                                 <tr>
-                                    <td>Brand Name</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="brand" name="brand" value="<%=dto.getBrandName()%>" size="30" />
-                                        </label>
-                                    </td>
                                     <td>Description</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="description" value="<%=dto.getProductDescription()%>" size="50" />
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
+                                    <td><input type="text" id="itemDescription" name="itemDescription" size="50" pattern="[^&quot;]{1,}" /></td>
                                     <td>Category</td>
                                     <td>
-                                        <label>
-                                            <select id="category" name="category" required="true">
-                                                <c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
-                                                    <option value="${droplist.categoryCode}" ${(droplist.categoryName eq requestScope.model.categoryName)? "selected": ""}>
-                                                        ${droplist.categoryName}
-                                                    </option> 
-                                                </c:forEach>
-                                            </select>
-                                        </label>
-                                        <label>*</label>
-                                    </td>
-                                    <td>Item Color</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" name="color" value="<%=dto.getProductColor()%>" size="30" />
-                                        </label>
+                                        <select id="category" name="category" required="required">
+                                            <c:forEach var="droplist" items="${requestScope.model.dropListCategory}">
+                                                <option value="<c:out value='${droplist.categoryCode}'/>"  <c:if test="${droplist.categoryCode == model.dto.productCategory}">selected="true"</c:if>>
+                                                    <c:out value="${droplist.categoryName}" />
+                                                </option> 
+                                            </c:forEach>
+                                        </select> *
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Unit of Measurement (UoM)</td>
+                                    <td>Unit of Measurement</td>
                                     <td>
-                                        <label>
-                                            <select name="uom" required="true">
-                                                <c:forEach var="droplist" items="${requestScope.model.dropListUOM}">
-                                                    <option value="${droplist.uomName}" ${(droplist.uomName eq requestScope.model.uomName)? "selected": ""}>
-                                                        ${droplist.uomName}
-                                                    </option> 
-                                                </c:forEach>
-                                            </select>
-                                        </label>
-                                        <label>*</label>
+                                        <select name="uom" required="required">
+                                            <c:forEach var="droplist" items="${requestScope.model.dropListUOM}">
+                                                <option value="${droplist.uomName}" <c:if test="${droplist.uomName == model.dto.uom}">selected="true"</c:if>>
+                                                    ${droplist.uomName}
+                                                </option> 
+                                            </c:forEach>
+                                        </select> *
                                     </td>
-                                    <td><b>Upload</b></td>
-                                    <td>
-                                        <a href="javascript:void(0)" id="uploadlink"> Upload Products</a>
-                                    </td>
-                                </tr>
-                                <tr>
                                     <td></td>
-                                    <td>
-                                        <%-- 
-                                        <label>
-                                                <select name="supplierName">
-                                                        <c:forEach var="droplist" items="${requestScope.model.dropListSupplier}">
-                                                                  <option></option>
-                                                                  <option value="${droplist.supplierName}" ${(droplist.supplierName eq requestScope.model.supplierName)? "selected": ""}>
-                                                                        ${droplist.supplierName}
-                                                                  </option> 
-                                                        </c:forEach>
-                                                </select>
-                                        </label>
-                                        --%>
-                                    </td>
-                                    <td>Buyer FG</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="buyer" name="buyer" value="" size="30" />
-                                        </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Pack Style</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="packstyle" name="packstyle" value="" size="30" />
-                                        </label>
-                                    </td>
-                                    <td>Pack Size</td>
-                                    <td>
-                                        <select name="packsize">
-                                            <option value=""></option>  
-                                            <option value="603">603</option> 
-                                            <option value="307">307</option>    
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>LID</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="lid" name="lid" value="" size="30" />
-                                        </label>
-                                    </td>
-                                    <td>NW / DW-PW</td>
-                                    <td>
-                                        <label>
-                                            <input type="text" id="nwdwpw" name="nwdwpw" value="" size="30" />
-                                        </label>
-                                    </td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -190,228 +86,26 @@
             </div>
         </div>
         <script type="text/javascript">
-            $(function() {
-                $('#btnCancel').click(function() {
-                    location.href = 'Product.htm';
+
+            $('#itemCode').bind('blur', function() {
+                var $o = $(this);
+                if (!$o.val())
+                    return;
+                $.ajax({
+                    url: 'Product.htm?term=' + $o.val(),
+                    method: 'post',
+                    data: { action: 'getUnique', term: $o.val() },
+                    dataType: 'json',
+                    success: function(json) {
+                        if (json.status) {
+                            alert('The code is already exist!');
+                            $o.val(null);
+                            $o.focus();
+                        }
+                    }
                 });
             });
             
-            $('#productCode').bind('blur', function() {
-                    var $o = $(this);
-                    if (!$o.val())
-                        return;
-                    $.ajax({
-                        url: 'Product.htm?term=' + $o.val(),
-                        method: 'post',
-                        data: {
-                            action: 'getUnique', term: $o.val()
-                        },
-                        dataType: 'json',
-                        success: function(json) {
-                            if (json.status) {
-                                alert('The code is already exist!');
-                                $o.val(null);
-                                $o.focus();
-                            }
-                        }
-                    });
-                });
         </script>
-
-        <script language="JavaScript">
-            function cek() {
-                if (form.length.value == "" || form.width.value == "" || form.height.value == "") {
-                    alert("data empty");
-                    exit;
-                }
-            }
-            function kali() {
-                cek();
-                a = eval(form.length.value);
-                b = eval(form.width.value);
-                c = eval(form.height.value);
-                d = a * b * c
-                form.volumeMatrix.value = d;
-            }
-        </script>
-
-        <script type="text/javascript">
-            function formfocus() {
-                document.getElementById('autofocus').focus();
-            }
-            window.onload = formfocus;
-        </script>
-
-
-        <!-- added by edw for uploading products csv -->
-
-        <div id="dialog-upload" title="Product Upload" style="display:none;z-index:1;">
-            <iframe id="uploadFrameID" name="uploadFrame" height="0" width="0" frameborder="0" scrolling="yes"></iframe>  
-            <form id="myForm" enctype="multipart/form-data" method="post" 
-                  target="uploadFrame" 
-                  action="uploadProductServlet" onsubmit="ajaxFunction()">
-                <input type="file" name="txtFile" id="txtFile" /><br />
-                <input type="submit" id="submitID" name="submit" value="Upload" />
-            </form>
-
-            <div id="initializing" style="visibility: hidden; position:    absolute; top: 100px;">
-                <table width="100%" style="border: 1px; background-color: black;">
-                    <tr>
-                        <td>
-                            <table width="100%" style="border: 1px; background-color:    black; color: white;">
-                                <tr>
-                                    <td align="center">
-                                        <b>Initializing Upload...</b>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div id="progressBarTable" style="visibility: hidden; position:   absolute; top: 100px;">
-                <table width="100%" style="border: 1px; color: white;">
-                    <tr>
-                        <td>
-                            <table id="progressBar" width="100%" >
-                                <tr>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                <table width="100%" style="background-color: white; color: black;">
-                    <tr>
-                        <td align="center" nowrap="nowrap">
-                            <span id="bytesRead" style="font-weight: bold;">&nbsp;</span>
-                        </td>
-                    </tr>
-                </table>  
-            </div>
-
-            <div id="percentCompleteTable" align="center"
-                 style="visibility: hidden; position: absolute; top: 100px;">
-                <table width="100%" style="border: 1px;">
-                    <tr>
-                        <td>
-                            <table width="100%" style="border: 1px;">
-                                <tr>
-                                    <td align="center"  width="100%">
-                                        <span id="percentComplete" style="color: blue; font-weight: bold; width:100%">&nbsp;</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <script language="javascript">
-            var req;
-
-            function ajaxFunction() {
-                var url = "uploadProductServlet";
-
-                if (window.XMLHttpRequest) {
-                    req = new XMLHttpRequest();
-                    req.onreadystatechange = processStateChange;
-
-                    try {
-                        req.open("GET", url, true);
-                    } catch (e) {
-                        alert(e);
-                    }
-                    req.send(null);
-                } else if (window.ActiveXObject) {
-                    req = new ActiveXObject("Microsoft.XMLHTTP");
-
-                    if (req) {
-                        req.onreadystatechange = processStateChange;
-                        req.open("GET", url, true);
-                        req.send();
-                    }
-                }
-            }
-
-            function processStateChange() {
-                if (req.readyState == 4) {
-                    if (req.status == 200) {
-                        var xml = req.responseXML;
-                        var isNotFinished = xml.getElementsByTagName
-                                ("finished")[0];
-                        var myBytesRead = xml.getElementsByTagName
-                                ("bytes_read")[0];
-                        var myContentLength = xml.getElementsByTagName
-                                ("content_length")[0];
-                        var myPercent = xml.getElementsByTagName
-                                ("percent_complete")[0];
-                        if ((isNotFinished == null) && (myPercent == null)) {
-                            document.getElementById("initializing").style.
-                                    visibility = "visible";
-                            window.setTimeout("ajaxFunction();", 100);
-                        } else {
-                            document.getElementById("initializing").style.
-                                    visibility = "hidden";
-                            document.getElementById("progressBarTable").style.
-                                    visibility = "visible";
-                            document.getElementById("percentCompleteTable").style.
-                                    visibility = "visible";
-                            document.getElementById("bytesRead").style.
-                                    visibility = "visible";
-
-                            myBytesRead = myBytesRead.firstChild.data;
-                            myContentLength = myContentLength.firstChild.data;
-
-                            if (myPercent != null) {
-                                myPercent = myPercent.firstChild.data;
-
-                                document.getElementById("progressBar").style.width
-                                        = myPercent + "%";
-                                document.getElementById("bytesRead").innerHTML
-                                        = myBytesRead + " of " +
-                                        myContentLength + " bytes read";
-                                document.getElementById("percentComplete").innerHTML
-                                        = myPercent + "100%";
-                                window.setTimeout("ajaxFunction();", 100);
-                            } else { // finished
-                                document.getElementById("bytesRead").style.visibility
-                                        = "hidden";
-                                document.getElementById("progressBar").style.width
-                                        = "100%";
-                                document.getElementById("percentComplete").innerHTML
-                                        = "File Uploading Done!";
-                                document.getElementById("txtFile").value = "";
-
-                                alert('success uploading....');
-
-                                // close
-                                $("#dialog-upload").dialog('close');
-                            }
-                        }
-                    } else {
-                        alert(req.statusText);
-                    }
-                }
-            }
-
-
-            $("#uploadlink").click(function() {
-                $("#dialog-upload").dialog({width: 350, height: 150, position: "center", modal: true, zindex: 1, title: 'Upload'});
-            });
-        </script>
-
-        <!--    end of uploading    -->             
-
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>            
-
     </body>
 </html>

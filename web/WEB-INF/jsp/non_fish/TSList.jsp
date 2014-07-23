@@ -17,7 +17,7 @@
             <!-- include file header HERE -->
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-            
+
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
@@ -34,8 +34,8 @@
                                 <tr>
                                     <td colspan="2">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <select id="type"><option value="NORMAL">Normal</option><option value="OTHERS">Others</option><option value="BAD_STOCKS">Bad Stocks</option></select>
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('TransferSlip.htm?action=create&module=<%= request.getParameter("module") %>&type=' + document.getElementById('type').value);" />
+                                        <select id="type"><option value="NORMAL">Normal</option><option value="OTHERS">Others</option><!--<option value="BAD_STOCKS">Bad Stocks</option>--></select>
+                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('TransferSlip.htm?action=create&module=<%= request.getParameter("module")%>&type=' + document.getElementById('type').value);" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -64,7 +64,7 @@
                                             <c:set scope="page" value="${no + 1}" var="no"/>
                                         </td>
                                         <td>
-                                             <a href="GenerateReport.htm?action=index&item=IMTS&type=xls&params=${x.tsCode}"><img src="resources/images/printxls.gif" title="Print Transfer Slip (xls)" /></a>
+                                            <a href="GenerateReport.htm?action=index&item=IMTS&type=xls&params=${x.tsCode}"><img src="resources/images/printxls.gif" title="Print Transfer Slip (xls)" /></a>
                                         </td>
                                         <td>${x.tsCode}</td>
                                         <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.tsDate}" /></td>
@@ -91,7 +91,7 @@
                     </table>
                 </div>
             </div>
-            
+
             <!-- footer HERE -->
             <div class="span-24 last border-top">
                 <div class="box">&copy; 2013 SPFI</div>
@@ -101,7 +101,7 @@
         <!-- javascript block HERE -->
         <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
-            
+
         </script>
     </body>
 </html>

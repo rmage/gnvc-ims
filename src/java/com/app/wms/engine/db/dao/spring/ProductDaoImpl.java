@@ -104,7 +104,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         SqlUpdate su = new SqlUpdate(dataSource, "UPDATE " + getTableName()
                 + " SET product_code=?, product_name=?, product_alias=?, product_category=?,"
                 + " brand_name=?, is_active=?, is_delete=?, updated_by=?, updated_date=?,"
-                + " uom_name=?, packstyle=?, packsize=?, lid=?, nwdwpw=?  WHERE product_id=?");
+                + " uom_name=?, packstyle=?, packsize=?, lid=?, nwdwpw=?, product_description = ?  WHERE product_id=?");
 
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
@@ -121,7 +121,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
 //        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
 //        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
 //        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
@@ -147,7 +147,8 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 
         su.compile();
 //        su.update(new Object[]{dto.getBarCode(), dto.getProductCode(), dto.getProductName(), dto.getProductAlias(), dto.getProductCategory(), dto.getBrandName(), dto.getProductType(), dto.getProductColor(), dto.getProductDescription(), dto.getVolumeWeight(), dto.getUnitWeight(), dto.getVolumeMatrix(), dto.getUnitMatrix(), dto.getUnitLength(), dto.getUnitWidth(), dto.getUnitHeight(), dto.getUnitPiece(), dto.getUnitBox(), dto.getUnitCartoon(), dto.getUnitPallete(), dto.getUserId(), dto.getCorpId(), dto.getWhCode(), dto.getIsActive(), dto.getIsDelete(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getUom(), dto.getSupplier(), dto.getBuyer(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), pk.getProductId()});
-        su.update(new Object[]{dto.getProductCode(), dto.getProductName(), dto.getProductAlias(), dto.getProductCategory(), dto.getBrandName(), dto.getIsActive(), dto.getIsDelete(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getUom(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), pk.getProductId()});
+        su.update(new Object[]{dto.getProductCode(), dto.getProductName(), dto.getProductAlias(), dto.getProductCategory(), dto.getBrandName(), dto.getIsActive(), dto.getIsDelete(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getUom(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), dto.getProductDescription(),
+            pk.getProductId()});
     }
 
     /**
