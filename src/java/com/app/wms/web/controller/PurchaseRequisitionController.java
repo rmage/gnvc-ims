@@ -184,6 +184,8 @@ public class PurchaseRequisitionController extends ReportManagerController {
             List<PrsDetail> prsDetails = new ArrayList<PrsDetail>();
 
             for (int i = 0; i < productcode1s.length; i++) {
+                
+                System.err.println("QTYs: " + qtys[i] + " / in Process");
                 PrsDetail prsDetail = new PrsDetail();
                 prsDetail.setPrsnumber(p.getPrsnumber());
                 prsDetail.setProductcode(productcode1s[i]);

@@ -85,15 +85,15 @@ public class PurchaseController extends MultiActionController {
             CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
             PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
             PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
+            UserDao uDao = DaoFactory.createUserDao();
 
             /* TRANSACTION | Something complex here */
             // get currency rate
-            CurrencyRate cr = currencyRateDao.findByCurrency(master[6]);
-
+            //CurrencyRate cr = currencyRateDao.findByCurrency(master[6]);
             // insert master purchase order
             Purchase p = new Purchase();
             p.setPoCode(Integer.parseInt(master[0]));
-            p.setRateId(cr.getRateId());
+            //p.setRateId(cr.getRateId());
             p.setPoDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
             p.setSupplierCode(master[2]);
             p.setDiscount(Integer.parseInt(master[3]));
@@ -101,7 +101,7 @@ public class PurchaseController extends MultiActionController {
             p.setPpn(Integer.parseInt(master[5]));
             p.setCurrency(master[6]);
             p.setRemarks(master[7]);
-            p.setCreatedBy(lu.getUserId());
+            p.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
             p.setCreatedDate(new Date());
             purchaseDao.insert(p);
 
@@ -114,8 +114,8 @@ public class PurchaseController extends MultiActionController {
                 pd.setProductCode(detail[1]);
                 pd.setDepartmentCode(detail[2]);
                 pd.setSubTotal(new BigDecimal(detail[3]));
-                pd.setCreatedBy(lu.getUserId());
-                pd.setCreatedDate(new Date());
+                pd.setCreatedBy(p.getCreatedBy());
+                pd.setCreatedDate(p.getCreatedDate());
                 purchaseDtlDao.insert(pd);
             }
         } catch (Exception e) {
@@ -140,10 +140,23 @@ public class PurchaseController extends MultiActionController {
         // get po data and approve it
         Purchase p = purchaseDao.findByPo(request.getParameter("po"));
         if (p != null) {
-            p.setIsApproved("Y");
-            p.setApprovedBy(userDao.findByPrimaryKey(lu.getUserId()).getName());
-            p.setApprovedDate(new Date());
-            p.setUpdatedBy(lu.getUserId());
+            String name = userDao.findByPrimaryKey(lu.getUserId()).getName();
+            if (lu.getRoleCode().contains("MAN")) {
+                if (p.getIsCertified().equals("N")) {
+                    p.setIsCertified("Y");
+                    p.setCertifiedBy(name);
+                    p.setCertifiedDate(new Date());
+                } else {
+                    p.setIsApproved("Y");
+                    p.setApprovedBy(name);
+                    p.setApprovedDate(new Date());
+                }
+            } else if (lu.getRoleCode().contains("MD")) {
+                p.setIsApproved("Y");
+                p.setApprovedBy(name);
+                p.setApprovedDate(new Date());
+            }
+            p.setUpdatedBy(name);
             p.setUpdatedDate(new Date());
             purchaseDao.update(p);
         }
@@ -253,10 +266,13 @@ public class PurchaseController extends MultiActionController {
             if (b) {
                 pw.print(",");
             }
-            if(x.getIsApproved().equals("N")) {
+            if (x.getIsApproved().equals("N")) {
                 isApproved = FyaUtility.checkPOApprovalAuth(lu.getUserId(), amount);
                 x.setApprovedBy(FyaUtility.checkPOApprovalWait(amount, "name"));
             }
+            System.out.println("x.getIsCertified(): " + x.getIsCertified());
+            System.out.println("lu.getRoleCode(): " + lu.getRoleCode());
+            System.out.println("x.getIsApproved(): " + x.getIsApproved());
             pw.print("{\"1\": \"" + x.getPoCode() + "\", ");
             pw.print("\"2\": \"" + x.getPoCode() + "\", ");
             pw.print("\"3\": \"" + x.getPoDate() + "\", ");
@@ -264,8 +280,8 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"5\": \"" + s.getSupplierName() + "\", ");
             pw.print("\"6\": \"" + s.getTelephone() + "\", ");
             pw.print("\"7\": \"" + amount + "\", ");
-            pw.print("\"8\": \"" + (x.getIsApproved().equals("N") ? (isApproved.equals("Y") ? "Waiting for " + x.getApprovedBy() + " approval!" : "Approve : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Approve this Purchase Order\\\" /></a>" ) : 
-                    "Approved by <b>" + x.getApprovedBy() + "</b> at " + sdf.format(x.getApprovedDate())) + "\"}");
+            pw.print("\"8\": \"" + (x.getIsCertified().equals("N") ? (lu.getRoleCode().contains("MAN") ? "Certify : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Certify this Purchase Order\\\" /></a>" : "Waiting for Manager Purchasing certification")
+                    : (x.getIsApproved().equals("N") ? (isApproved.equals("Y") ? "Waiting for " + x.getApprovedBy() + " approval" : "Approve : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Approve this Purchase Order\\\" /></a>") : "Approved by <b>" + x.getApprovedBy() + "</b> at " + sdf.format(x.getApprovedDate()))) + "\"}");
 
             b = Boolean.TRUE;
         }

@@ -32,6 +32,7 @@ import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.dto.ProductCategory;
 import com.app.wms.engine.db.dto.User;
+import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductCategoryDaoException;
 import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -471,30 +472,53 @@ public class NewReportController extends MultiActionController {
     public ModelAndView getFGStockCard(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("finish_goods/StockCardFG");
     }
-    
+
     /* GNVS | New Fish Created Fish Inventory */
     public ModelAndView getFishStockCard(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishStockCard");
     }
-    
+
     public ModelAndView getSummaryReportPerSupplier(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishSummaryPerSupplier");
     }
-    
+
     public ModelAndView getSummaryReportPerCS(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishSummaryPerCS");
     }
-    
+
     public ModelAndView getFishStockCardActual(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishStockCardActual");
     }
-    
+
     public ModelAndView getSummaryReportPerSupplierActual(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishSummaryPerSupplierActual");
     }
-    
+
     public ModelAndView getSummaryReportPerCSActual(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishSummaryPerCSActual");
+    }
+
+    //  Non-Fish Module | Form and Report List
+    public ModelAndView getNFRStockInventoryPerCategory(HttpServletRequest request, HttpServletResponse response)
+            throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            // get logged user
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            model.put("userId", lu.getUserId());
+
+            ProductCategoryDao pcDao = DaoFactory.createProductCategoryDao();
+            List<ProductCategory> pcs = pcDao.findAll();
+            model.put("pcs", pcs);
+
+            return new ModelAndView("default/non_fish/StockInventoryPerCategory", "ims", model);
+        } else {
+            return new ModelAndView("redirect:index.htm");
+        }
+    }
+
+    public boolean isLogin(HttpServletRequest request) {
+        return request.getSession().getAttribute("user") != null;
     }
 
 }

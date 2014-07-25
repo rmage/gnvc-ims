@@ -152,13 +152,13 @@ public class GeneralReportController extends MultiActionController {
 			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name"
 		);
 		
-		ListMap.put(Report.PPoForm, 
-			"SELECT * " +
-			"FROM inventory..po po " +
-			"LEFT JOIN inventory..po_detail pod ON po.ponumber = pod.ponumber " +
-			"LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
-			"LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
-			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name");
+//		ListMap.put(Report.PPoForm, 
+//			"SELECT * " +
+//			"FROM inventory..po po " +
+//			"LEFT JOIN inventory..po_detail pod ON po.ponumber = pod.ponumber " +
+//			"LEFT JOIN inventory..supplier su ON po.supplier_name = su.supplier_name " +
+//			"LEFT JOIN inventory..product p ON p.product_code = pod.productcode " +
+//			"LEFT JOIN inventory..department dep ON dep.department_name = po.department_name");
 		
 		ListMap.put(Report.IMStockCardperCategory, 
 				"select * " +

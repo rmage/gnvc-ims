@@ -151,10 +151,10 @@ public class ReceiveReportController extends MultiActionController {
                 // average price in different module | productPriceDao.update(pp, 1, new BigDecimal(rrd.getQtyGood()));
                 
                 // stock balance history for stock card
-                stockBalanceDao.insertOrUpdate(rrd.getProductCode(), new Date(), si.getBalance(), new BigDecimal(rrd.getQtyGood()), 10);
+                stockBalanceDao.insertOrUpdate(rrd.getProductCode(), new Date(), si.getBalance(), new BigDecimal(rrd.getQtyGood() + rrd.getQtyBad()), 10);
                 
                 // insert or update stock_inventory
-                receiveReportDao.updateStockInventory(rrd.getProductCode(), rrd.getQtyGood());
+                receiveReportDao.updateStockInventory(rrd.getProductCode(), rrd.getQtyGood() + rrd.getQtyBad());
             }
             
         } catch(Exception e) {

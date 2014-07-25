@@ -25,7 +25,7 @@
                                         <select id="canvasser" name="canvasser" required="true">
                                             <option value="">-- Pick Canvasser --</option>
                                             <c:forEach items="${model.u}" var="x">
-                                            <option value="${x.userId}">${x.name}</option>
+                                            <option value="${x.name}">${x.name}</option>
                                             </c:forEach>
                                         </select>
                                     </td>

@@ -49,7 +49,8 @@ public class StockBalanceDaoImpl extends AbstractDAO
          *  please see mode for multiply support stock card
          *  10  :   Receive Report
          *  20  :   Transfer Slip Normal
-         *  21  :   Transfer Slip Others   
+         *  21  :   Transfer Slip Others
+         *  23  :   Delivery Receipt
          */
         String q = "";
         String i = "";

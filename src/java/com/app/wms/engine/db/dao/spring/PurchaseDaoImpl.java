@@ -37,6 +37,9 @@ public class PurchaseDaoImpl extends AbstractDAO
         p.setPpn(rs.getInt("ppn"));
         p.setCurrency(rs.getString("currency"));
         p.setRemarks(rs.getString("remarks"));
+        p.setIsCertified(rs.getString("is_certified"));
+        p.setCertifiedBy(rs.getString("certified_by"));
+        p.setCertifiedDate(rs.getDate("certified_date"));
         p.setIsApproved(rs.getString("is_approved"));
         p.setApprovedBy(rs.getString("approved_by"));
         p.setApprovedDate(rs.getDate("approved_date"));
@@ -49,16 +52,16 @@ public class PurchaseDaoImpl extends AbstractDAO
     }
 
     public void insert(Purchase p) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 p.getPoCode(), p.getRateId(), p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getCurrency(),
-                p.getRemarks(), "N", null, null, p.getCreatedBy(), p.getCreatedDate(), null, null);
+                p.getRemarks(), "N", null, null, "N", null, null, p.getCreatedBy(), p.getCreatedDate(), null, null);
     }
 
     public void update(Purchase p) {
         jdbcTemplate.update("UPDATE " + getTableName() + " SET po_date = ?, supplier_code = ?, discount = ?, pph = ?, ppn = ?, currency = ?, remarks = ?, is_approved = ?"
-                + ",approved_by = ?, approved_date = ?, updated_by = ?, updated_date = ? WHERE po_code = ?",
+                + ",approved_by = ?, approved_date = ?, updated_by = ?, updated_date = ?, is_certified = ?, certified_by = ?, certified_date = ? WHERE po_code = ?",
                 p.getPoDate(), p.getSupplierCode(), p.getDiscount(), p.getPph(), p.getPpn(), p.getCurrency(), p.getRemarks(), p.getIsApproved(), p.getApprovedBy(), p.getApprovedDate(),
-                p.getUpdatedBy(), p.getUpdatedDate(), p.getPoCode());
+                p.getUpdatedBy(), p.getUpdatedDate(), p.getIsCertified(), p.getCertifiedBy(), p.getCertifiedDate(), p.getPoCode());
     }
 
     public Purchase findByPo(String poCode) {
@@ -90,7 +93,7 @@ public class PurchaseDaoImpl extends AbstractDAO
 
     public List<Purchase> ajaxSearch(String where, String order, int page, int show) {
         return jdbcTemplate.query("DECLARE @page INT, @show INT SELECT @page=?, @show=? "
-                + "SELECT * FROM (SELECT * , ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY po_code" : order) + ") row "
+                + "SELECT * FROM (SELECT * , ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY created_date DESC" : order) + ") row "
                 + "FROM " + getTableName() + " " + (where.isEmpty() ? "" : where) + ") "
                 + "list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", this, page, show);
     }

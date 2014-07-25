@@ -48,7 +48,7 @@ public class PrsDetailDaoImpl extends AbstractDAO implements ParameterizedRowMap
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
+        su.declareParameter(new SqlParameter(java.sql.Types.NUMERIC));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.NUMERIC));
         su.compile();

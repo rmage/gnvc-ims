@@ -46,7 +46,7 @@ public class AssignCanvasserDtlDaoImpl extends AbstractDAO
     public List<AssignCanvasserDtl> findByUserId(String userId) {
         return jdbcTemplate.query("SELECT acd.id, acd.prsnumber, acd.productcode, acd.user_id FROM " + getTableName() + " acd " +
             "LEFT JOIN assign_canv_prc acp ON acp.prsnumber = acd.prsnumber AND acp.productcode = acd.productcode " +
-            "WHERE acp.id IS NULL AND acd.user_id = ?", this, userId);
+            "WHERE acp.id IS NULL AND acd.user_id = ? ORDER BY prsnumber", this, userId);
     }
     
 }

@@ -23,6 +23,12 @@ public class Purchase implements Serializable {
     
     private String remarks;
     
+    private String isCertified;
+    
+    private String certifiedBy;
+    
+    private Date certifiedDate;
+    
     private String isApproved;
     
     private String approvedBy;
@@ -182,6 +188,30 @@ public class Purchase implements Serializable {
 
     public void setRateId(int rateId) {
         this.rateId = rateId;
+    }
+
+    public String getIsCertified() {
+        return isCertified;
+    }
+
+    public void setIsCertified(String isCertified) {
+        this.isCertified = isCertified;
+    }
+
+    public String getCertifiedBy() {
+        return certifiedBy;
+    }
+
+    public void setCertifiedBy(String certifiedBy) {
+        this.certifiedBy = certifiedBy;
+    }
+
+    public Date getCertifiedDate() {
+        return certifiedDate;
+    }
+
+    public void setCertifiedDate(Date certifiedDate) {
+        this.certifiedDate = certifiedDate;
     }
 
 }
