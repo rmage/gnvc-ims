@@ -168,7 +168,7 @@ public class PoDetailDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 */
 	public String getTableName()
 	{
-		return "inventory..po_detail";
+		return "po_detail";
 	}
 
 	/** 

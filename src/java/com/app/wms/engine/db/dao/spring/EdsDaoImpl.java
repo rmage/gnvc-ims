@@ -22,7 +22,7 @@ public class EdsDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..eds";
+        return "eds";
     }
     
     public Eds mapRow(ResultSet rs, int i) throws SQLException {

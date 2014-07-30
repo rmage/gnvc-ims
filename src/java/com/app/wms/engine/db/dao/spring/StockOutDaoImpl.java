@@ -127,7 +127,7 @@ public class StockOutDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 */
 	public String getTableName()
 	{
-		return "inventory..stock_out";
+		return "stock_out";
 	}
 
 	/** 

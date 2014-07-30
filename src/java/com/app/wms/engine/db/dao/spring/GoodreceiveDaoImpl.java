@@ -111,7 +111,7 @@ public class GoodreceiveDaoImpl extends AbstractDAO implements ParameterizedRowM
 	 */
 	public String getTableName()
 	{
-		return "inventory..goodreceive";
+		return "goodreceive";
 	}
 
 	/** 

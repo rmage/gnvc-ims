@@ -116,7 +116,7 @@ public class WhLocationDetailDaoImpl extends AbstractDAO implements Parameterize
 	 */
 	public String getTableName()
 	{
-		return "inventory..wh_location_detail";
+		return "wh_location_detail";
 	}
 
 	/** 

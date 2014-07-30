@@ -184,7 +184,7 @@ public class FishWsDaoImpl extends AbstractDAO
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_ws";
+		return "fish_ws";
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class FishWsDaoImpl extends AbstractDAO
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_ws WHERE ws_no LIKE ? AND date_shift = ? AND is_active = 'Y' ) " +
+				"FROM fish_ws WHERE ws_no LIKE ? AND date_shift = ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -217,7 +217,7 @@ public class FishWsDaoImpl extends AbstractDAO
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_ws WHERE ws_no LIKE ? AND is_active = 'Y' ) " +
+				"FROM fish_ws WHERE ws_no LIKE ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";

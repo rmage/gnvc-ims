@@ -22,7 +22,7 @@ public class OfalDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..ofal";
+        return "ofal";
     }
     
     public Ofal mapRow(ResultSet rs, int i) throws SQLException {

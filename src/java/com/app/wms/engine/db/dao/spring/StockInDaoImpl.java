@@ -127,7 +127,7 @@ public class StockInDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 	 */
 	public String getTableName()
 	{
-		return "inventory..stock_in";
+		return "stock_in";
 	}
 
 	/** 

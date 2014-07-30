@@ -50,7 +50,7 @@ public class DistributorDaoImpl extends AbstractDAO
     }
 
     public String getTableName() {
-        return "inventory..distributor";
+        return "distributor";
     }
 
     public void edit(Distributor d) {

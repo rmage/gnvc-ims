@@ -22,7 +22,7 @@ public class ReceiveReportDtlDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..rr_detail";
+        return "rr_detail";
     }
     
     public ReceiveReportDtl mapRow(ResultSet rs, int i) throws SQLException {

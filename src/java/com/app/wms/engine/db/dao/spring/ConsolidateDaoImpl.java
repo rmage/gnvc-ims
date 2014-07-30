@@ -111,7 +111,7 @@ public class ConsolidateDaoImpl extends AbstractDAO implements ParameterizedRowM
 	 */
 	public String getTableName()
 	{
-		return "inventory..consolidate";
+		return "consolidate";
 	}
 
 	/** 

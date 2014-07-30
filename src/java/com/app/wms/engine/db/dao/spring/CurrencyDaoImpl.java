@@ -112,7 +112,7 @@ public class CurrencyDaoImpl extends AbstractDAO implements ParameterizedRowMapp
      * @return String
      */
     public String getTableName() {
-        return "inventory..currency";
+        return "currency";
     }
 
     /**

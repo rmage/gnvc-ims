@@ -202,11 +202,10 @@ public class UserDaoImpl extends AbstractDAO implements ParameterizedRowMapper<U
     @Transactional
     public List<User> findByUserRole(String roleCode) throws UserDaoException {
         try {
-            return jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE FROM " + getTableName() + " WHERE ROLE_CODE = ?", this, roleCode);
+            return jdbcTemplate.query("SELECT USER_ID, CODE, NAME, USERNAME, PASSWORD, ROLE_CODE, EMAIL, IS_ACTIVE, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, '' as WH_CODE FROM " + getTableName() + " WHERE ROLE_CODE = ? AND IS_ACTIVE = 'Y' ORDER BY NAME", this, roleCode);
         } catch (Exception e) {
             throw new UserDaoException("Query failed", e);
         }
-
     }
 //    
 //    dto.setUserId(rs.getString(1));

@@ -24,7 +24,7 @@ public class StockBalanceDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..stock_balance";
+        return "stock_balance";
     }
     
     public StockBalance mapRow(ResultSet rs, int i) throws SQLException {

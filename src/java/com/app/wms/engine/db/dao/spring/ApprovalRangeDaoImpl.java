@@ -125,7 +125,7 @@ public class ApprovalRangeDaoImpl extends AbstractDAO implements ParameterizedRo
      * @return String
      */
     public String getTableName() {
-        return "inventory..approval_range";
+        return "approval_range";
     }
 
     /**

@@ -136,7 +136,7 @@ public class GoodreceiveDetailDaoImpl extends AbstractDAO implements Parameteriz
 	 */
 	public String getTableName()
 	{
-		return "inventory..goodreceive_detail";
+		return "goodreceive_detail";
 	}
 
 	/** 

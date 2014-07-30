@@ -118,7 +118,7 @@ public class BundleDaoImpl extends AbstractDAO implements ParameterizedRowMapper
 	 */
 	public String getTableName()
 	{
-		return "inventory..bundle";
+		return "bundle";
 	}
 
 	/** 

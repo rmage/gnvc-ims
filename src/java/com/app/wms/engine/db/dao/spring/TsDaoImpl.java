@@ -23,7 +23,7 @@ public class TsDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..ts";
+        return "ts";
     }
     
     public Ts mapRow(ResultSet rs, int i) throws SQLException {
@@ -56,7 +56,7 @@ public class TsDaoImpl extends AbstractDAO
     }
     
     public void updateStockInventory(String productCode, int qty) {
-        jdbcTemplate.update("UPDATE inventory..stock_inventory SET balance = balance - ? WHERE product_code = ?",
+        jdbcTemplate.update("UPDATE stock_inventory SET balance = balance - ? WHERE product_code = ?",
             qty, productCode);
     }
     

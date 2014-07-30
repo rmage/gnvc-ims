@@ -22,7 +22,7 @@ public class CurrencyRateDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..currency_rate";
+        return "currency_rate";
     }
     
     public CurrencyRate mapRow(ResultSet rs, int i) throws SQLException {

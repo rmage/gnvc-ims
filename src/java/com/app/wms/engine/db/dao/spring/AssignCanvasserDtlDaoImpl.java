@@ -22,7 +22,7 @@ public class AssignCanvasserDtlDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..assign_canv_dtl";
+        return "assign_canv_dtl";
     }
     
     public AssignCanvasserDtl mapRow(ResultSet rs, int row) throws SQLException {

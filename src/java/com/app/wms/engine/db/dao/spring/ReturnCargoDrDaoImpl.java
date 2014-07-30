@@ -21,7 +21,7 @@ public class ReturnCargoDrDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..rrc_dr";
+        return "rrc_dr";
     }
 
     public ReturnCargoDr mapRow(ResultSet rs, int i) throws SQLException {

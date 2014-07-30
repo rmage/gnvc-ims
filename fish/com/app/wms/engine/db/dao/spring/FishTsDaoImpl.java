@@ -174,15 +174,15 @@ public class FishTsDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_ts";
+		return "fish_ts";
 	}
 
 	@Override
 	public Boolean checkIsTsNoExist(String tsNo) {
-		String query = "SELECT * FROM inventory..fish_ts ts "
+		String query = "SELECT * FROM fish_ts ts "
                 + "WHERE ts.ts_no = ? "
                 + "UNION ALL "
-                + "SELECT 0, * FROM inventory..fish_bad_stock fbs "
+                + "SELECT 0, * FROM fish_bad_stock fbs "
                 + "WHERE fbs.bs_no = ?";
         
 		List<FishTs> resultList = jdbcTemplate.query(query, this, tsNo, tsNo);
@@ -196,7 +196,7 @@ public class FishTsDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_ts WHERE ts_no LIKE ? AND ts_date = ? AND is_active = 'Y' ) " +
+				"FROM fish_ts WHERE ts_no LIKE ? AND ts_date = ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -211,7 +211,7 @@ public class FishTsDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_ts WHERE ts_no LIKE ? AND is_active = 'Y' ) " +
+				"FROM fish_ts WHERE ts_no LIKE ? AND is_active = 'Y' ) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";

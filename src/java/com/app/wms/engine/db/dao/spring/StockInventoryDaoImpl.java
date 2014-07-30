@@ -147,7 +147,7 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
 	 */
 	public String getTableName()
 	{
-		return "inventory..stock_inventory";
+		return "stock_inventory";
 	}
 
 	/** 
@@ -416,7 +416,7 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
     /* added by FYA */
     public void updateBalance(String productCode, BigDecimal qty, String name, BigDecimal initQty) {
         jdbcTemplate.update("UPDATE " + getTableName() + " SET balance = ?, updated_by = ?, updated_date = GETDATE() WHERE product_code = ?;" + 
-            "INSERT INTO inventory..stock_inventory_log VALUES(?, ?, GETDATE());" , qty, name, productCode, productCode, "updated by " + name + " from value " + initQty + 
+            "INSERT INTO stock_inventory_log VALUES(?, ?, GETDATE());" , qty, name, productCode, productCode, "updated by " + name + " from value " + initQty + 
             " with value " + qty);
     }
       

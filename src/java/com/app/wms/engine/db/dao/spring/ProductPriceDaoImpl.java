@@ -25,7 +25,7 @@ public class ProductPriceDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..product_price";
+        return "product_price";
     }
     
     public ProductPrice mapRow(ResultSet rs, int i) throws SQLException {

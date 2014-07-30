@@ -21,7 +21,7 @@ public class TsDtlDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..ts_detail";
+        return "ts_detail";
     }
     
     public TsDtl mapRow(ResultSet rs, int i) throws SQLException {

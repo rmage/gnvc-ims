@@ -143,7 +143,7 @@ public class FishSupplierDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_supplier";
+		return "fish_supplier";
 	}
 
     public List<FishSupplier> findAllAndPaging(int limit, int offset) {

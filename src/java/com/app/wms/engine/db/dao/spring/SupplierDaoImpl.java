@@ -128,7 +128,7 @@ public class SupplierDaoImpl extends AbstractDAO implements ParameterizedRowMapp
      * @return String
      */
     public String getTableName() {
-        return "inventory..supplier";
+        return "supplier";
     }
 
     /**

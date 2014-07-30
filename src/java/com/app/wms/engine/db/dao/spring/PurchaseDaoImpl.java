@@ -24,7 +24,7 @@ public class PurchaseDaoImpl extends AbstractDAO
     }
 
     public String getTableName() {
-        return "inventory..po";
+        return "po";
     }
 
     public Purchase mapRow(ResultSet rs, int i) throws SQLException {

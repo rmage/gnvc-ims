@@ -117,7 +117,7 @@ public class FishStorageDaoImpl extends AbstractDAO
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_storage";
+		return "fish_storage";
 	}
 
     public List<FishStorage> findAllAndPaging(int limit, int offset) {

@@ -117,7 +117,7 @@ public class WarehouseDaoImpl extends AbstractDAO implements ParameterizedRowMap
 	 */
 	public String getTableName()
 	{
-		return "inventory..warehouse";
+		return "warehouse";
 	}
 
 	/** 

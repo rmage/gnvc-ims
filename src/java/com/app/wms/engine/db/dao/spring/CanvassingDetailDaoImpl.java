@@ -147,7 +147,7 @@ public class CanvassingDetailDaoImpl extends AbstractDAO implements Parameterize
 	 */
 	public String getTableName()
 	{
-		return "inventory..canvassing_detail";
+		return "canvassing_detail";
 	}
 
 	/** 

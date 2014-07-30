@@ -195,7 +195,7 @@ public class BeritaAcaraDaoImpl extends AbstractDAO implements ParameterizedRowM
 	 */
 	public String getTableName()
 	{
-		return "inventory..berita_acara";
+		return "berita_acara";
 	}
 
 	/** 

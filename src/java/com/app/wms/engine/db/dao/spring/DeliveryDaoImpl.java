@@ -120,7 +120,7 @@ public class DeliveryDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 */
 	public String getTableName()
 	{
-		return "inventory..deliveryorder";
+		return "deliveryorder";
 	}
 
 	/** 

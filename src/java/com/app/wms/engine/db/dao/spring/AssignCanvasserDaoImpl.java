@@ -116,7 +116,7 @@ public class AssignCanvasserDaoImpl extends AbstractDAO implements Parameterized
 	 */
 	public String getTableName()
 	{
-		return "inventory..assign_canv";
+		return "assign_canv";
 	}
 
 	/** 

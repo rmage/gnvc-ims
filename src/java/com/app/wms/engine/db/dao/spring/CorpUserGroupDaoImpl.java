@@ -117,7 +117,7 @@ public class CorpUserGroupDaoImpl extends AbstractDAO implements ParameterizedRo
 	 */
 	public String getTableName()
 	{
-		return "inventory..corp_user_group";
+		return "corp_user_group";
 	}
 
 	/** 

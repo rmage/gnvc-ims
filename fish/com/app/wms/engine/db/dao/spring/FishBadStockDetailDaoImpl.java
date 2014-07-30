@@ -166,6 +166,6 @@ public class FishBadStockDetailDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_bad_stock_detail";
+		return "fish_bad_stock_detail";
 	}
 }

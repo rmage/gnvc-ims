@@ -117,6 +117,6 @@ public class GeneralDaoImpl extends AbstractDAO
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_weight_type";
+		return "fish_weight_type";
 	}
 }

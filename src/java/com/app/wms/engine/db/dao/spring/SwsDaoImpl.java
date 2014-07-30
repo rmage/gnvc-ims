@@ -22,7 +22,7 @@ public class SwsDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..sws";
+        return "sws";
     }
     
     public Sws mapRow(ResultSet rs, int i) throws SQLException {

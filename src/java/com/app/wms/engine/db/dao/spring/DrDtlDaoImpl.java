@@ -22,7 +22,7 @@ public class DrDtlDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..dr_detail";
+        return "dr_detail";
     }
     
     public DrDtl mapRow(ResultSet rs, int i) throws SQLException {

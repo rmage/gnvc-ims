@@ -172,7 +172,7 @@ public class WhLocationDaoImpl extends AbstractDAO implements ParameterizedRowMa
 	 */
 	public String getTableName()
 	{
-		return "inventory..wh_location";
+		return "wh_location";
 	}
 
 	/** 

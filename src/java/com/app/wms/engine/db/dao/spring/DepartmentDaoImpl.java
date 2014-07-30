@@ -114,7 +114,7 @@ public class DepartmentDaoImpl extends AbstractDAO implements ParameterizedRowMa
      * @return String
      */
     public String getTableName() {
-        return "inventory..department";
+        return "department";
     }
 
     /**

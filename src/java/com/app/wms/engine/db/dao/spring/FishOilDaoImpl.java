@@ -21,7 +21,7 @@ public class FishOilDaoImpl extends AbstractDAO implements ParameterizedRowMappe
     }
 
     public String getTableName() {
-        return "inventory..fishoil";
+        return "fishoil";
     }
 
     public FishOil mapRow(ResultSet rs, int i) throws SQLException {

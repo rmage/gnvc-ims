@@ -114,7 +114,7 @@ public class ReplenishmentDaoImpl extends AbstractDAO implements ParameterizedRo
 	 */
 	public String getTableName()
 	{
-		return "inventory..replenishment";
+		return "replenishment";
 	}
 
 	/** 

@@ -154,7 +154,7 @@ public class CorpDaoImpl extends AbstractDAO implements ParameterizedRowMapper<C
 	 */
 	public String getTableName()
 	{
-		return "inventory..corp";
+		return "corp";
 	}
 
 	/** 

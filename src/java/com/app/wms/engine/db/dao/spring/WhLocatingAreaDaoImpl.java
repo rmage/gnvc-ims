@@ -109,7 +109,7 @@ public class WhLocatingAreaDaoImpl extends AbstractDAO implements ParameterizedR
 	 */
 	public String getTableName()
 	{
-		return "inventory..wh_locating_area";
+		return "wh_locating_area";
 	}
 
 	/** 

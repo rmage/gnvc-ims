@@ -114,7 +114,7 @@ public class CorpUserDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 */
 	public String getTableName()
 	{
-		return "inventory..corp_user";
+		return "corp_user";
 	}
 
 	/** 

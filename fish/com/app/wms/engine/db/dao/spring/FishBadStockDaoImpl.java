@@ -165,7 +165,7 @@ public class FishBadStockDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_bad_stock";
+		return "fish_bad_stock";
 	}
 
 	@Override
@@ -177,7 +177,7 @@ public class FishBadStockDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_bad_stock WHERE bs_no LIKE ? AND bs_date = ?) " +
+				"FROM fish_bad_stock WHERE bs_no LIKE ? AND bs_date = ?) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";
@@ -192,7 +192,7 @@ public class FishBadStockDaoImpl extends AbstractDAO implements
 				"SET @OFFSET = ? " +
 				"SELECT * FROM ( " +
 				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM inventory..fish_bad_stock WHERE bs_no LIKE ?) " +
+				"FROM fish_bad_stock WHERE bs_no LIKE ?) " +
 				"AS RowConstrainedResult " +
 				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
 				"ORDER BY RowNum";

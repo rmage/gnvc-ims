@@ -82,7 +82,7 @@ public class CorpWhDaoImpl extends AbstractDAO implements ParameterizedRowMapper
 	 */
 	public String getTableName()
 	{
-		return "inventory..corp_wh";
+		return "corp_wh";
 	}
 
 	/** 

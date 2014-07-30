@@ -137,7 +137,7 @@ public class TallymanDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 */
 	public String getTableName()
 	{
-		return "inventory..tallyman";
+		return "tallyman";
 	}
 
 	/** 

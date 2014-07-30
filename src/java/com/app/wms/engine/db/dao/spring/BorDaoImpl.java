@@ -22,7 +22,7 @@ public class BorDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..bor";
+        return "bor";
     }
     
     public Bor mapRow(ResultSet rs, int i) throws SQLException {

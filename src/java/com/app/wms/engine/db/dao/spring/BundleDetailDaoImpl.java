@@ -86,7 +86,7 @@ public class BundleDetailDaoImpl extends AbstractDAO implements ParameterizedRow
 	 */
 	public String getTableName()
 	{
-		return "inventory..bundle_detail";
+		return "bundle_detail";
 	}
 
 	/** 

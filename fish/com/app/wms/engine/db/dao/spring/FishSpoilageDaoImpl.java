@@ -143,7 +143,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"SUM(sp.raw_weight) as raw_weight, SUM(sp.total_processed) as total_processed, " +
 				"MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete " +
-				"from inventory..fish_spoilage sp WHERE is_active='Y' " +
+				"from fish_spoilage sp WHERE is_active='Y' " +
 				"GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift";
 		
 		List<FishSpoilage> resultList = jdbcTemplate.query(query, this);
@@ -174,7 +174,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
 				"	ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
-				"	from inventory..fish_spoilage sp WHERE is_active='Y' " +
+				"	from fish_spoilage sp WHERE is_active='Y' " +
 				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
 				") " +
 				"SELECT * FROM Results_CTE " +
@@ -222,7 +222,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_spoilage";
+		return "fish_spoilage";
 	}
 
 	@Override
@@ -240,8 +240,8 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
 				"	MAX(vs.batch_no) as batch_no, ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
-				"	from inventory..fish_spoilage sp " +
-                "   LEFT JOIN inventory..fish_vessel vs ON vs.id = sp.vessel_id " +
+				"	from fish_spoilage sp " +
+                "   LEFT JOIN fish_vessel vs ON vs.id = sp.vessel_id " +
                 "   WHERE vs.batch_no LIKE ? AND sp.date_shift = ? " +
 				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
 				") " +
@@ -266,8 +266,8 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
 				"	MAX(sp.reason) as reason, MAX(sp.created_date) as created_date, MAX(sp.created_by) as created_by, " +
 				"	NULL as updated_date, NULL as updated_by, NULL as is_active, NULL as is_delete, " +
 				"	MAX(vs.batch_no) as batch_no, ROW_NUMBER() OVER (ORDER BY MAX(sp.id)) AS RowNum " +
-				"	from inventory..fish_spoilage sp " +
-                "   LEFT JOIN inventory..fish_vessel vs ON vs.id = sp.vessel_id " +
+				"	from fish_spoilage sp " +
+                "   LEFT JOIN fish_vessel vs ON vs.id = sp.vessel_id " +
                 "   WHERE vs.batch_no LIKE ? " +
 				"	GROUP BY sp.vessel_id, sp.date_shift, sp.time_shift " +
 				") " +

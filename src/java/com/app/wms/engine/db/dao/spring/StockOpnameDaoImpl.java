@@ -128,7 +128,7 @@ public class StockOpnameDaoImpl extends AbstractDAO implements ParameterizedRowM
 	 */
 	public String getTableName()
 	{
-		return "inventory..stock_opname";
+		return "stock_opname";
 	}
 
 	/** 

@@ -307,54 +307,6 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("fish/GeneralReport", "model", modelMap);
     }
 
-    public ModelAndView getPoNotYetDeliveredCash(HttpServletRequest request, HttpServletResponse response)
-            throws UserDaoException {
-
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-
-        /* DAO | Define needed dao here */
-        UserDao userDao = DaoFactory.createUserDao();
-
-        /* TRANSACTION | Something complex here */
-        List<User> us = userDao.findRoleCanvasser();
-        m.put("u", us);
-
-        return new ModelAndView("fish/PoNotYetDeliveredCash", "model", m);
-    }
-
-    public ModelAndView getPoNotYetDeliveredCredit(HttpServletRequest request, HttpServletResponse response)
-            throws UserDaoException {
-
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-
-        /* DAO | Define needed dao here */
-        UserDao userDao = DaoFactory.createUserDao();
-
-        /* TRANSACTION | Something complex here */
-        List<User> us = userDao.findRoleCanvasser();
-        m.put("u", us);
-
-        return new ModelAndView("fish/PoNotYetDeliveredCredit", "model", m);
-    }
-
-    public ModelAndView getPrsNotyetPO(HttpServletRequest request, HttpServletResponse response)
-            throws UserDaoException {
-
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-
-        /* DAO | Define needed dao here */
-        UserDao userDao = DaoFactory.createUserDao();
-
-        /* TRANSACTION | Something complex here */
-        List<User> us = userDao.findRoleCanvasser();
-        m.put("u", us);
-
-        return new ModelAndView("fish/PrsNotyetPO", "model", m);
-    }
-
     public ModelAndView getPoRegisterPerPeriode(HttpServletRequest request, HttpServletResponse response) {
 
         /* DATA | get initial value */
@@ -496,6 +448,31 @@ public class NewReportController extends MultiActionController {
 
     public ModelAndView getSummaryReportPerCSActual(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/FishSummaryPerCSActual");
+    }
+    
+    //  Purchasing Module | Form and Report List
+    public ModelAndView getPrsNotYetPO(HttpServletRequest request, HttpServletResponse response) 
+            throws UserDaoException {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        
+        //  User | Get active purcashing user
+        UserDao uDao = DaoFactory.createUserDao();
+        List<User> us = uDao.findByUserRole("7050.STA");
+        model.put("us", us);
+        
+        return new ModelAndView("default/purchase/PrsNotYetPo", "ims", model);
+    }
+    
+    public ModelAndView getPoNotYetRr(HttpServletRequest request, HttpServletResponse response)
+            throws UserDaoException {
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        
+        //  User | Get active purcashing user
+        UserDao uDao = DaoFactory.createUserDao();
+        List<User> us = uDao.findByUserRole("7050.STA");
+        model.put("us", us);
+        
+        return new ModelAndView("default/purchase/PoNotYetRr", "ims", model);
     }
 
     //  Non-Fish Module | Form and Report List

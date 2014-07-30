@@ -173,6 +173,6 @@ public class FishTsDetailDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_ts_detail";
+		return "fish_ts_detail";
 	}
 }

@@ -133,7 +133,7 @@ public class WhDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Wh>
 	 */
 	public String getTableName()
 	{
-		return "inventory..wh";
+		return "wh";
 	}
 
 	/** 

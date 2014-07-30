@@ -173,6 +173,6 @@ public class FishWdsDetailDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_wds_detail";
+		return "fish_wds_detail";
 	}
 }

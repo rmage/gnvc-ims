@@ -141,7 +141,7 @@ public class PoDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Po>
 	 */
 	public String getTableName()
 	{
-		return "inventory..po";
+		return "po";
 	}
 
 	/** 

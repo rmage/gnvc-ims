@@ -112,7 +112,7 @@ public class PackingDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 	 */
 	public String getTableName()
 	{
-		return "inventory..packing";
+		return "packing";
 	}
 
 	/** 

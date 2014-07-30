@@ -144,7 +144,7 @@ public class ConsigneeDaoImpl extends AbstractDAO implements ParameterizedRowMap
 	 */
 	public String getTableName()
 	{
-		return "inventory..consignee";
+		return "consignee";
 	}
 
 	/** 

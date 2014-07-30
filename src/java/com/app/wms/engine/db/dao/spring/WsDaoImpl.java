@@ -146,7 +146,7 @@ public class WsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Ws>
 	 */
 	public String getTableName()
 	{
-		return "inventory..ws";
+		return "ws";
 	}
 
 	/** 

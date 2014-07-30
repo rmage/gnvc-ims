@@ -114,7 +114,7 @@ public class VgrdetailproductcategoryDaoImpl extends AbstractDAO implements Para
 	 */
 	public String getTableName()
 	{
-		return "inventory..vgrdetailproductcategory";
+		return "vgrdetailproductcategory";
 	}
 
 	/** 

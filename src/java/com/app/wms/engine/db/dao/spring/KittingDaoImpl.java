@@ -112,7 +112,7 @@ public class KittingDaoImpl extends AbstractDAO implements ParameterizedRowMappe
 	 */
 	public String getTableName()
 	{
-		return "inventory..kitting";
+		return "kitting";
 	}
 
 	/** 

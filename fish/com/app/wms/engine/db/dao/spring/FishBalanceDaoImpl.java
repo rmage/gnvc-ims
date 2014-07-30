@@ -170,13 +170,13 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
     }
 
     public String getTableName() {
-        return "inventory..fish_balance";
+        return "fish_balance";
     }
     
     /* GNVS | Actual Balance */
 
     public int insertActual(FishBalance dto) {
-        String query = "INSERT INTO inventory..fish_balance_actual"
+        String query = "INSERT INTO fish_balance_actual"
                 + " (vessel_id, storage_id, fish_id, balance,"
                 + " created_date, created_by, is_active, is_delete)"
                 + " VALUES(?,?,?,?,?,?,?,?); SELECT @@IDENTITY;";
@@ -215,7 +215,7 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
     
     @Override
     public FishBalance findByPrimaryKeyActual(int id) throws DaoException {
-        String query = "SELECT * FROM inventory..fish_balance_actual WHERE id=?";
+        String query = "SELECT * FROM fish_balance_actual WHERE id=?";
         List<FishBalance> resultList = jdbcTemplate.query(query, this, id);
 
         return resultList.size() == 0 ? null : resultList.get(0);
@@ -223,7 +223,7 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
     
     @Override
     public FishBalance findUniqueFishBalanceActual(int vesselId, int storageId, int fishId) {
-        String query = "SELECT * FROM inventory..fish_balance_actual WHERE vessel_id=? AND storage_id=? AND fish_id=?";
+        String query = "SELECT * FROM fish_balance_actual WHERE vessel_id=? AND storage_id=? AND fish_id=?";
 
         List<FishBalance> resultList = jdbcTemplate.query(query, this,
                 vesselId, storageId, fishId);
@@ -232,7 +232,7 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
     }
     
     public List<FishBalance> getWithdrawableFish(int vesselId) {
-        String query = "SELECT * FROM inventory..fish_balance_actual "
+        String query = "SELECT * FROM fish_balance_actual "
                 + " WHERE vessel_id = ? AND balance IS NOT NULL";
         List<FishBalance> resultList = jdbcTemplate.query(query, this, vesselId);
 

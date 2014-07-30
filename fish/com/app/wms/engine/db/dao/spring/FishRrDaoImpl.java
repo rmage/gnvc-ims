@@ -168,7 +168,7 @@ public class FishRrDaoImpl extends AbstractDAO implements
     }
 
     public String getTableName() {
-        return "inventory..fish_rr";
+        return "fish_rr";
     }
 
     @Override
@@ -186,7 +186,7 @@ public class FishRrDaoImpl extends AbstractDAO implements
                 + "SET @OFFSET = ? "
                 + "SELECT * FROM ( "
                 + "SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * "
-                + "FROM inventory..fish_rr WHERE rr_no LIKE ? AND rr_date = ? AND is_active = 'Y' ) "
+                + "FROM fish_rr WHERE rr_no LIKE ? AND rr_date = ? AND is_active = 'Y' ) "
                 + "AS RowConstrainedResult "
                 + "WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT "
                 + "ORDER BY RowNum";
@@ -201,7 +201,7 @@ public class FishRrDaoImpl extends AbstractDAO implements
                 + "SET @OFFSET = ? "
                 + "SELECT * FROM ( "
                 + "SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * "
-                + "FROM inventory..fish_rr WHERE rr_no LIKE ? AND is_active = 'Y' ) "
+                + "FROM fish_rr WHERE rr_no LIKE ? AND is_active = 'Y' ) "
                 + "AS RowConstrainedResult "
                 + "WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT "
                 + "ORDER BY RowNum";

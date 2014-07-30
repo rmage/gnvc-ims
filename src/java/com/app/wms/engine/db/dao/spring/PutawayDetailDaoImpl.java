@@ -116,7 +116,7 @@ public class PutawayDetailDaoImpl extends AbstractDAO implements ParameterizedRo
 	 */
 	public String getTableName()
 	{
-		return "inventory..putaway_detail";
+		return "putaway_detail";
 	}
 
 	/** 

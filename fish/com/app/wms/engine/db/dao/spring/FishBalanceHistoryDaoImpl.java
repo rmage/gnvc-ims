@@ -136,7 +136,7 @@ public class FishBalanceHistoryDaoImpl extends AbstractDAO implements
     }
 
     public String getTableName() {
-        return "inventory..fish_balance_history";
+        return "fish_balance_history";
     }
 
     /* GNVS | Actual Balance */

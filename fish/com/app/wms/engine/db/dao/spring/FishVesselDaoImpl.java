@@ -154,7 +154,7 @@ public class FishVesselDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_vessel";
+		return "fish_vessel";
 	}
 
     public List<FishVessel> findAllAndPaging(int limit, int offset) {

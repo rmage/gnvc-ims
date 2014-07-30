@@ -110,7 +110,7 @@ public class ReplenishDetailDaoImpl extends AbstractDAO implements Parameterized
 	 */
 	public String getTableName()
 	{
-		return "inventory..replenish_detail";
+		return "replenish_detail";
 	}
 
 	/** 

@@ -24,7 +24,7 @@ public class FishMealDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..fishmeal";
+        return "fishmeal";
     }
     
     public FishMeal mapRow(ResultSet rs, int i) throws SQLException {

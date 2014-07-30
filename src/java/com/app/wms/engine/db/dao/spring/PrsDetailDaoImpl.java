@@ -110,7 +110,7 @@ public class PrsDetailDaoImpl extends AbstractDAO implements ParameterizedRowMap
      * @return String
      */
     public String getTableName() {
-        return "inventory..prs_detail";
+        return "prs_detail";
     }
 
     /**

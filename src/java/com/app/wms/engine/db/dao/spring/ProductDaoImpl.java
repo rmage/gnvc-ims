@@ -237,7 +237,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
      * @return String
      */
     public String getTableName() {
-        return "inventory..product";
+        return "product";
     }
 
     /**

@@ -24,7 +24,7 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
     }
 
     public String getTableName() {
-        return "inventory..assign_canv_prc";
+        return "assign_canv_prc";
     }
 
     public AssignCanvassing mapRow(ResultSet rs, int row) throws SQLException {

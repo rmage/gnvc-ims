@@ -118,7 +118,7 @@ public class FishWsTypeDaoImpl extends AbstractDAO
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_ws_type";
+		return "fish_ws_type";
 	}
 
     public List<FishWSType> findAllAndPaging(int limit, int offset) {

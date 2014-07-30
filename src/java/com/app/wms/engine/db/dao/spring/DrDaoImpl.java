@@ -23,7 +23,7 @@ public class DrDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..dr";
+        return "dr";
     }
     
     public Dr mapRow(ResultSet rs, int i) throws SQLException {
@@ -59,7 +59,7 @@ public class DrDaoImpl extends AbstractDAO
     }
     
     public void updateStockInventory(String productCode, BigDecimal qty) {
-        jdbcTemplate.update("UPDATE inventory..stock_inventory SET balance = balance - ? WHERE product_code = ?",
+        jdbcTemplate.update("UPDATE stock_inventory SET balance = balance - ? WHERE product_code = ?",
             qty, productCode);
     }
     

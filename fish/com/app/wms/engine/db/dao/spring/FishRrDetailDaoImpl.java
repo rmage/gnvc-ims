@@ -145,7 +145,7 @@ public class FishRrDetailDaoImpl extends AbstractDAO implements
 				"SUM(total_weight) AS total_weight, MAX(rrd.storage_id) AS storage_id, MAX(rrd.created_date) AS created_date, " +
 				"MAX(rrd.created_by) AS created_by, MAX(rrd.updated_date) AS updated_date, " +
 				"MAX(rrd.updated_by) AS updated_by, MAX(rrd.is_active) AS is_active, MAX(rrd.is_delete) AS is_delete " +
-				"FROM inventory..fish_rr_detail rrd " +
+				"FROM fish_rr_detail rrd " +
 				"WHERE rrd.rr_id=? " +
 				"GROUP BY rrd.fish_id";
         
@@ -163,7 +163,7 @@ public class FishRrDetailDaoImpl extends AbstractDAO implements
 				"SUM(total_weight) AS total_weight, rrd.storage_id, MAX(rrd.created_date) AS created_date, " +
 				"MAX(rrd.created_by) AS created_by, MAX(rrd.updated_date) AS updated_date, " +
 				"MAX(rrd.updated_by) AS updated_by, MAX(rrd.is_active) AS is_active, MAX(rrd.is_delete) AS is_delete " +
-				"FROM inventory..fish_rr_detail rrd " +
+				"FROM fish_rr_detail rrd " +
 				"WHERE rrd.rr_id=? " +
 				"GROUP BY rrd.fish_id, rrd.storage_id";
 		
@@ -210,6 +210,6 @@ public class FishRrDetailDaoImpl extends AbstractDAO implements
 	}
 
 	public String getTableName() {
-		return "inventory..fish_rr_detail";
+		return "fish_rr_detail";
 	}
 }

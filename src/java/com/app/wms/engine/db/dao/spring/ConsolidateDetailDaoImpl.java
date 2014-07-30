@@ -90,7 +90,7 @@ public class ConsolidateDetailDaoImpl extends AbstractDAO implements Parameteriz
 	 */
 	public String getTableName()
 	{
-		return "inventory..consolidate_detail";
+		return "consolidate_detail";
 	}
 
 	/** 

@@ -110,7 +110,7 @@ public class CanvassingDaoImpl extends AbstractDAO implements ParameterizedRowMa
 	 */
 	public String getTableName()
 	{
-		return "inventory..canvassing";
+		return "canvassing";
 	}
 
 	/** 

@@ -100,7 +100,7 @@ public class UserRoleDaoImpl extends AbstractDAO implements ParameterizedRowMapp
      * @return String
      */
     public String getTableName() {
-        return "inventory..user_role";
+        return "user_role";
     }
 
     /**

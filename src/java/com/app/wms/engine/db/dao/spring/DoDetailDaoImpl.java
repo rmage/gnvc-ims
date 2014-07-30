@@ -93,7 +93,7 @@ public class DoDetailDaoImpl extends AbstractDAO implements ParameterizedRowMapp
 	 */
 	public String getTableName()
 	{
-		return "inventory..do_detail";
+		return "do_detail";
 	}
 
 	/** 

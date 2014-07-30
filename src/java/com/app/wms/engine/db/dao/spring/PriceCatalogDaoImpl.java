@@ -122,7 +122,7 @@ public class PriceCatalogDaoImpl extends AbstractDAO implements ParameterizedRow
 	 */
 	public String getTableName()
 	{
-		return "inventory..price_catalog";
+		return "price_catalog";
 	}
 
 	/** 

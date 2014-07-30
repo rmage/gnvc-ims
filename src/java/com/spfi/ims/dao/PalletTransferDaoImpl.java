@@ -20,7 +20,7 @@ public class PalletTransferDaoImpl extends AbstractDAO implements PalletTransfer
     }
     
     public String getTableName() {
-        return "inventory..FG_PTS";
+        return "FG_PTS";
     }
     
     public int ajaxMaxPage(BigDecimal show, String where) {

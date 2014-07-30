@@ -148,7 +148,7 @@ public class FishWsDetailDaoImpl extends AbstractDAO implements
 				"SUM(wsd.total_weight) AS total_weight, MAX(wsd.created_date) AS created_date, " +
 				"MAX(wsd.created_by) AS created_by, MAX(wsd.updated_date) AS updated_date, " +
 				"MAX(wsd.updated_by) AS updated_by, MAX(wsd.is_active) AS is_active, MAX(wsd.is_delete) AS is_delete " +
-				"FROM inventory..fish_ws_detail wsd " +
+				"FROM fish_ws_detail wsd " +
 				"WHERE wsd.ws_id = ? GROUP BY wsd.fish_id";
 		
 		List<FishWsDetail> resultList = jdbcTemplate.query(query, this, wsId);
@@ -187,7 +187,7 @@ public class FishWsDetailDaoImpl extends AbstractDAO implements
 	}
 	
 	public String getTableName() {
-		return "inventory..fish_ws_detail";
+		return "fish_ws_detail";
 	}
 
     public void deleteAllByWsId(int wsId) {

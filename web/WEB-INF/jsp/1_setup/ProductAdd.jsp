@@ -70,7 +70,7 @@
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" />
+                                            <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" onclick="windows.location.replace('Product.htm')" />
                                         </label>
                                     </td>
                                 </tr>

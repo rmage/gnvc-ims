@@ -169,7 +169,7 @@ public class FishDaoImpl extends AbstractDAO
     }
 
     public String getTableName() {
-        return "inventory..fish";
+        return "fish";
     }
 
     public boolean checkFishCodeIsExist(String code) {
@@ -181,12 +181,12 @@ public class FishDaoImpl extends AbstractDAO
     }
 
     public List<Fish> findFishByBatchNo(String batchNo) {
-        String query = "select distinct f.id, f.code, 0 as fish_type_id, 0 as fish_weight_type_id, getdate() as created_date, ft.description as created_by, getdate() as updated_date, '' as updated_by, '' as is_active, '' as is_delete from inventory..fish_ws ws "
-                + "inner join inventory..fish_vessel fv on fv.id = ws.vessel_id "
-                + "inner join inventory..fish_ws_type fwt on fwt.id = ws.ws_type_id "
-                + "inner join inventory..fish_ws_detail fwd on fwd.ws_id = ws.id "
-                + "inner join inventory..fish f on f.id = fwd.fish_id "
-                + "inner join inventory..fish_type ft on ft.id = f.fish_type_id "
+        String query = "select distinct f.id, f.code, 0 as fish_type_id, 0 as fish_weight_type_id, getdate() as created_date, ft.description as created_by, getdate() as updated_date, '' as updated_by, '' as is_active, '' as is_delete from fish_ws ws "
+                + "inner join fish_vessel fv on fv.id = ws.vessel_id "
+                + "inner join fish_ws_type fwt on fwt.id = ws.ws_type_id "
+                + "inner join fish_ws_detail fwd on fwd.ws_id = ws.id "
+                + "inner join fish f on f.id = fwd.fish_id "
+                + "inner join fish_type ft on ft.id = f.fish_type_id "
                 + "where fwt.code in ('WSHR','WSNR','WSL') and batch_no = ? ";
 
         List<Fish> resultList = jdbcTemplate.query(query, this, batchNo);

@@ -96,7 +96,7 @@ public class PackingDetailDaoImpl extends AbstractDAO implements ParameterizedRo
 	 */
 	public String getTableName()
 	{
-		return "inventory..packing_detail";
+		return "packing_detail";
 	}
 
 	/** 

@@ -23,7 +23,7 @@ public class SwsDtlDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..sws_detail";
+        return "sws_detail";
     }
     
     public SwsDtl mapRow(ResultSet rs, int i) throws SQLException {

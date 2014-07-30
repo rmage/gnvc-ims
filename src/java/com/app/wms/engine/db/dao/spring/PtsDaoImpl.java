@@ -23,7 +23,7 @@ public class PtsDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..pts";
+        return "pts";
     }
     
     public Pts mapRow(ResultSet rs, int i) throws SQLException {
@@ -58,8 +58,8 @@ public class PtsDaoImpl extends AbstractDAO
     }
     
     public void updateStockInventory(String productCode, BigDecimal qty) {
-        jdbcTemplate.update("UPDATE inventory..stock_inventory SET balance = balance + ? WHERE product_code = ?; " +
-            "IF @@ROWCOUNT = 0 INSERT INTO inventory..stock_inventory(product_code, balance) VALUES(?, ?);", 
+        jdbcTemplate.update("UPDATE stock_inventory SET balance = balance + ? WHERE product_code = ?; " +
+            "IF @@ROWCOUNT = 0 INSERT INTO stock_inventory(product_code, balance) VALUES(?, ?);", 
             qty, productCode, productCode, qty);
     }
     

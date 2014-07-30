@@ -112,7 +112,7 @@ public class UomDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Uo
      * @return String
      */
     public String getTableName() {
-        return "inventory..uom";
+        return "uom";
     }
 
     /**

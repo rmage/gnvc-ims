@@ -22,7 +22,7 @@ public class FishOilDtlDaoImpl extends AbstractDAO implements ParameterizedRowMa
     }
 
     public String getTableName() {
-        return "inventory..fishoil_detail";
+        return "fishoil_detail";
     }
 
     public FishOilDtl mapRow(ResultSet rs, int i) throws SQLException {

@@ -456,7 +456,7 @@ public class ProductCategoryController extends MultiActionController {
         //  pw.print("[");
         List<ProductCategory> cr = productcategoryDao.findByCode(uniCategoryCode);
         System.out.println("data: " + cr);
-        if (cr.isEmpty()) {
+        if (!cr.isEmpty()) {
             pw.print("{\"status\": true}");
         } else {
             pw.print("{\"status\": false}");

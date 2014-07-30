@@ -22,7 +22,7 @@ public class PtsDtlDaoImpl extends AbstractDAO
     }
     
     public String getTableName() {
-        return "inventory..pts_detail";
+        return "pts_detail";
     }
     
     public PtsDtl mapRow(ResultSet rs, int i) throws SQLException {

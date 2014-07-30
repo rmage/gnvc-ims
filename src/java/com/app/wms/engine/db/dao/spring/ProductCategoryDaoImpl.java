@@ -113,7 +113,7 @@ public class ProductCategoryDaoImpl extends AbstractDAO implements Parameterized
      * @return String
      */
     public String getTableName() {
-        return "inventory..product_category";
+        return "product_category";
     }
 
     /**

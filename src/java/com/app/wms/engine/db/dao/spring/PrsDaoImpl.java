@@ -130,7 +130,7 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
 	 */
 	public String getTableName()
 	{
-		return "inventory..prs";
+		return "prs";
 	}
 
 	/** 
