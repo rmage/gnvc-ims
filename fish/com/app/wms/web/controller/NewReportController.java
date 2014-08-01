@@ -307,39 +307,6 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("fish/GeneralReport", "model", modelMap);
     }
 
-    public ModelAndView getPoRegisterPerPeriode(HttpServletRequest request, HttpServletResponse response) {
-
-        /* DATA | get initial value */
-
-        /* DAO | Define needed dao here */
-
-        /* TRANSACTION | Something complex here */
-        return new ModelAndView("fish/PoRegisterPerPeriode");
-
-    }
-
-    public ModelAndView getPoConfirmatory(HttpServletRequest request, HttpServletResponse response) {
-
-        /* DATA | get initial value */
-
-        /* DAO | Define needed dao here */
-
-        /* TRANSACTION | Something complex here */
-        return new ModelAndView("fish/PoConfirmatory");
-
-    }
-
-    public ModelAndView getPoPerDepartment(HttpServletRequest request, HttpServletResponse response) {
-
-        /* DATA | get initial value */
-
-        /* DAO | Define needed dao here */
-
-        /* TRANSACTION | Something complex here */
-        return new ModelAndView("fish/PoPerDepartment");
-
-    }
-
     public ModelAndView getPoIssuedPerSupplier(HttpServletRequest request, HttpServletResponse response) {
 
         /* DATA | get initial value */
@@ -473,6 +440,18 @@ public class NewReportController extends MultiActionController {
         model.put("us", us);
         
         return new ModelAndView("default/purchase/PoNotYetRr", "ims", model);
+    }
+    
+    public ModelAndView getPoRegisteredPerPeriod(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/purchase/PoRegisteredPerPeriod");
+    }
+
+    public ModelAndView getPoConfirmatory(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("fish/PoConfirmatory");
+    }
+
+    public ModelAndView getPoRegisteredPerDepartment(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/purchase/PoRegisteredPerDepartment");
     }
 
     //  Non-Fish Module | Form and Report List

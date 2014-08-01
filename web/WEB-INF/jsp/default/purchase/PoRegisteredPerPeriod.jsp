@@ -1,13 +1,12 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
-<%
-    String cDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+<%    String cDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     String cDateH = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 %>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS &therefore; Generate &therefore; PO Not Yet Delivered</title>
+        <title>IMS &therefore; Generate &therefore; PO Registered Per Period</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -20,31 +19,25 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="#" method="post" id="genForm">
-                        <input type="hidden" id="dateFrom" name="dateFrom" value="2013-01-01" />
+                        <input type="hidden" id="dateFrom" name="dateFrom" value="<%=cDateH%>" />
                         <input type="hidden" id="dateTo" name="dateTo" value="<%=cDateH%>" />
                         <table class="collapse tblForm row-select">
-                            <caption>Generate &therefore; PO Not Yet Delivered</caption>
+                            <caption>Generate &therefore; PO Registered Per Period</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
-                                    <td style="width: 200px">Date To</td>
-                                    <td><input type="text" id="dateToSource" name="dateTo" size="10" value="<%=cDate%>" required="required" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}" /></td>
+                                    <td style="width: 200px">Date From</td>
+                                    <td><input type="text" id="dateFromSource" name="dateTo" size="10" value="<%=cDate%>" required="required" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}" /></td>
                                 </tr>
                                 <tr>
-                                    <td>Canvasser Name</td>
-                                    <td>
-                                        <select id="userId" name="userId">
-                                            <c:forEach items="${ims.us}" var="x">
-                                                <option value="${x.userId}">${x.name}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
+                                    <td>Date To</td>
+                                    <td><input type="text" id="dateToSource" name="dateTo" size="10" value="<%=cDate%>" required="required" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}" /></td>
                                 </tr>
                                 <tr>
                                     <td>PO Type</td>
                                     <td>
                                         <select id="poType" name="poType">
-                                            <option>Cash</option>
-                                            <option>Credit</option>
+                                            <option value="0">All Purchase Order</option>
+                                            <option value="1">Confirmatory Only</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -70,10 +63,16 @@
             </div>
         </div>
         <script>
+            $('#dateFromSource').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#dateFrom", altFormat: "yy-mm-dd"});
             $('#dateToSource').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#dateTo", altFormat: "yy-mm-dd"});
             $('#genForm').bind('submit', function() {
-                window.location.replace('GenerateReport.htm?action=index&item=PRCPoNotYetRr&type=xls&params=' +
-                        $('#dateFrom').val() + ':' + $('#dateTo').val() + ':' + $('#poType').val() + ':' + $('#userId').val());
+                if ($('#poType').val() === '0') {
+                    window.location.replace('GenerateReport.htm?action=index&item=PRCPoRegisteredPerPeriod&type=xls&params=' +
+                            $('#dateFrom').val() + ':' + $('#dateTo').val());
+                } else if ($('#poType').val() === '1') {
+                    window.location.replace('GenerateReport.htm?action=index&item=PRCPoRegisteredPerPeriodConfirmatory&type=xls&params=' +
+                            $('#dateFrom').val() + ':' + $('#dateTo').val());
+                }
                 return false;
             });
         </script>

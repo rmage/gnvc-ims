@@ -174,6 +174,9 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.PRCPo, "EXEC PRT_PRC_PURCHASE_ORDER ?, ?");
         ListMap.put(Report.PRCPrsNotYetPo, "EXEC RPT_PRC_PRS_NOT_YET_PO ?, ?, ?");
         ListMap.put(Report.PRCPoNotYetRr, "EXEC RPT_PRC_PO_NOT_YET_RR ?, ?, ?, ?");
+        ListMap.put(Report.PRCPoRegisteredPerPeriod, "EXEC RPT_PRC_PO_PER_PERIODE ?, ?");
+        ListMap.put(Report.PRCPoRegisteredPerPeriodConfirmatory, "EXEC RPT_PRC_PO_PER_PERIODE_CONFIRMATORY ?, ?");
+        ListMap.put(Report.PRCPoRegisteredPerDepartment, "EXEC RPT_PRC_PO_PER_DEPARTMENT ?, ?");
         //  ***END*** | Purcashing Module | Form and Report List
         
         //  Non-Fish Module | Form and Report List
@@ -1327,32 +1330,6 @@ public class GenerateReportController extends MultiActionController {
         //                      "LEFT JOIN department dep ON dep.department_name = po.department_name"
         );
 
-        ListMap.put(Report.PPoPerDepartment,
-                "SELECT p.product_code, p.product_name, prd.qty, prs.department_name as department_code, acp.unit_price, \n"
-                + "	MAX(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr, \n"
-                + "	MAX(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd, \n"
-                + "	MAX(CASE WHEN po.currency = 'PHP' THEN pod.sub_total END) as php, \n"
-                + "	MAX(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur, \n"
-                + "	REPLACE(CONVERT(VARCHAR(9), po.po_date, 6), ' ', '-') as po_date, po.po_code, \n"
-                + "	d.department_name, ? as periode\n "
-                + "FROM prs_detail prd \n"
-                + "	LEFT JOIN prs ON prs.prsnumber = prd.prsnumber \n"
-                + "	LEFT JOIN product p ON p.product_code = prd.productcode \n"
-                + "	LEFT JOIN assign_canv_prc acp ON acp.prsnumber = prd.prsnumber AND acp.productcode = prd.productcode \n"
-                + "		AND acp.is_selected = 'Y' \n"
-                + "	LEFT JOIN po_detail pod ON pod.prsnumber = prd.prsnumber AND pod.product_code = prd.productcode \n"
-                + "	LEFT JOIN po ON po.po_code = pod.po_code \n"
-                + "       LEFT JOIN department d ON d.department_code = prs.department_name \n"
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? \n"
-                + "GROUP BY p.product_code, p.product_name, prd.qty, prs.department_name, acp.unit_price, po.po_date, po.po_code, d.department_name \n"
-                + "ORDER BY prs.department_name, po_date, po_code, product_name"
-        //			"SELECT * "+
-        //			"FROM po_detail pod " +
-        //			"LEFT JOIN po ON po.ponumber = pod.ponumber " +
-        //			"LEFT JOIN product p ON p.product_code = pod.productcode "+
-        //			"WHERE MONTH(podate) = ? AND YEAR(podate) = ?"
-        );
-
         ListMap.put(Report.IMSWS,
                 //                "SELECT * " +
                 //                "FROM dbo.sws sws, dbo.sws_detail swsd " +
@@ -1508,7 +1485,9 @@ public class GenerateReportController extends MultiActionController {
         Report reportType = Report.valueOf(map.get("item").toString());
 
         List data = getDataForType(reportType, map);
-        System.out.println("Data:" + data);
+        
+        //  DEBUG | Data that will be injected to excel template
+//        System.out.println("Data:" + data);
         if (data != null) {
             if (!data.isEmpty()) {
                 map.put("sdata", data.get(0));
@@ -1641,11 +1620,12 @@ public class GenerateReportController extends MultiActionController {
                     }
                 }
                 conn.close();
-
-                System.out.println("size list >>>> " + list.size());
-                for (ResultSetRow resultSetRow : list) {
-                    System.out.println("disiini >>> " + resultSetRow.toString());
-                }
+                
+                //  DEBUG | Purposes uncomment it if you want to see the report data
+//                System.out.println("size list >>>> " + list.size());
+//                for (ResultSetRow resultSetRow : list) {
+//                    System.out.println("disiini >>> " + resultSetRow.toString());
+//                }
 
                 return list;
             } else if (o instanceof String[]) {

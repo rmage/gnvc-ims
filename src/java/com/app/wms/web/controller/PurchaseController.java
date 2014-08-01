@@ -31,6 +31,7 @@ import com.app.wms.web.util.FyaUtility;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -279,7 +280,7 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"4\": \"" + x.getSupplierCode() + "\", ");
             pw.print("\"5\": \"" + s.getSupplierName() + "\", ");
             pw.print("\"6\": \"" + s.getTelephone() + "\", ");
-            pw.print("\"7\": \"" + amount + "\", ");
+            pw.print("\"7\": \"" + NumberFormat.getCurrencyInstance().format(amount) + "\", ");
             pw.print("\"8\": \"" + (x.getIsCertified().equals("N") ? (lu.getRoleCode().contains("MAN") ? "Certify : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Certify this Purchase Order\\\" /></a>" : "Waiting for Manager Purchasing certification")
                     : (x.getIsApproved().equals("N") ? (isApproved.equals("Y") ? "Waiting for " + x.getApprovedBy() + " approval" : "Approve : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Approve this Purchase Order\\\" /></a>") : "Approved by <b>" + x.getApprovedBy() + "</b> at " + sdf.format(x.getApprovedDate()))) + "\"}");
 
