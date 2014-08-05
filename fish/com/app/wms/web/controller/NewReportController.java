@@ -307,17 +307,6 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("fish/GeneralReport", "model", modelMap);
     }
 
-    public ModelAndView getPoIssuedPerSupplier(HttpServletRequest request, HttpServletResponse response) {
-
-        /* DATA | get initial value */
-
-        /* DAO | Define needed dao here */
-
-        /* TRANSACTION | Something complex here */
-        return new ModelAndView("fish/PoIssuedPerSupplier");
-
-    }
-
     public ModelAndView getIMStockCardperCategory(HttpServletRequest request, HttpServletResponse response)
             throws ProductCategoryDaoException {
 
@@ -374,14 +363,6 @@ public class NewReportController extends MultiActionController {
 
     public ModelAndView getRRPeriode(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("non_fish/ReportRRPeriode");
-    }
-
-    public ModelAndView getPurchasedItems(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("non_fish/ReportPurchasedItems");
-    }
-
-    public ModelAndView getPurchasedPerSupplier(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("non_fish/ReportPurchasedPerSupplier");
     }
 
     public ModelAndView getTSPeriode(HttpServletRequest request, HttpServletResponse response) {
@@ -446,12 +427,16 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("default/purchase/PoRegisteredPerPeriod");
     }
 
-    public ModelAndView getPoConfirmatory(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("fish/PoConfirmatory");
-    }
-
     public ModelAndView getPoRegisteredPerDepartment(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/purchase/PoRegisteredPerDepartment");
+    }
+    
+    public ModelAndView getPoRegisteredPerItem(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/purchase/PoRegisteredPerItem");
+    }
+
+    public ModelAndView getPoRegisteredPerSupplier(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/purchase/PoRegisteredPerSupplier");
     }
 
     //  Non-Fish Module | Form and Report List

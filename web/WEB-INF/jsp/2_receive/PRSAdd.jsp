@@ -55,6 +55,10 @@
                         var jumlah = $("#jumlah").val();
                         var stockonhand = $("#stockonhand").val();
 
+                        if(jumlah <= 0) {
+                            return;
+                        }
+
                         var isiArray = $("#productcode").val() + " " + $("#tipebarang").val();
                         if ($.inArray(isiArray, queryArr) == -1) {
                             queryArr.push(isiArray);
@@ -283,20 +287,14 @@
                                     <td>Unit</td>
                                 </tr>
                             </thead>
-
-
-                            <tbody>
-
-                            </tbody>
-
-                            <tfoot><br/>
+                            <tbody></tbody>
+                            <tfoot>
+                                <br/>
                                 <tr>
                                     <td colspan="5"></td>	                                    
                                 </tr>
                             </tfoot>
                         </table>
-
-
 
                         <table class="collapse tblForm row-select ui-widget-content">
 

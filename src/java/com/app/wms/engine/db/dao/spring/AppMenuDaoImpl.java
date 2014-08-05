@@ -170,25 +170,18 @@ public class AppMenuDaoImpl extends AbstractDAO implements ParameterizedRowMappe
     @Transactional
     public List<AppMenu> findWhereNotInAppMenuRole(String roleCode, String filter) throws AppMenuDaoException {
         try {
-            StringBuffer sb = new StringBuffer();
-            sb.append("SELECT APP_MENU.MENU_CODE, APP_MENU.NAME, APP_MENU.URL, APP_MENU.CREATED_BY "
-                    + ", APP_MENU.CREATED_DATE,  APP_MENU.UPDATED_BY,  APP_MENU.UPDATED_DATE "
-                    + ", APP_MENU.GROUP_CODE, APP_MENU.SORT_NO FROM " + getTableName() + " WHERE APP_MENU.IS_DELETED='N' ");
-            
-          //  		+ ", APP_MENU.GROUP_CODE, APP_MENU.SORT_NO FROM " + getTableName() + " ");
-          //  strQuery.append("WHERE NOT EXISTS(SELECT MENU_CODE FROM APP_MENU_ROLE WHERE APP_MENU_ROLE.MENU_CODE = APP_MENU.MENU_CODE AND APP_MENU_ROLE.ROLE_CODE = ?)");
+            StringBuilder sb = new StringBuilder();
+            sb.append("SELECT appm.MENU_CODE, appm.NAME, appm.URL, appm.CREATED_BY " + 
+                    ", appm.CREATED_DATE,  appm.UPDATED_BY,  appm.UPDATED_DATE " + 
+                    ", appm.GROUP_CODE, appm.SORT_NO FROM ")
+                    .append(getTableName()).append(" appm WHERE appm.IS_DELETED='N' ");
             
             if (filter != null && !filter.trim().equals("")) {
-                sb.append(" AND ");
-                sb.append(filter);
+                sb.append(" AND ").append(filter).append(" AND NOT EXISTS (SELECT 1 FROM app_menu_role appmr WHERE appmr.menu_code = appm.menu_code AND appmr.role_code = ?) ");
             }
          
             sb.append("ORDER BY MENU_CODE ");
-     
-            Map map = new HashMap();
-            map.put(roleCode, roleCode);
-          //  return jdbcTemplate.query(DBUtil.createPagingSql(strQuery.toString(), 1, 10), this, roleCode);
-            return jdbcTemplate.query(sb.toString(),this,map);
+            return jdbcTemplate.query(sb.toString(), this, roleCode);
         } catch (Exception e) {
             throw new AppMenuDaoException("Query failed", e);
         }

@@ -193,7 +193,7 @@
 //            });
             $('#prsdate').datepicker({dateFormat: "dd/mm/yy"});
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'u:d:R_PPrsForm_Print Purchase Requisition Slip (xls)');
+            util.initListTable($('#list'), 'u:d:R_PRCPrs_Print Purchase Requisition Slip (xls)');
             tableListAction(800);
 
             function tableListModalCaller() {

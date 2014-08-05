@@ -4,9 +4,12 @@ import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.PurchaseDtl;
 import com.app.wms.engine.db.dto.ReceiveReport;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -80,6 +83,24 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     
     public List<ReceiveReport> findAll() {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " ORDER BY created_date DESC", this);
+    }
+    
+    public int ajaxMaxPage(BigDecimal show, String where) {
+        try {
+            return jdbcTemplate.queryForInt("EXEC NF_RECEIVING_MAX_PAGE ?, ?", show, where);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+    
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
+        try {
+            return jdbcTemplate.queryForList("EXEC NF_RECEIVING_LIST ?, ?, ?, ?", page, show, where, order);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
     }
     
 }

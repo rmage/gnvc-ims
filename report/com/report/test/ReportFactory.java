@@ -25,21 +25,20 @@ public class ReportFactory {
         FLaporanPemasukanBarangPerDokumenPabean, FLaporanPengeluaranBarangPerDokumenPabean, FLaporanPengeluaranBahanBakuDanBahanPenolong, //added by edw
         FLaporanPengeluaranMutasiBarangJadi, FLaporanPengeluaranMutasiBarangDanScrap, FLaporanPengeluaranMutasiMesin, // added by edw
         RPDailyProduction, FMDR,
-        PPoRegisterPerPeriode,
-        PPoIssuedPerSupplier, PPoIssuedPerItem, PPrsForm,
-        PCanvassingForm, PPoConfirmatory,
-        IMRR, IMSWS, IMStockCardperItem,
+        PCanvassingForm, 
+        IMStockCardperItem,
         IMTS, IMDR, IMStockCardperCategory, IMStockCardTransactionReport,
         FGPTS, FGOFAL, FGBOR, FGFM, FGFO, FGSC,
         FGTS, FGEDS, FGBadStockReport,
         FGTunaVayaReport, Accounting,
-        RRPeriode, PurchasedItems, PurchasedPerSupplier, TSPeriode, CanvassingHistory //,
+        RRPeriode, TSPeriode, CanvassingHistory //,
 //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
 //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         //  Fish Module | Form and Report List
         , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
-        , PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment
-        , NFishSIPerCat
+        //  Purchase Module | Form and Report List
+        , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier
+        , NFRr, NFSws, NFSIPerCat
         ; 
     }
 
@@ -100,6 +99,8 @@ public class ReportFactory {
         reportMap.put(Report.FishWsSZ, reportTemplateMap.get("FishWsSZ"));
         
         //  Purchasing Module | Form and Report List
+        reportTemplateMap.put("PRCPrs", new ReportModel("purchase/prs", false));
+        reportMap.put(Report.PRCPrs, reportTemplateMap.get("PRCPrs"));
         reportTemplateMap.put("PRCPo", new ReportModel("purchase/po", false));
         reportMap.put(Report.PRCPo, reportTemplateMap.get("PRCPo"));
         reportTemplateMap.put("PRCPrsNotYetPo", new ReportModel("purchase/prsnypo", false));
@@ -112,10 +113,34 @@ public class ReportFactory {
         reportMap.put(Report.PRCPoRegisteredPerPeriodConfirmatory, reportTemplateMap.get("PRCPoRegisteredPerPeriodConfirmatory"));
         reportTemplateMap.put("PRCPoRegisteredPerDepartment", new ReportModel("purchase/porpd", false));
         reportMap.put(Report.PRCPoRegisteredPerDepartment, reportTemplateMap.get("PRCPoRegisteredPerDepartment"));
+        reportTemplateMap.put("PRCPoRegisteredPerItem", new ReportModel("purchase/porpi", false));
+        reportMap.put(Report.PRCPoRegisteredPerItem, reportTemplateMap.get("PRCPoRegisteredPerItem"));
+        reportTemplateMap.put("PRCPoRegisteredPerSupplier", new ReportModel("purchase/porps", false));
+        reportMap.put(Report.PRCPoRegisteredPerSupplier, reportTemplateMap.get("PRCPoRegisteredPerSupplier"));
         
         //  Non-Fish Module | Form and Report List
-        reportTemplateMap.put("NFishSIPerCat", new ReportModel("non_fish/sipcat", false));
-        reportMap.put(Report.NFishSIPerCat, reportTemplateMap.get("NFishSIPerCat"));
+        reportTemplateMap.put("NFRr", new ReportModel("non_fish/rr", false));
+        reportMap.put(Report.NFRr, reportTemplateMap.get("NFRr"));
+        reportTemplateMap.put("NFSws", new ReportModel("non_fish/sws", false));
+        reportMap.put(Report.NFSws, reportTemplateMap.get("NFSws"));
+        reportTemplateMap.put("NFSIPerCat", new ReportModel("non_fish/sipcat", false));
+        reportMap.put(Report.NFSIPerCat, reportTemplateMap.get("NFSIPerCat"));
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         reportTemplateMap.put("IMDR", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));
@@ -134,15 +159,8 @@ public class ReportFactory {
         reportTemplateMap.put("LaporanPengeluaranBarangPerDokumenPabean", new ReportModel("LaporanPengeluaranBarangPerDokumenPabean")); // add by edw
         reportTemplateMap.put("LaporanPengeluaranBahanBakuDanBahanPenolong", new ReportModel("LaporanPengeluaranBahanBakuDanBahanPenolong")); // add by edw
         
-        reportTemplateMap.put("poConfirmatory", new ReportModel("poConfirmatory"));
-        
-        reportTemplateMap.put("poIssuedPerSupplier", new ReportModel("poIssuedPerSupplier"));
-        reportTemplateMap.put("poRegisterPerPeriode", new ReportModel("poRegisterPerPeriode"));
-        reportTemplateMap.put("prsForm", new ReportModel("prsForm", false));
-        reportTemplateMap.put("prsNotyetPO", new ReportModel("prsNotyetPO"));
         reportTemplateMap.put("pts", new ReportModel("pts", true));
         reportTemplateMap.put("receivingReport", new ReportModel("receivingReport", false));
-        reportTemplateMap.put("receivingReportNF", new ReportModel("receivingReportNF", false));
         reportTemplateMap.put("stockCardReport", new ReportModel("stockCardReport", false));
         reportTemplateMap.put("summaryWeightSlip", new ReportModel("summaryWeightSlip"));
         reportTemplateMap.put("transferSlip", new ReportModel("transferSlip", false));
@@ -156,17 +174,13 @@ public class ReportFactory {
         reportTemplateMap.put("wsnr", new ReportModel("wsnr", false));
         reportTemplateMap.put("ofal", new ReportModel("ofal", false));
         reportTemplateMap.put("bookedOrderReport", new ReportModel("bookedOrderReport", false));
-        reportTemplateMap.put("poIssuedPerItem", new ReportModel("poIssuedPerItem", false));
         reportTemplateMap.put("viandTunaInv", new ReportModel("viandTunaInv", false));
         reportTemplateMap.put("IMStockCardperItem", new ReportModel("gnvStockCardIMperItem", false));
-        reportTemplateMap.put("withdrawalSlip", new ReportModel("withdrawalSlip", false));
         reportTemplateMap.put("badStockCard", new ReportModel("badStockCard", false));
         reportTemplateMap.put("IMStockCardperCategory", new ReportModel("gnvStockCardIM", false));
         reportTemplateMap.put("IMStockCardTransactionReport", new ReportModel("gnvTransactionReportIM", false));
         reportTemplateMap.put("RPDailyProduction", new ReportModel("gnvRenderingPlantIM", false));
         reportTemplateMap.put("RRPeriode", new ReportModel("gnvRRPeriode", false));
-        reportTemplateMap.put("PurchasedItems", new ReportModel("gnvPurchasedItems", false));
-        reportTemplateMap.put("PurchasedPerSupplier", new ReportModel("gnvPurchasedPerSupplier", false));
         reportTemplateMap.put("TSPeriode", new ReportModel("gnvTSPeriode", false));
         reportTemplateMap.put("CanvassingHistory", new ReportModel("gnvCanvassingHistory", false));
         reportTemplateMap.put("FGFM", new ReportModel("gnvFishMeal", false));
@@ -202,15 +216,8 @@ public class ReportFactory {
         reportMap.put(Report.FLaporanPengeluaranMutasiMesin, reportTemplateMap.get("LaporanPengeluaranMutasiMesin")); // added by edw
         
         reportMap.put(Report.FMDR, reportTemplateMap.get("deliverReceipt"));
-        reportMap.put(Report.PPoRegisterPerPeriode, reportTemplateMap.get("poRegisterPerPeriode"));
-        reportMap.put(Report.PPoIssuedPerSupplier, reportTemplateMap.get("poIssuedPerSupplier"));
-        reportMap.put(Report.PPoIssuedPerItem, reportTemplateMap.get("poIssuedPerItem"));
-        reportMap.put(Report.PPrsForm, reportTemplateMap.get("prsForm"));
         reportMap.put(Report.PCanvassingForm, reportTemplateMap.get("canvassingForm"));
         
-        reportMap.put(Report.PPoConfirmatory, reportTemplateMap.get("poConfirmatory"));
-        reportMap.put(Report.IMRR, reportTemplateMap.get("receivingReportNF"));
-        reportMap.put(Report.IMSWS, reportTemplateMap.get("withdrawalSlip"));
         reportMap.put(Report.IMTS, reportTemplateMap.get("transferSlipNF"));
         reportMap.put(Report.IMStockCardperItem, reportTemplateMap.get("IMStockCardperItem"));
         reportMap.put(Report.IMStockCardperCategory, reportTemplateMap.get("IMStockCardperCategory"));
@@ -223,8 +230,6 @@ public class ReportFactory {
 
         reportMap.put(Report.RPDailyProduction, reportTemplateMap.get("RPDailyProduction"));
         reportMap.put(Report.RRPeriode, reportTemplateMap.get("RRPeriode"));
-        reportMap.put(Report.PurchasedItems, reportTemplateMap.get("PurchasedItems"));
-        reportMap.put(Report.PurchasedPerSupplier, reportTemplateMap.get("PurchasedPerSupplier"));
         reportMap.put(Report.TSPeriode, reportTemplateMap.get("TSPeriode"));
         reportMap.put(Report.CanvassingHistory, reportTemplateMap.get("CanvassingHistory"));
 

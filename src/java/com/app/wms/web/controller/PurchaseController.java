@@ -105,6 +105,9 @@ public class PurchaseController extends MultiActionController {
             p.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
             p.setCreatedDate(new Date());
             purchaseDao.insert(p);
+            
+            //  DEBUG | Remarks dissapear suddenly?
+            System.out.println("[PO" + p.getPoCode() + "] Remarks: " + p.getRemarks());
 
             // insert detail purchase order
             for (String x : details) {
@@ -279,8 +282,8 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"3\": \"" + x.getPoDate() + "\", ");
             pw.print("\"4\": \"" + x.getSupplierCode() + "\", ");
             pw.print("\"5\": \"" + s.getSupplierName() + "\", ");
-            pw.print("\"6\": \"" + s.getTelephone() + "\", ");
-            pw.print("\"7\": \"" + NumberFormat.getCurrencyInstance().format(amount) + "\", ");
+            pw.print("\"6\": \"" + (s.getTelephone() == null ? "" : s.getTelephone()) + "\", ");
+            pw.print("\"7\": \"" + NumberFormat.getNumberInstance().format(amount) + "\", ");
             pw.print("\"8\": \"" + (x.getIsCertified().equals("N") ? (lu.getRoleCode().contains("MAN") ? "Certify : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Certify this Purchase Order\\\" /></a>" : "Waiting for Manager Purchasing certification")
                     : (x.getIsApproved().equals("N") ? (isApproved.equals("Y") ? "Waiting for " + x.getApprovedBy() + " approval" : "Approve : <a href=\\\"?action=approval&po=" + x.getPoCode() + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Approve this Purchase Order\\\" /></a>") : "Approved by <b>" + x.getApprovedBy() + "</b> at " + sdf.format(x.getApprovedDate()))) + "\"}");
 

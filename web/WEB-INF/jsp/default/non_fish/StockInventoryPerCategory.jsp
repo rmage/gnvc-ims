@@ -16,7 +16,7 @@
                 <div class="box">
                     <form action="GenerateReport.htm" id="generator" method="post">
                         <input type="hidden" name="action" value="index" />
-                        <input type="hidden" name="item" value="NFishSIPerCat" />
+                        <input type="hidden" name="item" value="NFSIPerCat" />
                         <input type="hidden" name="type" value="xls" />
                         <input type="hidden" id="params" name="params" value="" />
 

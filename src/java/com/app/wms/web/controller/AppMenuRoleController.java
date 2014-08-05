@@ -150,15 +150,20 @@ public class AppMenuRoleController extends MultiActionController {
         }
 
         dtoRole = daoRole.findByUserRole(proleCode);
+        //  ROLE ACCESS | Get name of the assigned menu
+        for(AppMenuRole x : dtoRole) {
+            x.setCreatedBy(dao.findByPrimaryKey(x.getMenuCode()).getName());
+        }
 
         StringBuffer filter = new StringBuffer();
         if (!StringHelper.emptyIfNull(groupCode).equals("ALL")) {
-            filter.append(String.format(" APP_MENU.GROUP_CODE = '%s' ", groupCode));
+            filter.append(String.format(" appm.GROUP_CODE = '%s' ", groupCode));
         }
 
         dto = dao.findWhereNotInAppMenuRole(proleCode, filter.toString());
 
-        System.out.println(">>> " + dtoRole.size());
+        //  DEBUG | Get menu role length
+//        System.out.println(">>> " + dtoRole.size());
 
         m.put("menuGroups", dtoGroup);
         m.put("menuRoles", dtoRole);

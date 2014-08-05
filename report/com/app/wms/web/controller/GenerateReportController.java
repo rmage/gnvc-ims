@@ -171,16 +171,21 @@ public class GenerateReportController extends MultiActionController {
         //  ***END*** | Fish Module | Form and Report List
         
         //  Purcashing Module | Form and Report List
+        ListMap.put(Report.PRCPrs, "EXEC PRT_PRC_PURCHASE_REQUISITION_SLIP ?");
         ListMap.put(Report.PRCPo, "EXEC PRT_PRC_PURCHASE_ORDER ?, ?");
         ListMap.put(Report.PRCPrsNotYetPo, "EXEC RPT_PRC_PRS_NOT_YET_PO ?, ?, ?");
         ListMap.put(Report.PRCPoNotYetRr, "EXEC RPT_PRC_PO_NOT_YET_RR ?, ?, ?, ?");
         ListMap.put(Report.PRCPoRegisteredPerPeriod, "EXEC RPT_PRC_PO_PER_PERIODE ?, ?");
         ListMap.put(Report.PRCPoRegisteredPerPeriodConfirmatory, "EXEC RPT_PRC_PO_PER_PERIODE_CONFIRMATORY ?, ?");
         ListMap.put(Report.PRCPoRegisteredPerDepartment, "EXEC RPT_PRC_PO_PER_DEPARTMENT ?, ?");
+        ListMap.put(Report.PRCPoRegisteredPerItem, "EXEC RPT_PRC_PO_PER_ITEM ?");
+        ListMap.put(Report.PRCPoRegisteredPerSupplier, "EXEC RPT_PRC_PO_PER_SUPPLIER ?");
         //  ***END*** | Purcashing Module | Form and Report List
         
         //  Non-Fish Module | Form and Report List
-        ListMap.put(Report.NFishSIPerCat, "EXEC RPT_NFR_STOCK_INVENTORY_PER_CATEGORY ?, ?, ?, ?, ?");
+        ListMap.put(Report.NFRr, "EXEC PRT_NF_RECEIVING ?");
+        ListMap.put(Report.NFSws, "EXEC PRT_NF_STORES_WITHDRAWAL ?");
+        ListMap.put(Report.NFSIPerCat, "EXEC RPT_NF_STOCK_INVENTORY_PER_CATEGORY ?, ?, ?, ?, ?");
         //  ***END*** | Non-Fish Module | Form and Report List
 
         ListMap.put(Report.FWS,
@@ -634,46 +639,12 @@ public class GenerateReportController extends MultiActionController {
                 + "group by product.product_code, product.product_name, rr_detail.uom"
         );
 
-        ListMap.put(Report.IMRR,
-                //                "select * " +
-                //                "from goodreceive gr " +
-                //                "LEFT JOIN goodreceive_detail grd ON gr.grnumber = grd.grnumber " +
-                //                "LEFT JOIN product p ON p.product_code = grd.productcode " +
-                //                "LEFT JOIN department d ON d.department_code = gr.department"
-                "SELECT rrd.rr_code, CONVERT(VARCHAR(10), rr.rr_date, 103) as rr_date, rr.rr_from, po.po_code, "
-                + "CONVERT(VARCHAR(10), po.po_date, 103) as po_date, "
-                + "p.product_name, p.product_code, rrd.department_code, rrd.qty_g, rrd.uom, u.name "
-                + "FROM rr_detail rrd "
-                + "INNER JOIN rr ON rr.rr_code = rrd.rr_code "
-                + "INNER JOIN po ON po.po_code = rr.po_code "
-                + "LEFT JOIN product p ON p.product_code = rrd.product_code "
-                + "LEFT JOIN \"user\" u ON u.user_id = rr.created_by "
-                + "WHERE rrd.rr_code = ?");
-
         ListMap.put(Report.FGEDS,
                 "");
 
         ListMap.put(Report.FMDR, "SELECT * "
                 + "FROM dbo.dr dr, dbo.dr_detail drd "
                 + "WHERE dr.drnumber = drd.drnumber");
-
-        ListMap.put(Report.PPoRegisterPerPeriode,
-                "SELECT '' as prs_id, prd.prsnumber as prs_number, REPLACE(CONVERT(VARCHAR(9), prs.prsdate, 6), ' ', '-') as prs_date, \n"
-                + "	p.product_code, p.product_name, prd.qty, prs.department_name, '' as date_received, '' as currency, acp.unit_price as price, \n"
-                + "	(acp.unit_price * prd.qty) as amount, REPLACE(CONVERT(VARCHAR(9), po.po_date, 6), ' ', '-') as po_date, po.po_code, \n"
-                + "	s.supplier_name, u.name, po.remarks, ? as periode \n"
-                + "FROM prs_detail prd \n"
-                + "	LEFT JOIN prs ON prs.prsnumber = prd.prsnumber \n"
-                + "	LEFT JOIN po_detail pod ON pod.prsnumber = prd.prsnumber AND pod.product_code = prd.productcode \n"
-                + "	LEFT JOIN po ON po.po_code = pod.po_code \n"
-                + "	LEFT JOIN product p ON p.product_code = prd.productcode \n"
-                + "	LEFT JOIN assign_canv_prc acp ON acp.prsnumber = prs.prsnumber AND acp.productcode = prd.productcode \n"
-                + "		AND acp.is_selected = 'Y' \n"
-                + "	LEFT JOIN \"user\" u ON u.user_id = acp.created_by \n"
-                + "	LEFT JOIN supplier s ON s.supplier_code = po.supplier_code \n"
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? AND DAY(po.po_date) BETWEEN ? AND ? \n"
-                + "ORDER BY prs_date, prs_number, product_name"
-        );
 
         ListMap.put(Report.RRPeriode,
                 "DECLARE @YEAR INT, @MONTH INT "
@@ -712,89 +683,6 @@ public class GenerateReportController extends MultiActionController {
                 + "	LEFT JOIN supplier s ON s.supplier_code = acp.supplier_code "
                 + "WHERE po.po_code = ?  "
                 + "ORDER BY prsnumber, product_code, (CASE WHEN is_selected = 'Y' THEN 0 ELSE 1 END), supplier_name"
-        );
-
-        ListMap.put(Report.PurchasedItems,
-                "DECLARE @YEAR INT, @MONTH INT "
-                + "SET @YEAR = ? "
-                + "SET @MONTH = ? "
-                + "SELECT p.product_code, p.product_name, ? periode, "
-                + "	SUM(CASE WHEN MONTH(po.po_date) = @MONTH THEN prsd.qty END) as qty1, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as idr1, "
-                + "	SUM(CASE WHEN po.currency = 'USD' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as usd1, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as eur1, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as jpy1, "
-                + "	SUM(CASE WHEN 1 = 1 THEN prsd.qty END) as qty2, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr2, "
-                + "	SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd2, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur2, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy2 "
-                + "FROM po "
-                + "	INNER JOIN po_detail pod ON pod.po_code = po.po_code "
-                + "	LEFT JOIN product p ON p.product_code = pod.product_code "
-                + "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code "
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = @YEAR "
-                + "GROUP BY p.product_code, p.product_name ORDER BY p.product_name"
-        );
-
-        ListMap.put(Report.PurchasedPerSupplier,
-                "DECLARE @YEAR INT, @MONTH INT "
-                + "SET @YEAR = ? "
-                + "SET @MONTH = ? "
-                + "SELECT s.supplier_code, s.supplier_name, ? periode, "
-                + "	SUM(CASE WHEN MONTH(po.po_date) = @MONTH THEN prsd.qty END) as qty1, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as idr1, "
-                + "	SUM(CASE WHEN po.currency = 'USD' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as usd1, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as eur1, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as jpy1, "
-                + "	SUM(CASE WHEN 1 = 1 THEN prsd.qty END) as qty2, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr2, "
-                + "	SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd2, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur2, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy2 "
-                + "FROM po "
-                + "	INNER JOIN po_detail pod ON pod.po_code = po.po_code "
-                + "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code "
-                + "	INNER JOIN supplier s ON s.supplier_code = po.supplier_code "
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = @YEAR "
-                + "GROUP BY s.supplier_code, s.supplier_name ORDER BY s.supplier_name"
-        );
-
-        ListMap.put(Report.PPoIssuedPerSupplier,
-                "SELECT *,  RANK() OVER(PARTITION BY idr, usd, php, jpy ORDER BY idr DESC, usd DESC, php DESC, jpy DESC) as rank, \n"
-                + "	? as periode \n"
-                + "FROM (\n"
-                + "	SELECT s.supplier_name, pc.category_name, \n"
-                + "		SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr, \n"
-                + "		SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd, \n"
-                + "		SUM(CASE WHEN po.currency = 'PHP' THEN pod.sub_total END) as php, \n"
-                + "		SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy \n"
-                + "	FROM prs_detail prd \n"
-                + "		LEFT JOIN product p ON p.product_code = prd.productcode \n"
-                + "		LEFT JOIN product_category pc ON pc.category_code = p.product_category \n"
-                + "		LEFT JOIN po_detail pod ON pod.prsnumber = prd.prsnumber AND pod.product_code = prd.productcode \n"
-                + "		LEFT JOIN po ON po.po_code = pod.po_code \n"
-                + "		LEFT JOIN supplier s ON s.supplier_code = po.supplier_code \n"
-                + "		LEFT JOIN assign_canv_prc acp ON acp.prsnumber = prd.prsnumber AND acp.productcode = prd.productcode \n"
-                + "			AND acp.is_selected = 'Y' \n"
-                + "	WHERE pod.po_code IS NOT NULL AND po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? \n"
-                + "	GROUP BY s.supplier_name, pc.category_name \n"
-                + ") x ORDER BY category_name, idr DESC, usd DESC, php DESC, jpy DESC"
-        );
-
-        ListMap.put(Report.PPoIssuedPerItem,
-                "SELECT prs.prsnumber, pod.productcode, cvd.productname, "
-                + "SUM(pod.qty) as qty, dep.department_code, pod.currencyCode, pod.unitprice, "
-                + "SUM(pod.amount) as amount, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks "
-                + "FROM po po "
-                + "LEFT JOIN po_detail pod ON pod.ponumber = po.ponumber "
-                + "LEFT JOIN prs ON prs.prsnumber = po.prsnumber "
-                + "LEFT JOIN prs_detail prsd ON prsd.prsnumber = prs.prsnumber "
-                + "LEFT JOIN canvassing cv ON cv.prsnumber = prs.prsnumber "
-                + "LEFT JOIN canvassing_detail cvd ON cvd.prsnumber = prs.prsnumber "
-                + "LEFT JOIN department dep ON dep.department_name = po.department_name "
-                + "GROUP BY prs.prsnumber, pod.productcode, cvd.productname, dep.department_code, "
-                + "pod.currencyCode, pod.unitprice, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks"
         );
 
         ListMap.put(Report.FGBadStockReport,
@@ -1029,22 +917,6 @@ public class GenerateReportController extends MultiActionController {
                 + "WHERE dr_date >= ? AND dr_date <= ? and supplier.supplier_code= ? "
         );
 
-        ListMap.put(Report.IMRR,
-                //                "select * " +
-                //                "from goodreceive gr " +
-                //                "LEFT JOIN goodreceive_detail grd ON gr.grnumber = grd.grnumber " +
-                //                "LEFT JOIN product p ON p.product_code = grd.productcode " +
-                //                "LEFT JOIN department d ON d.department_code = gr.department"
-                "SELECT rrd.rr_code, CONVERT(VARCHAR(10), rr.rr_date, 103) as rr_date, rr.rr_from, po.po_code, "
-                + "CONVERT(VARCHAR(10), po.po_date, 103) as po_date, "
-                + "p.product_name, p.product_code, rrd.department_code, rrd.qty_g, rrd.uom, u.name "
-                + "FROM rr_detail rrd "
-                + "INNER JOIN rr ON rr.rr_code = rrd.rr_code "
-                + "INNER JOIN po ON po.po_code = rr.po_code "
-                + "LEFT JOIN product p ON p.product_code = rrd.product_code "
-                + "LEFT JOIN \"user\" u ON u.user_id = rr.created_by "
-                + "WHERE rrd.rr_code = ?");
-
         ListMap.put(Report.FGEDS,
                 "SELECT eds.*, bd.bor_buyer , bd.bor_packstyle, bd.bor_brand, bd.bor_ponumber, bd.bor_destinationport, qpts.qty, qpts.pts_cancode, "
                 + "	SUBSTRING(bd.bor_cansize, 1, CHARINDEX('/', bd.bor_cansize) - 1) bor_cansize, CONVERT(VARCHAR(10), eds.eds_date, 105) cdate "
@@ -1061,24 +933,6 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FMDR, "SELECT * "
                 + "FROM dbo.dr dr, dbo.dr_detail drd "
                 + "WHERE dr.dr_code = ?");
-
-        ListMap.put(Report.PPoRegisterPerPeriode,
-                "SELECT '' as prs_id, prd.prsnumber as prs_number, REPLACE(CONVERT(VARCHAR(9), prs.prsdate, 6), ' ', '-') as prs_date, \n"
-                + "	p.product_code, p.product_name, prd.qty, prs.department_name, '' as date_received, '' as currency, acp.unit_price as price, \n"
-                + "	(acp.unit_price * prd.qty) as amount, REPLACE(CONVERT(VARCHAR(9), po.po_date, 6), ' ', '-') as po_date, po.po_code, \n"
-                + "	s.supplier_name, u.name, po.remarks, ? as periode \n"
-                + "FROM prs_detail prd \n"
-                + "	LEFT JOIN prs ON prs.prsnumber = prd.prsnumber \n"
-                + "	LEFT JOIN po_detail pod ON pod.prsnumber = prd.prsnumber AND pod.product_code = prd.productcode \n"
-                + "	LEFT JOIN po ON po.po_code = pod.po_code \n"
-                + "	LEFT JOIN product p ON p.product_code = prd.productcode \n"
-                + "	LEFT JOIN assign_canv_prc acp ON acp.prsnumber = prs.prsnumber AND acp.productcode = prd.productcode \n"
-                + "		AND acp.is_selected = 'Y' \n"
-                + "	LEFT JOIN \"user\" u ON u.user_id = acp.created_by \n"
-                + "	LEFT JOIN supplier s ON s.supplier_code = po.supplier_code \n"
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? AND DAY(po.po_date) BETWEEN ? AND ? \n"
-                + "ORDER BY prs_date, prs_number, product_name"
-        );
 
         ListMap.put(Report.RRPeriode,
                 "DECLARE @YEAR INT, @MONTH INT "
@@ -1117,89 +971,6 @@ public class GenerateReportController extends MultiActionController {
                 + "	LEFT JOIN supplier s ON s.supplier_code = acp.supplier_code "
                 + "WHERE po.po_code = ?  "
                 + "ORDER BY prsnumber, product_code, (CASE WHEN is_selected = 'Y' THEN 0 ELSE 1 END), supplier_name"
-        );
-
-        ListMap.put(Report.PurchasedItems,
-                "DECLARE @YEAR INT, @MONTH INT "
-                + "SET @YEAR = ? "
-                + "SET @MONTH = ? "
-                + "SELECT p.product_code, p.product_name, ? periode, "
-                + "	SUM(CASE WHEN MONTH(po.po_date) = @MONTH THEN prsd.qty END) as qty1, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as idr1, "
-                + "	SUM(CASE WHEN po.currency = 'USD' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as usd1, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as eur1, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as jpy1, "
-                + "	SUM(CASE WHEN 1 = 1 THEN prsd.qty END) as qty2, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr2, "
-                + "	SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd2, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur2, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy2 "
-                + "FROM po "
-                + "	INNER JOIN po_detail pod ON pod.po_code = po.po_code "
-                + "	LEFT JOIN product p ON p.product_code = pod.product_code "
-                + "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code "
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = @YEAR "
-                + "GROUP BY p.product_code, p.product_name ORDER BY p.product_name"
-        );
-
-        ListMap.put(Report.PurchasedPerSupplier,
-                "DECLARE @YEAR INT, @MONTH INT "
-                + "SET @YEAR = ? "
-                + "SET @MONTH = ? "
-                + "SELECT s.supplier_code, s.supplier_name, ? periode, "
-                + "	SUM(CASE WHEN MONTH(po.po_date) = @MONTH THEN prsd.qty END) as qty1, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as idr1, "
-                + "	SUM(CASE WHEN po.currency = 'USD' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as usd1, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as eur1, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' AND MONTH(po.po_date) = @MONTH THEN pod.sub_total END) as jpy1, "
-                + "	SUM(CASE WHEN 1 = 1 THEN prsd.qty END) as qty2, "
-                + "	SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr2, "
-                + "	SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd2, "
-                + "	SUM(CASE WHEN po.currency = 'EUR' THEN pod.sub_total END) as eur2, "
-                + "	SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy2 "
-                + "FROM po "
-                + "	INNER JOIN po_detail pod ON pod.po_code = po.po_code "
-                + "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code "
-                + "	INNER JOIN supplier s ON s.supplier_code = po.supplier_code "
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = @YEAR "
-                + "GROUP BY s.supplier_code, s.supplier_name ORDER BY s.supplier_name"
-        );
-
-        ListMap.put(Report.PPoIssuedPerSupplier,
-                "SELECT *,  RANK() OVER(PARTITION BY idr, usd, php, jpy ORDER BY idr DESC, usd DESC, php DESC, jpy DESC) as rank, \n"
-                + "	? as periode \n"
-                + "FROM (\n"
-                + "	SELECT s.supplier_name, pc.category_name, \n"
-                + "		SUM(CASE WHEN po.currency = 'IDR' THEN pod.sub_total END) as idr, \n"
-                + "		SUM(CASE WHEN po.currency = 'USD' THEN pod.sub_total END) as usd, \n"
-                + "		SUM(CASE WHEN po.currency = 'PHP' THEN pod.sub_total END) as php, \n"
-                + "		SUM(CASE WHEN po.currency = 'JPY' THEN pod.sub_total END) as jpy \n"
-                + "	FROM prs_detail prd \n"
-                + "		LEFT JOIN product p ON p.product_code = prd.productcode \n"
-                + "		LEFT JOIN product_category pc ON pc.category_code = p.product_category \n"
-                + "		LEFT JOIN po_detail pod ON pod.prsnumber = prd.prsnumber AND pod.product_code = prd.productcode \n"
-                + "		LEFT JOIN po ON po.po_code = pod.po_code \n"
-                + "		LEFT JOIN supplier s ON s.supplier_code = po.supplier_code \n"
-                + "		LEFT JOIN assign_canv_prc acp ON acp.prsnumber = prd.prsnumber AND acp.productcode = prd.productcode \n"
-                + "			AND acp.is_selected = 'Y' \n"
-                + "	WHERE pod.po_code IS NOT NULL AND po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? \n"
-                + "	GROUP BY s.supplier_name, pc.category_name \n"
-                + ") x ORDER BY category_name, idr DESC, usd DESC, php DESC, jpy DESC"
-        );
-
-        ListMap.put(Report.PPoIssuedPerItem,
-                "SELECT prs.prsnumber, pod.productcode, cvd.productname, "
-                + "SUM(pod.qty) as qty, dep.department_code, pod.currencyCode, pod.unitprice, "
-                + "SUM(pod.amount) as amount, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks "
-                + "FROM po po "
-                + "LEFT JOIN po_detail pod ON pod.ponumber = po.ponumber "
-                + "LEFT JOIN prs ON prs.prsnumber = po.prsnumber "
-                + "LEFT JOIN prs_detail prsd ON prsd.prsnumber = prs.prsnumber "
-                + "LEFT JOIN canvassing cv ON cv.prsnumber = prs.prsnumber "
-                + "LEFT JOIN canvassing_detail cvd ON cvd.prsnumber = prs.prsnumber "
-                + "LEFT JOIN department dep ON dep.department_name = po.department_name "
-                + "GROUP BY prs.prsnumber, pod.productcode, cvd.productname, dep.department_code, "
-                + "pod.currencyCode, pod.unitprice, po.ponumber, po.supplier_name, cv.canvassername, prs.remarks"
         );
 
         ListMap.put(Report.IMStockCardperCategory,
@@ -1278,17 +1049,7 @@ public class GenerateReportController extends MultiActionController {
                 + "WHERE p.product_category = ? "
                 + "ORDER BY z.doc_date, p.product_name"
         );
-        ListMap.put(Report.PPrsForm,
-                //                "SELECT * " +
-                //                "FROM prs " +
-                //                "LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber " +
-                //                "WHERE prsd.prsnumber = ?"
-                "SELECT prsd.id as prsdid, prs.prsnumber, CONVERT(VARCHAR(10), prs.prsdate, 103) as prsdate, prsd.productcode, "
-                + "prsd.productname, prsd.qty, ISNULL(prsd.prs_soh, 0) as soh, prsd.uom_name, prs.department_name, prs.remarks, "
-                + "CONVERT(VARCHAR(20), prs.requestdate, 106)as requestdate, prs.createdby "
-                + "FROM prs LEFT JOIN prs_detail prsd ON prs.prsnumber = prsd.prsnumber "
-                + "WHERE prs.prsnumber = ?"
-        );
+        
         ListMap.put(Report.PCanvassingForm,
                 //                "SELECT * " +
                 //                "FROM canvassing cv " +
@@ -1303,45 +1064,6 @@ public class GenerateReportController extends MultiActionController {
                 + "LEFT JOIN \"user\" u ON u.user_id = acp.created_by "
                 + "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? "
         );
-
-        ListMap.put(Report.PPoConfirmatory,
-                "SELECT '' as prs_id, prd.prsnumber as prs_number, REPLACE(CONVERT(VARCHAR(9), prs.prsdate, 6), ' ', '-') as prs_date, \n"
-                + "	p.product_code, p.product_name, prd.qty, prs.department_name, '' as date_received, '' as currency, acp.unit_price as price, \n"
-                + "	(acp.unit_price * prd.qty) as amount, REPLACE(CONVERT(VARCHAR(9), po.po_date, 6), ' ', '-') as po_date, po.po_code, \n"
-                + "	s.supplier_name, u.name, po.remarks \n"
-                + "FROM prs_detail prd \n"
-                + "	LEFT JOIN prs ON prs.prsnumber = prd.prsnumber \n"
-                + "	LEFT JOIN po_detail pod ON pod.prsnumber = prd.prsnumber AND pod.product_code = prd.productcode \n"
-                + "	LEFT JOIN po ON po.po_code = pod.po_code \n"
-                + "	LEFT JOIN product p ON p.product_code = prd.productcode \n"
-                + "	LEFT JOIN assign_canv_prc acp ON acp.prsnumber = prs.prsnumber AND acp.productcode = prd.productcode \n"
-                + "		AND acp.is_selected = 'Y' \n"
-                + "	LEFT JOIN \"user\" u ON u.user_id = acp.created_by \n"
-                + "	LEFT JOIN supplier s ON s.supplier_code = po.supplier_code \n"
-                + "WHERE po.is_approved = 'Y' AND YEAR(po.po_date) = ? AND MONTH(po.po_date) = ? AND DAY(po.po_date) BETWEEN ? AND ? \n"
-                + "	AND po.remarks LIKE 'CONFIRMATORY%' \n"
-                + "ORDER BY prs_date, prs_number, product_name"
-        //			"SELECT * " +
-        //			"FROM po po " +
-        //			"LEFT JOIN po_detail pod ON pod.ponumber = po.ponumber " +
-        //			"LEFT JOIN prs ON prs.prsnumber = po.prsnumber " +
-        //			"LEFT JOIN prs_detail prsd ON prsd.prsnumber = prsd.prsnumber " +
-        //			"LEFT JOIN canvassing cnv ON cnv.prsnumber = prs.prsnumber " +
-        //                      "LEFT JOIN department dep ON dep.department_name = po.department_name"
-        );
-
-        ListMap.put(Report.IMSWS,
-                //                "SELECT * " +
-                //                "FROM dbo.sws sws, dbo.sws_detail swsd " +
-                //                "WHERE sws.swsnumber = swsd.swsnumber"
-                "SELECT sws.sws_code, sws.sws_info, CONVERT(VARCHAR(10), sws.sws_date, 103) as sws_date, "
-                + "d.department_code, d.department_name, u.name, p.product_code, p.product_name, p.product_category, "
-                + "swsd.qty, swsd.uom FROM sws "
-                + "INNER JOIN sws_detail swsd ON swsd.sws_code = sws.sws_code "
-                + "LEFT JOIN product p ON p.product_code = swsd.product_code "
-                + "LEFT JOIN \"user\" u ON u.user_id = sws.created_by "
-                + "LEFT JOIN department d ON d.department_code = sws.department_code "
-                + "WHERE sws.sws_code = ?");
 
         ListMap.put(Report.IMTS,
                 //                "SELECT * " +

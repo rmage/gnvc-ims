@@ -36,20 +36,28 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Action</td>
-                                <td>PRS Number</td>
-                                <td>Item Code</td>
+                                <td style="width: 113px">Action</td>
+                                <td style="width: 87px">PRS Number</td>
+                                <td style="width: 61px">Item Code</td>
                                 <td>Item Name</td>
-                                <td>Quantity</td>
+                                <td style="width: 48px">Quantity</td>
                                 <td style="width: 330px">Supplier</td>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td><input type="text" size="10" onkeyup="filterList(2, this.value)" /></td>
+                                <td><input type="text" size="3" onkeyup="filterList(3, this.value)"></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </thead>
-                        <tbody class="tbl-nohover">
+                        <tbody id="main" class="tbl-nohover">
                             <c:forEach items="${model.list}" var="x">
                                 <tr class="form">
                                     <td>
-                                        <input type="submit" value="Assign" onclick="submitForm(this);" />
-                                        <input class="add" type="button" value="Add" />
+                                        <input type="submit" value="Assign" onclick="if (confirm('Assign Button clicked, want to continue?')) { submitForm(this); } else { return false; }" />
+                                        <input class="add" type="button" value="Add" data-prsc="${x.prsnumber}" data-proc="${x.productcode}" data-pron="${x.productname}" />
                                     </td>
                                     <td>
                                         ${x.prsnumber}
@@ -79,25 +87,28 @@
         </div>
 
         <!-- javascript block HERE -->
-        <script>
+        <script>            
+            //  ACTION | Add action on click
             $('.add').live('click', function() {
-                var l = $(this).parent().parent().find('.supplier').size();
-                var $p = $(this).parent().parent().find('.row');
-                $('<input class="supplier" name="' + (l + 1) + 'supplier" size="40" type="text" required="true" /> ' 
-                    + '<input name="' + (l + 1) + 'supplierCode" type="hidden" required="true" /> '
-                    + '<input class="delete ui-button ui-widget ui-state-default ui-corner-all" name="' + (l + 1) 
-                        + 'delete" style="font-size: smaller;" type="button" value="Delete" />')
-                    .appendTo($p);
-                $p.find('input[name="' + (l + 1) + 'supplier"]')
-                    .autocomplete({
-                        source: supplierList,
-                        select: function( event, ui ) {
-                            var $o = $( "input:focus" );
-                            $o.val( ui.item.label );
-                            $('input[name="' + ($o.attr('name') + 'Code') + '"]').val( ui.item.code );
-                            return false;
-                        }
-                    });
+                if (confirm('Add new supplier for this? PRS Number : ' + $(this).data('prsc') + ' | Item : [' + $(this).data('proc') + '] '  + $(this).data('pron'))) {
+                    var l = $(this).parent().parent().find('.supplier').size();
+                    var $p = $(this).parent().parent().find('.row');
+                    $('<input class="supplier" name="' + (l + 1) + 'supplier" size="40" type="text" required="true" /> ' 
+                        + '<input name="' + (l + 1) + 'supplierCode" type="hidden" required="true" /> '
+                        + '<input class="delete ui-button ui-widget ui-state-default ui-corner-all" name="' + (l + 1) 
+                            + 'delete" style="font-size: smaller;" type="button" value="Delete" />')
+                        .appendTo($p);
+                    $p.find('input[name="' + (l + 1) + 'supplier"]')
+                        .autocomplete({
+                            source: supplierList,
+                            select: function( event, ui ) {
+                                var $o = $( "input:focus" );
+                                $o.val( ui.item.label );
+                                $('input[name="' + ($o.attr('name') + 'Code') + '"]').val( ui.item.code );
+                                return false;
+                            }
+                        });
+                }
             });
             
             $('.delete').live('click', function() {
@@ -151,7 +162,18 @@
                     form.submit();
                 else
                     window.location.replace(window.location.href);
-            } 
+            }
+            
+            //  FILTER | By PRS Number
+            var $trObj = $('#main tr.form');
+            function filterList(i, keyword) {
+                if(keyword === '') {
+                    $trObj.filter(':hidden').show();
+                } else {
+                    $trObj.filter(':visible').hide();
+                    $trObj.find('td:nth-child(' + i + '):contains("' + keyword + '")').parent().show();
+                }
+            }
         </script>
     </body>
 </html>

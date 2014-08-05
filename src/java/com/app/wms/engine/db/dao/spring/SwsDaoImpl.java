@@ -2,9 +2,12 @@ package com.app.wms.engine.db.dao.spring;
 
 import com.app.wms.engine.db.dao.SwsDao;
 import com.app.wms.engine.db.dto.Sws;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -50,6 +53,24 @@ public class SwsDaoImpl extends AbstractDAO
     public List<Sws> findByLogin(String departmentCode) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE department_code = ? ORDER BY CREATED_DATE DESC", 
             this, departmentCode);
+    }
+    
+    public int ajaxMaxPage(BigDecimal show, String where) {
+        try {
+            return jdbcTemplate.queryForInt("EXEC NF_STORES_WITHDRAWAL_MAX_PAGE ?, ?", show, where);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+    
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
+        try {
+            return jdbcTemplate.queryForList("EXEC NF_STORES_WITHDRAWAL_LIST ?, ?, ?, ?", page, show, where, order);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
     }
     
 }

@@ -59,10 +59,8 @@
                                 <tr>
                                     <td colspan="4">
                                         <span>
-                                            <label>
-                                                <input type="submit" name="btnSave" id="btnSave" value="Update" />
-                                            </label>
-                                            <input type="button" name="button" id="btnBack" value="Back" onclick="windows.location.replace('Product.htm')" />
+                                            <input type="submit" name="btnSave" id="btnSave" value="Update" />
+                                            <input type="button" name="button" id="btnBack" value="Cancel" onclick="window.location.replace('Product.htm')" />
                                         </span>
                                     </td>
                                 </tr>

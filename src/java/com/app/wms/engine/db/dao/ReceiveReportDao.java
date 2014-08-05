@@ -3,7 +3,9 @@ package com.app.wms.engine.db.dao;
 import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.PurchaseDtl;
 import com.app.wms.engine.db.dto.ReceiveReport;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 public interface ReceiveReportDao {
     
@@ -16,5 +18,9 @@ public interface ReceiveReportDao {
     public List<PurchaseDtl> findByPo(int poCode);
     
     public List<ReceiveReport> findAll();
+    
+    public int ajaxMaxPage(BigDecimal show, String where);
+    
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
 }
