@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Delivery Receipt</title>
+        <title>IMS &therefore; Delivery &therefore; Create</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -32,7 +32,7 @@
                     </form>
                     <form action="#" id="drForm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Header</caption>
+                            <caption>Delivery &therefore; Header</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>DR Number</td>
@@ -70,7 +70,7 @@
                             </tfoot>
                         </table>
                         <table class="collapse tblForm row-select">
-                            <caption>Detail</caption>
+                            <caption>Delivery &therefore; Detail</caption>
                             <thead>
                                 <tr>
                                     <th colspan="6">Please Type Item Name : <input id="itemName" size="40" type="text" /></th>

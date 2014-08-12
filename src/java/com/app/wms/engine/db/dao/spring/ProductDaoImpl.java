@@ -16,6 +16,8 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -852,4 +854,14 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         List<Product> products = jdbcTemplate.query("SELECT product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw FROM " + getTableName() + " WHERE product_id=?", this, id);
         return products.isEmpty() ? null : products.get(0);
     }
+    
+    public List<Map<String, Object>> getLastXInPo(String productCode, int x) {
+        try {
+            return jdbcTemplate.queryForList("EXEC M_PRODUCT_GET_LAST_X_IN_PURCHASE_ORDER ?, ?", productCode, x);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
 }

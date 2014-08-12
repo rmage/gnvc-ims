@@ -16,6 +16,9 @@ import com.app.wms.web.util.AppConstant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -483,15 +486,15 @@ public class ProductController extends MultiActionController {
 //          }
 //      }
     }
-    
+
     public ModelAndView saveUpdate(HttpServletRequest request, HttpServletResponse response) {
         try {
             String productId = request.getParameter("productId");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            
+
             ProductDao pDao = DaoFactory.createProductDao();
             UserDao uDao = DaoFactory.createUserDao();
-            
+
             Product p = pDao.findByPrimaryKey(productId);
             p.setProductName(request.getParameter("itemname"));
             p.setProductDescription(request.getParameter("itemDescription"));
@@ -500,9 +503,9 @@ public class ProductController extends MultiActionController {
             p.setUpdatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
             p.setUpdatedDate(new Date());
             pDao.update(p.createPk(), p);
-            
+
             return new ModelAndView("redirect:Product.htm");
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ModelAndView("redirect:Product.htm?action=update&key=PR048904");
         }
@@ -523,29 +526,6 @@ public class ProductController extends MultiActionController {
     }
 
     //Modified 9 April 2014
-    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Boolean b = Boolean.FALSE;
-        PrintWriter pw = response.getWriter();
-
-        ProductDao proDao = DaoFactory.createProductDao();
-
-        pw.print("{\"maxpage\": " + proDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
-        List<Product> ps = proDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
-        for (Product x : ps) {
-            if (b) {
-                pw.print(",");
-            }
-            pw.print("{\"1\": \"" + x.getProductId() + "\", ");
-            pw.print("\"2\": \"" + x.getProductCode() + "\", ");
-            pw.print("\"3\": \"" + x.getProductName() + "\", ");
-            pw.print("\"4\": \"" + x.getProductCategory() + "\", ");
-            pw.print("\"5\": \"" + x.getIsActive() + "\"}");
-
-            b = Boolean.TRUE;
-        }
-        pw.print("]}");
-    }
-
     public ModelAndView update(HttpServletRequest request, HttpServletResponse response)
             throws ProductCategoryDaoException, UomDaoException {
         /* DATA | get initial value */
@@ -570,7 +550,67 @@ public class ProductController extends MultiActionController {
         // get product unit of measurement
         List<Uom> dropListUOM = daoUoM.findAll();
         map.put("dropListUOM", dropListUOM);
-        
+
         return new ModelAndView("1_setup/ProductEdit", "model", map);
     }
-}
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+
+        ProductDao proDao = DaoFactory.createProductDao();
+
+        pw.print("{\"maxpage\": " + proDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
+        List<Product> ps = proDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
+        for (Product x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+            pw.print("{\"1\": \"" + x.getProductId() + "\", ");
+            pw.print("\"2\": \"" + x.getProductCode() + "\", ");
+            pw.print("\"3\": \"" + x.getProductName() + "\", ");
+            pw.print("\"4\": \"" + x.getProductCategory() + "\", ");
+            pw.print("\"5\": \"" + x.getIsActive() + "\"}");
+
+            b = Boolean.TRUE;
+        }
+        pw.print("]}");
+    }
+
+    public void ajaxReadDetail(HttpServletRequest request, HttpServletResponse response) 
+            throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        ProductDao pDao = DaoFactory.createProductDao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("[");
+        List<Map<String, Object>> ms = pDao.getLastXInPo(request.getParameter("term"), 20);
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("po_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("po_date")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("po_currency")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("supplier_code")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("supplier_name") == null ? "" : x.get("supplier_name")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("department_code") == null ? "" : x.get("department_code")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("department_name") == null ? "" : x.get("department_name")).append("\", ");
+            sb.append("\"8\": \"").append(x.get("po_qty")).append("\", ");
+            sb.append("\"9\": \"").append(x.get("unit_price")).append("\", ");
+            sb.append("\"10\": \"").append(x.get("canvasser") == null ? "" : x.get("canvasser")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+        
+    }}

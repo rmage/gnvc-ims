@@ -27,7 +27,7 @@ public class ReportFactory {
         RPDailyProduction, FMDR,
         PCanvassingForm, 
         IMStockCardperItem,
-        IMTS, IMDR, IMStockCardperCategory, IMStockCardTransactionReport,
+        IMStockCardperCategory, IMStockCardTransactionReport,
         FGPTS, FGOFAL, FGBOR, FGFM, FGFO, FGSC,
         FGTS, FGEDS, FGBadStockReport,
         FGTunaVayaReport, Accounting,
@@ -38,7 +38,7 @@ public class ReportFactory {
         , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
         //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier
-        , NFRr, NFSws, NFSIPerCat
+        , NFRr, NFSws, NFTs, NFDr, NFSIPerCat
         ; 
     }
 
@@ -123,6 +123,10 @@ public class ReportFactory {
         reportMap.put(Report.NFRr, reportTemplateMap.get("NFRr"));
         reportTemplateMap.put("NFSws", new ReportModel("non_fish/sws", false));
         reportMap.put(Report.NFSws, reportTemplateMap.get("NFSws"));
+        reportTemplateMap.put("NFTs", new ReportModel("non_fish/ts", false));
+        reportMap.put(Report.NFTs, reportTemplateMap.get("NFTs"));
+        reportTemplateMap.put("NFDr", new ReportModel("non_fish/dr", false));
+        reportMap.put(Report.NFDr, reportTemplateMap.get("NFDr"));
         reportTemplateMap.put("NFSIPerCat", new ReportModel("non_fish/sipcat", false));
         reportMap.put(Report.NFSIPerCat, reportTemplateMap.get("NFSIPerCat"));
         
@@ -142,7 +146,6 @@ public class ReportFactory {
         
         
         
-        reportTemplateMap.put("IMDR", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));
         
         reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
@@ -164,7 +167,6 @@ public class ReportFactory {
         reportTemplateMap.put("stockCardReport", new ReportModel("stockCardReport", false));
         reportTemplateMap.put("summaryWeightSlip", new ReportModel("summaryWeightSlip"));
         reportTemplateMap.put("transferSlip", new ReportModel("transferSlip", false));
-        reportTemplateMap.put("transferSlipNF", new ReportModel("transferSlipNF", false));
         reportTemplateMap.put("spoilageReport", new ReportModel("spoilageReport", false));
         reportTemplateMap.put("weightslip", new ReportModel("weightslip", false));
         reportTemplateMap.put("wsabf", new ReportModel("wsabf", false));
@@ -187,7 +189,6 @@ public class ReportFactory {
         reportTemplateMap.put("FGFO", new ReportModel("gnvFishOil", false));
 
         reportMap.put(Report.FGSC, reportTemplateMap.get("FGSC"));
-        reportMap.put(Report.IMDR, reportTemplateMap.get("IMDR"));
         
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
@@ -218,7 +219,6 @@ public class ReportFactory {
         reportMap.put(Report.FMDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.PCanvassingForm, reportTemplateMap.get("canvassingForm"));
         
-        reportMap.put(Report.IMTS, reportTemplateMap.get("transferSlipNF"));
         reportMap.put(Report.IMStockCardperItem, reportTemplateMap.get("IMStockCardperItem"));
         reportMap.put(Report.IMStockCardperCategory, reportTemplateMap.get("IMStockCardperCategory"));
         reportMap.put(Report.IMStockCardTransactionReport, reportTemplateMap.get("IMStockCardTransactionReport"));

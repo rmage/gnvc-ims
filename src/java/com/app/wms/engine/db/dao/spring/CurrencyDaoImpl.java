@@ -136,7 +136,7 @@ public class CurrencyDaoImpl extends AbstractDAO implements ParameterizedRowMapp
     @Transactional
     public List<Currency> findAll() throws CurrencyDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, currency_code, currency_name, currency_symbol, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " ORDER BY id", this);
+            return jdbcTemplate.query("SELECT id, currency_code, currency_name, currency_symbol, is_active, is_delete, created_by, created_date, updated_by, updated_date FROM " + getTableName() + " WHERE is_active = 'Y' ORDER BY id", this);
         } catch (Exception e) {
             throw new CurrencyDaoException("Query failed", e);
         }

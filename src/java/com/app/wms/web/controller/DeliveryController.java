@@ -1,5 +1,6 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.DeliveryDao;
 import com.app.wms.engine.db.dao.DistributorDao;
 import com.app.wms.engine.db.dao.DrDao;
 import com.app.wms.engine.db.dao.DrDtlDao;
@@ -7,6 +8,7 @@ import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
+import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.Distributor;
 import com.app.wms.engine.db.dto.Dr;
 import com.app.wms.engine.db.dto.DrDtl;
@@ -17,6 +19,7 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
 import com.app.wms.engine.db.exceptions.SupplierDaoException;
+import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,34 +37,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class DeliveryController extends MultiActionController {
 
-    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) 
-        throws SupplierDaoException {
-        
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-
-        /* DAO | Define needed dao here */
-        DrDao drDao = DaoFactory.createDrDao();
-        SupplierDao supplierDao = DaoFactory.createSupplierDao();
-        DistributorDao distributorDao = DaoFactory.createDistributorDao();
-
-        /* TRANSACTION | Something complex here */
-        m.put("type", request.getParameter("type"));
-        
-        List<Dr> ds = drDao.findAll(request.getParameter("type"));
-        for(Dr x : ds) {
-            if (x.getDrType().equals("NF")) {
-                Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
-                x.setSupplierCode(s.getSupplierName());
-            } else {
-                Distributor d = distributorDao.findByCode(x.getSupplierCode());
-                x.setSupplierCode(d.getDistributorName());
-            }
-        }
-        m.put("d", ds);
-        
-        return new ModelAndView("finish_goods/DRList", "model", m);
-        
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("finish_goods/DRList");
     }
     
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
@@ -70,20 +48,16 @@ public class DeliveryController extends MultiActionController {
         HashMap m = new HashMap();
 
         /* DAO | Define needed dao here */
-//        SupplierDao supplierDao = DaoFactory.createSupplierDao();
         
         /* TRANSACTION | Something complex here */
         m.put("type", request.getParameter("type"));
-        
-//        List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
-//        m.put("supplier", ss);
         
         return new ModelAndView("finish_goods/DRAdd", "model", m);
         
     }
     
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
-        throws ParseException, NumberFormatException, StockInventoryDaoException {
+        throws ParseException, NumberFormatException, StockInventoryDaoException, UserDaoException {
         
         /* DATA | get initial value */
         String type = request.getParameter("type");
@@ -96,6 +70,7 @@ public class DeliveryController extends MultiActionController {
         DrDtlDao drDtlDao = DaoFactory.createDrDtlDao();
         StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
         StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
+        UserDao uDao = DaoFactory.createUserDao();
 
         /* TRANSACTION | Something complex here */
         // insert master delivery receipt
@@ -110,7 +85,7 @@ public class DeliveryController extends MultiActionController {
         d.setSupplierCode(master[6]);
         d.setOrCode(master[7]);
         d.setDmCode(master[8]);
-        d.setCreatedBy(lu.getUserId());
+        d.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
         d.setCreatedDate(new Date());
         drDao.insert(d);
         
@@ -122,8 +97,8 @@ public class DeliveryController extends MultiActionController {
             dd.setDrQty(new BigDecimal(detail[0]));
             dd.setDrUom(detail[1]);
             dd.setProductCode(detail[2]);
-            dd.setCreatedBy(lu.getUserId());
-            dd.setCreatedDate(new Date());
+            dd.setCreatedBy(d.getCreatedBy());
+            dd.setCreatedDate(d.getCreatedDate());
             drDtlDao.insert(dd);
             
             // stock balance history for stock card
@@ -249,6 +224,39 @@ public class DeliveryController extends MultiActionController {
         }
         pw.print("]");
         
+    }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        
+        /* DAO | Define needed dao here */
+        DeliveryDao dDao = DaoFactory.createDeliveryDao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("{\"maxpage\": ").append(dDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = dDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("dr_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("dr_code")).append("\", ");
+            sb.append("\"3\": \"").append(sdf.format(x.get("dr_date"))).append("\", ");
+            sb.append("\"4\": \"").append(x.get("dr_from")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("dr_to")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("created_by")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
     }
 
 }

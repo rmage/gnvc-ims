@@ -1,4 +1,13 @@
 /*global $, jQuery, alert, console, document*/
+Object.kColumnSize = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key))
+            size++;
+    }
+    return size;
+};
+
 var variable = {
     page: 1,
     show: 5,
@@ -11,12 +20,12 @@ var variable = {
     regexNumericOnly: new RegExp(/^[1-9][0-9]*$/),
     searchForm: null,
     listTable: null,
-    getClauseCriteria: function () {
+    getClauseCriteria: function() {
         'use strict';
         var r = '';
-        variable.searchForm.find('input:not(:button):not(:submit)').filter(function () {
+        variable.searchForm.find('input:not(:button):not(:submit)').filter(function() {
             return this.value.length !== 0;
-        }).each(function (i) {
+        }).each(function(i) {
             var v = $(this).val();
             if (i > 0) {
                 r = r + ' AND ';
@@ -32,10 +41,10 @@ var variable = {
         });
         return r;
     },
-    getClauseOrder: function () {
+    getClauseOrder: function() {
         'use strict';
         var r = '';
-        variable.listTable.find('thead td[class*=filter]').each(function (i) {
+        variable.listTable.find('thead td[class*=filter]').each(function(i) {
             if (i > 0) {
                 r = r + ', ';
             } else {
@@ -48,25 +57,25 @@ var variable = {
 };
 
 var event = {
-    sorting: function ($jqo) {
+    sorting: function($jqo) {
         'use strict';
         switch ($jqo.data('status')) {
-        case 0:
-            $jqo.data('status', 1);
-            $jqo.addClass('filter-down');
-            break;
-        case 1:
-            $jqo.data('status', 2);
-            $jqo.addClass('filter-up');
-            $jqo.removeClass('filter-down');
-            break;
-        case 2:
-            $jqo.data('status', 0);
-            $jqo.removeClass('filter-up');
-            break;
+            case 0:
+                $jqo.data('status', 1);
+                $jqo.addClass('filter-down');
+                break;
+            case 1:
+                $jqo.data('status', 2);
+                $jqo.addClass('filter-up');
+                $jqo.removeClass('filter-down');
+                break;
+            case 2:
+                $jqo.data('status', 0);
+                $jqo.removeClass('filter-up');
+                break;
         }
     },
-    paging: function (v) {
+    paging: function(v) {
         'use strict';
         if (variable.regexNumericOnly.test(v)) {
             if (v > variable.maxPage || v < 1) {
@@ -76,7 +85,7 @@ var event = {
         }
         return 1;
     },
-    limit: function (v) {
+    limit: function(v) {
         'use strict';
         if (!variable.regexNumericOnly.test(v)) {
             return variable.show;
@@ -87,7 +96,7 @@ var event = {
 
 var ajax = {
     // AJAX | sorting, filtering and paging
-    sfp: function () {
+    sfp: function() {
         'use strict';
         // AJAX | default ajax call for sorting, filtering and paging
         $.ajax({
@@ -95,60 +104,64 @@ var ajax = {
             data: {action: 'ajaxSearch', where: variable.getClauseCriteria(), order: variable.getClauseOrder(), page: variable.page, show: variable.show},
             type: 'POST',
             dataType: 'json',
-            beforeSend: function () {
+            beforeSend: function() {
                 variable.listTable.find('#main').html('<tr><td colspan="' + variable.column + '" style="text-align: center;">' + variable.ajaxImageLoader + '</td></tr>');
             },
-            success: function (data) {
+            success: function(data) {
                 var i, j, k, x, y, z, R, Rs, params, action = variable.action.split(':'), row = (((variable.page - 1) * variable.show) + 1), html, $main = variable.listTable.find('#main');
                 $main.html('');
                 for (i = 0; i < data.data.length; i += 1) {
                     html = '<tr>';
                     for (j = 0; j < variable.column; j += 1) {
                         switch (j) {
-                        case 0:
-                            html += '<td>' + row + '</td>';
-                            row += 1;
-                            break;
-                        case 1:
-                            html += '<td>';
-                            for (z = 0; z < action.length; z += 1) {
-                                switch (action[z]) {
-                                case 'u':
-                                    html += '<a href="' + variable.urlPage + '?action=update&key=' + data.data[i][j] + '" onclick="return confirm(\'Continue to UPDATE THIS THIS : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/edit.gif" title="Update"></a> ';
-                                    break;
-                                case 'd':
-                                    html += '<a href="' + variable.urlPage + '?action=delete&key=' + data.data[i][j] + '" onclick="return confirm(\'Continue to DELETE THIS THIS : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/delete.gif" title="Delete"></a> ';
-                                    break;
-                                default:
-                                    // CHECK | report action here
-                                    if (/^R/.test(action[z])) {
-                                        Rs = action[z].split('*');
-                                        for (x = 0; x < Rs.length; x += 1) {
-                                            if (x === 0) { html += '<span class="separator"></span>'; }
-                                            R = Rs[x].split('_');
-                                            if (!R[3]) {
-                                                params = data.data[i][j + 1];
-                                            } else {
-                                                params = '';
-                                                k = R[3].split('-');
-                                                for (y = 0; y < k.length; y += 1) {
-                                                    if (y !== 0) { params += ':'; }
-                                                    params += data.data[i][j + parseInt(k[y], 10)];
+                            case 0:
+                                html += '<td>' + row + '</td>';
+                                row += 1;
+                                break;
+                            case 1:
+                                html += '<td>';
+                                for (z = 0; z < action.length; z += 1) {
+                                    switch (action[z]) {
+                                        case 'u':
+                                            html += '<a href="' + variable.urlPage + '?action=update&key=' + data.data[i][j] + '" onclick="return confirm(\'Continue to UPDATE THIS THIS : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/edit.gif" title="Update"></a> ';
+                                            break;
+                                        case 'd':
+                                            html += '<a href="' + variable.urlPage + '?action=delete&key=' + data.data[i][j] + '" onclick="return confirm(\'Continue to DELETE THIS THIS : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/delete.gif" title="Delete"></a> ';
+                                            break;
+                                        default:
+                                            // CHECK | report action here
+                                            if (/^R/.test(action[z])) {
+                                                Rs = action[z].split('*');
+                                                for (x = 0; x < Rs.length; x += 1) {
+                                                    if (x === 0) {
+                                                        html += '<span class="separator"></span>';
+                                                    }
+                                                    R = Rs[x].split('_');
+                                                    if (!R[3]) {
+                                                        params = data.data[i][j + 1];
+                                                    } else {
+                                                        params = '';
+                                                        k = R[3].split('-');
+                                                        for (y = 0; y < k.length; y += 1) {
+                                                            if (y !== 0) {
+                                                                params += ':';
+                                                            }
+                                                            params += data.data[i][j + parseInt(k[y], 10)];
+                                                        }
+                                                    }
+                                                    html += '<a href="GenerateReport.htm?action=index&item=' + R[1] + '&type=xls&params=' + params + '" onclick="return confirm(\'Continue to PRINT THIS ITEM : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/printxls.gif" title="' + R[2] + '" /></a> ';
                                                 }
                                             }
-                                            html += '<a href="GenerateReport.htm?action=index&item=' + R[1] + '&type=xls&params=' + params + '" onclick="return confirm(\'Continue to PRINT THIS ITEM : ' + data.data[i][j + 1] + ' ?\');"><img src="resources/images/printxls.gif" title="' + R[2] + '" /></a> ';
-                                        }
+                                            break;
                                     }
-                                    break;
                                 }
-                            }
-                            html += '</td>';
-                            break;
-                        case 2:
-                            html += '<td><a class="d" href="#' + data.data[i][j] + '#r" onclick="tableListModalCaller()">' + data.data[i][j] + '</a></td>';
-                            break;
-                        default:
-                            html += '<td>' + data.data[i][j] + '</td>';
+                                html += '</td>';
+                                break;
+                            case 2:
+                                html += '<td><a class="d" href="#' + data.data[i][j] + '#r" onclick="util.tableListModalCaller()">' + data.data[i][j] + '</a></td>';
+                                break;
+                            default:
+                                html += '<td>' + data.data[i][j] + '</td>';
                         }
                     }
                     html += '</tr>';
@@ -157,11 +170,11 @@ var ajax = {
                 variable.maxPage = data.maxpage;
                 variable.listTable.find('#maxpage').html(variable.maxPage);
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function(jqXHR, textStatus, errorThrown) {
                 console.log('AJAX ERROR | log : ' + jqXHR + ' :: ' + textStatus + ' :: ' + errorThrown);
                 variable.listTable.find('#main').html('<tr><td colspan="' + variable.column + '" style="text-align: center;">' + variable.ajaxImageError + '</td></tr>');
             },
-            complete: function () {
+            complete: function() {
                 var $main = variable.listTable.find('#main');
                 if ($main.html() === '') {
                     $main.append('<tr><td colspan="' + variable.column + '" style="text-align: center;"><i>-- no data to show --</i></td></tr>');
@@ -172,7 +185,7 @@ var ajax = {
 };
 
 var util = {
-    initSearchForm: function ($jqo) {
+    initSearchForm: function($jqo) {
         'use strict';
         // VARIABLE | search form
         variable.searchForm = $jqo;
@@ -181,47 +194,118 @@ var util = {
             $('<input name="where" type="hidden" />').appendTo($jqo);
         }
         // EVENT | search form
-        $jqo.on('submit', function () {
+        $jqo.on('submit', function() {
             ajax.sfp();
             return false;
         });
     },
-    initListTable: function ($jqo, action) {
+    initListTable: function($jqo, action) {
         'use strict';
         // VARIABLE | list table, action
         variable.listTable = $jqo;
         variable.action = action;
         // COLUMN | set event on filterable column
         var td = 0;
-        $jqo.find('thead tr td').each(function () {
+        $jqo.find('thead tr td').each(function() {
             if ($(this).attr('column') !== undefined) {
                 $(this).data('status', 0);
-                $(this).on('click', function () { event.sorting($(this)); });
+                $(this).on('click', function() {
+                    event.sorting($(this));
+                });
             }
             td = td + 1;
         });
         variable.column = td;
         // TFOOT | for paging
-        if ($jqo.find('tfoot').length < 1) { $jqo.append('<tfoot></tfoot>'); }
+        if ($jqo.find('tfoot').length < 1) {
+            $jqo.append('<tfoot></tfoot>');
+        }
         $jqo.find('tfoot').append('<tr><td colspan="' + variable.column + '" style="text-align: right;">Page : <input type="text" style="text-align: center;" value="1" size="2"> of <span id="maxpage">' + variable.page + '</span> | Show : <input type="text" style="text-align: center;" value="' + variable.show + '" size="2"></td></tr>');
-        $jqo.find('input:eq(0)').on('focus', function () {
+        $jqo.find('input:eq(0)').on('focus', function() {
             $(this).val(null);
-        }).on('blur', function () {
+        }).on('blur', function() {
             $(this).val(event.paging($(this).val()));
             variable.page = parseInt($(this).val(), 10);
-        }).on('keydown', function (e) {
-            if (e.keyCode === 13) { $(this).trigger("blur"); variable.searchForm.submit(); }
+        }).on('keydown', function(e) {
+            if (e.keyCode === 13) {
+                $(this).trigger("blur");
+                variable.searchForm.submit();
+            }
         });
-        $jqo.find('input:eq(1)').on('focus', function () {
+        $jqo.find('input:eq(1)').on('focus', function() {
             $(this).val(null);
-        }).on('blur', function () {
+        }).on('blur', function() {
             $(this).val(event.limit($(this).val()));
             variable.show = parseInt($(this).val(), 10);
-        }).on('keydown', function (e) {
-            if (e.keyCode === 13) { $(this).trigger("blur"); variable.searchForm.submit(); }
+        }).on('keydown', function(e) {
+            if (e.keyCode === 13) {
+                $(this).trigger("blur");
+                variable.searchForm.submit();
+            }
         });
         // ACTION | click search button
         variable.searchForm.submit();
+    },
+    tableListAction: function(w, title) {
+        /* concept of view data */
+        if (!$('#imsModal').length)
+            $('body').append('<div id="imsModal" title="Title"></div>');
+
+        $(function() {
+            $("#imsModal").dialog({
+                modal: true,
+                autoOpen: false,
+                resizable: false,
+                width: w,
+                height: 398,
+                minHeight: 396,
+                maxWidth: 1000,
+                buttons: {
+                    OK: function() {
+                        $(this).dialog("close");
+                    }
+                },
+                create: function() {
+                    $(this).css("maxHeight", 400);
+                },
+                open: function() {
+                    $('#imsModal').dialog("option", "title", "Title").html(variable.ajaxImageLoader);
+                    setTimeout(function() {
+                        var s = window.location.href.split('#');
+                        if (s[2] === 'r') {
+                            $.ajax({
+                                url: '?',
+                                data: {action: 'ajaxReadDetail', term: s[1]},
+                                dataType: 'json',
+                                success: function(json) {
+                                    var html = '';
+                                    $("#imsModal").dialog("option", "title", title + s[1]);
+                                    html += '<table class="collapse tblForm row-select ui-widget-content"><thead>';
+                                    for (var i = 0; i < json.length; i++) {
+                                        if (i === 1)
+                                            html += '</thead><tbody>';
+                                        html += '<tr>';
+                                        for (var j = 0; j < Object.kColumnSize(json[i]); j++) {
+                                            html += '<td class="' + (i === 0 ? 'ui-state-default' : '') + '">' + json[i][j + 1] + '</td>';
+                                        }
+                                        html += '</tr>';
+                                    }
+                                    html += '<tbody></table>';
+                                    //console.log(html);
+                                    $('#imsModal').html(html);
+                                },
+                                error: function(o) {
+                                    $('#imsModal').html('<img src="resources/images/delete.gif" /> Error occured! Contact administrator <br><br><h3>[' + o.status + '] ' + o.statusText + '</h3>');
+                                }
+                            });
+                        }
+                    }, 300);
+                }
+            });
+        });
+    },
+    tableListModalCaller: function() {
+        $('#imsModal').dialog('open');
     }
 };
 

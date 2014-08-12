@@ -3,9 +3,12 @@ package com.app.wms.engine.db.dao.spring;
 import com.app.wms.engine.db.dao.TsDao;
 import com.app.wms.engine.db.dto.Sws;
 import com.app.wms.engine.db.dto.Ts;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -61,12 +64,30 @@ public class TsDaoImpl extends AbstractDAO
     }
     
     public List<Sws> findWhereNotInTs() {
-        return jdbcTemplate.query("SELECT * FROM sws WHERE sws_code NOT IN (SELECT sws_code FROM " + getTableName() + ") ORDER BY sws_date ASC", 
+        return jdbcTemplate.query("SELECT * FROM sws WHERE sws_code NOT IN (SELECT sws_code FROM " + getTableName() + ") ORDER BY sws_code ASC", 
             new SwsDaoImpl());
     }
     
     public List<Ts> findAll(String module) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE ts_module = ? ORDER BY created_date DESC", this, module);
+    }
+    
+    public int ajaxMaxPage(BigDecimal show, String where) {
+        try {
+            return jdbcTemplate.queryForInt("EXEC NF_TRANSFER_MAX_PAGE ?, ?", show, where);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+    
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
+        try {
+            return jdbcTemplate.queryForList("EXEC NF_TRANSFER_LIST ?, ?, ?, ?", page, show, where, order);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
     }
 
 }

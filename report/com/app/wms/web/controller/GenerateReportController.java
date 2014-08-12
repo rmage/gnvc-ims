@@ -185,6 +185,8 @@ public class GenerateReportController extends MultiActionController {
         //  Non-Fish Module | Form and Report List
         ListMap.put(Report.NFRr, "EXEC PRT_NF_RECEIVING ?");
         ListMap.put(Report.NFSws, "EXEC PRT_NF_STORES_WITHDRAWAL ?");
+        ListMap.put(Report.NFTs, "EXEC PRT_NF_TRANSFER ?");
+        ListMap.put(Report.NFDr, "EXEC PRT_NF_DELIVERY ?");
         ListMap.put(Report.NFSIPerCat, "EXEC RPT_NF_STOCK_INVENTORY_PER_CATEGORY ?, ?, ?, ?, ?");
         //  ***END*** | Non-Fish Module | Form and Report List
 
@@ -1064,36 +1066,6 @@ public class GenerateReportController extends MultiActionController {
                 + "LEFT JOIN \"user\" u ON u.user_id = acp.created_by "
                 + "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? "
         );
-
-        ListMap.put(Report.IMTS,
-                //                "SELECT * " +
-                //                "FROM dbo.ts ts, dbo.ts_detail tsd " +
-                //                "WHERE ts.tsnumber = tsd.tsnumber"
-                "SELECT ts.ts_code, CONVERT(VARCHAR(10), ts.ts_date, 103) as ts_date, d.department_name as [from], "
-                + "u.name, ts.sws_code, ts.ts_info, p.product_name, p.product_code, p.product_category, "
-                + "td.qty, sd.uom, d2.department_name as [to] FROM ts "
-                + "LEFT JOIN sws ON sws.sws_code = ts.sws_code "
-                + "LEFT JOIN sws_detail sd ON sd.sws_code = sws.sws_code "
-                + "LEFT JOIN ts_detail td ON td.ts_code = ts.ts_code AND td.product_code = sd.product_code "
-                + "LEFT JOIN product p ON p.product_code = sd.product_code "
-                + "LEFT JOIN \"user\" u ON u.user_id = ts.created_by "
-                + "LEFT JOIN user_role ur ON ur.role_code = u.role_code "
-                + "LEFT JOIN department d ON d.department_code = ur.department_code "
-                + "LEFT JOIN department d2 ON d2.department_code = sws.department_code "
-                + "WHERE ts.ts_code = ? ");
-
-        ListMap.put(Report.IMDR,
-                //                "SELECT * FROM dbo.dr dr " +
-                //                "LEFT JOIN dbo.dr_detail drd ON dr.drnumber = drd.drnumber " +
-                //                "LEFT JOIN product p ON p.product_code = drd.productcode"
-                "SELECT dr.dr_code, CONVERT(VARCHAR(10), dr.dr_date, 103) as dr_date, dr.dr_from, dr.dr_fromloc, "
-                + "dr.or_code, dr.dr_toloc, dr.dm_code, dr.dr_remarks, dd.dr_qty, dd.dr_uom, s.supplier_name, "
-                + "p.product_code, p.product_name, u.name FROM dr "
-                + "INNER JOIN dr_detail dd ON dd.dr_code = dr.dr_code "
-                + "LEFT JOIN supplier s ON s.supplier_code = dr.supplier_code "
-                + "LEFT JOIN product p ON p.product_code = dd.product_code "
-                + "LEFT JOIN \"user\" u ON u.user_id = dr.created_by "
-                + "WHERE dr.dr_code = ?");
 
         ListMap.put(Report.FGPTS,
                 //                "SELECT * "+

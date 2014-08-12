@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - Transfer Slip</title>
+        <title>IMS &therefore; Transfer</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -21,28 +21,40 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="TransferSlip.htm" method="post">
+                    <form id="search" action="TransferSlip.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search</caption>
+                            <caption>Transfer &therefore; Search</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">TS Number</td>
-                                    <td><input type="text" name="tsCode" /></td>
+                                    <td><input type="text" name="ts_code" /></td>
+                                    <td>TS Type</td>
+                                    <td>
+                                        <input id="ts_type" name="ts_type" type="hidden" value="" />
+                                        <select name="type" onchange="document.getElementById('ts_type').value = this.value">
+                                            <option value="">-- Show All --</option>
+                                            <option value="NORMAL">Normal</option>
+                                            <option value="OTHERS">Others</option>
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="2">
+                                    <td colspan="4">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <select id="type"><option value="NORMAL">Normal</option><option value="OTHERS">Others</option><!--<option value="BAD_STOCKS">Bad Stocks</option>--></select>
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('TransferSlip.htm?action=create&module=<%= request.getParameter("module")%>&type=' + document.getElementById('type').value);" />
+                                        <select id="type">
+                                            <option value="NORMAL">Normal</option>
+                                            <option value="OTHERS">Others</option>
+                                        </select>
+                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('TransferSlip.htm?action=create&module=NF&type=' + document.getElementById('type').value);" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
-                        <caption>List</caption>
+                    <table id="list" class="collapse tblForm row-select">
+                        <caption>Transfer &therefore; List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
@@ -52,42 +64,11 @@
                                 <td>TS Type</td>
                                 <td>Sws Number</td>
                                 <td>Info</td>
+                                <td>Creator</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:if test="${model.t != null}">
-                                <c:set scope="page" value="${((model.page-1) * model.paging) + 1}" var="no" />
-                                <c:forEach items="${model.t}" var="x" varStatus="i">
-                                    <tr>
-                                        <td>
-                                            ${no}
-                                            <c:set scope="page" value="${no + 1}" var="no"/>
-                                        </td>
-                                        <td>
-                                            <a href="GenerateReport.htm?action=index&item=IMTS&type=xls&params=${x.tsCode}"><img src="resources/images/printxls.gif" title="Print Transfer Slip (xls)" /></a>
-                                        </td>
-                                        <td>${x.tsCode}</td>
-                                        <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.tsDate}" /></td>
-                                        <td>${x.tsType}</td>
-                                        <td>${x.swsCode == 0 ? '-' : x.swsCode}</td>
-                                        <td>${x.tsInfo}</td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="7">
-                                    <c:if test="${model.page !=null && model.page > 1}">
-                                        <a href="TransferSlip.htm?page=<c:out value="${model.page-1}" />">&lt</a>
-                                    </c:if>
-                                    &nbsp;page: ${model.page}&nbsp;
-                                    <c:if test="${model.page < model.totalRows/model.paging}">
-                                        <a href="TransferSlip.htm?page=<c:out value="${model.page+1}" />">&gt;</a>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </tfoot>
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>
@@ -99,9 +80,9 @@
         </div>
 
         <!-- javascript block HERE -->
-        <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
-
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'R_NFTs_Transfer Slip (xls)');
         </script>
     </body>
 </html>

@@ -8,6 +8,7 @@ import com.app.wms.engine.db.exceptions.ProductDaoException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
@@ -250,4 +251,6 @@ public interface ProductDao {
     public int ajaxMaxPage(String where, BigDecimal show);
     public List<Product> ajaxSearch(String where, String order, int page, int show);
     public Product findId(String id);
+    
+    public List<Map<String, Object>> getLastXInPo(String productCode, int x);
 }

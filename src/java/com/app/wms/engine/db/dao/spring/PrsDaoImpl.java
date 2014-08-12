@@ -442,7 +442,7 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
     
     public int ajaxMaxPage(String deptId, String where, BigDecimal show) {
         try {
-            return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM prs " + (where.isEmpty() ? "WHERE department_name = ?" : where + " AND department_name = ?"), show, deptId);
+            return jdbcTemplate.queryForInt("EXEC PRC_PURCHASE_REQUISITION_MAX_PAGE ?, ?, ?", show, where, deptId);
         } catch(DataAccessException e) {
             e.printStackTrace();
             return 1;
@@ -451,11 +451,7 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
     
     public List<Map<String, Object>> ajaxSearch(String deptId, String where, String order, int page, int show) {
         try {
-            return jdbcTemplate.queryForList("DECLARE @page INT, @show INT " +
-                "SELECT @page = ?, @show = ? " +
-                "SELECT * FROM ( " +
-                "   SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved, approved_by, approved_date, ROW_NUMBER() OVER(" + (order.isEmpty() ? "ORDER BY id DESC" : order) + ") row FROM prs " + (where.isEmpty() ? "WHERE department_name = ?" : where + " AND department_name = ?") +
-                ") list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", page, show, deptId);
+            return jdbcTemplate.queryForList("EXEC PRC_PURCHASE_REQUISITION_LIST ?, ?, ?, ?, ?", page, show, where, order, deptId);
         } catch(DataAccessException e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();

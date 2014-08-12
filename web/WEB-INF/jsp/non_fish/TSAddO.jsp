@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Transfer Slip Others</title>
+        <title>IMS &therefore; Transfer Slip &therefore; Others &therefore; Create</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -25,7 +25,7 @@
                         <input type="hidden" name="type"value="<%= request.getParameter("type") %>" />
                         <input type="hidden" name="module" value="<%= request.getParameter("module") %>" />
                         <table class="collapse tblForm row-select">
-                            <caption>Header Others</caption>
+                            <caption>Transfer Slip &therefore; Others &therefore; Header</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
@@ -50,7 +50,7 @@
                             </tfoot>
                         </table>
                         <table class="collapse tblForm row-select">
-                            <caption>Detail Others</caption>
+                            <caption>Transfer Slip &therefore; Others &therefore; Detail</caption>
                             <thead>
                                 <tr>
                                     <td style="width: 100px;">Select Item</td>

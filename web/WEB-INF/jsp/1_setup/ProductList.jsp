@@ -1,3 +1,4 @@
+<%@page import="com.app.wms.engine.db.dto.map.LoginUser"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
@@ -7,8 +8,6 @@
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
-        <%
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
@@ -60,6 +59,13 @@
         <script type="text/javascript">
             util.initSearchForm($('#search'));
             util.initListTable($('#list'), 'u:d');
+            
+            <%
+                if (((LoginUser) request.getSession().getAttribute("user")).getRoleCode().contains("7050")) {
+                    out.println("util.tableListAction(1200, 'Product &therefore; In Last 20 Purchase Order &therefore; ');");
+                }
+            %>
+            
         </script>
     </body>
 </html>

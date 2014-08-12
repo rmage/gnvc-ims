@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Transfer Slip</title>
+        <title>IMS &therefore; Transfer &therefore; Create</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -25,7 +25,7 @@
                         <input type="hidden" name="type"value="NORMAL" />
                         <input type="hidden" name="module" value="NF" />
                         <table class="collapse tblForm row-select">
-                            <caption>Header</caption>
+                            <caption>Transfer &therefore; Header</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
@@ -42,13 +42,13 @@
                                 <tr>
                                     <td colspan="5">
                                         <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=<%= request.getParameter("module") %>');" />
+                                        <input type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=NF');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                         <table class="collapse tblForm row-select">
-                            <caption>Detail</caption>
+                            <caption>Transfer &therefore; Detail</caption>
                             <thead>
                                 <tr>
                                     <td style="width: 100px;">Select SWS</td>
@@ -57,8 +57,7 @@
                                             <option value="">-- Please select SWS Number --</option>
                                             <c:forEach items="${model.s}" var="x">
                                                 <option value="${x.swsCode}">
-                                                    <fmt:formatDate pattern="dd/MM/yyyy" value="${x.swsDate}" /> :: 
-                                                    ${x.departmentCode} :: ${x.swsCode}
+                                                    ${x.swsCode} :: <fmt:formatDate pattern="dd/MM/yyyy" value="${x.swsDate}" /> :: ${x.departmentCode}
                                                 </option>
                                             </c:forEach>
                                         </select>

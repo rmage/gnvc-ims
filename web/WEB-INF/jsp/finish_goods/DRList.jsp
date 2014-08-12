@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - Delivery Receipt</title>
+        <title>IMS &therefore; Delivery</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -22,27 +22,27 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="Delivery.htm" method="post">
+                    <form id="search" action="Delivery.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search</caption>
+                            <caption>Delivery &therefore; Search</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">DR Number</td>
-                                    <td><input type="text" name="tsCode" /></td>
+                                    <td><input type="text" name="dr_code" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('Delivery.htm?action=create&type=${model.type}');" />
+                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('Delivery.htm?action=create&type=NF');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
-                        <caption>List</caption>
+                    <table id="list" class="collapse tblForm row-select">
+                        <caption>Delivery &therefore; List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
@@ -51,41 +51,11 @@
                                 <td>DR Date</td>
                                 <td>From</td>
                                 <td>To</td>
+                                <td>Creator</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:if test="${model.d != null}">
-                                <c:set scope="page" value="${((model.page-1) * model.paging) + 1}" var="no" />
-                                <c:forEach items="${model.d}" var="x" varStatus="i">
-                                    <tr>
-                                        <td>
-                                            ${no}
-                                            <c:set scope="page" value="${no + 1}" var="no"/>
-                                        </td>
-                                        <td>
-                                             <a href="GenerateReport.htm?action=index&item=IMDR&type=xls&params=${x.drCode}"><img src="resources/images/printxls.gif" title="Print Delivery Receipt (xls)" /></a>
-                                        </td>
-                                        <td><a class="d" href="#${x.drCode}">${x.drCode}</a></td>
-                                        <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.drDate}" /></td>
-                                        <td>${x.drFrom}</td>
-                                        <td>${x.supplierCode}</td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="14">
-                                    <c:if test="${model.page !=null && model.page > 1}">
-                                        <a href="Delivery.htm?page=<c:out value="${model.page-1}" />">&lt</a>
-                                    </c:if>
-                                    &nbsp;page: ${model.page}&nbsp;
-                                    <c:if test="${model.page < model.totalRows/model.paging}">
-                                        <a href="Delivery.htm?page=<c:out value="${model.page+1}" />">&gt;</a>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </tfoot>
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>
@@ -99,6 +69,9 @@
         <!-- javascript block HERE -->
         <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
+            
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'R_NFDr_Delivery Receipt (xls)');
             
             $('.d').live('click', function(){
                 fyaQPanel($(this).html());
@@ -133,12 +106,6 @@
                 }
             }
             
-            function numberWithCommas(x) {
-                var parts = x.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                return parts.join(".");
-            }
-           
         </script>
     </body>
 </html>

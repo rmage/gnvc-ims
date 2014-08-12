@@ -423,7 +423,8 @@ public class PurchaseRequisitionController extends ReportManagerController {
             pw.print("\"5\": \"" + sdf.format(x.get("requestdate")) + "\",");
             pw.print("\"6\": \"" + x.get("createdby") + "\",");
             pw.print("\"7\": \"" + (x.get("is_approved").equals("N") ? (!lu.getRoleCode().contains("MAN") ? "Waiting for Manager approval!" : "Approve : <a href=\\\"?action=approvedPRS&prsNo=" + x.get("prsnumber") + "\\\"><img src=\\\"resources/images/checkmark.gif\\\" title=\\\"Approve this Purchase Requisition Slip\\\" /></a>")
-                    : "Approved by <b>" + x.get("approved_by") + "</b> at " + sdf.format(x.get("approved_date"))) + "\"}");
+                    : "Approved by <b>" + x.get("approved_by") + "</b> at " + sdf.format(x.get("approved_date"))) + "\",");
+            pw.print("\"8\": \"" + x.get("last_status") + "\"}");
 
             b = Boolean.TRUE;
         }

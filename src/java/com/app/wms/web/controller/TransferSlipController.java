@@ -7,6 +7,7 @@ import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SwsDtlDao;
 import com.app.wms.engine.db.dao.TsDao;
 import com.app.wms.engine.db.dao.TsDtlDao;
+import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.Department;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.StockInventory;
@@ -18,6 +19,7 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
+import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,20 +38,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 public class TransferSlipController extends MultiActionController {
 
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
-
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
-        /* DAO | Define needed dao here */
-        TsDao tsDao = DaoFactory.createTsDao();
-
-        /* TRANSACTION | Something complex here */
-        List<Ts> ts = tsDao.findAll(request.getParameter("module"));
-        m.put("t", ts);
-
-        return new ModelAndView("non_fish/TSList", "model", m);
-
+        return new ModelAndView("non_fish/TSList");
     }
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
@@ -79,19 +69,11 @@ public class TransferSlipController extends MultiActionController {
                 return null;
             }
         }
-//        if (request.getParameter("isNormal").equals("1")) {
-//            List<Sws> ss = tsDao.findWhereNotInTs();
-//            m.put("s", ss);
-//
-//            return new ModelAndView("non_fish/TSAdd", "model", m);
-//        } else {
-//            return new ModelAndView("non_fish/TSAddO", "model", m);
-//        }
-
+        
     }
 
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
-            throws ParseException, StockInventoryDaoException {
+            throws ParseException, StockInventoryDaoException, UserDaoException {
 
         /* DATA | get initial value */
         Ts t = new Ts();
@@ -104,6 +86,7 @@ public class TransferSlipController extends MultiActionController {
         TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
         StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
         StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
+        UserDao uDao = DaoFactory.createUserDao();
 
         /* TRANSACTION | Something complex here */
         // insert transfer slip
@@ -115,15 +98,15 @@ public class TransferSlipController extends MultiActionController {
         t.setTsModule(request.getParameter("module"));
         t.setTsType(request.getParameter("type"));
         t.setSwsCode(t.getTsType().equals("NORMAL") ? Integer.parseInt(request.getParameter("swsCode")) : 0);
-        t.setCreatedBy(lu.getUserId());
+        t.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
         t.setCreatedDate(new Date());
         tsDao.insert(t);
 
         int i = 0;
         TsDtl td = new TsDtl();
         td.setTsCode(t.getTsCode());
-        td.setCreatedBy(lu.getUserId());
-        td.setCreatedDate(new Date());
+        td.setCreatedBy(t.getCreatedBy());
+        td.setCreatedDate(t.getCreatedDate());
         for (String x : items) {
             td.setProductCode(x);
             td.setQty(Integer.parseInt(qtys[i]));
@@ -239,6 +222,40 @@ public class TransferSlipController extends MultiActionController {
         }
         pw.print("]");
 
+    }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        
+        /* DAO | Define needed dao here */
+        TsDao tsDao = DaoFactory.createTsDao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("{\"maxpage\": ").append(tsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = tsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("ts_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("ts_code")).append("\", ");
+            sb.append("\"3\": \"").append(sdf.format(x.get("ts_date"))).append("\", ");
+            sb.append("\"4\": \"").append(x.get("ts_type")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("sws_code")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("ts_info")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
     }
 
 }
