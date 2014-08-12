@@ -368,7 +368,7 @@ public class PurchaseRequisitionController extends ReportManagerController {
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
-        String productName = request.getParameter("term");
+        String term = request.getParameter("term");
 
         /* DAO | Define needed dao here */
         ProductDao productDao = DaoFactory.createProductDao();
@@ -376,7 +376,12 @@ public class PurchaseRequisitionController extends ReportManagerController {
 
         /* TRANSACTION | Something complex here */
         pw.print("[");
-        List<Product> ps = productDao.findWhereProductNameEquals(productName, 5);
+        List<Product> ps;
+        if(request.getParameter("mode").equals("name")) {
+            ps = productDao.findWhereProductNameEquals(term, 20);
+        } else {
+            ps = productDao.findWhereProductCodeEquals(term, 20);
+        }
         for (Product x : ps) {
             if (b) {
                 pw.print(",");

@@ -243,6 +243,8 @@ public interface ProductDao {
 
     public List<Product> findWhereProductNameEquals(String productName, int limit);
     
+    public List<Product> findWhereProductCodeEquals(String productCode, int limit);
+    
     public List<Product> findWhereProductNameEquals(String productName, String type, int limit);
 
     public List<Product> findWhereBrandNameEquals(String brandName, int limit);

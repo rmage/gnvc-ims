@@ -3,41 +3,24 @@
 <%@page import="java.text.DateFormat"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <head>
             <title>IMS - New PRS</title>
             <%@include file="../metaheader.jsp" %>
+            <style>
+                .ui-autocomplete {
+                    max-height: 250px;
+                    overflow-y: auto;
+                    /* prevent horizontal scrollbar */
+                    overflow-x: hidden;
+                }
+            </style>
             <script language="JavaScript">
                 $(document).ready(function() {
 
                     $('#prsAddForm').validationEngine('attach');
-
-//                    $("#list2").jqGrid({ url:'productjson.htm', datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-//                                colNames:[ 'Item Code','Item Name','Stock on Hand','Unit','Item Category','Brand Name', 'Description'], 
-//                                colModel:[ {name:'productCode',index:'productCode'}, {name:'productName',index:'productName'},
-//                                           {name:'balance',index:'balance'}, {name:'uomName',index:'uomName'},  
-//                                           {name:'productCategory',index:'productCategory'}, {name:'brandName',index:'brandName'}, 
-//                                           {name:'productDescription',index:'productDescription'}], 
-//                                sortname: 'productCode',
-//                                rowNum:10, rowList:[10,20,30], 
-//                                jsonReader : {
-//                                    repeatitems: false
-//                                },
-//                                onSelectRow: function(ids) { 
-//                                    if(ids != null) {         
-//                                            var localRowData = $(this).getRowData(ids); 
-//                                            $("#productcode").val(localRowData.productCode);
-//                                            $("#productname").val(localRowData.productName);
-//                                            $("#uomName").val(localRowData.uomName);    
-//                                            $("#stockonhand").val(localRowData.balance);                                       
-//                                            $("#dialog").dialog('close');
-//                                        } 
-//                                },
-//                                pager: '#pager2', sortname: 'id', viewrecords: true, sortorder: "desc"}); 
-//                            jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false});
 
                     /*
                      * calendar request date
@@ -55,7 +38,7 @@
                         var jumlah = $("#jumlah").val();
                         var stockonhand = $("#stockonhand").val();
 
-                        if(jumlah <= 0) {
+                        if (jumlah <= 0) {
                             return;
                         }
 
@@ -223,51 +206,37 @@
 
                                         <td width="10%">Item Code</td>
                                         <td width="20%">
-                                            <input type="text" name="productcode" value="" size="30"  
-
-                                                   id="productcode" /> 
+                                            <input type="text" id="productcode" name="productcode" value="" size="30" /> 
                                             <img width="16" height="16" src="resources/images/search.png" alt="Search Items" />
                                         </td>
                                         <td width="10%">Stock On Hand</td>
                                         <td width="20%">
-                                            <label>
-                                                <input type="text" size="30" value="" name="stockonhand" 
-                                                       onblur="changeStockOnHandDecimal()"
-                                                       id="stockonhand" />
-                                            </label>
+                                            <input type="text" size="30" value="" name="stockonhand" onblur="changeStockOnHandDecimal()" id="stockonhand" />
                                         </td>
                                         <td width="10%">Unit</td>
                                         <td width="20%">
-                                            <label>
-                                                <input type="text" name="uomName" value="" size="30" readonly="" id="uomName" />
-                                            </label>                           
+                                            <input type="text" name="uomName" value="" size="30" readonly="" id="uomName" />                       
                                         </td>
                                     </tr>
 
                                     <tr class="detail_genap">
                                         <td width="10%">Item Name</td>
                                         <td width="20%">
-                                            <input type="text" name="productname" value="" size="30" readonly="" id="productname" />
+                                            <input type="text" id="productname" name="productname" value="" size="30" />
                                         </td>
                                         <td width="10%">Qty</td>
                                         <td width="20%">
-                                            <label>
-                                                <input type="text" size="30" value="" 
-                                                       onblur="changeQtyDecimal()"
-                                                       onkeypress="return isNumberKey(event)" name="jumlah" id="jumlah" />
-                                            </label>
+                                            <input type="text" size="30" value="" onblur="changeQtyDecimal()" onkeypress="return isNumberKey(event)" name="jumlah" id="jumlah" />
                                         </td>
                                     </tr>
 
                                     <tfoot>
                                         <td colspan="4">
                                             <label>
-                                                <input type="button" name="btnSavePurchase" id="btnAddItem" value="Add" 
-                                                       class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" />
+                                                <input type="button" name="btnSavePurchase" id="btnAddItem" value="Add" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" />
                                             </label>
                                             <label>
-                                                <input type="button" name="btnCancel" id="btnClearItem" value="Clear"
-                                                       class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;"/>
+                                                <input type="button" name="btnCancel" id="btnClearItem" value="Clear" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;"/>
                                             </label>
                                         </td>
                                     </tfoot>
@@ -365,8 +334,30 @@
 //                        $("#dialog").dialog({ width: 900, height: 275, position: "center", modal: true, zindex: 1, title: 'Select Item' });
 //                });
             // modified by : FYA
+            //  AUTOCOMPLETE | Find product by code
             $('#productcode').autocomplete({
-                source: '?action=getProduct',
+                source: '?action=getProduct&mode=code',
+                minLength: 2,
+                select: function(event, ui) {
+                    $("#productcode").val(ui.item.itemCode);
+                    $("#productname").val(ui.item.itemName);
+                    $("#uomName").val(ui.item.uom);
+                    $("#stockonhand").val(ui.item.soh);
+                    $('#jumlah').focus();
+
+                    return false;
+                }
+            }).data('autocomplete')._renderItem = function(ul, item) {
+                return $('<li>')
+                        .data("item", item)
+                        .append('<a><b>' + item.itemCode + ' : ' + item.itemName +
+                                '</b><br /> Stock : ' + item.soh + '</a></li>')
+                        .appendTo(ul);
+            };
+
+            //  AUTOCOMPLETE | Find product by name
+            $('#productname').autocomplete({
+                source: '?action=getProduct&mode=name',
                 minLength: 2,
                 select: function(event, ui) {
                     $("#productcode").val(ui.item.itemCode);
