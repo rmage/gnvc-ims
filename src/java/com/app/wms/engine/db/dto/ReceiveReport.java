@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class ReceiveReport implements Serializable {
     
-    private int rrCode;
+    private String rrCode;
     
     private Date rrDate;
     
@@ -48,11 +48,11 @@ public class ReceiveReport implements Serializable {
         return sb.toString();
     }
 
-    public int getRrCode() {
+    public String getRrCode() {
         return rrCode;
     }
 
-    public void setRrCode(int rrCode) {
+    public void setRrCode(String rrCode) {
         this.rrCode = rrCode;
     }
 

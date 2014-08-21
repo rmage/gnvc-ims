@@ -4,15 +4,12 @@ import com.app.wms.engine.db.dao.DepartmentDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
-import com.app.wms.engine.db.dao.SwsDtlDao;
 import com.app.wms.engine.db.dao.TsDao;
 import com.app.wms.engine.db.dao.TsDtlDao;
 import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.Department;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.StockInventory;
-import com.app.wms.engine.db.dto.Sws;
-import com.app.wms.engine.db.dto.SwsDtl;
 import com.app.wms.engine.db.dto.Ts;
 import com.app.wms.engine.db.dto.TsDtl;
 import com.app.wms.engine.db.dto.map.LoginUser;
@@ -24,6 +21,7 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,15 +45,15 @@ public class TransferSlipController extends MultiActionController {
         HashMap m = new HashMap();
 
         /* DAO | Define needed dao here */
-        TsDao tsDao = DaoFactory.createTsDao();
+//        TsDao tsDao = DaoFactory.createTsDao();
 
         /* TRANSACTION | Something complex here */
         String module = request.getParameter("module");
         String type = request.getParameter("type");
         if (module.equals("NF")) {
             if (type.equals("NORMAL")) {
-                List<Sws> ss = tsDao.findWhereNotInTs();
-                m.put("s", ss);
+//                List<Sws> ss = tsDao.findWhereNotInTs();
+//                m.put("s", ss);
                 return new ModelAndView("non_fish/TSAdd", "model", m);
             } else if (type.equals("OTHERS")) {
                 return new ModelAndView("non_fish/TSAddO", "model", m);
@@ -69,63 +67,70 @@ public class TransferSlipController extends MultiActionController {
                 return null;
             }
         }
-        
+
     }
 
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
             throws ParseException, StockInventoryDaoException, UserDaoException {
+        
+        try {
+            /* DATA | get initial value */
+            Ts t = new Ts();
+            String[] qtys = request.getParameterValues("qty");
+            String[] items = request.getParameterValues("item");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
-        /* DATA | get initial value */
-        Ts t = new Ts();
-        String[] qtys = request.getParameterValues("qty");
-        String[] items = request.getParameterValues("item");
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            /* DAO | Define needed dao here */
+            TsDao tsDao = DaoFactory.createTsDao();
+            TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
+            StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
+            StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
+            UserDao uDao = DaoFactory.createUserDao();
 
-        /* DAO | Define needed dao here */
-        TsDao tsDao = DaoFactory.createTsDao();
-        TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
-        StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
-        StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
-        UserDao uDao = DaoFactory.createUserDao();
+            /* TRANSACTION | Something complex here */
+            // insert transfer slip
+            t.setTsCode(Integer.parseInt(request.getParameter("tsCode")));
+            t.setTsDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(request.getParameter("tsDate") + " "
+                    + new SimpleDateFormat("HH:mm:ss").format(new Date())));
+            t.setTsInfo(request.getParameter("tsInfo"));
+            t.setTsTo(request.getParameter("tsTo"));
+            t.setTsModule(request.getParameter("module"));
+            t.setTsType(request.getParameter("type"));
+            t.setSwsCode(t.getTsType().equals("NORMAL") ? Integer.parseInt(request.getParameter("swsCode")) : 0);
+            t.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
+            t.setCreatedDate(new Date());
+            tsDao.insert(t);
 
-        /* TRANSACTION | Something complex here */
-        // insert transfer slip
-        t.setTsCode(Integer.parseInt(request.getParameter("tsCode")));
-        t.setTsDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(request.getParameter("tsDate") + " "
-                + new SimpleDateFormat("HH:mm:ss").format(new Date())));
-        t.setTsInfo(request.getParameter("tsInfo"));
-        t.setTsTo(request.getParameter("tsTo"));
-        t.setTsModule(request.getParameter("module"));
-        t.setTsType(request.getParameter("type"));
-        t.setSwsCode(t.getTsType().equals("NORMAL") ? Integer.parseInt(request.getParameter("swsCode")) : 0);
-        t.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
-        t.setCreatedDate(new Date());
-        tsDao.insert(t);
+            int i = 0;
+            TsDtl td = new TsDtl();
+            td.setTsCode(t.getTsCode());
+            td.setCreatedBy(t.getCreatedBy());
+            td.setCreatedDate(t.getCreatedDate());
+            for (String x : items) {
+                td.setProductCode(x);
+                if (!qtys[i].equals("")) {
+                    td.setQty(Integer.parseInt(qtys[i]));
+                    tsDtlDao.insert(td);
 
-        int i = 0;
-        TsDtl td = new TsDtl();
-        td.setTsCode(t.getTsCode());
-        td.setCreatedBy(t.getCreatedBy());
-        td.setCreatedDate(t.getCreatedDate());
-        for (String x : items) {
-            td.setProductCode(x);
-            td.setQty(Integer.parseInt(qtys[i]));
-            tsDtlDao.insert(td);
+                    // stock balance history for stock card
+                    StockInventory si = stockInventoryDao.findWhereProductCodeEquals(td.getProductCode()).get(0);
+                    if (t.getTsType().equals("NORMAL")) {
+                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 20);
+                    } else if (t.getTsType().equals("OTHERS")) {
+                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 21);
+                    }
 
-            // stock balance history for stock card
-            StockInventory si = stockInventoryDao.findWhereProductCodeEquals(td.getProductCode()).get(0);
-            if (t.getTsType().equals("NORMAL")) {
-                stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 20);
-            } else if (t.getTsType().equals("OTHERS")) {
-                stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 21);
+                    // substract stock inventory balance
+                    tsDao.updateStockInventory(td.getProductCode(), td.getQty());
+                }
+                i++;
             }
 
-            // substract stock inventory balance
-            tsDao.updateStockInventory(td.getProductCode(), td.getQty());
-            i++;
+            return new ModelAndView("redirect:TransferSlip.htm?module=" + t.getTsModule());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:TransferSlip.htm?action=create&module=" + request.getParameter("module"));
         }
-
-        return new ModelAndView("redirect:TransferSlip.htm?module=" + t.getTsModule());
 
     }
 
@@ -135,26 +140,24 @@ public class TransferSlipController extends MultiActionController {
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
-        int swsCode = Integer.parseInt(request.getParameter("key"));
 
         /* DAO | Define needed dao here */
-        SwsDtlDao swsDtlDao = DaoFactory.createSwsDtlDao();
         ProductDao productDao = DaoFactory.createProductDao();
+        TsDao tsDao = DaoFactory.createTsDao();
 
         /* TRANSACTION | Something complex here */
         pw.print("[");
-        List<SwsDtl> sds = swsDtlDao.findBySws(swsCode);
-        for (SwsDtl x : sds) {
+        List<Map<String, Object>> xs = tsDao.findSwsDtlForTs(request.getParameter("key"));
+        for (Map<String, Object> x : xs) {
             if (b) {
                 pw.print(",");
             }
 
-            Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
-            pw.print("{\"itemCode\": \"" + p.getProductCode() + "\", ");
-            pw.print("\"itemName\": \"" + p.getProductName() + "\",");
-            pw.print("\"type\": \"" + p.getProductCategory() + "\",");
-            pw.print("\"qty\": \"" + x.getQty() + "\",");
-            pw.print("\"uom\": \"" + x.getUom() + "\"}");
+            pw.print("{\"1\": \"" + x.get("product_code") + "\", ");
+            pw.print("\"2\": \"" + x.get("product_name") + "\",");
+            pw.print("\"3\": \"" + x.get("product_category") + "\",");
+            pw.print("\"4\": \"" + NumberFormat.getNumberInstance().format(x.get("qty")) + "\",");
+            pw.print("\"5\": \"" + x.get("uom") + "\"}");
 
             b = Boolean.TRUE;
         }
@@ -223,7 +226,7 @@ public class TransferSlipController extends MultiActionController {
         pw.print("]");
 
     }
-    
+
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         /* DATA | get initial value */
@@ -231,10 +234,10 @@ public class TransferSlipController extends MultiActionController {
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        
+
         /* DAO | Define needed dao here */
         TsDao tsDao = DaoFactory.createTsDao();
-        
+
         /* TRANSACTION | Something complex here */
         sb.append("{\"maxpage\": ").append(tsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
         List<Map<String, Object>> ms = tsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
@@ -249,7 +252,7 @@ public class TransferSlipController extends MultiActionController {
             sb.append("\"5\": \"").append(x.get("sws_code")).append("\", ");
             sb.append("\"6\": \"").append(x.get("ts_info")).append("\", ");
             sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
-            
+
             b = Boolean.TRUE;
         }
         sb.append("]}");

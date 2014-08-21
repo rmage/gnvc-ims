@@ -7,7 +7,7 @@ public class SwsDtl implements Serializable {
     
     private int id;
     
-    private int swsCode;
+    private String swsCode;
     
     private String productCode;
     
@@ -50,11 +50,11 @@ public class SwsDtl implements Serializable {
         this.id = id;
     }
 
-    public int getSwsCode() {
+    public String getSwsCode() {
         return swsCode;
     }
 
-    public void setSwsCode(int swsCode) {
+    public void setSwsCode(String swsCode) {
         this.swsCode = swsCode;
     }
 

@@ -117,7 +117,7 @@
                 //  ELEMENT | Fade in then remove old parameter
                 $('#params').remove();
 
-                var html = '<table id="params" class="collapse tblForm row-select ui-widget-content"><caption class="ui-widget-header left span-7 ui-corner-tr ui-corner-tl">D3 &therefore; Parameter</caption><tbody>';
+                var html = '<form id="fD3"><table id="params" class="collapse tblForm row-select ui-widget-content"><caption class="ui-widget-header left span-7 ui-corner-tr ui-corner-tl">D3 &therefore; Parameter</caption><tbody>';
 
                 for (var i = 0; i < json.params.length; i++) {
                     html = html + '<tr><td' + (i === 0 ? ' style="width: 200px;"' : '') + '>' + json.params[i].title + '</td><td>';
@@ -136,7 +136,7 @@
                 }
 
                 //  ELEMENT | Append #content .box
-                $('#content .box').append(html + '</tbody><tfoot class="ui-widget-header"><tr><td colspan="2"><input type="submit" value="D3 View" id="btnD3View" name="btnD3View" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;"></td></tr></tfoot></table>');
+                $('#content .box').append(html + '</tbody><tfoot class="ui-widget-header"><tr><td colspan="2"><input type="submit" value="D3 View" id="btnD3View" name="btnD3View" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;"></td></tr></tfoot></table></form>');
 
                 //  DIALOG  | Prepared dialog
                 $("#d3modal").dialog({
@@ -153,23 +153,23 @@
                         }
                     },
                     create: function() {
-                        $(this).dialog("option", "title", $('#d3 option:selected').html());
                         $(this).css("maxHeight", 400);
                     },
                     open: function() {
                         //  D3 | Initialize
+                        $(this).dialog("option", "title", $('#d3 option:selected').html() + " &therefore; " + $("#" + json.title).data("title"));
                         $("#d3modal").html("");
                         var
-                            div = d3.select($('#d3tooltip')[0]),
-                            formatTime = d3.time.format("%e %B %Y"),
-                            margin = {top: 20, right: 20, bottom: 30, left: 100},
-                            width = 987 - margin.left - margin.right,
-                            height = 397 - margin.top - margin.bottom,
-                            x = d3.time.scale().range([0, width]),
-                            y = d3.scale.linear().range([height, 0]),
-                            xAxis = d3.svg.axis().scale(x).orient("bottom"),
-                            yAxis = d3.svg.axis().scale(y).orient("left"),
-                            line = d3.svg.line()
+                                div = d3.select($('#d3tooltip')[0]),
+                                formatTime = d3.time.format("%e %B %Y"),
+                                margin = {top: 20, right: 20, bottom: 30, left: 100},
+                        width = 987 - margin.left - margin.right,
+                                height = 397 - margin.top - margin.bottom,
+                                x = d3.time.scale().range([0, width]),
+                                y = d3.scale.linear().range([height, 0]),
+                                xAxis = d3.svg.axis().scale(x).orient("bottom"),
+                                yAxis = d3.svg.axis().scale(y).orient("left"),
+                                line = d3.svg.line()
                                 .x(function(d) {
                                     return x(d.x);
                                 })
@@ -177,8 +177,8 @@
                                     return y(d.y);
                                 }),
 //                            parseDate = d3.time.format("%d-%b-%y").parse,
-                            parseDate = d3.time.format("%Y-%m-%d").parse,
-                            svg = d3.select($("#d3modal")[0]).append("svg")
+                                parseDate = d3.time.format("%Y-%m-%d").parse,
+                                svg = d3.select($("#d3modal")[0]).append("svg")
                                 .attr("width", width + margin.left + margin.right)
                                 .attr("height", height + margin.top + margin.bottom)
                                 .append("g")
@@ -273,6 +273,7 @@
                                         return false;
                                     }
                                 }).data('autocomplete')._renderItem = function(ul, item) {
+                                    $("#" + json.title).data("title", item.itemCode + " | " + item.itemName);
                                     return $('<li>')
                                             .data("item", item)
                                             .append('<a><b>[' + item.itemCode + '] ' + item.itemName + '</b></a></li>')
@@ -291,8 +292,10 @@
                 }
 
                 //  EVENT | D3View button
-                $('#btnD3View').bind("click", function() {
+                $('#fD3').bind("submit", function() {
                     $('#d3modal').dialog("open");
+
+                    return false;
                 });
             }
 

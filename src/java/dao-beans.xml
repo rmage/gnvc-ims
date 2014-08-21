@@ -9,7 +9,7 @@
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 	<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://7.51.9.228:1433/inventory" />
+        <property name="url" value="jdbc:jtds:sqlserver://192.168.11.253:1433/inventory" />
         <!-- ravindo|<property name="url" value="jdbc:jtds:sqlserver://7.35.130.2:1433/inventory" />-->
         <!--<property name="url" value="jdbc:jtds:sqlserver://192.168.0.213:1433/inventory" />-->
         <property name="username" value="sa" />
@@ -390,11 +390,6 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     
-    <!-- GNVS | New Concept of Finish Goods -->
-    <bean id="PalletTransferDao" class="com.spfi.ims.dao.PalletTransferDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
-    </bean>
-    
     <!-- GNVS | Fish Module -->
     <bean id="BrineFreezingDao" class="com.spfi.ims.dao.BrineFreezingDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
@@ -409,6 +404,31 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWsSummaryDao" class="com.spfi.ims.dao.FishWsSummaryDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!-- GNVS | New Concept of Finish Goods -->
+    <bean id="FGLocationDao" class="com.spfi.ims.dao.FGLocationDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGPackStyleDao" class="com.spfi.ims.dao.FGPackStyleDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGItemDao" class="com.spfi.ims.dao.FGItemDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGBookedOrderDao" class="com.spfi.ims.dao.FGBookedOrderDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGPalletTransferDao" class="com.spfi.ims.dao.FGPalletTransferDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGOrderFillDao" class="com.spfi.ims.dao.FGOrderFillDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!-- GNVS | D3 Data-Driven Documents -->
+    <bean id="D3Dao" class="com.spfi.ims.dao.D3DaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
 </beans>

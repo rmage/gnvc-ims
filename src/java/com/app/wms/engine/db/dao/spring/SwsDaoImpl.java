@@ -30,7 +30,7 @@ public class SwsDaoImpl extends AbstractDAO
     
     public Sws mapRow(ResultSet rs, int i) throws SQLException {
         Sws s = new Sws();
-        s.setSwsCode(rs.getInt("sws_code"));
+        s.setSwsCode(rs.getString("sws_code"));
         s.setSwsDate(rs.getDate("sws_date"));
         s.setSwsInfo(rs.getString("sws_info"));
         s.setDepartmentCode(rs.getString("department_code"));

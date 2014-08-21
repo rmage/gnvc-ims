@@ -38,7 +38,7 @@ public class ReportFactory {
         , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
         //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier
-        , NFRr, NFSws, NFTs, NFDr, NFSIPerCat
+        , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod
         ; 
     }
 
@@ -123,12 +123,18 @@ public class ReportFactory {
         reportMap.put(Report.NFRr, reportTemplateMap.get("NFRr"));
         reportTemplateMap.put("NFSws", new ReportModel("non_fish/sws", false));
         reportMap.put(Report.NFSws, reportTemplateMap.get("NFSws"));
+        reportTemplateMap.put("NFSwsP", new ReportModel("non_fish/sws-print", false));
+        reportMap.put(Report.NFSwsP, reportTemplateMap.get("NFSwsP"));
         reportTemplateMap.put("NFTs", new ReportModel("non_fish/ts", false));
         reportMap.put(Report.NFTs, reportTemplateMap.get("NFTs"));
         reportTemplateMap.put("NFDr", new ReportModel("non_fish/dr", false));
         reportMap.put(Report.NFDr, reportTemplateMap.get("NFDr"));
         reportTemplateMap.put("NFSIPerCat", new ReportModel("non_fish/sipcat", false));
         reportMap.put(Report.NFSIPerCat, reportTemplateMap.get("NFSIPerCat"));
+        reportTemplateMap.put("NFTPerCat", new ReportModel("non_fish/tpcat", false));
+        reportMap.put(Report.NFTPerCat, reportTemplateMap.get("NFTPerCat"));
+        reportTemplateMap.put("NFRrRegisterPerPeriod", new ReportModel("non_fish/rrrpp", false));
+        reportMap.put(Report.NFRrRegisterPerPeriod, reportTemplateMap.get("NFRrRegisterPerPeriod"));
         
         
         

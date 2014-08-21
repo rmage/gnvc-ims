@@ -8,7 +8,6 @@
     </head>
     <body>
         <%
-        	
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -37,7 +36,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                   
+
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -45,7 +44,7 @@
                                     <span class="style1">
                                         <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
                                     </span>
-                                     <label>
+                                    <label>
                                         <input type="button" name="button" id="btnAdd" value="Add" />
                                     </label>
                                 </td>
@@ -93,7 +92,7 @@
                                     </tr>
                                 </c:forEach>
                             </c:if>
-                          <tr>
+                            <tr>
                                 <td colspan="5">
                                     <span class="style1">
                                         <c:if test="${model.page !=null && model.page > 1}">
@@ -102,12 +101,12 @@
                                             </a>
                                         </c:if>
                                         &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="Ws.htm?page=<c:out value="${model.page+1}" />">
-											&gt;
-						    				</a>
-										</c:if>
-				    				</span>
+                                        <c:if test="${model.page < model.totalRows/model.paging}">
+                                            <a href="Ws.htm?page=<c:out value="${model.page+1}" />">
+                                                &gt;
+                                            </a>
+                                        </c:if>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -115,7 +114,7 @@
 
                             <td colspan="6">
                                 <span class="style1">
-                                   
+
                                 </span>
                             </td>
                         </tfoot>
@@ -144,14 +143,14 @@
                 $('#btnEdit').click(function() {
                     $('.tab').show();
                 });
-                $('#wsDate').datepicker({                        
-                    dateFormat: "dd/mm/yy"                        
+                $('#wsDate').datepicker({
+                    dateFormat: "dd/mm/yy"
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
             });
         </script>
-        
+
     </body>
 
 </html>

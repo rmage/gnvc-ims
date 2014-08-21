@@ -8,19 +8,25 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReceiveReportDao {
-    
+
     public void insert(ReceiveReport rr);
-    
+
     public void updateStockInventory(String productCode, int qty);
-    
+
     public List<Purchase> findByNotInRR();
-    
+
     public List<PurchaseDtl> findByPo(int poCode);
-    
+
     public List<ReceiveReport> findAll();
-    
+
     public int ajaxMaxPage(BigDecimal show, String where);
-    
+
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
+
+    public List<Map<String, Object>> getPo(String poCode);
+
+    public List<Map<String, Object>> getPoDetail(String poCode);
     
+    public void insert(String data, String createdBy);
+
 }

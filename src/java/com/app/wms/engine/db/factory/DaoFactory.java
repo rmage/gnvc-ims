@@ -850,12 +850,6 @@ public class DaoFactory {
         return (FishOilDtlDao) bf.getBean("FishOilDtlDao");
     }
     
-    /* GNVS | New Concept of Finish Goods */
-    public static PalletTransferDao createPalletTransferDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (PalletTransferDao) bf.getBean("PalletTransferDao");
-    }
-    
     /* GNVS | Fish Module */
     public static BrineFreezingDao createBrineFreezingDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
@@ -880,6 +874,43 @@ public class DaoFactory {
     public static FishWsSummaryDao createFishWsSummaryDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FishWsSummaryDao) bf.getBean("FishWsSummaryDao");
+    }
+    
+    /* GNVS | New Concept of Finish Goods */
+    public static FGLocationDao createFGLocationDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGLocationDao) bf.getBean("FGLocationDao");
+    }
+    
+    public static FGPackStyleDao createFGPackStyleDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGPackStyleDao) bf.getBean("FGPackStyleDao");
+    }
+    
+    public static FGItemDao createFGItemDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGItemDao) bf.getBean("FGItemDao");
+    }
+    
+    public static FGBookedOrderDao createFGBookedOrderDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGBookedOrderDao) bf.getBean("FGBookedOrderDao");
+    }
+    
+    public static FGPalletTransferDao createFGPalletTransferDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGPalletTransferDao) bf.getBean("FGPalletTransferDao");
+    }
+    
+    public static FGOrderFillDao createFGOrderFillDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGOrderFillDao) bf.getBean("FGOrderFillDao");
+    }
+    
+    /* GNVS | D3 Data-Driven Documents */
+    public static D3Dao createD3Dao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (D3Dao) bf.getBean("D3Dao");
     }
     
 }

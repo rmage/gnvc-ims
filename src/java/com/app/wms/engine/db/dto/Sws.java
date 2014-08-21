@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Sws implements Serializable {
     
-    private int swsCode;
+    private String swsCode;
     
     private Date swsDate;
     
@@ -42,11 +42,11 @@ public class Sws implements Serializable {
         return sb.toString();
     }
 
-    public int getSwsCode() {
+    public String getSwsCode() {
         return swsCode;
     }
 
-    public void setSwsCode(int swsCode) {
+    public void setSwsCode(String swsCode) {
         this.swsCode = swsCode;
     }
 

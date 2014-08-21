@@ -457,6 +457,25 @@ public class NewReportController extends MultiActionController {
             return new ModelAndView("redirect:index.htm");
         }
     }
+    
+    public ModelAndView getNFTransactionPerCategory(HttpServletRequest request, HttpServletResponse response)
+            throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+
+            ProductCategoryDao pcDao = DaoFactory.createProductCategoryDao();
+            List<ProductCategory> pcs = pcDao.findAll();
+            model.put("pcs", pcs);
+
+            return new ModelAndView("default/non_fish/TransactionPerCategory", "ims", model);
+        } else {
+            return new ModelAndView("redirect:index.htm");
+        }
+    }
+    
+    public ModelAndView getNFReceivingReportRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/non_fish/ReceivingReportRegisterPerPeriod");
+    }
 
     public boolean isLogin(HttpServletRequest request) {
         return request.getSession().getAttribute("user") != null;

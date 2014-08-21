@@ -11,6 +11,7 @@ import com.app.wms.engine.db.dao.ReceiveReportDtlDao;
 import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.SupplierDao;
+import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.ProductPrice;
@@ -29,10 +30,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,39 +44,15 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 public class ReceiveReportController extends MultiActionController {
     
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
-        
-        /* DATA | get initial value */
-        HashMap m = new HashMap();
-
-        /* DAO | Define needed dao here */
-        ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
-
-        /* TRANSACTION | Something complex here */
-        List<ReceiveReport> rrs = receiveReportDao.findAll();
-        m.put("rr", rrs);
-        
-        return new ModelAndView("non_fish/RRList", "model", m);
-        
+        return new ModelAndView("non_fish/RRList");
     }
     
-    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
-        throws SupplierDaoException {
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
         
         /* DATA | get initial value */
-        HashMap m = new HashMap();
-
         /* DAO | Define needed dao here */
-        SupplierDao supplierDao = DaoFactory.createSupplierDao();
-        ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
-
         /* TRANSACTION | Something complex here */
-        List<Purchase> ps = receiveReportDao.findByNotInRR();
-        for(Purchase x : ps) {
-            Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
-            x.setSupplierCode(s.getSupplierName());
-        } m.put("p", ps);
-        
-        return new ModelAndView("non_fish/RRAdd", "model", m);
+      return new ModelAndView("non_fish/RRAdd");
         
     }
     
@@ -81,87 +60,20 @@ public class ReceiveReportController extends MultiActionController {
         
         try {
             /* DATA | get initial value */
-            String[] master = request.getParameter("master").split(":", -1);
-            String[] details = request.getParameterValues("detail");
+            String data = request.getParameter("data");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
+            
             /* DAO | Define needed dao here */
-            CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
-            PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
-            PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
-            PurchaseDtlDao purchaseDtlDao = DaoFactory.createPurchaseDtlDao();
-            StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
-            // average price in different module | ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
-            ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
-            StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
-            ReceiveReportDtlDao receiveReportDtlDao = DaoFactory.createReceiveReportDtlDao();
-
+            ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
+            
             /* TRANSACTION | Something complex here */
-            // insert master receiving report
-            ReceiveReport rr = new ReceiveReport();
-            rr.setRrCode(Integer.parseInt(master[0]));
-            rr.setRrDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
-            rr.setPoCode(Integer.parseInt(master[2]));
-            rr.setRrFrom(master[3]);
-            rr.setCreatedBy(lu.getUserId());
-            rr.setCreatedDate(new Date());
-            receiveReportDao.insert(rr);
-            
-            // get currency rate
-            // average price in different module | CurrencyRate cr = currencyRateDao.findByPurchase(Integer.parseInt(master[2]));
-            
-            // get sub total and quantity
-            Purchase p = purchaseDao.findByPo(String.valueOf(rr.getPoCode()));
-            List<PurchaseDtl> pds = purchaseDtlDao.findByPo(p.getPoCode());
-            
-            // insert detail receiving report
-            for(String x : details) {
-                String[] detail = x.split(":");
-                ReceiveReportDtl rrd = new ReceiveReportDtl();
-                rrd.setRrCode(rr.getRrCode());
-                rrd.setProductCode(detail[0]);
-                rrd.setDepartmentCode(detail[1]);
-                rrd.setQtyGood(Integer.parseInt(detail[2]));
-                rrd.setQtyBad(Integer.parseInt(detail[3]));
-                rrd.setUom(detail[4]);
-                rrd.setCreatedBy(lu.getUserId());
-                rrd.setCreatedDate(new Date());
-                receiveReportDtlDao.insert(rrd);
-                
-                // XXX: FYA | ACCOUNTING - set average price
-                PurchaseDtl pd = new PurchaseDtl();
-                for(PurchaseDtl xx : pds) {
-                    if(xx.getProductCode().equals(rrd.getProductCode())) {
-                        pd = xx; break;
-                    }
-                }
-                // average price in different module | PrsDetail prd = prsDetailDao.findByPrsProduct(pd.getPrsNumber(), rrd.getProductCode());
-                // average price in different module | ProductPrice pp = productPriceDao.findByProduct(rrd.getProductCode());
-                
-                // FIXME: FYA | [--Only-Support-IDR-not-check-PO-Currency-x>
-                StockInventory si = stockInventoryDao.findWhereProductCodeEquals(rrd.getProductCode()).get(0);
-                
-                // average price in different module | pp.setUnitPrice( (pp.getUnitPrice()
-                // average price in different module |     .multiply( si.getBalance() ).setScale(2, RoundingMode.HALF_EVEN)).add( ((pd.getSubTotal().multiply(cr.getRateValue()).setScale(2))
-                // average price in different module |     .divide(prd.getQty(), 2, RoundingMode.HALF_EVEN))
-                // average price in different module |     .multiply(new BigDecimal(rrd.getQtyGood())).setScale(2, RoundingMode.HALF_EVEN) )
-                // average price in different module |     .divide( si.getBalance().add(new BigDecimal(rrd.getQtyGood())), 2, RoundingMode.HALF_EVEN ));
-                // average price in different module | pp.setUpdatedBy(lu.getUserId());
-                // average price in different module | pp.setUpdatedDate(new Date());
-                // average price in different module | productPriceDao.update(pp, 1, new BigDecimal(rrd.getQtyGood()));
-                
-                // stock balance history for stock card
-                stockBalanceDao.insertOrUpdate(rrd.getProductCode(), new Date(), si.getBalance(), new BigDecimal(rrd.getQtyGood() + rrd.getQtyBad()), 10);
-                
-                // insert or update stock_inventory
-                receiveReportDao.updateStockInventory(rrd.getProductCode(), rrd.getQtyGood() + rrd.getQtyBad());
-            }
-            
-        } catch(Exception e) {
+            rrDao.insert(data, lu.getUserId());
+
+            return new ModelAndView("redirect:ReceiveReport.htm");
+        } catch (Exception e) {
             e.printStackTrace();
+            return new ModelAndView("redirect:ReceiveReport.htm?action=create");
         }
-        
-        return new ModelAndView("redirect:ReceiveReport.htm");
         
     }
     
@@ -198,44 +110,94 @@ public class ReceiveReportController extends MultiActionController {
         
     }
     
+    public void getPO(HttpServletRequest request, HttpServletResponse response) 
+        throws IOException {
+        
+        /* DATA | get initial value */
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
+        
+        /* TRANSACTION | Something complex here */
+        List<Map<String, Object>> ms = rrDao.getPo(request.getParameter("key"));
+        for (Map<String, Object> x : ms) {
+            sb.append("{\"1\": \"").append(x.get("po_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("po_date")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("supplier_name")).append("\"}");
+        }
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+        
+    }
+    
     public void getPODetail(HttpServletRequest request, HttpServletResponse response) 
-        throws IOException, ProductDaoException {
+        throws IOException {
         
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
-        PrintWriter pw = response.getWriter(); 
-        int poCode = Integer.parseInt(request.getParameter("key"));
-
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
         /* DAO | Define needed dao here */
-        ProductDao productDao = DaoFactory.createProductDao();
-        PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
-        ReceiveReportDao receiveReportDao = DaoFactory.createReceiveReportDao();
-        ReceiveReportDtlDao receiveReportDtlDao = DaoFactory.createReceiveReportDtlDao();
-
+        ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
+        
         /* TRANSACTION | Something complex here */
-        pw.print("[");
-        List<PurchaseDtl> pds = receiveReportDao.findByPo(poCode);
-        for(PurchaseDtl x : pds) {
-            if(b)
-                pw.print(",");
-            
-            Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
-            PrsDetail pd = prsDetailDao.findByPrsProduct(x.getPrsNumber(), x.getProductCode());
-            List<ReceiveReportDtl> rrd = receiveReportDtlDao.findByPoProduct(poCode, x.getProductCode());
-            
-            for(ReceiveReportDtl xx : rrd) {
-                pd.setQty(pd.getQty().subtract(new BigDecimal(xx.getQtyGood())));
+        sb.append("[");
+        List<Map<String, Object>> ms = rrDao.getPoDetail(request.getParameter("key"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
             }
-            
-            x.setProductCode(p.getProductName() + ":" + p.getProductCode() + ":" + 
-                pd.getQty() + ":" + pd.getUomName());
-            
-            pw.print("{\"product\": \"" + x.getProductCode()+ "\", ");
-            pw.print("\"department\": \"" + x.getDepartmentCode()+ "\"}");
+            sb.append("{\"1\": \"").append(x.get("prs_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("product_code")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("product_name")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("department_code")).append("\", ");
+            sb.append("\"5\": \"").append(NumberFormat.getNumberInstance().format(x.get("qty"))).append("\", ");
+            sb.append("\"6\": \"").append(x.get("uom_name")).append("\"}");
             
             b = Boolean.TRUE;
-        } pw.print("]");
+        }
+        sb.append("]");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
         
+    }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        
+        /* DAO | Define needed dao here */
+        ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("{\"maxpage\": ").append(rrDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = rrDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("rr_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("rr_code")).append("\", ");
+            sb.append("\"3\": \"").append(sdf.format(x.get("rr_date"))).append("\", ");
+            sb.append("\"4\": \"").append(x.get("po_code")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("rr_from")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("created_by")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
     }
     
 }

@@ -57,7 +57,8 @@ public class D3Controller extends MultiActionController {
                             + "{\"title\": \"Date From\", \"name\": \"dateFrom\", \"type\": \"text\", \"size\": 10, \"is_datepicker\": 1},"
                             + "{\"title\": \"Date To\", \"name\": \"dateTo\", \"type\": \"text\", \"size\": 10, \"is_datepicker\": 1}"
                         + "],"
-                        + "\"data\": [{\"key\": \"itemCode\"}, {\"key\": \"currency\"}, {\"key\": \"dateFrom\"}, {\"key\": \"dateTo\"}]}");
+                        + "\"data\": [{\"key\": \"itemCode\"}, {\"key\": \"currency\"}, {\"key\": \"dateFrom\"}, {\"key\": \"dateTo\"}],"
+                        + "\"title\": \"itemCode\"}");
             }
             break;
             case 10: {

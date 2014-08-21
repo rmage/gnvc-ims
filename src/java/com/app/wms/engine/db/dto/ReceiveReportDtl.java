@@ -8,7 +8,7 @@ public class ReceiveReportDtl implements Serializable {
     
     private int id;
     
-    private int rrCode;
+    private String rrCode;
     
     private String productCode;
     
@@ -60,11 +60,11 @@ public class ReceiveReportDtl implements Serializable {
         this.id = id;
     }
 
-    public int getRrCode() {
+    public String getRrCode() {
         return rrCode;
     }
 
-    public void setRrCode(int rrCode) {
+    public void setRrCode(String rrCode) {
         this.rrCode = rrCode;
     }
 

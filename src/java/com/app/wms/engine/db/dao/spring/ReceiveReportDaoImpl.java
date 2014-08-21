@@ -32,7 +32,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     
     public ReceiveReport mapRow(ResultSet rs, int i) throws SQLException {
         ReceiveReport rr = new ReceiveReport();
-        rr.setRrCode(rs.getInt("rr_code"));
+        rr.setRrCode(rs.getString("rr_code"));
         rr.setRrDate(rs.getDate("rr_date"));
         rr.setPoCode(rs.getInt("po_code"));
         rr.setRrFrom(rs.getString("rr_from"));
@@ -101,6 +101,28 @@ public class ReceiveReportDaoImpl extends AbstractDAO
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
+    }
+    
+    public List<Map<String, Object>> getPo(String poCode) {
+        try {
+            return jdbcTemplate.queryForList("EXEC PRC_PURCHASE_ORDER_FIND_BY_POCODE ?", poCode);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
+    public List<Map<String, Object>> getPoDetail(String poCode) {
+        try {
+            return jdbcTemplate.queryForList("EXEC PRC_PURCHASE_ORDER_DTL_FIND_BY_POCODE_FOR_RR ?", poCode);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
+    public void insert(String data, String createdBy) {
+        jdbcTemplate.update("EXEC NF_RECEIVING_INSERT ?, ?", data, createdBy);
     }
     
 }

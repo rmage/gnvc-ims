@@ -1,5 +1,9 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%    Date cDate = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +20,7 @@
             <!-- include file header HERE -->
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-            
+
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
@@ -31,7 +35,7 @@
                                     <td>TS Number</td>
                                     <td><input name="tsCode" pattern="[0-9]{1,}" type="text" required="true" /></td>
                                     <td>TS Date</td>
-                                    <td><input id="tsDate" name="tsDate" size="10" type="text" required="true" /></td>
+                                    <td><input id="tsDate" name="tsDate" size="10" type="text" value="<%=sdf.format(cDate)%>" required="true" /></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
@@ -53,14 +57,16 @@
                                 <tr>
                                     <td style="width: 100px;">Select SWS</td>
                                     <td colspan="6">
-                                        <select id="swsCode" name="swsCode" required="true">
+                                        <input type="text" id="swsCode" name="swsCode" size="10" />
+                                        <input type="button" id="select" name="select" value="Select" />
+                                        <%--<select id="swsCode" name="swsCode" required="true">
                                             <option value="">-- Please select SWS Number --</option>
                                             <c:forEach items="${model.s}" var="x">
                                                 <option value="${x.swsCode}">
                                                     ${x.swsCode} :: <fmt:formatDate pattern="dd/MM/yyyy" value="${x.swsDate}" /> :: ${x.departmentCode}
                                                 </option>
                                             </c:forEach>
-                                        </select>
+                                        </select>--%>
                                     </td>
                                 </tr>
                                 <tr>
@@ -78,7 +84,7 @@
                     </form>
                 </div>
             </div>
-            
+
             <!-- footer HERE -->
             <div class="span-24 last border-top">
                 <div class="box">&copy; 2013 SPFI</div>
@@ -87,40 +93,64 @@
 
         <!-- javascript block HERE -->
         <script>
+
             /* BIND | element event */
-            $('#tsDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
-            $('#swsCode').bind('change', function() {
-                if($('#swsCode').val() === '') {
+            $('#tsDate').datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                changeYear: true
+            });
+            
+            /* BIND | Validation maximum quantity */
+            $(".detailQty").live("blur", function() {
+                if ($(this).val() > $(this).data("max")) {
+                    $(this).val($(this).data("max"));
+                }
+            });
+
+            $('#select').bind('click', function() {
+                if ($('#swsCode').val() === '') {
                     $('#main').html(null);
                     return;
                 }
-                
+
                 $(this).attr('disabled', true);
                 $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif" style="vertical-align: middle; background-color: rgb(255, 255, 255); border-radius: 4px; padding: 2.5px;" />');
-                
+
                 $.ajax({
                     url: 'TransferSlip.htm',
-                    data: {action: 'getSwsDetail', key: $(this).val()},
+                    data: {action: 'getSwsDetail', key: $("#swsCode").val()},
                     dataType: 'json',
                     success: function(json) {
                         $('#main').html(null);
-                        for(var i = 0; i < json.length; i++) {
-                            $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].itemName + '</td><td><input name="item" type="hidden" value="' + json[i].itemCode + '" />' + json[i].itemCode + 
-                                '</td><td>' + json[i].type + '</td><td>' + numberWithCommas(json[i].qty) + '</td><td><input name="qty" pattern="[0-9]{1,}" type="text" required="true" /></td><td>' + json[i].uom + '</td></tr>');
+                        for (var i = 0; i < json.length; i++) {
+                            $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i][2] + '</td><td><input name="item" type="hidden" value="' + json[i][1] + '" />' + json[i][1] +
+                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") + '" type="text" /></td><td>' + json[i][5] + '</td></tr>');
                         }
                     },
                     complete: function() {
                         $('#load').remove();
-                        $('#swsCode').attr('disabled', false);  
+                        $('#select').attr('disabled', false);
                     }
                 });
             });
-            
-            function numberWithCommas(x) {
-                var parts = x.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                return parts.join(".");
-            }
+
+            // VALIDATE | Minimum 1 (one) quantity
+            $("#tsForm").bind("submit", function() {
+                var b = true;
+                $(".detailQty").each(function() {
+                    if ($(this).val() > 0) {
+                        b = false;
+                    } else if ($(this).val() <= 0 && $(this).val() !== "" ) {
+                        b = true;
+                        return false;
+                    }
+                });
+
+                if (b) {
+                    return false;
+                }
+            });
 
         </script>
     </body>

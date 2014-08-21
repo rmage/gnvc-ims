@@ -28,7 +28,7 @@ public class ReceiveReportDtlDaoImpl extends AbstractDAO
     public ReceiveReportDtl mapRow(ResultSet rs, int i) throws SQLException {
         ReceiveReportDtl rrd = new ReceiveReportDtl();
         rrd.setId(rs.getInt("id"));
-        rrd.setRrCode(rs.getInt("rr_code"));
+        rrd.setRrCode(rs.getString("rr_code"));
         rrd.setProductCode(rs.getString("product_code"));
         rrd.setDepartmentCode(rs.getString("department_code"));
         rrd.setQtyGood(rs.getInt("qty_g"));

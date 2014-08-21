@@ -302,11 +302,6 @@
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
-    <!-- GNVS | New Concept of Finish Goods -->
-    <bean name="/PalletTransfer.htm" class="com.spfi.ims.controller.PalletTransferController">
-    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    
     <!-- GNVS | Fish Module -->
     <bean name="/FishReceivingReport.htm" class="com.spfi.ims.controller.FishReceivingReportController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
@@ -325,5 +320,30 @@
     </bean>
     <bean name="/FishWsSummary.htm" class="com.spfi.ims.controller.FishWsSummaryController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <!-- GNVS | New Concept of Finish Goods -->
+    <bean name="/FGLocation.htm" class="com.spfi.ims.controller.FGLocationController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGPackStyle.htm" class="com.spfi.ims.controller.FGPackStyleController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGItem.htm" class="com.spfi.ims.controller.FGItemController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGBookedOrder.htm" class="com.spfi.ims.controller.FGBookedOrderController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGPalletTransfer.htm" class="com.spfi.ims.controller.FGPalletTransferController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGOrderFill.htm" class="com.spfi.ims.controller.FGOrderFillController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <!-- GNVS | D3 Data-Driven Documents -->
+    <bean name="/D3.htm" class="com.spfi.ims.controller.D3Controller">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
 </beans>

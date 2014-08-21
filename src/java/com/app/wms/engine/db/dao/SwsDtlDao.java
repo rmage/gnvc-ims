@@ -7,6 +7,6 @@ public interface SwsDtlDao {
 
     public void insert(SwsDtl sd);
     
-    public List<SwsDtl> findBySws(int swsCode);
+    public List<SwsDtl> findBySws(String swsCode);
 
 }

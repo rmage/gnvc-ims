@@ -4,11 +4,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Stores Withdrawal Slip</title>
+        <title>IMS &therefore; Stores Withdrawal &therefore; Create</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
             .ui-datepicker { display: none; }
+            .ui-autocomplete {
+                max-height: 250px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+            }
         </style>
     </head>
     <body>
@@ -25,7 +31,7 @@
                     </form>
                     <form action="#" id="swsForm" method="get">
                         <table class="collapse tblForm row-select">
-                            <caption>Header</caption>
+                            <caption>Stores Withdrawal &therefore; Header</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>SWS Number</td>
@@ -36,7 +42,7 @@
                                 <tr>
                                     <c:set var="x" value="${fn:split(model.department, ':')}" />
                                     <td>Department</td>
-                                    <td style="width: 500px;"><input id="departmentCode" size="4" type="text" required="true" value="${x[0]}" /> ${x[1]}</td>
+                                    <td style="width: 500px;"><input id="departmentCode" size="4" type="text" required="true" value="${x[0]}" readonly="readonly" /> ${x[1]}</td>
                                     <td>Info</td>
                                     <td>
                                         <textarea id="swsInfo"></textarea>
@@ -53,11 +59,17 @@
                             </tfoot>
                         </table>
                         <table class="collapse tblForm row-select">
-                            <caption>Detail</caption>
+                            <caption>Stores Withdrawal &therefore; Detail</caption>
                             <thead>
                                 <tr>
                                     <td style="width: 100px;">Select Item</td>
-                                    <td colspan="6"><input id="itemCode" size="50" type="text" /></td>
+                                    <td colspan="6">
+                                        <select id="mode" name="mode">
+                                            <option value="code">By Code</option>
+                                            <option value="name">By Name</option>
+                                        </select>
+                                        <input id="item" name="item" size="50" type="text" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Action</td>
@@ -87,15 +99,19 @@
             $('#swsDate').datepicker({ dateFormat: "dd/mm/yy" }).datepicker("setDate", new Date());
             $('.delete').live('click', function() { $(this).parent().parent().remove(); });
             
-             $('#itemCode').autocomplete({
-                source: '?action=getProduct',
+            $("#mode").bind("change", function() {
+                $('#item').autocomplete("option", "source", "?action=getProduct&mode=" + $(this).val());
+            });
+            
+             $('#item').autocomplete({
+                source: '?action=getProduct&mode=code',
                 minLength: 2,
                 select: function( event, ui ) {
                     $('#main').append('<tr><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' + 
                         ui.item.itemCode + '</td><td>' + ui.item.itemName + '</td><td>' + ui.item.type + '</td><td>' + numberWithCommas(ui.item.soh) + 
                         '</td><td><input size="3" type="text" style="font-size: smaller;" required="true" /></td><td>' + ui.item.uom + '</td></tr>');
                     $('#main tr:last input[type="text"]').focus();
-                    $('#itemCode').val(null);
+                    $('#item').val(null);
                 }
             }).data( 'autocomplete' )._renderItem = function( ul, item ) {
                 return $( '<li>' )

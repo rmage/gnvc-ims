@@ -89,5 +89,14 @@ public class TsDaoImpl extends AbstractDAO
             return new ArrayList<Map<String, Object>>();
         }
     }
+    
+    public List<Map<String, Object>> findSwsDtlForTs(String swsCode) {
+        try {
+            return jdbcTemplate.queryForList("EXEC NF_STORES_WITHDRAWAL_DTL_FIND_BY_SWSCODE_FOR_TS ?", swsCode);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
 
 }

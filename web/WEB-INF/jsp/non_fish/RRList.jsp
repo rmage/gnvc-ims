@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - Receiving Report</title>
+        <title>IMS &therefore; Receiving</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -21,13 +21,13 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="ReceiveReport.htm" method="post">
+                    <form id="search" name="search" action="ReceiveReport.htm" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Search</caption>
+                            <caption>Receiving &therefore; Search</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">RR Number</td>
-                                    <td><input type="text" name="prsnumber" /></td>
+                                    <td><input type="text" name="rr_code" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -40,51 +40,21 @@
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
-                        <caption>List</caption>
+                    <table id="list" class="collapse tblForm row-select">
+                        <caption>Receiving &therefore; List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td>RR Number</td>
-                                <td>RR Date</td>
+                                <td column="rr_code">RR Number</td>
+                                <td column="rr_date">RR Date</td>
                                 <td>PO Code</td>
-                                <td>From</td>
+                                <td column="rr_from">From</td>
+                                <td>Creator</td>
                             </tr>
                         </thead>
-                        <tbody>
-                            <c:if test="${model.rr != null}">
-                                <c:set scope="page" value="${((model.page-1) * model.paging) + 1}" var="no" />
-                                <c:forEach items="${model.rr}" var="x" varStatus="i">
-                                    <tr>
-                                        <td>
-                                            ${no}
-                                            <c:set scope="page" value="${no + 1}" var="no"/>
-                                        </td>
-                                        <td>
-                                             <a href="GenerateReport.htm?action=index&item=IMRR&type=xls&params=${x.rrCode}"><img src="resources/images/printxls.gif" title="Print Receiving Report (xls)" /></a>
-                                        </td>
-                                        <td><a class="d" href="#${x.rrCode}">${x.rrCode}</a></td>
-                                        <td><fmt:formatDate pattern="dd/MM/yyyy" value="${x.rrDate}" /></td>
-                                        <td>${x.poCode}</td>
-                                        <td>${x.rrFrom}</td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="6">
-                                    <c:if test="${model.page !=null && model.page > 1}">
-                                        <a href="ReceiveReport.htm?page=<c:out value="${model.page-1}" />">&lt</a>
-                                    </c:if>
-                                    &nbsp;page: ${model.page}&nbsp;
-                                    <c:if test="${model.page < model.totalRows/model.paging}">
-                                        <a href="ReceiveReport.htm?page=<c:out value="${model.page+1}" />">&gt;</a>
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </tfoot>
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>
@@ -98,6 +68,9 @@
         <!-- javascript block HERE -->
         <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'R_NFRr_Receiving Report (xls)');
+            
             /* jQuery | Binding event */
             $('.d').live('click', function(){
                 fyaQPanel($(this).html());
@@ -133,11 +106,11 @@
                 }
             }
             
-            function numberWithCommas(x) {
-                var parts = x.toString().split(".");
-                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                return parts.join(".");
-            }
+//            function numberWithCommas(x) {
+//                var parts = x.toString().split(".");
+//                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+//                return parts.join(".");
+//            }
         </script>
     </body>
 </html>

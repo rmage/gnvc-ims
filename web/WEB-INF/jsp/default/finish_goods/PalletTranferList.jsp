@@ -33,7 +33,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('PalletTransfer.htm?action=create');" />
+                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('FGPalletTransfer.htm?action=create');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -48,11 +48,12 @@
                                 <td>PTS Number</td>
                                 <td>PTS Date</td>
                                 <td>For Brand</td>
-                                <td>Pack Size</td>
+                                <td>Pack Style</td>
                                 <td>Can Code</td>
                                 <td>Reff</td>
                                 <td>Location</td>
                                 <td>Quantity</td>
+                                <td>Creator</td>
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>

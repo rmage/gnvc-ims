@@ -29,7 +29,7 @@ public class SwsDtlDaoImpl extends AbstractDAO
     public SwsDtl mapRow(ResultSet rs, int i) throws SQLException {
         SwsDtl sd = new SwsDtl();
         sd.setId(rs.getInt("id"));
-        sd.setSwsCode(rs.getInt("sws_code"));
+        sd.setSwsCode(rs.getString("sws_code"));
         sd.setProductCode(rs.getString("product_code"));
         sd.setQty(rs.getInt("qty"));
         sd.setSoh(rs.getInt("soh"));
@@ -48,7 +48,7 @@ public class SwsDtlDaoImpl extends AbstractDAO
             sd.getCreatedDate(), null, null);
     }
     
-    public List<SwsDtl> findBySws(int swsCode) {
+    public List<SwsDtl> findBySws(String swsCode) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE sws_code = ?", this, swsCode);
     }
 

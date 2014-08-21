@@ -67,9 +67,9 @@
     $('.myhover').live("mouseenter", function() {
         $(this).css('background-color', '#EFEFEF');
     })
-    .live("mouseleave", function() {
-        $(this).css("background-color", "");
-    });
+            .live("mouseleave", function() {
+                $(this).css("background-color", "");
+            });
 
     $("body").on({
         ajaxStart: function() {
@@ -143,3 +143,114 @@
 <div id="dialog-insufficient" title="Insufficient Balance" style="display:none;z-index:1;">
     Insufficient amount in your storage
 </div>
+
+<%-- DEFAULT THEME | Add something new here --%>
+<!-- JQUERY | Version 2.1.1 -->
+<script src="resources/default/js/jquery-2.1.1.min.js"></script>
+
+<!-- NOTIFICATION | IMS notification module -->
+<style>
+    div#fny2-notification-modules {
+        -moz-user-select: none;
+        position: fixed;
+        right: 20px;
+        top: 0;
+        width: 300px;
+    }
+
+    .fny2-notification {
+        background-color: #ffffff;
+        border-bottom: 2px solid #0066ff;
+        border-left: 2px solid #ffffff;
+        border-radius: 5px;
+        border-right: 2px solid #ffffff;
+        height: 0;
+        overflow-y: auto;
+        transition: all 1s ease-out 0s;
+    }
+
+    #fny2-notification-modules ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    .fny2-notification-button {
+        background-color: #2288ff;
+        border-bottom: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-radius: 0 0 5px 5px;
+        border-right: 2px solid #ffffff;
+        cursor: pointer;
+    }
+
+    .fny2-notification-button span,
+    .fny2-notification-quantity {
+        color: #ffffff;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 3px 0 3px 8px;
+    }
+
+    .fny2-notification-quantity {
+        bottom: -4px;
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        width: 18px;
+        z-index: 51;
+    }
+
+    .fny2-notification-button > img {
+        bottom: -7px;
+        position: absolute;
+        right: -7px;
+        z-index: 50;
+    }
+
+    .fny2-notification-button > img.roll {
+        animation: fny2-notification-roll 3s infinite;
+    }
+
+    @keyframes fny2-notification-roll {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<script>
+    jq2 = jQuery.noConflict(true);
+    jq2(function() {
+        jq2("body").append(
+                '<div id="fny2-notification-modules" title="You have unread notification(s)">' +
+                '<div class="fny2-notification"><ul></ul></div>' +
+                '<div class="fny2-notification-button" onclick="fny2_notification_fnc.showHide()">' +
+                '<span>Notification</span>' +
+                '<div class="fny2-notification-quantity"><div style="display: inline-block;">99</div></div>' +
+                '<img src="resources/default/images/fny2-icon-notification.png" class="roll" width="32">' +
+                '</div>' +
+                '</div>');
+    });
+
+    var fny2_notification_fnc = {
+        content: "",
+        showHide: function() {
+            if (fny2_notification_fnc.content === "") {
+                fny2_notification_fnc.init();
+            }
+            
+            if (fny2_notification_fnc.content.height() === 0) {
+                fny2_notification_fnc.content.height(500);
+            } else {
+                fny2_notification_fnc.content.height(0);
+            }
+        },
+        init: function() {
+            fny2_notification_fnc.content = jq2(".fny2-notification");
+        }
+    };
+</script>
