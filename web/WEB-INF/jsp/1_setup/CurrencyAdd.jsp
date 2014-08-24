@@ -48,7 +48,8 @@
                                     <td class="style1">Currency Symbol</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="symbol" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+<!--                                            pattern="^\S+[A-Za-z0-9 ]{1,}"-->
+                                            <input type="text" name="symbol" maxlength="25" size="30" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

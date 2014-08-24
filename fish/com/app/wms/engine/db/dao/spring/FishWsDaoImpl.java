@@ -15,11 +15,13 @@ import org.springframework.jdbc.object.SqlUpdate;
 import com.app.wms.engine.db.dao.FishStorageDao;
 import com.app.wms.engine.db.dao.FishVesselDao;
 import com.app.wms.engine.db.dao.FishWsDao;
+import com.app.wms.engine.db.dao.FishWsDetailDao;
 import com.app.wms.engine.db.dao.FishWsTypeDao;
 import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.dto.FishWs;
 import com.app.wms.engine.db.dto.FishWSType;
+import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 
@@ -225,5 +227,30 @@ public class FishWsDaoImpl extends AbstractDAO
 		List<FishWs> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+wsNo+"%");
 		return resultList;
     }
+
+    public List<FishWs> findWSWithinDateAndFishType(String dateString, String fishType) {
+        List<FishWs> resultList;
+        String sqlQuery = "select fws.id,fws.ws_no,fws.date_shift,fws.ws_type_id, " +
+                        "fws.vessel_id , fws.storage_id, fws.time_shift, fws.regu, " +
+                        "fws.created_date, fws.created_by , fws.updated_date, fws.updated_by," +
+                        "fws.is_active , fws.is_delete, " +
+                        "sum(fwsd.total_weight) as QTY from dbo.fish_ws fws " +
+                        "join dbo.fish_ws_detail fwsd on " +
+                        "fwsd.ws_id = fws.id join dbo.fish f on " +
+                        "fwsd.fish_id = f.id " +
+                        "where f.code like '" + fishType + "' AND " +
+                        "fws.date_shift BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + dateString + "') - 1, 0) AND '" + dateString + "' " +
+                        "group by fws.ws_no,fws.id,fws.date_shift,fws.ws_type_id,fws.vessel_id,fws.storage_id,fws.time_shift,fws.regu, " +
+                        "fws.created_date, fws.created_by , fws.updated_date, fws.updated_by, " +
+                        "fws.is_active , fws.is_delete " +
+                        "order by fws.date_shift";
+        
+        System.out.println("-------findWSWithinDateAndFishType---------- " + sqlQuery);
+                         
+         resultList = jdbcTemplate.query(sqlQuery, this);
+         return resultList;        
+    }
+    
+    
 
 }

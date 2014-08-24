@@ -2,6 +2,7 @@ package com.app.wms.engine.db.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class FishWs extends AbstractDTO implements Serializable {
 
@@ -17,6 +18,7 @@ public class FishWs extends AbstractDTO implements Serializable {
 	protected FishWSType wsType;
 	protected FishVessel vessel;
 	protected FishStorage storage;
+        protected List<FishWsDetail> fishWsDetails;
 	
 	/**
 	 * @return the id
@@ -171,4 +173,12 @@ public class FishWs extends AbstractDTO implements Serializable {
 	public void setStorage(FishStorage storage) {
 		this.storage = storage;
 	}
+
+        public List<FishWsDetail> getFishWsDetails() {
+            return fishWsDetails;
+        }
+
+        public void setFishWsDetails(List<FishWsDetail> fishWsDetails) {
+            this.fishWsDetails = fishWsDetails;
+        }        
 }

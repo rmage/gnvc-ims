@@ -192,4 +192,13 @@ public class FishDaoImpl extends AbstractDAO
         List<Fish> resultList = jdbcTemplate.query(query, this, batchNo);
         return resultList;
     }
+
+    public List<Fish> findAllActiveAndNotDelete() {
+        String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y' AND is_delete='N' ORDER BY id";
+        List<Fish> resultList = jdbcTemplate.query(query, this);
+
+        return resultList;
+    }
+    
+    
 }

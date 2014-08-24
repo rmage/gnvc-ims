@@ -207,6 +207,10 @@
     <bean name="/ApprovalRange.htm" class="com.app.wms.web.controller.ApprovalRangeController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <!--    FISH STOCK CARD ACCOUNTING 20 Agustus 2014 by Idzi-->
+    <bean name="/FishStockAccounting.htm" class="com.app.wms.web.controller.acc.FishAccountingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 	<!-- <bean name="/customerjson.htm" class="com.app.wms.web.controller.Customer2Controller">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>-->
@@ -301,6 +305,11 @@
     <bean name="/ReturnCargoDr.htm" class="com.app.wms.web.controller.ReturnCargoDrController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    
+    <!-- GNVS | New Concept of Finish Goods -->
+<!--    <bean name="/PalletTransfer.htm" class="com.spfi.ims.controller.PalletTransferController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>-->
     
     <!-- GNVS | Fish Module -->
     <bean name="/FishReceivingReport.htm" class="com.spfi.ims.controller.FishReceivingReportController">

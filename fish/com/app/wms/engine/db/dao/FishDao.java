@@ -8,4 +8,5 @@ public interface FishDao extends GeneralDao<Fish> {
     public List<Fish> searchAndPaging(String fishCode, int limit, int offset);
     public boolean checkFishCodeIsExist(String code);
     public List<Fish> findFishByBatchNo(String batchNo);
+    public List<Fish> findAllActiveAndNotDelete();
 }
