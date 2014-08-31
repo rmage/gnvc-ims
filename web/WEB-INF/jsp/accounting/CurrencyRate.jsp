@@ -1,7 +1,7 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -127,11 +127,7 @@
                                     <td style="width: 0px" ></td>
                                     <td>${x.currencyCode}</td>
                                     <td>${x.rateValue}</td>
-                                    <!--                                <td>
-                                                                            <input type="text" value="${x.rateValue == null ? '0.00' : x.rateValue}"  data-currency="${x.currencyCode}" data-old="${x.rateValue}" pattern="^\d+(\.|\,)\d{2}$" />
-                                                                            <input type="button" value="Set" />
-                                                                        </td>-->
-                                    <td><c:if test="${x.rateDate != null}"><fmt:formatDate pattern="dd-MM-yy" value="${x.rateDate}" /></c:if></td>
+                                    <td> <fmt:formatDate value="${x.rateDate}" pattern="yyyy-MM-dd" /> </td>
                                     <td>${x.createdBy}</td>
                                 </tr>
                             </c:forEach>

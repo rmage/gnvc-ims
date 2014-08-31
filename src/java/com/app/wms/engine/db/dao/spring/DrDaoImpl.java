@@ -10,22 +10,22 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-public class DrDaoImpl extends AbstractDAO 
-    implements ParameterizedRowMapper<Dr>, DrDao {
+public class DrDaoImpl extends AbstractDAO
+        implements ParameterizedRowMapper<Dr>, DrDao {
 
     private SimpleJdbcTemplate jdbcTemplate;
-    
+
     private DataSource dataSource;
-    
+
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
         jdbcTemplate = new SimpleJdbcTemplate(dataSource);
     }
-    
+
     public String getTableName() {
         return "dr";
     }
-    
+
     public Dr mapRow(ResultSet rs, int i) throws SQLException {
         Dr d = new Dr();
         d.setDrCode(rs.getInt("dr_code"));
@@ -48,28 +48,55 @@ public class DrDaoImpl extends AbstractDAO
         d.setCreatedDate(rs.getDate("created_date"));
         d.setUpdatedBy(rs.getString("updated_by"));
         d.setUpdatedDate(rs.getDate("updated_date"));
-        
+        d.setQty(rs.getDouble("dr_qty"));
+
         return d;
     }
-    
+
     public void insert(Dr d) {
         jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            d.getDrCode(), d.getDrDate(), d.getDrFrom(), d.getDrFromLoc(), d.getDrToLoc(), d.getDrRemarks(), d.getDrType(), d.getSupplierCode(),
-            d.getOrCode(), d.getDmCode(), null, null, null, null, null, null, d.getCreatedBy(), d.getCreatedDate(), null, null);
+                d.getDrCode(), d.getDrDate(), d.getDrFrom(), d.getDrFromLoc(), d.getDrToLoc(), d.getDrRemarks(), d.getDrType(), d.getSupplierCode(),
+                d.getOrCode(), d.getDmCode(), null, null, null, null, null, null, d.getCreatedBy(), d.getCreatedDate(), null, null);
     }
-    
+
     public void updateStockInventory(String productCode, BigDecimal qty) {
         jdbcTemplate.update("UPDATE stock_inventory SET balance = balance - ? WHERE product_code = ?",
-            qty, productCode);
+                qty, productCode);
     }
-    
+
     public Dr findByCode(int code) {
         List<Dr> ds = jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE dr_code = ?", this, code);
         return ds.isEmpty() ? null : ds.get(0);
     }
-    
+
     public List<Dr> findAll(String type) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE dr_type = ? ORDER BY created_date", this, type);
     }
+
+    public List<Dr> findByProductCode(String productCode, String asOf) {
+        List<Dr> resultList = null;
+        String sqlQuery = "select * from dbo.dr dr left join dbo.dr_detail drd on "
+                + "dr.dr_code = drd.dr_code left join dbo.product prod on "
+                + "prod.product_code = drd.product_code where drd.product_code = '" + productCode + "' and "
+                + "dr.dr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) AND '"+asOf+"' "
+                + "order by dr.dr_date";
+                
+        resultList = jdbcTemplate.query(sqlQuery, this);
+        return resultList;
+    }
+
+    public List<Dr> findByProductCodeAndBeforeThan(String productCode, String asOf) {
+        List<Dr> resultList = null;
+        String sqlQuery = "select * from dbo.dr dr left join dbo.dr_detail drd on "
+                + "dr.dr_code = drd.dr_code left join dbo.product prod on "
+                + "prod.product_code = drd.product_code where drd.product_code = '" + productCode + "' and "
+                + "dr.dr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) "
+                + "order by dr.dr_date";
+                
+        resultList = jdbcTemplate.query(sqlQuery, this);
+        return resultList;
+    }
+    
+    
 
 }

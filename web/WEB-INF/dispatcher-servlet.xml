@@ -211,6 +211,16 @@
     <bean name="/FishStockAccounting.htm" class="com.app.wms.web.controller.acc.FishAccountingController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/NonFishStockAccounting.htm" class="com.app.wms.web.controller.acc.NonFishAccountingController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/NonFishStockDocumentSummary.htm" class="com.app.wms.web.controller.acc.NonFishStockDocumentSummaryController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/NonFishStockCardReport.htm" class="com.app.wms.web.controller.acc.NonFishStockCardReportController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
 	<!-- <bean name="/customerjson.htm" class="com.app.wms.web.controller.Customer2Controller">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>-->

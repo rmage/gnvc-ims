@@ -38,6 +38,8 @@ public class Ts implements Serializable {
     private String updatedBy;
     
     private Date updatedDate;
+    
+    private Double qty;
 
     @Override
     public String toString() {
@@ -195,5 +197,13 @@ public class Ts implements Serializable {
     public void setTsType(String tsType) {
         this.tsType = tsType;
     }
+
+    public Double getQty() {
+        return qty;
+    }
+
+    public void setQty(Double qty) {
+        this.qty = qty;
+    }   
 
 }

@@ -172,64 +172,65 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
     public Product mapRow(ResultSet rs, int row) throws SQLException {
         Product dto = new Product();
 //		dto.setId( rs.getInt( 1 ) );
-        dto.setProductId(rs.getString(1));
-        dto.setBarCode(rs.getString(2));
-        dto.setProductCode(rs.getString(3));
-        dto.setProductName(rs.getString(4));
-        dto.setProductAlias(rs.getString(5));
-        dto.setProductCategory(rs.getString(6));
-        dto.setBrandName(rs.getString(7));
-        dto.setProductType(rs.getString(8));
-        dto.setProductColor(rs.getString(9));
-        dto.setProductDescription(rs.getString(10));
-        dto.setVolumeWeight(rs.getString(11));
+        dto.setProductId(rs.getString("product_id"));
+        dto.setBarCode(rs.getString("bar_code"));
+        dto.setProductCode(rs.getString("product_code"));
+        dto.setProductName(rs.getString("product_name"));
+        dto.setProductAlias(rs.getString("product_alias"));
+        dto.setProductCategory(rs.getString("product_category"));
+        dto.setBrandName(rs.getString("brand_name"));
+        dto.setProductType(rs.getString("product_type"));
+        dto.setProductColor(rs.getString("product_color"));
+        dto.setProductDescription(rs.getString("product_description"));
+        dto.setVolumeWeight(rs.getString("volume_weight"));
 
-        dto.setUnitWeight(rs.getString(12));
-        dto.setVolumeMatrix(rs.getString(13));
+        dto.setUnitWeight(rs.getString("unit_weight"));
+        dto.setVolumeMatrix(rs.getString("volume_matrix"));
 
-        dto.setUnitMatrix(rs.getString(14));
-        dto.setUnitLength(rs.getString(15));
+        dto.setUnitMatrix(rs.getString("unit_matrix"));
+        dto.setUnitLength(rs.getString("unit_length"));
 
-        dto.setUnitWidth(rs.getString(16));
+        dto.setUnitWidth(rs.getString("unit_width"));
 
-        dto.setUnitHeight(rs.getString(17));
+        dto.setUnitHeight(rs.getString("unit_height"));
 
-        dto.setUnitPiece(rs.getInt(18));
+        dto.setUnitPiece(rs.getInt("unit_piece"));
         if (rs.wasNull()) {
             dto.setUnitPieceNull(true);
         }
 
-        dto.setUnitBox(rs.getInt(19));
+        dto.setUnitBox(rs.getInt("unit_box"));
         if (rs.wasNull()) {
             dto.setUnitBoxNull(true);
         }
 
-        dto.setUnitCartoon(rs.getInt(20));
+        dto.setUnitCartoon(rs.getInt("unit_cartoon"));
         if (rs.wasNull()) {
             dto.setUnitCartoonNull(true);
         }
 
-        dto.setUnitPallete(rs.getInt(21));
+        dto.setUnitPallete(rs.getInt("unit_pallete"));
         if (rs.wasNull()) {
             dto.setUnitPalleteNull(true);
         }
 
-        dto.setUserId(rs.getString(22));
-        dto.setCorpId(rs.getString(23));
-        dto.setWhCode(rs.getString(24));
-        dto.setIsActive(rs.getString(25));
-        dto.setIsDelete(rs.getString(26));
-        dto.setCreatedBy(rs.getString(27));
-        dto.setCreatedDate(rs.getTimestamp(28));
-        dto.setUpdatedBy(rs.getString(29));
-        dto.setUpdatedDate(rs.getTimestamp(30));
-        dto.setUom(rs.getString(31));
-        dto.setSupplier(rs.getString(32));
-        dto.setBuyer(rs.getString(33));
-        dto.setPackstyle(rs.getString(34));
-        dto.setPacksize(rs.getString(35));
-        dto.setLid(rs.getString(36));
-        dto.setNwdwpw(rs.getString(37));
+        dto.setUserId(rs.getString("user_id"));
+        dto.setCorpId(rs.getString("corp_id"));
+        dto.setWhCode(rs.getString("wh_code"));
+        dto.setIsActive(rs.getString("is_active"));
+        dto.setIsDelete(rs.getString("is_delete"));
+        dto.setCreatedBy(rs.getString("created_by"));
+        dto.setCreatedDate(rs.getTimestamp("created_date"));
+        dto.setUpdatedBy(rs.getString("updated_by"));
+        dto.setUpdatedDate(rs.getTimestamp("updated_date"));
+        dto.setUom(rs.getString("uom_name"));
+        dto.setSupplier(rs.getString("supplier_name"));
+        dto.setBuyer(rs.getString("buyer"));
+        dto.setPackstyle(rs.getString("packstyle"));
+        dto.setPacksize(rs.getString("packsize"));
+        dto.setLid(rs.getString("lid"));
+        dto.setNwdwpw(rs.getString("nwdwpw"));
+        dto.setCanCode("can_code");
         return dto;
     }
 
@@ -382,7 +383,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
     @Transactional
     public List<Product> findWhereProductCategoryEquals(String productCategory) throws ProductDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, product_id, product_code, product_name, is_active, product_category, updated_by, updated_date FROM " + getTableName() + " WHERE product_category = ? ORDER BY product_name", new ProductListMap(), productCategory);
+            return jdbcTemplate.query("SELECT id, product_id, product_code, product_name, is_active, product_category, updated_by, updated_date FROM " + getTableName() + " WHERE product_category = ? ORDER BY product_code", new ProductListMap(), productCategory);
         } catch (Exception e) {
             throw new ProductDaoException("Query failed", e);
         }
@@ -871,5 +872,22 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
             return new ArrayList<Map<String, Object>>();
         }
     }
+
+    public Product findByProductCode(String productCode) throws ProductDaoException {
+        try {
+            List<Product> list = jdbcTemplate.query(" select product_id, bar_code, product_code, product_name, product_alias, product_category, "
+                    + "brand_name, product_type, product_color, product_description, "
+                    + "volume_weight, unit_weight, volume_matrix, unit_matrix, "
+                    + "unit_length, unit_width, unit_height, unit_piece, unit_box, "
+                    + "unit_cartoon, unit_pallete, user_id, corp_id, wh_code, "
+                    + "is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw "
+                    + " FROM " + getTableName() + " WHERE product_code = ?", this, productCode);
+            return list.size() == 0 ? null : list.get(0);
+        } catch (Exception e) {
+            throw new ProductDaoException("Query failed", e);
+        }
+    }
+    
+    
     
 }

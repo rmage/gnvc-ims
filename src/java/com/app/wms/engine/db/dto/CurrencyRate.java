@@ -18,6 +18,8 @@ public class CurrencyRate  implements Serializable {
     
     private Date createdDate;
     
+    private String rateDateString;
+    
     @Override
     public String toString() {
         //FIXME :: CurrencyRate @toString completion
@@ -74,5 +76,14 @@ public class CurrencyRate  implements Serializable {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
+
+    public String getRateDateString() {
+        return rateDateString;
+    }
+
+    public void setRateDateString(String rateDateString) {
+        this.rateDateString = rateDateString;
+    }
     
+       
 }

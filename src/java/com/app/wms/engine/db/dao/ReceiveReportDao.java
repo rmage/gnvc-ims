@@ -28,5 +28,9 @@ public interface ReceiveReportDao {
     public List<Map<String, Object>> getPoDetail(String poCode);
     
     public void insert(String data, String createdBy);
+    
+    public List<ReceiveReport> findByProductCode(String productCode, String asOf);
+    
+    public List<ReceiveReport> findByProductCodeAndBeforeThan(String productCode, String asOf);
 
 }

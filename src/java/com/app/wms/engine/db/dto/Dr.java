@@ -45,6 +45,8 @@ public class Dr implements Serializable {
     
     private Date updatedDate;
     
+    private Double qty;
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -231,4 +233,12 @@ public class Dr implements Serializable {
         this.drType = drType;
     }
 
+    public Double getQty() {
+        return qty;
+    }
+
+    public void setQty(Double qty) {
+        this.qty = qty;
+    }
+    
 }

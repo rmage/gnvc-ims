@@ -240,6 +240,8 @@ public interface ProductDao {
     public List<Product> findProductPaging(Product p, int page) throws ProductDaoException;
 
     public Product findByPrimaryKey(String productId) throws ProductDaoException;
+    
+    public Product findByProductCode(String productCode) throws ProductDaoException;
 
     public List<Product> findWhereProductNameEquals(String productName, int limit);
     
@@ -254,5 +256,6 @@ public interface ProductDao {
     public List<Product> ajaxSearch(String where, String order, int page, int show);
     public Product findId(String id);
     
+    /*FIND PRODUCT by PRODUCT CODE*/
     public List<Map<String, Object>> getLastXInPo(String productCode, int x);
 }

@@ -19,6 +19,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class CurrencyRateDaoImpl extends AbstractDAO 
     implements ParameterizedRowMapper<CurrencyRate>, CurrencyRateDao {
     
+    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    
     private SimpleJdbcTemplate jdbcTemplate;
 
     private DataSource dataSource;
@@ -173,5 +175,18 @@ public class CurrencyRateDaoImpl extends AbstractDAO
         result = (CurrencyRate) jdbcTemplate.query(queryString , this, currencyCode).get(0);
         return result;
     }
+
+    public CurrencyRate findLatestByCurrencyCodeAndDate(String currencyCode, Date date) {
+        CurrencyRate result = new CurrencyRate();
+        String queryString;
+        String dateString = df.format(date);
+        
+        queryString = "SELECT TOP 1 * FROM " + getTableName()
+                + " WHERE rate_date <= '" + dateString + "' and currency_code = ? ORDER BY rate_date DESC";
+        result = (CurrencyRate) jdbcTemplate.query(queryString , this, currencyCode).get(0);
+        return result;
+    }
+    
+     
 
 }

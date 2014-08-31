@@ -13,5 +13,9 @@ public interface DrDao {
     public Dr findByCode(int code);
     
     public List<Dr> findAll(String type);
+    
+    public List<Dr> findByProductCode(String productCode, String asOf);
+    
+    public List<Dr> findByProductCodeAndBeforeThan(String productCode, String asOf);
 
 }

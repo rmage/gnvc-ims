@@ -15,6 +15,10 @@ public interface TsDao {
     public List<Sws> findWhereNotInTs();
 
     public List<Ts> findAll(String module);
+    
+    public List<Ts> findByProductCode(String productCode, String asOf);
+    
+    public List<Ts> findByProductCodeAndBeforeThan(String productCode, String asOf);
 
     public int ajaxMaxPage(BigDecimal show, String where);
 

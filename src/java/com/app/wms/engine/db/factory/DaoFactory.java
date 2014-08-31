@@ -913,4 +913,10 @@ public class DaoFactory {
         return (D3Dao) bf.getBean("D3Dao");
     }
     
+    /*ACCOUNTING AND STUFF DAO*/
+    public static NonFishStockCardSummaryDao createNonFishStockCardSummaryDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (NonFishStockCardSummaryDao) bf.getBean("NonFishStockCardSummaryDao");
+    }
+    
 }

@@ -4,47 +4,53 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ReceiveReport implements Serializable {
-    
+
     private String rrCode;
-    
+
     private Date rrDate;
-    
+
     private int poCode;
-    
+
     private String rrFrom;
-    
+
     private String evaluatedBy;
-    
+
     private Date evaluatedDate;
-    
+
     private String approvedBy;
-    
+
     private Date approvedDate;
-    
+
     private String createdBy;
-    
+
     private Date createdDate;
-    
+
     private String updatedBy;
-    
+
     private Date updatedDate;
-    
+
+    private Double qty;
+
+    private Double unitCost;
+
+    private Po po;
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append( "com.app.wms.engine.db.dto.ReceiveReport: " );
-        sb.append("rrCode = ").append( getRrCode());
-        sb.append(", rrDate = ").append( getRrDate());
-        sb.append(", poCode = ").append( getPoCode());
-        sb.append(", rrFrom = ").append( getRrFrom());
-        sb.append(", evaluatedBy = ").append( getEvaluatedBy());
-        sb.append(", evaluatedDate = ").append( getEvaluatedDate());
-        sb.append(", approvedBy = ").append( getApprovedBy());
-        sb.append(", approvedDate = ").append( getApprovedDate());
-        sb.append(", createdBy = ").append( getCreatedBy());
-        sb.append(", createDate = ").append( getCreatedDate());
-        sb.append(", updatedBy = ").append( getUpdatedBy());
-        sb.append(", updatedDate = ").append( getUpdatedDate());
+        sb.append("com.app.wms.engine.db.dto.ReceiveReport: ");
+        sb.append("rrCode = ").append(getRrCode());
+        sb.append(", rrDate = ").append(getRrDate());
+        sb.append(", poCode = ").append(getPoCode());
+        sb.append(", rrFrom = ").append(getRrFrom());
+        sb.append(", evaluatedBy = ").append(getEvaluatedBy());
+        sb.append(", evaluatedDate = ").append(getEvaluatedDate());
+        sb.append(", approvedBy = ").append(getApprovedBy());
+        sb.append(", approvedDate = ").append(getApprovedDate());
+        sb.append(", createdBy = ").append(getCreatedBy());
+        sb.append(", createDate = ").append(getCreatedDate());
+        sb.append(", updatedBy = ").append(getUpdatedBy());
+        sb.append(", updatedDate = ").append(getUpdatedDate());
         return sb.toString();
     }
 
@@ -143,5 +149,29 @@ public class ReceiveReport implements Serializable {
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
-    
+
+    public Double getUnitCost() {
+        return unitCost;
+    }
+
+    public void setUnitCost(Double unitCost) {
+        this.unitCost = unitCost;
+    }
+
+    public Double getQty() {
+        return qty;
+    }
+
+    public void setQty(Double qty) {
+        this.qty = qty;
+    }
+
+    public Po getPo() {
+        return po;
+    }
+
+    public void setPo(Po po) {
+        this.po = po;
+    }
+
 }
