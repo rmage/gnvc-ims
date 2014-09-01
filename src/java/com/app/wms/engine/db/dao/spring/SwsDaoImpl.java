@@ -64,9 +64,9 @@ public class SwsDaoImpl extends AbstractDAO
         }
     }
     
-    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order, String departmentCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC NF_STORES_WITHDRAWAL_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC NF_STORES_WITHDRAWAL_LIST ?, ?, ?, ?, ?", page, show, where, order, departmentCode);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();

@@ -10,6 +10,10 @@ public interface FGOrderFillDao {
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
+    public List<Map<String, Object>> getBor(String borCode);
+    
     public List<Map<String, Object>> getPalletTransfer(String ptsCode);
+    
+    public void insert(String data, String createdBy);
     
 }

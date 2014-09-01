@@ -360,6 +360,12 @@
     <bean name="/FGOrderFill.htm" class="com.spfi.ims.controller.FGOrderFillController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FGLabelingMonitoring.htm" class="com.spfi.ims.controller.FGLabelingMonitoringController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGExportDelivery.htm" class="com.spfi.ims.controller.FGExportDeliveryController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     
     <!-- GNVS | D3 Data-Driven Documents -->
     <bean name="/D3.htm" class="com.spfi.ims.controller.D3Controller">

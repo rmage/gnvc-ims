@@ -26,68 +26,68 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="#" id="fPts" name="fOfal" method="post">
+                    <form action="#" id="fOfal" name="fOfal" method="post">
                         <input type="hidden" id="ofalDate" name="ofalDate" value="<%=sdf.format(cDate)%>" />
                         <table class="collapse tblForm row-select">
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">Bor Code</td>
-                                    <td><input type="text" class="bor-info" id="borId" name="borId" required="required" /></td>
-                                    <td style="width: 200px;">OFAL Date</td>
-                                    <td><input type="text" class="bor-info" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required" /></td>
+                                    <td><input type="text" class="bor-info" id="borId" name="borId" required="required" data-id="" /></td>
+                                    <td style="width: 200px;">OFAL Code</td>
+                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" required="required" /></td>
                                 </tr>
                                 <tr>
                                     <td>Buyer</td>
+                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td>OFAL Date</td>
+                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required" /></td>
+                                </tr>
+                                <tr>
+                                    <td>Brand</td>
                                     <td><input type="text" class="bor-info" readonly="readonly"</td>
                                     <td><b>Label Declaration</b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Brand</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
-                                    <td>Net Weight</td>
-                                    <td><input type="text" id="lNw" /> g</td>
-                                </tr>
-                                <tr>
                                     <td>Reference Number</td>
                                     <td><input type="text" class="bor-info" readonly="readonly"</td>
-                                    <td>Drained Weight</td>
-                                    <td><input type="text" id="lDw" /> g</td>
+                                    <td>Net Weight</td>
+                                    <td><input type="text" id="lNw" value="0" /> g</td>
                                 </tr>
                                 <tr>
                                     <td>Destination Port</td>
                                     <td><input type="text" class="bor-info" readonly="readonly"</td>
-                                    <td>BBE</td>
-                                    <td><input type="text" id="lBbe" /> g</td>
+                                    <td>Drained Weight</td>
+                                    <td><input type="text" id="lDw" value="0" /> g</td>
                                 </tr>
                                 <tr>
                                     <td>Quantity</td>
+                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td>BBE</td>
+                                    <td><input type="text" id="lBbe" value="0" /> g</td>
+                                </tr>
+                                <tr>
+                                    <td>Pack Style / Size</td>
                                     <td><input type="text" class="bor-info" readonly="readonly"</td>
                                     <td><b>Actual Specification</b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>Pack Style / Size</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td>Can Code</td>
+                                    <td><input type="text" id="canCode" name="canCode" readonly="readonly"</td>
                                     <td>Net Weight</td>
                                     <td><input type="text" id="aNw" /> g</td>
                                 </tr>
                                 <tr>
-                                    <td>Can Code</td>
-                                    <td><input type="text" id="canCode" name="canCode" readonly="readonly"</td>
+                                    <td>Max Code</td>
+                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
                                     <td>Drained Weight</td>
                                     <td><input type="text" id="aDw" /> g</td>
                                 </tr>
                                 <tr>
-                                    <td>Max Code</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
                                     <td>Shipment Schedule</td>
-                                    <td><input type="text" id="shipment" name="shipment" readonly="readonly"</td>
+                                    <td><input type="text" id="shipment" name="shipment"</td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -107,7 +107,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 75px">PTS Number</th>
-                                <th colspan="10">
+                                <th colspan="12">
                                     <input type="text" id="ptsCode" name="ptsCode" />
                                     <input type="button" id="btnAdd" name="btnAdd" value="Add" />
                                 </th>
@@ -115,12 +115,14 @@
                             <tr>
                                 <td rowspan="2">Number</td>
                                 <td rowspan="2">Pallet Number</td>
+                                <td rowspan="2">Can Code</td>
                                 <td colspan="2">Production</td>
                                 <td rowspan="2">Shift</td>
                                 <td rowspan="2">Quantity</td>
                                 <td colspan="3">Cut Out</td>
                                 <td rowspan="2">Location</td>
                                 <td rowspan="2">Remarks</td>
+                                <td rowspan="2">Action</td>
                             </tr>
                             <tr>
                                 <td>Date</td>
@@ -153,9 +155,12 @@
                 changeYear: true,
                 changeMonth: true
             });
-            
+
             // BIND | Add PTS button
             $("#btnAdd").bind("click", function() {
+                if ($("#detail tr td:nth-child(2):contains('" + $("#ptsCode").val() + "')").size() > 0) {
+                    return false;
+                }
                 $(this).after('<img id="load" src="resources/ui-anim_basic_16x16.gif" />');
                 // PTS | Get data
                 $.ajax({
@@ -163,77 +168,59 @@
                     data: {action: "getPts", key: $("#ptsCode").val()},
                     dataType: "json",
                     success: function(json) {
-                        
+                        if (json.length > 0) {
+                            $("#detail").append('<tr><td>' + ($("#detail tr").size() + 1) + '</td><td>' + json[0][1] +
+                                    '</td><td>' + json[0][2] + '</td><td>' + json[0][3] + '</td><td>' + json[0][4] +
+                                    '</td><td>' + json[0][5] + '</td><td><input type="text" class="quantity" value="' + parseFloat(json[0][6]).toFixed(2) + '" size="6" data-max="' + parseFloat(json[0][6]).toFixed(2) + '" data-code="' + json[0][1] + '" /></td><td>' + parseFloat(json[0][7]).toFixed(2) +
+                                    '</td><td>' + parseFloat(json[0][8]).toFixed(2) + '</td><td>' + parseFloat(json[0][9]).toFixed(2) + '</td><td>' + json[0][10] +
+                                    '</td><td><input type="text" class="remarks" /></td><td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this)"></td></tr>');
+                            $("#ptsCode").val("");
+                            setCanCode();
+                        }
+                    },
+                    complete: function() {
+                        $('#load').remove();
                     }
                 });
-                $('#load').remove();
             });
 
-            <%--// BIND | Change event on pack style to get item on list
-            $("#packStyle").bind("change", function() {
-                $.ajax({
-                    url: "?", type: "post",
-                    data: {action: "getItem", key: $(this).val()},
-                    dataType: "json",
-                    success: function(json) {
-                        $("#itemId").html("");
-                        for (var i = 0; i < json.length; i++) {
-                            $("#itemId").append('<option value="' + json[i][1] + '">' + json[i][3] + ' | ' + json[i][2] + '</option>');
-                        }
-                    }
-                });
-                calculateCs();
-            }).trigger("change");
-
-            //  BIND | Blur on detail quantity to calculate Cs value
-            $(".i4").live("blur", function() {
-                calculateCs();
+            // BIND | Quantity maximu and minimum value
+            $(".quantity").live("blur", function() {
+                if (parseFloat($(this).val()) < 0.01 || parseFloat($(this).val()) > parseFloat($(this).data("max")) || !/^\d+(\.\d{1,2})?$/.test($(this).val())) {
+                    $(this).val($(this).data("max"));
+                }
             });
-            function calculateCs() {
-                var cs = 0.00;
-                var divider = $("#packStyle option:selected").data("ppc");
-                $(".i4").each(function() {
-                    if ($(this).val() > 0) {
-                        var io = $(this).val().indexOf(".");
-                        if (io < 0) {
-                            cs = cs + parseFloat($(this).val());
-                        } else {
-                            cs = cs + parseFloat($(this).val().substring(0, io)) + ($(this).val().substring(io + 1, $(this).val().length) / divider);
-                        }
-                    }
-                });
-                $("#ptsQty").val(cs.toFixed(2));
-            }
 
-            //  AUTOCOMPLETE | Reff to bor id
+            // BIND | Reset form if bor change
+            $("#borId").bind("keyup", function() {
+                if ($(this).data("id") !== "") {
+                    $(".bor-info,#aNw,#aDw").each(function(i) {
+                        $(this).val("");
+                    });
+                    $(this).data("id", "");
+                }
+            });
+
+            // AUTOCOMPLETE | Get bor info
             $("#borId").autocomplete({
                 source: "?action=getBor",
                 minLength: 6,
                 delay: 1000,
                 select: function(event, ui) {
                     $(this).data("id", ui.item[1]);
+                    $(".bor-info,#aNw,#aDw").each(function(i) {
+                        $(this).val(ui.item[i + 3]);
+                    });
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
                 return $('<li>')
                         .data("item", item)
-                        .append('<a><b>' + item[2] + ' | ' + item[3] + '</b><br />Buyer: ' + item[4] + '</a></li>')
+                        .append('<a><b>' + item[3] + ' | ' + item[2] + '</b><br />Buyer: ' + item[4] + '</a></li>')
                         .appendTo(ul);
             };
 
-            //  DETAIL | Add / remove detail input form
-            $(".detailAdd").live("click", function() {
-                addNewDetail(1);
-            });
-            $(".detailDelete").live("click", function() {
-                if (confirm("Delete selected row?")) {
-                    $(this).parent().parent().remove();
-                    calculateCs();
-                }
-            });
-
-            //  FORM | Submit action
-            $("#fPts").bind("submit", function() {
+            $("#fOfal").bind("submit", function() {
                 //  VALIDATION
                 //  BOR | not selected from list
                 if ($("#borId").val() !== "") {
@@ -244,21 +231,16 @@
                 }
 
                 var data = "";
-                $(".i1").each(function() {
-                    if ($(this).val() !== "" && $(this).val() !== undefined) {
-                        var $r = $(this).parent().parent();
-                        data = data + $("#ptsCode").val() + "," + $("#ptsDate").val() + "," + $("#packStyle").val() + ","
-                                + $("#forBrand").val() + "," + $("#canCode").val() + "," + $("#borId").data("id") + ","
-                                + $("#ptsLocation").val() + "," + $("#ptsQty").val() + "," + $r.find(".i0").val() + ","
-                                + $r.find(".i1").val() + "," + $r.find(".i2").val() + "," + $r.find(".i3").val() + ","
-                                + $r.find(".i4").val() + "," + $r.find(".i5").val() + "," + $r.find(".i6").val() + ","
-                                + $r.find(".i7").val() + "," + $r.find(".i8").val() + "," + $r.find(".i9").val() + ","
-                                + $r.find(".i10").val() + "," + $("#itemId").val() + ",";
 
-                        data = data + "@";
-                    }
-                });
-                console.log(data);
+                var $x = $(".quantity");
+                var $y = $(".remarks");
+
+                for (var i = 0; i < $x.size(); i++) {
+                    data = data + $("#ofalCode").val() + "," + $("#borId").data("id") + "," + $("#ofalDate").val() + "," + $("#canCode").val() + "," +
+                            $("#lNw").val() + "," + $("#lDw").val() + "," + $("#lBbe").val() + "," + $("#shipment").val() + "," + $x[i].getAttribute("data-code") + "," + 
+                            $x[i].value + "," + $y[i].value + ",@";
+                }
+//                console.log(data);
                 if (data !== "") {
                     window.location.replace("?action=save&data=" + data);
                 }
@@ -266,30 +248,25 @@
                 return false;
             });
 
-            //  FUNCTION | Add detail input form
-            var counter = 0;
-            function addNewDetail(mode) {
-                var detail = '<tr><td><select class="i0"><option value="NS">Night Shift</option><option value="DS">Day Shift</option><option value="2ND">Second Shift</option></select></td>'
-                        + '<td><input type="hidden" id="date' + counter + '" class="i1" /><input type="text" class="bor-info" id="datePicker' + counter + '" class="i1Picker" size="8" /></td><td><input type="text" class="bor-info" class="i2" size="11" /></td>'
-                        + '<td><input type="text" class="bor-info" class="i3" size="11" /></td><td><input type="text" class="bor-info" class="i4" size="11" /></td><td><input type="text" class="bor-info" class="i5" size="11" /></td>'
-                        + '<td><input type="text" class="bor-info" class="i6" size="11" /></td><td><input type="text" class="bor-info" class="i7" size="11" /></td><td><input type="text" class="bor-info" class="i8" size="11" /></td>'
-                        + '<td><input type="text" class="bor-info" class="i9" size="11" /></td><td><input type="text" class="bor-info" class="i10" size="11" /></td><td><input type="button" class="detailAdd ui-button ui-widget ui-state-default ui-corner-all" value="Add" style="font-size: smaller;" /></td></tr>';
-                $("#detail").append(detail);
-                $("#datePicker" + counter).datepicker({
-                    dateFormat: "dd/mm/yy",
-                    altFormat: "yy-mm-dd",
-                    altField: "#date" + counter,
-                    changeYear: true,
-                    changeMonth: true
+            // FUNCTION | Remove row
+            function removeRow(e) {
+                $(e).parent().parent().remove();
+                $("#detail tr td:nth-child(1)").each(function(i) {
+                    $(this).html(i + 1);
                 });
-                if (mode === 1) {
-                    $(".detailAdd:first").removeClass("detailAdd").addClass("detailDelete").val("Remove");
-                }
-
-                counter = counter + 1;
+                setCanCode();
             }
-            addNewDetail();
-            --%>
+
+            // FUNCTION | SEt can code
+            function setCanCode() {
+                $("#canCode").val("");
+                $("#detail tr td:nth-child(3)").each(function() {
+                    if ($("#canCode").val().indexOf($(this).html()) === -1) {
+                        $("#canCode").val($("#canCode").val() + $(this).html() + ";");
+                    }
+                });
+            }
+
         </script>
     </body>
 </html>

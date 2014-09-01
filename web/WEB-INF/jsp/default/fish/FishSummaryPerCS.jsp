@@ -20,7 +20,7 @@
                         <input type="hidden" name="action" value="index" />
                         <input type="hidden" name="item" value="FishSumPerCS" />
                         <input type="hidden" name="type" value="xls" />
-                        <input type="hidden" name="params" value="<%=cDateH %>" />
+                        <input type="hidden" id="params" name="params" value="<%=cDateH %>" />
                         <table class="collapse tblForm row-select">
                             <caption>Summary Report &therefore; per Cold Storage</caption>
                             <tbody>
@@ -48,7 +48,13 @@
         </div>
 
         <script>
-            $('#date').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#params", altFormat: "yy-mm-dd"});
+            $('#date').datepicker({
+                changeMonth: true, 
+                changeYear: true, 
+                dateFormat: "dd/mm/yy", 
+                altField: "#params", 
+                altFormat: "yy-mm-dd"
+            });
         </script>
 
     </body>

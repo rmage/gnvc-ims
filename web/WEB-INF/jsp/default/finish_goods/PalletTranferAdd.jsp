@@ -153,6 +153,7 @@
             });
             function calculateCs() {
                 var cs = 0.00;
+                var tin = 0.00;
                 var divider = $("#packStyle option:selected").data("ppc");
                 $(".i4").each(function() {
                     if ($(this).val() > 0) {
@@ -160,11 +161,14 @@
                         if (io < 0) {
                             cs = cs + parseFloat($(this).val());
                         } else {
-                            cs = cs + parseFloat($(this).val().substring(0, io)) + ($(this).val().substring(io + 1, $(this).val().length) / divider);
+                            cs = cs + parseFloat($(this).val().substring(0, io));
+                            tin = tin + parseFloat($(this).val().substring(io + 1, $(this).val().length));
+                                    //+ Math.floor(( / divider)) + 
+                                    //(($(this).val().substring(io + 1, $(this).val().length) % divider) / 100);
                         }
                     }
                 });
-                $("#ptsQty").val(cs.toFixed(2));
+                $("#ptsQty").val((cs + Math.floor(tin / divider) + ((tin % divider) / 100)).toFixed(2));
             }
 
             //  AUTOCOMPLETE | Reff to bor id
@@ -220,7 +224,7 @@
                         data = data + "@";
                     }
                 });
-                console.log(data);
+                //console.log(data);
                 if (data !== "") {
                     window.location.replace("?action=save&data=" + data);
                 }

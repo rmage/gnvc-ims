@@ -36,6 +36,15 @@ public class FGBookedOrderDaoImpl extends AbstractDAO implements FGBookedOrderDa
         }
     }
     
+    public List<Map<String, Object>> getItem(int packId) {
+        try {
+            return jdbcTemplate.queryForList("EXEC FG_ITEM_BY_PACKID ?", packId);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
     public List<Map<String, Object>> getPackStyle(String packStyle) {
         try {
             return jdbcTemplate.queryForList("EXEC M_PACK_STYLE_BY_PACK_STYLE ?", packStyle);

@@ -60,7 +60,13 @@
                         </tr>
                         <tr>
                             <td style="width: 137px">Pack Style</td>
-                            <td><input tabindex="3" id="i0" type="text" /></td>
+                            <td>
+                                <input tabindex="3" id="i0" type="text" size="10" />
+                                Item:
+                                <select id="i24">
+                                    
+                                </select>
+                            </td>
                             <td>Drained / Pressed Wt</td>
                             <td><input tabindex="15" id="i12" type="text" size="3" value="0" /></td>
                         </tr>
@@ -139,7 +145,13 @@
                         </tr>
                         <tr>
                             <td style="width: 137px">Pack Style</td>
-                            <td><input tabindex="27" id="j0" type="text" /></td>
+                            <td>
+                                <input tabindex="27" id="j0" type="text" size="10" />
+                                Item:
+                                <select id="j24">
+                                    
+                                </select>
+                            </td>
                             <td>Drained / Pressed Wt</td>
                             <td><input tabindex="39" id="j12" type="text" size="3" value="0" /></td>
                         </tr>
@@ -218,7 +230,13 @@
                         </tr>
                         <tr>
                             <td style="width: 137px">Pack Style</td>
-                            <td><input tabindex="51" id="k0" type="text" /></td>
+                            <td>
+                                <input tabindex="51" id="k0" type="text" size="10" />
+                                Item:
+                                <select id="k24">
+                                    
+                                </select>
+                            </td>
                             <td>Drained / Pressed Wt</td>
                             <td><input tabindex="63" id="k12" type="text" size="3" value="0" /></td>
                         </tr>
@@ -314,8 +332,10 @@
             //  BIND | KEYDOWN and AUTOCOMPLETE in packstyle field
             $("#i0,#j0,#k0").each(function() {
                 var $o = $(this);
+                var $i = $("#" + $o.attr("id").substring(0, 1) +  "24");
                 $o.bind("keyup", function() {
-                    $(this).data("id", "");
+                    $o.data("id", "");
+                    $i.html("");
                 });
                 $o.autocomplete({
                     source: "?action=getPackStyle",
@@ -324,6 +344,19 @@
                     select: function(event, ui) {
                         $o.data("id", ui.item[1]);
                         $o.val(ui.item[2]);
+                        
+                        // ITEM | Get item list from selected pack_style
+                        $.ajax({
+                            url: "?", type: "post",
+                            data: {action: "getItem", key: $o.data("id")},
+                            dataType: "json",
+                            success: function(json) {
+                                $i.html("");
+                                for (var i = 0; i < json.length; i++) {
+                                    $i.append('<option value="' + json[i][1] + '">' + json[i][2] + ' | ' + json[i][3] + '</option>');
+                                }
+                            }
+                        });
                         return false;
                     }
                 }).data('autocomplete')._renderItem = function(ul, item) {
@@ -339,12 +372,12 @@
                 var data = "";
                 $("#i0,#j0,#k0").each(function() {
                     if ($(this).data("id") !== "" && $(this).data("id") !== undefined) {
-                        data = data + $("#borCode").val() + "," + $("#borDate").val() + ",";
+                        data = data + $("#borCode").val() + "^" + $("#borDate").val() + "^";
 
                         var prefix = $(this).attr("id").substring(0, 1);
-                        data = data + $(this).data("id") + ",";
-                        for (var i = 1; i < 24; i++) {
-                            data = data + $("#" + prefix + i).val() + ",";
+                        data = data + $(this).data("id") + "^";
+                        for (var i = 1; i < 25; i++) {
+                            data = data + $("#" + prefix + i).val() + "^";
                         }
                         data = data + "~*";
                     }

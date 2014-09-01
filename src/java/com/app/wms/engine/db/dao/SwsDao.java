@@ -13,6 +13,6 @@ public interface SwsDao {
     
     public int ajaxMaxPage(BigDecimal show, String where);
     
-    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order, String departmentCode);
 
 }

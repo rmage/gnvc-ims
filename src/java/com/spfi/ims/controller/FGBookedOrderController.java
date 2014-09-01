@@ -109,5 +109,34 @@ public class FGBookedOrderController extends MultiActionController {
         pw.flush();
         pw.close();
     }
+    
+    public void getItem(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        FGBookedOrderDao fgboDao = DaoFactory.createFGBookedOrderDao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("[");
+        List<Map<String, Object>> ms = fgboDao.getItem(Integer.parseInt(request.getParameter("key")));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("item_id")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("item_code")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("item_name")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+    }
 
 }

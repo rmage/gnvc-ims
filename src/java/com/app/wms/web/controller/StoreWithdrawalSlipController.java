@@ -175,13 +175,14 @@ public class StoreWithdrawalSlipController extends MultiActionController {
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         
         /* DAO | Define needed dao here */
         SwsDao swsDao = DaoFactory.createSwsDao();
         
         /* TRANSACTION | Something complex here */
         sb.append("{\"maxpage\": ").append(swsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
-        List<Map<String, Object>> ms = swsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        List<Map<String, Object>> ms = swsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"), lu.getDepartmentCode());
         for (Map<String, Object> x : ms) {
             if (b) {
                 sb.append(",");
