@@ -1,7 +1,6 @@
 package com.app.wms.engine.db.dao.spring;
 
 import com.app.wms.engine.db.dao.NonFishStockCardSummaryDao;
-import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.NonFishStockCardSummary;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
@@ -9,7 +8,6 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,14 +70,41 @@ public class NonFishStockCardSummaryDaoImpl extends AbstractDAO
 
     public List<NonFishStockCardSummary> findByItemCategoryandDate(String productCategory, String asOfDate) {
         String queryString;
-        queryString = "select a.* from dbo.nf_stock_card_summary a inner join "
-                + "( "
-                + "select distinct product_code, min(id) as id from dbo.nf_stock_card_summary group by product_code "
-                + ") as b "
-                + "on a.product_code = b.product_code and a.id = b.id where a.product_category = '" + productCategory + "' and as_of_date <= '" + asOfDate + "' ";
+        queryString = "  select * from dbo.nf_stock_card_summary where product_category = '" + productCategory + "'  and "
+                + "  as_of_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOfDate + "') - 1, 0) AND '" + asOfDate + "'";
         List<NonFishStockCardSummary> list = new ArrayList<NonFishStockCardSummary>();
         list = jdbcTemplate.query(queryString, this);
         return list;
+    }
+
+    public int update(NonFishStockCardSummary nfSummary) {
+        return jdbcTemplate.update("UPDATE " + getTableName() + " SET as_of_date = ?, qty =  ?, unit_cost = ?, amount_to_date = ?, beginning_amount = ?, transaction_amount = ? where id = ? ",
+                nfSummary.getAsOFDate(), nfSummary.getQuantity(), nfSummary.getUnitCost(), nfSummary.getAmountToDate(), nfSummary.getBeginningAmount(), nfSummary.getTransactionAmount(), nfSummary.getId());
+    }
+
+    public boolean isExist(String productCode, String asOfDate) {
+        boolean result = false;
+        String sqlQuery = " SELECT count(*) "
+                + "  FROM dbo.nf_stock_card_summary  "
+                + "  where product_code = '" + productCode + "' and "
+                + "  as_of_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOfDate + "') - 1, 0) AND '" + asOfDate + "'";
+        int temp = (int) jdbcTemplate.queryForInt(sqlQuery);
+        if (temp > 0) {
+            result = true;
+        }
+        return result;
+    }
+
+    public NonFishStockCardSummary findByProductCodeAndDate(String productCode, String asOfDate) {
+        NonFishStockCardSummary result = new NonFishStockCardSummary();
+        String sqlQuery = " SELECT top 1 * "
+                + "  FROM dbo.nf_stock_card_summary  "
+                + "  where product_code = '" + productCode + "' and "
+                + "  as_of_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOfDate + "') - 1, 0) AND '" + asOfDate + "'";
+        result = (NonFishStockCardSummary) jdbcTemplate.query(sqlQuery, this).get(0);
+
+        return result;
+
     }
 
 }

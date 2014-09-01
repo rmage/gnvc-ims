@@ -13,8 +13,11 @@ import com.app.wms.engine.db.dto.ProductCategory;
 import com.app.wms.engine.db.exceptions.ProductCategoryDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -60,16 +63,36 @@ public class NonFishStockCardReportController extends MultiActionController {
         /*INITIALIZE*/
         List<NonFishStockCardSummary> nonFishStockCardReportList = new ArrayList<NonFishStockCardSummary>();
 
+        Calendar aCalendar = Calendar.getInstance();
+        Date now = null;
+        String lastDateOfThisMonthString = "";
+
         /*GET PARAMETER*/
         String productCat = request.getParameter("productcat");
         String dateAsOf = request.getParameter("asOf");
+
+        try {
+            now = df.parse(dateAsOf);
+        } catch (ParseException ex) {
+            Logger.getLogger(NonFishStockCardSummaryDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /*GET LAST DATE*/
+        /*SET DATE REPORT TO PREVIOUS MONTH LAST DAY*/
+        aCalendar.setTime(now);
+
+        /*SET LAST DAY OF MONTH*/
+        aCalendar.set(Calendar.DATE, aCalendar.getActualMaximum(Calendar.DATE));
+
+        Date lastDateOfThisMonth = aCalendar.getTime();
+        lastDateOfThisMonthString = df.format(lastDateOfThisMonth);
 
         /*VAR FOR TOTALING*/
         Double totalQuantity = 0d;
         BigDecimal totalAmountToDate = BigDecimal.ZERO;
         BigDecimal totalTransactionAmount = BigDecimal.ZERO;
 
-        nonFishStockCardReportList = nonFishStockCardSummaryDao.findByItemCategoryandDate(productCat, dateAsOf);
+        nonFishStockCardReportList = nonFishStockCardSummaryDao.findByItemCategoryandDate(productCat, lastDateOfThisMonthString);
 
         for (NonFishStockCardSummary nfs : nonFishStockCardReportList) {
             totalQuantity += nfs.getQuantity();

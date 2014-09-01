@@ -85,6 +85,7 @@ public class NonFishAccountingController extends MultiActionController {
         String dateAsOfString = request.getParameter("asOf");
         NonFishStockCardAccounting nfTemp;
         Date now = null;
+        Date lastDateofThisMonth = null;
 
         /*SUMMARY STOCK CARD*/
         NonFishStockCardSummary nonFishStockCardSummary = new NonFishStockCardSummary();
@@ -98,6 +99,7 @@ public class NonFishAccountingController extends MultiActionController {
         Double lastMonthTotalQTY = 0d;
         Calendar aCalendar = Calendar.getInstance();
         String lastDateOfPreviousMonthString = "";
+        String lastDateOfThisMonthString = "";
 
         try {
             now = df.parse(dateAsOfString);
@@ -122,6 +124,16 @@ public class NonFishAccountingController extends MultiActionController {
         long end = System.currentTimeMillis();
         long diff = end - start;
         System.out.println("Difference is : " + diff);
+
+        /*GET LAST DATE*/
+        /*SET DATE REPORT TO PREVIOUS MONTH LAST DAY*/
+        aCalendar.setTime(now);
+
+        /*SET LAST DAY OF MONTH*/
+        aCalendar.set(Calendar.DATE, aCalendar.getActualMaximum(Calendar.DATE));
+
+        Date lastDateOfThisMonth = aCalendar.getTime();
+        lastDateOfThisMonthString = df.format(lastDateOfThisMonth);
 
         /*SET DATE REPORT TO PREVIOUS MONTH LAST DAY*/
         aCalendar.setTime(now);
@@ -229,7 +241,7 @@ public class NonFishAccountingController extends MultiActionController {
         boolean isOut = false;
 
         /*INITIALIZE VAR FOR TOTALING*/
-        Double totalQTY = 0d;
+        Double totalQTY = begBalance.qty;
         Double totalQTYEnd = begBalance.qty;
         BigDecimal totalAmountEND = begBalance.balance;
         BigDecimal totalAmountIDR = BigDecimal.ZERO;
@@ -299,6 +311,11 @@ public class NonFishAccountingController extends MultiActionController {
 
         balanceIDR = totalAmountEND;
 
+        try {
+            lastDateofThisMonth = df.parse(lastDateOfThisMonthString);
+        } catch (ParseException ex) {
+            Logger.getLogger(NonFishAccountingController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         /*SET STOCK CARD SUMMARY*/
         nonFishStockCardSummary.setProductCode(product.getProductCode());
         nonFishStockCardSummary.setProduct(product);
@@ -310,20 +327,23 @@ public class NonFishAccountingController extends MultiActionController {
         BigDecimal trxAmount = balanceIDR.subtract(begBalance.balance);
         nonFishStockCardSummary.setTransactionAmount(trxAmount);
         nonFishStockCardSummary.setProductCategory(product.getProductCategory());
-        
-        /*INSERT INTO STOCK CARD SUMMARY*/
-        nonFishStockCardSummaryDao.insert(nonFishStockCardSummary);
 
-        System.out.println(nonFishStockCardSummary.getProductCode() + "");
-        System.out.println(nonFishStockCardSummary.getProduct().getProductCode() + "");
-        System.out.println(nonFishStockCardSummary.getProduct().getProductName() + "");
-        System.out.println(nonFishStockCardSummary.getProduct().getUom() + "");
-        System.out.println(nonFishStockCardSummary.getQuantity() + "");
-        System.out.println(nonFishStockCardSummary.getUnitCost() + "");
-        System.out.println(nonFishStockCardSummary.getAmountToDate() + "");
-        System.out.println(nonFishStockCardSummary.getBeginningAmount() + "");
-        System.out.println(nonFishStockCardSummary.getTransactionAmount() + "");
-        System.out.println(nonFishStockCardSummary.getProductCategory() + "");
+        /*INSERT INTO STOCK CARD SUMMARY*/
+        /*CHECK IF EXIST*/
+        boolean exist = nonFishStockCardSummaryDao.isExist(product.getProductCode(), lastDateOfThisMonthString);
+        if (exist) {
+            /*UPDATE*/
+            NonFishStockCardSummary nfsTemp = new NonFishStockCardSummary();
+            nfsTemp = nonFishStockCardSummaryDao.findByProductCodeAndDate(product.getProductCode(), lastDateOfThisMonthString);
+            if (now.compareTo(nfsTemp.getAsOFDate()) > 0) {
+                System.out.println("UPDATE");
+                nonFishStockCardSummary.setId(nfsTemp.getId());
+                nonFishStockCardSummaryDao.update(nonFishStockCardSummary);
+            }
+        } else {
+            /*INSERT*/
+            nonFishStockCardSummaryDao.insert(nonFishStockCardSummary);
+        }
 
         modelMap.put("product", product);
         modelMap.put("productCat", product.getProductCategory());

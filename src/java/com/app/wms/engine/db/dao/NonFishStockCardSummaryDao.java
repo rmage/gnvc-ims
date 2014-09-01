@@ -7,6 +7,12 @@ public interface NonFishStockCardSummaryDao {
     
     public int insert(NonFishStockCardSummary nfSummary);
     
+    public int update(NonFishStockCardSummary nfSummary);
+    
+    public boolean isExist(String productCode, String asOfDate);
+    
+    public NonFishStockCardSummary findByProductCodeAndDate(String productCode, String asOfDate);
+    
     public List<NonFishStockCardSummary> findAll();
     
     public List<NonFishStockCardSummary> findByItemCategory(String productCategory);
