@@ -102,11 +102,11 @@
             });
             
             /* BIND | Validation maximum quantity */
-            $(".detailQty").live("blur", function() {
-                if ($(this).val() > $(this).data("max")) {
-                    $(this).val($(this).data("max"));
-                }
-            });
+//            $(".detailQty").live("blur", function() {
+//                if ($(this).val() > $(this).data("max")) {
+//                    $(this).val($(this).data("max"));
+//                }
+//            });
 
             $('#select').bind('click', function() {
                 if ($('#swsCode').val() === '') {

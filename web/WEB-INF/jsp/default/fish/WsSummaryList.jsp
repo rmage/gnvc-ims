@@ -17,7 +17,7 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">WSS Number</td>
-                                    <td><input type="text" name="code" /></td>
+                                    <td><input type="text" name="fwss.code" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>

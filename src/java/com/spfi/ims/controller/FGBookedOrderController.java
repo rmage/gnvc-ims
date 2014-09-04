@@ -33,7 +33,7 @@ public class FGBookedOrderController extends MultiActionController {
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
         try {
             /* DATA | get initial value */
-            String data = request.getParameter("data");
+            String data = request.getParameter("data").replaceAll(":numberSign:", "#");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             
             /* DAO | Define needed dao here */

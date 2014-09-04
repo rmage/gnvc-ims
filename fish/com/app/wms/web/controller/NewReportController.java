@@ -1,5 +1,6 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.DepartmentDao;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.dto.ProductCategory;
 import com.app.wms.engine.db.dto.User;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.ProductCategoryDaoException;
 import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
@@ -476,7 +478,24 @@ public class NewReportController extends MultiActionController {
     public ModelAndView getNFReceivingReportRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/non_fish/ReceivingReportRegisterPerPeriod");
     }
-
+    
+    public ModelAndView getNFStoresWithdrawalRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) throws DepartmentDaoException {
+        HashMap<String, Object> m = new HashMap<String, Object>();
+        
+        DepartmentDao dDao = DaoFactory.createDepartmentDao();
+        m.put("ds", dDao.findAll());
+        
+        return new ModelAndView("default/non_fish/StoresWithdrawalRegisterPerPeriod", "ims", m);
+    }
+    
+    public ModelAndView getNFTransferRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/non_fish/TransferRegisterPerPeriod");
+    }
+    
+    public ModelAndView getNFDeliveryRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/non_fish/DeliveryRegisterPerPeriod");
+    }
+    
     public boolean isLogin(HttpServletRequest request) {
         return request.getSession().getAttribute("user") != null;
     }

@@ -384,7 +384,7 @@
                 });
                 
                 if (data !== "") {
-                    window.location.replace("?action=save&data=" + data + "@");
+                    window.location.replace("?action=save&data=" + data.replace(/#/g, ":numberSign:") + "@");
                 }
                 
                 return false;
