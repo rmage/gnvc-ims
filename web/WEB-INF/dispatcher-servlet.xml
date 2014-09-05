@@ -221,6 +221,11 @@
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
+    <!--FISH UNIT COST-->
+    <bean name="/FishUnitCostList.htm" class="com.app.wms.web.controller.FishUnitCostController">
+	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean> 
+    
 	<!-- <bean name="/customerjson.htm" class="com.app.wms.web.controller.Customer2Controller">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>-->

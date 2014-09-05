@@ -7,14 +7,25 @@ import com.app.wms.engine.db.exceptions.DaoException;
 
 public interface FishSupplierDao {
 
-	public int insert(FishSupplier dto);
-	public void update(int id, FishSupplier dto) throws DaoException;
-	public void delete(int id) throws DaoException;
-	public FishSupplier findByPrimaryKey(int id) throws DaoException;
-	public List<FishSupplier> findAll() throws DaoException;
-	public List<FishSupplier> findAllActive() throws DaoException;
-	public List<FishSupplier> findBySupplierName(String supplierName) throws DaoException;
+    public int insert(FishSupplier dto);
+
+    public void update(int id, FishSupplier dto) throws DaoException;
+
+    public void delete(int id) throws DaoException;
+
+    public FishSupplier findByPrimaryKey(int id) throws DaoException;
+
+    public FishSupplier findBySupplierCode(String supplierCode) throws DaoException;
+
+    public List<FishSupplier> findAll() throws DaoException;
+
+    public List<FishSupplier> findAllActive() throws DaoException;
+
+    public List<FishSupplier> findBySupplierName(String supplierName) throws DaoException;
+
     public List<FishSupplier> findAllAndPaging(int limit, int offset);
+
     public List<FishSupplier> searchAndPaging(String supplierName, int limit, int offset);
-     public List<FishSupplier> findByCode(String code);
+
+    public List<FishSupplier> findByCode(String code);
 }

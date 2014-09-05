@@ -924,9 +924,21 @@ public class DaoFactory {
     }
     
     /*ACCOUNTING AND STUFF DAO*/
+    public static NonFishStockCardDao createNonFishStockCardDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (NonFishStockCardDao) bf.getBean("NonFishStockCardDao");
+    }
+    
     public static NonFishStockCardSummaryDao createNonFishStockCardSummaryDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (NonFishStockCardSummaryDao) bf.getBean("NonFishStockCardSummaryDao");
     }
+    
+    /*MASTER FISH UNIT COST*/
+    public static FishUnitCostDao createFishUnitCostDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishUnitCostDao) bf.getBean("FishUnitCostDao");
+    }
+    
     
 }

@@ -121,7 +121,7 @@
                                         ${nFStockCard.currencyCode}
                                     </td>
                                     <td>
-                                        <fmt:formatNumber pattern="#,##0" value="${nFStockCard.amount}" />
+                                        <fmt:formatNumber value="${nFStockCard.amount}" minFractionDigits="2" maxFractionDigits="2"/>
                                     </td>
                                     <td>
                                         <fmt:formatNumber pattern="#,##0" value="${nFStockCard.rateValue}" />

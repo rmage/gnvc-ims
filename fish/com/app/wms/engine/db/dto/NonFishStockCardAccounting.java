@@ -8,7 +8,9 @@ public class NonFishStockCardAccounting implements Serializable, Comparable<NonF
 
     private static final long serialVersionUID = 1L;
     private int id;
-    private Integer productId;
+    private Product product;
+    private String productId;
+    private String productCategory;
     /*DOCUMENT*/
     private Date stockCardDate;
     private String code;
@@ -31,9 +33,12 @@ public class NonFishStockCardAccounting implements Serializable, Comparable<NonF
     private BigDecimal unitCostEND;
     private BigDecimal amountEND;
 
+    private BigDecimal total;
+
     public NonFishStockCardAccounting() {
         this.id = 0;
-        this.productId = 0;
+        this.productId = "";
+        this.productCategory = "";
         this.stockCardDate = new Date();
         this.code = "";
         this.number = "";
@@ -50,6 +55,8 @@ public class NonFishStockCardAccounting implements Serializable, Comparable<NonF
         this.quantityEND = 0d;
         this.unitCostEND = BigDecimal.ZERO;
         this.amountEND = BigDecimal.ZERO;
+        this.total = BigDecimal.ZERO;
+        this.product = new Product();
     }
 
     public int getId() {
@@ -60,11 +67,19 @@ public class NonFishStockCardAccounting implements Serializable, Comparable<NonF
         this.id = id;
     }
 
-    public Integer getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public void setProductCategory(String productCategory) {
+        this.productCategory = productCategory;
+    }
+
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
@@ -194,6 +209,22 @@ public class NonFishStockCardAccounting implements Serializable, Comparable<NonF
 
     public void setAmountEND(BigDecimal amountEND) {
         this.amountEND = amountEND;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public int compareTo(NonFishStockCardAccounting o) {

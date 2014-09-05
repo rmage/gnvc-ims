@@ -436,9 +436,18 @@
     	<property name="dataSource" ref="dataSource" />
     </bean>
     
-    <!--ACCOUNTING-->
-     <bean id="NonFishStockCardSummaryDao" class="com.app.wms.engine.db.dao.spring.NonFishStockCardSummaryDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+    <!--ACCOUNTING STUFF-->
+    <bean id="NonFishStockCardDao" class="com.app.wms.engine.db.dao.spring.NonFishStockCardDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="NonFishStockCardSummaryDao" class="com.app.wms.engine.db.dao.spring.NonFishStockCardSummaryDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!--FISH UNIT COST DAO-->
+    <bean id="FishUnitCostDao" class="com.app.wms.engine.db.dao.spring.FishUnitCostDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
 </beans>

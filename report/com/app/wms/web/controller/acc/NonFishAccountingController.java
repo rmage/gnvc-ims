@@ -3,6 +3,7 @@ package com.app.wms.web.controller.acc;
 import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.DrDao;
+import com.app.wms.engine.db.dao.NonFishStockCardDao;
 import com.app.wms.engine.db.dao.NonFishStockCardSummaryDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
@@ -61,6 +62,8 @@ public class NonFishAccountingController extends MultiActionController {
     private final TsDao tsDao = DaoFactory.createTsDao();
 
     private final DrDao drDao = DaoFactory.createDrDao();
+    
+    private final NonFishStockCardDao nonFishStockCardDao = DaoFactory.createNonFishStockCardDao();
 
     private final NonFishStockCardSummaryDao nonFishStockCardSummaryDao = DaoFactory.createNonFishStockCardSummaryDao();
 
@@ -162,6 +165,8 @@ public class NonFishAccountingController extends MultiActionController {
             nfTemp.setCurrencyCode(receiveReport.getPo().getCurrency());
             nfTemp.setAmount(BigDecimal.valueOf(receiveReport.getUnitCost()));
             nfTemp.setRateValue(receiveReport.getPo().getCurrencyRate().getRateValue());
+            System.out.println("-----RR------" + nfTemp.getRateValue() + "");
+            System.out.println("-----RR------" + nfTemp.getAmount() + "");
             amountIDR = nfTemp.getRateValue().multiply(nfTemp.getAmount());
             nfTemp.setAmountIDR(amountIDR);
             /*IN*/
@@ -254,7 +259,7 @@ public class NonFishAccountingController extends MultiActionController {
         Double totalQTYOUT = 0d;
         Double amountOut = begBalance.unitCost;
 
-        /*COUNT AVERAGE COST*/
+        /*COUNT AVERAGE COST AND TOTALING */
         for (int i = 0; i < size; i++) {
             NonFishStockCardAccounting nf = nFStockCardList.get(i);
             if (nf.getCode().equalsIgnoreCase("RR")) {
@@ -303,13 +308,28 @@ public class NonFishAccountingController extends MultiActionController {
             nFStockCardList.get(i).setAmountEND(totalAmountEND);
 
             nf = nFStockCardList.get(i);
+            
+            nFStockCardList.get(i).setProductId(product.getProductId());
+            nFStockCardList.get(i).setProductCategory(product.getProductCategory());
 
             /*FOR TOTALING*/
             totalAmountIDR = totalAmountIDR.add(nf.getAmountIDR());
-
         }
 
         balanceIDR = totalAmountEND;
+        
+        /*INSERT OR UPDATE INTO TABLE nf_stock_card*/
+        for (NonFishStockCardAccounting nf : nFStockCardList) {
+            boolean isExist = false;
+            isExist = nonFishStockCardDao.isExist(nf);
+            if (isExist) {
+                /*UPDATE*/
+                nonFishStockCardDao.update(nf);
+            } else {
+                /*INSERT*/
+                nonFishStockCardDao.insert(nf);
+            }
+        }
 
         try {
             lastDateofThisMonth = df.parse(lastDateOfThisMonthString);

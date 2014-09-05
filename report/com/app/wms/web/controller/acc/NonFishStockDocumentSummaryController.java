@@ -5,11 +5,15 @@
  */
 package com.app.wms.web.controller.acc;
 
+import com.app.wms.engine.db.dao.NonFishStockCardDao;
 import com.app.wms.engine.db.dao.ProductCategoryDao;
 import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dto.NonFishDocumentSummary;
 import com.app.wms.engine.db.dto.ProductCategory;
 import com.app.wms.engine.db.exceptions.ProductCategoryDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,6 +34,8 @@ public class NonFishStockDocumentSummaryController extends MultiActionController
 
     private final ProductCategoryDao productCategoryDao = DaoFactory.createProductCategoryDao();
 
+    private final NonFishStockCardDao nonFishStockCardDao = DaoFactory.createNonFishStockCardDao();
+
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
 
@@ -47,16 +53,31 @@ public class NonFishStockDocumentSummaryController extends MultiActionController
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
-        
+
         /*GET PARAMETER*/
         String productCat = request.getParameter("productcat");
         String docType = request.getParameter("doctype");
         String dateAsOf = request.getParameter("asOf");
-        
-        System.out.println("PARAM : " + productCat);
-        System.out.println("PARAM : " + docType);
-        System.out.println("PARAM : " + dateAsOf);
 
-        return new ModelAndView("accounting/NonFishStockAccountingGenerate", "model", modelMap);
+        /*FOR TOTALING*/
+        BigDecimal total = BigDecimal.ZERO;
+
+        /*INITIALIZE*/
+        List<NonFishDocumentSummary> nonFishDocumentSummaryList = new ArrayList<NonFishDocumentSummary>();
+
+        nonFishDocumentSummaryList = nonFishStockCardDao.findPerDocumentType(productCat, dateAsOf, docType);
+
+        for (NonFishDocumentSummary nfd : nonFishDocumentSummaryList) {
+            total = total.add(nfd.getAmountIDR());
+        }
+
+        modelMap.put("productCat", productCat);
+        modelMap.put("docType", docType);
+        modelMap.put("dateAsOf", dateAsOf);
+        modelMap.put("nonFishDocumentSummaryList", nonFishDocumentSummaryList);
+        modelMap.put("total", total);
+
+        return new ModelAndView("accounting/NonFishStockDocumentSummaryGenerate", "model", modelMap);
     }
+
 }

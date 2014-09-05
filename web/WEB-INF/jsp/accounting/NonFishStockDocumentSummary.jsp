@@ -82,11 +82,11 @@
                     var asOf = document.getElementById("asOfDate").value;
 
                     if (dt == 'RR') {
-                        location.href = 'NonFishStockDocumentSummary.htm?action=create&productcat=' + productCode + '&asOf=' + asOf + '&doctype=' + dt;
+                        location.href = 'NonFishStockDocumentSummary.htm?action=create&productcat=' + cat + '&asOf=' + asOf + '&doctype=' + dt;
                     } else if (dt == 'TS') {
-                        location.href = 'NonFishStockDocumentSummary.htm?action=create&productcat=' + productCode + '&asOf=' + asOf + '&doctype=' + dt;
+                        location.href = 'NonFishStockDocumentSummary.htm?action=create&productcat=' + cat + '&asOf=' + asOf + '&doctype=' + dt;
                     } else {
-                        location.href = 'NonFishStockDocumentSummary.htm?action=create&productcat=' + productCode + '&asOf=' + asOf + '&doctype=' + dt;
+                        location.href = 'NonFishStockDocumentSummary.htm?action=create&productcat=' + cat + '&asOf=' + asOf + '&doctype=' + dt;
                     }
 
                 });
