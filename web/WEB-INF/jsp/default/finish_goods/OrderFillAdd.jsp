@@ -237,12 +237,14 @@
 
                 for (var i = 0; i < $x.size(); i++) {
                     data = data + $("#ofalCode").val() + "," + $("#borId").data("id") + "," + $("#ofalDate").val() + "," + $("#canCode").val() + "," +
-                            $("#lNw").val() + "," + $("#lDw").val() + "," + $("#lBbe").val() + "," + $("#shipment").val() + "," + $x[i].getAttribute("data-code") + "," + 
+                            $("#lNw").val() + "," + $("#lDw").val() + "," + $("#lBbe").val() + "," + $("#shipment").val() + "," + $x[i].getAttribute("data-code") + "," +
                             $x[i].value + "," + $y[i].value + ",@";
                 }
 //                console.log(data);
                 if (data !== "") {
-                    window.location.replace("?action=save&data=" + data);
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + data);
+                    }
                 }
 
                 return false;

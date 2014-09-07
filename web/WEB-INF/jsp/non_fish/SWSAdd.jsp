@@ -45,7 +45,7 @@
                                     <td style="width: 500px;"><input id="departmentCode" size="4" type="text" required="true" value="${x[0]}" readonly="readonly" /> ${x[1]}</td>
                                     <td>Info</td>
                                     <td>
-                                        <textarea id="swsInfo"></textarea>
+                                        <input type="text" id="swsInfo" name="swsInfo" size="50" />
                                     </td>
                                 </tr>
                             </tbody>
@@ -123,16 +123,18 @@
             
             $('#swsForm').bind('submit', function() {
                 if($('#main tr').length !== 0) {
-                    $('#poster').append('<input name="master" type="hidden" value="' + $('#swsCode').val() + ':' + $('#swsDate').val() + ':' + 
-                        $('#swsInfo').val() + ':' + $('#departmentCode').val() + '" />');
-                    
-                    var i = 0;
-                    $('#main tr').each(function() {
-                        $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(1)').html() + ':' + 
-                            parseInt($(this).find('td:eq(4)').html()) + ':' + $(this).find('input[type="text"]').val() + ':' +
-                            $(this).find('td:eq(6)').html() + ':' + i + '" />'); i++;
-                    });
-                    $('#poster').submit();
+                    if (confirm("Continue to save this document?")) {
+                        $('#poster').append('<input name="master" type="hidden" value="' + $('#swsCode').val() + ':' + $('#swsDate').val() + ':' + 
+                            $('#swsInfo').val() + ':' + $('#departmentCode').val() + '" />');
+
+                        var i = 0;
+                        $('#main tr').each(function() {
+                            $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(1)').html() + ':' + 
+                                parseInt($(this).find('td:eq(4)').html()) + ':' + $(this).find('input[type="text"]').val() + ':' +
+                                $(this).find('td:eq(6)').html() + ':' + i + '" />'); i++;
+                        });
+                        $('#poster').submit();
+                    }
                 }
                 
                 return false;

@@ -52,13 +52,13 @@ public class D3Controller extends MultiActionController {
                 }
 
                 sb.append("{\"params\": ["
-                            + "{\"title\": \"Item Code\", \"name\": \"itemCode\", \"type\": \"text\", \"size\": 6, \"is_autocomplete\": 1, \"autocomplete\": \"D3.htm?action=NFUnitPriceTrend&mode=10\"},"
-                            + "{\"title\": \"Currency\", \"name\": \"currency\", \"type\": \"select\", \"options\": [").append(utilRemoveLastChar(sCs, 1)).append("]},"
-                            + "{\"title\": \"Date From\", \"name\": \"dateFrom\", \"type\": \"text\", \"size\": 10, \"is_datepicker\": 1},"
-                            + "{\"title\": \"Date To\", \"name\": \"dateTo\", \"type\": \"text\", \"size\": 10, \"is_datepicker\": 1}"
-                        + "],"
-                        + "\"data\": [{\"key\": \"itemCode\"}, {\"key\": \"currency\"}, {\"key\": \"dateFrom\"}, {\"key\": \"dateTo\"}],"
-                        + "\"title\": \"itemCode\"}");
+                        + "{\"title\": \"Item Code\", \"name\": \"itemCode\", \"type\": \"text\", \"size\": 6, \"is_autocomplete\": 1, \"autocomplete\": \"D3.htm?action=NFUnitPriceTrend&mode=10\"},"
+                        + "{\"title\": \"Currency\", \"name\": \"currency\", \"type\": \"select\", \"options\": [").append(utilRemoveLastChar(sCs, 1)).append("]},"
+                                + "{\"title\": \"Date From\", \"name\": \"dateFrom\", \"type\": \"text\", \"size\": 10, \"is_datepicker\": 1},"
+                                + "{\"title\": \"Date To\", \"name\": \"dateTo\", \"type\": \"text\", \"size\": 10, \"is_datepicker\": 1}"
+                                + "],"
+                                + "\"data\": [{\"key\": \"itemCode\"}, {\"key\": \"currency\"}, {\"key\": \"dateFrom\"}, {\"key\": \"dateTo\"}],"
+                                + "\"title\": \"itemCode\"}");
             }
             break;
             case 10: {
@@ -88,7 +88,8 @@ public class D3Controller extends MultiActionController {
                     sb.append("\"x\": \"").append(x.get("x")).append("\"}");
                 }
                 sb.append("]}");
-            } break;
+            }
+            break;
         }
 
         pw.print(sb.toString());
@@ -97,6 +98,88 @@ public class D3Controller extends MultiActionController {
 
     }
 
+    /* PRICE HISTORY
+     * September 05, 2014
+     */
+    public ModelAndView priceHistory(HttpServletRequest request, HttpServletResponse response) {
+        /* DATA | get initial value */
+        /* DAO | Define needed dao here */
+        /* TRANSACTION | Something complex here */
+        return new ModelAndView("default/d3/PriceHistory");
+    }
+
+    /*
+     * AUTOCOMPLETE / AJAX FUNCTION
+     */
+    public void getProduct(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        String term = request.getParameter("term");
+
+        /* DAO | Define needed dao here */
+        ProductDao productDao = DaoFactory.createProductDao();
+
+        /* TRANSACTION | Something complex here */
+        pw.print("[");
+        List<Product> ps;
+        if (request.getParameter("mode").equals("name")) {
+            ps = productDao.findWhereProductNameEquals(term, 20);
+        } else {
+            ps = productDao.findWhereProductCodeEquals(term, 20);
+        }
+        for (Product x : ps) {
+            if (b) {
+                pw.print(",");
+            }
+
+            pw.print("{\"1\": \"" + x.getProductCode() + "\", ");
+            pw.print("\"2\": \"" + x.getProductName() + "\"}");
+
+            b = Boolean.TRUE;
+
+        }
+        pw.print("]");
+
+    }
+
+    public void getPriceList(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        D3Dao d3Dao = DaoFactory.createD3Dao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("[");
+        List<Map<String, Object>> ms = d3Dao.NFPriceList(request.getParameter("itemCode"), request.getParameter("dateFrom"),
+                request.getParameter("dateTo"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("d3_date")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("d3_currency")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("d3_price")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+        
+    }
+
+    /*
+     * UTILITY FUNCTION
+     */
     public String utilRemoveLastChar(String s, int q) {
         int l = s.length();
         return s.substring(0, l - q);

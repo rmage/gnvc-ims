@@ -144,7 +144,7 @@
                 });
             });
 
-             $("#btnSave").click(function () {                         
+//             $("#btnSave").click(function () {                         
 
                 //if invalid do nothing
 //                if($("#addForm")[0].checkValidity()){

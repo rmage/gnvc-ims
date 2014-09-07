@@ -39,6 +39,7 @@ import com.app.wms.engine.db.exceptions.ProductCategoryDaoException;
 import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.report.test.ReportModel;
+import com.spfi.ims.dao.FGPackStyleDao;
 import java.util.ArrayList;
 
 public class NewReportController extends MultiActionController {
@@ -494,6 +495,11 @@ public class NewReportController extends MultiActionController {
     
     public ModelAndView getNFDeliveryRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/non_fish/DeliveryRegisterPerPeriod");
+    }
+    
+    //  Finished Goods Module | Form and Report List
+    public ModelAndView getFGInventoryReport(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/finish_goods/InventoryReport");
     }
     
     public boolean isLogin(HttpServletRequest request) {

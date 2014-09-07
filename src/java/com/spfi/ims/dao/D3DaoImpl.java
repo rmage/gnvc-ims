@@ -27,4 +27,13 @@ public class D3DaoImpl extends AbstractDAO implements D3Dao {
         }
     }
     
+    public List<Map<String, Object>> NFPriceList (String itemCode, String dateFrom, String dateTo) {
+        try {
+            return jdbcTemplate.queryForList("EXEC D3_NF_PRICE_LIST ?, ?, ?", itemCode, dateFrom, dateTo);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
 }

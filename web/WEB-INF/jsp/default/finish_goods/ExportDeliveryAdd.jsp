@@ -132,8 +132,10 @@
 
             // BIND | Remove all previous data if keyup in OFAL Code
             $("#lmrCode").bind("keyup", function() {
-                $(".lmr-info").val("");
-                $("#list > #detail").html("");
+                if ($(".lmr-info:eq(1)").val() !== '') {
+                    $(".lmr-info").val("");
+                    $("#list > #detail").html("");
+                }
             });
 
             // BIND | Search OFAL button
@@ -145,13 +147,15 @@
                     dataType: "json",
                     success: function(json) {
                         // DATA | Set header infor
-                        $(".lmr-info").each(function(i) {
-                            $(this).val(json[0][i + 1]);
-                        });
+                        if (json.length > 0) {
+                            $(".lmr-info").each(function(i) {
+                                $(this).val(json[0][i + 1]);
+                            });
 
-                        for (var i = 0; i < json.length; i++) {
-                            $("#detail").append("<tr><td>" + json[i][6] + "</td><td>" + json[i][7] + "</td><td>" + json[i][8] +
-                                    "</td><td>" + json[i][9] + "</td><td>" + json[i][10] + "</td></tr>");
+                            for (var i = 0; i < json.length; i++) {
+                                $("#detail").append("<tr><td>" + json[i][6] + "</td><td>" + json[i][7] + "</td><td>" + json[i][8] +
+                                        "</td><td>" + json[i][9] + "</td><td>" + json[i][10] + "</td></tr>");
+                            }
                         }
                     },
                     complete: function() {
@@ -169,13 +173,15 @@
 
                 var data = "";
 
-                data = data + $("#edsCode").val() + "^" +$("#lmrCode").val() + "^" + $("#edsDate").val() + "^" + $("#edsVan").val() + "^" +
+                data = data + $("#edsCode").val() + "^" + $("#lmrCode").val() + "^" + $("#edsDate").val() + "^" + $("#edsVan").val() + "^" +
                         $("#edsPelayaranSeal").val() + "^" + $("#edsVessel").val() + "^" + $("#edsPlatNo").val() + "^" + $("#edsTimeIn").val() + "^" +
                         $("#edsTimeOut").val() + "^" + $("#edsDriverName").val() + "^" + $("#edsCi").val() + "^" + $("#edsRemarks").val() + "^@";
 
 //                console.log(data);
                 if (data !== "") {
-                    window.location.replace("?action=save&data=" + data);
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + data);
+                    }
                 }
 
                 return false;

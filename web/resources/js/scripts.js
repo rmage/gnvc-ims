@@ -8,6 +8,10 @@ Object.kColumnSize = function(obj) {
     return size;
 };
 
+Number.prototype.kThousandFormat = function(digit) {
+    return this.toFixed(digit).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+};
+
 var variable = {
     page: 1,
     show: 5,
@@ -308,7 +312,6 @@ var util = {
         $('#imsModal').dialog('open');
     }
 };
-
 
 /* OLD | Javascripts Content */
 // JavaScript Document

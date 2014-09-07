@@ -64,7 +64,7 @@
                                 <input tabindex="3" id="i0" type="text" size="10" />
                                 Item:
                                 <select id="i24">
-                                    
+
                                 </select>
                             </td>
                             <td>Drained / Pressed Wt</td>
@@ -149,7 +149,7 @@
                                 <input tabindex="27" id="j0" type="text" size="10" />
                                 Item:
                                 <select id="j24">
-                                    
+
                                 </select>
                             </td>
                             <td>Drained / Pressed Wt</td>
@@ -234,7 +234,7 @@
                                 <input tabindex="51" id="k0" type="text" size="10" />
                                 Item:
                                 <select id="k24">
-                                    
+
                                 </select>
                             </td>
                             <td>Drained / Pressed Wt</td>
@@ -322,17 +322,17 @@
         <script>
             //  BIND | Date Picker to bor date
             $('#borDatePicker').datepicker({
-                dateFormat: "dd/mm/yy", 
+                dateFormat: "dd/mm/yy",
                 altFormat: "yy-mm-dd",
                 altField: "#borDate",
-                changeYear: true, 
+                changeYear: true,
                 changeMonth: true
             });
 
             //  BIND | KEYDOWN and AUTOCOMPLETE in packstyle field
             $("#i0,#j0,#k0").each(function() {
                 var $o = $(this);
-                var $i = $("#" + $o.attr("id").substring(0, 1) +  "24");
+                var $i = $("#" + $o.attr("id").substring(0, 1) + "24");
                 $o.bind("keyup", function() {
                     $o.data("id", "");
                     $i.html("");
@@ -344,7 +344,7 @@
                     select: function(event, ui) {
                         $o.data("id", ui.item[1]);
                         $o.val(ui.item[2]);
-                        
+
                         // ITEM | Get item list from selected pack_style
                         $.ajax({
                             url: "?", type: "post",
@@ -382,11 +382,13 @@
                         data = data + "~*";
                     }
                 });
-                
+
                 if (data !== "") {
-                    window.location.replace("?action=save&data=" + data.replace(/#/g, ":numberSign:") + "@");
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + data.replace(/#/g, ":numberSign:") + "@");
+                    }
                 }
-                
+
                 return false;
             });
 

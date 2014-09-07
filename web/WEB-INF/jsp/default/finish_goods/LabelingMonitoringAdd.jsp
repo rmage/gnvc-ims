@@ -205,21 +205,23 @@
                 $(".lmQty").each(function() {
                     lmQty = lmQty + csToTin($(this).val(), m);
                 });
-                
+
                 // DATA | Prepare lmData
-                $(".lmr-data").each(function(){
+                $(".lmr-data").each(function() {
                     lmData = lmData + $(this).val() + "^";
                 });
 
                 $("#detail tr").each(function() {
                     data = data + $("#lmCode").val() + "^" + $("#ofalCode").val() + "^" + $("#lmDate").val() + "^" + tinToCs(lmQty, m) + "^" +
                             lmData + $(this).data("id") + "^" + $(this).find("td:eq(3) > input").val() + "^" +
-                            $(this).find("td:eq(4) > input").val() + "^" +$(this).find("td:eq(5) > input").val() + "^" +$(this).find("td:eq(6) > input").val() + "^" +$(this).find("td:eq(7) > input").val() + "^" +
+                            $(this).find("td:eq(4) > input").val() + "^" + $(this).find("td:eq(5) > input").val() + "^" + $(this).find("td:eq(6) > input").val() + "^" + $(this).find("td:eq(7) > input").val() + "^" +
                             $(this).find("td:eq(8)").html() + "^" + $(this).find("td:eq(9) > input").val() + "^@";
                 });
 //                console.log(data);
                 if (data !== "") {
-                    window.location.replace("?action=save&data=" + data);
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + data);
+                    }
                 }
 
                 return false;
@@ -244,53 +246,6 @@
                 var cs = Math.floor(v / m);
                 return cs + ((v % m) / 100);
             }
-
-//            $("#fOfal").bind("submit", function() {
-//                //  VALIDATION
-//                //  BOR | not selected from list
-//                if ($("#borId").val() !== "") {
-//                    if ($("#borId").data("id") === "" || $("#borId").data("id") === undefined) {
-//                        alert("Please select Bor Reff from LIST!");
-//                        return false;
-//                    }
-//                }
-//
-//                var data = "";
-//
-//                var $x = $(".quantity");
-//                var $y = $(".remarks");
-//
-//                for (var i = 0; i < $x.size(); i++) {
-//                    data = data + $("#ofalCode").val() + "," + $("#borId").data("id") + "," + $("#ofalDate").val() + "," + $("#canCode").val() + "," +
-//                            $("#lNw").val() + "," + $("#lDw").val() + "," + $("#lBbe").val() + "," + $("#shipment").val() + "," + $x[i].getAttribute("data-code") + "," + 
-//                            $x[i].value + "," + $y[i].value + ",@";
-//                }
-////                console.log(data);
-//                if (data !== "") {
-//                    window.location.replace("?action=save&data=" + data);
-//                }
-//
-//                return false;
-//            });
-//
-//            // FUNCTION | Remove row
-//            function removeRow(e) {
-//                $(e).parent().parent().remove();
-//                $("#detail tr td:nth-child(1)").each(function(i) {
-//                    $(this).html(i + 1);
-//                });
-//                setCanCode();
-//            }
-//
-//            // FUNCTION | SEt can code
-//            function setCanCode() {
-//                $("#canCode").val("");
-//                $("#detail tr td:nth-child(3)").each(function() {
-//                    if ($("#canCode").val().indexOf($(this).html()) === -1) {
-//                        $("#canCode").val($("#canCode").val() + $(this).html() + ";");
-//                    }
-//                });
-//            }
 
         </script>
     </body>

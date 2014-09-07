@@ -29,15 +29,15 @@
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
-                                    <td><input name="tsCode" pattern="[0-9]{1,}" type="text" required="true" /></td>
+                                    <td><input name="tsCode" pattern="[0-9]{1,}" type="text" required /></td>
                                     <td>TS Date</td>
-                                    <td><input id="tsDate" name="tsDate" size="10" type="text" required="true" /></td>
+                                    <td><input id="tsDate" name="tsDate" size="10" type="text" required /></td>
                                 </tr>
                                 <tr>
                                     <td>To</td>
-                                    <td><input id="tsTo" name="tsTo" size="40" type="text" /></td>
+                                    <td><input id="tsTo" name="tsTo" size="40" type="text" required /></td>
                                     <td>Remarks</td>
-                                    <td><textarea name="tsInfo"></textarea></td>
+                                    <td><input type="text" id="tsInfo" name="tsInfo" size="50" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -54,7 +54,13 @@
                             <thead>
                                 <tr>
                                     <td style="width: 100px;">Select Item</td>
-                                    <td colspan="6"><input id="itemCode" size="50" type="text" /></td>
+                                    <td colspan="6">
+                                        <select id="mode" name="mode">
+                                            <option value="code">By Code</option>
+                                            <option value="name">By Name</option>
+                                        </select>
+                                        <input id="itemCode" size="50" type="text" />
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>No</td>
@@ -95,13 +101,17 @@
                     .appendTo( ul );
             };
             
+            $("#mode").bind("change", function() {
+                $('#itemCode').autocomplete("option", "source", "?action=getProduct&mode=" + $(this).val());
+            });
+            
             $('#itemCode').autocomplete({
-                source: '?action=getProduct&module=<%= request.getParameter("module") %>',
+                source: '?action=getProduct&mode=code',
                 minLength: 2,
                 select: function( event, ui ) {
                     $('#main').append('<tr><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' + 
                         '<input name="item" type="hidden" value="' + ui.item.itemCode + '" />' + ui.item.itemCode + '</td><td>' + ui.item.itemName + '</td><td>' + ui.item.type + '</td><td>' + numberWithCommas(ui.item.soh) + 
-                        '</td><td><input name="qty" pattern="[0-9]{1,}" size="3" type="text" style="font-size: smaller;" required="true" /></td><td>' + ui.item.uom + '</td></tr>');
+                        '</td><td><input name="qty" pattern="[0-9]{1,}" size="3" type="text" style="font-size: smaller;" required /></td><td>' + ui.item.uom + '</td></tr>');
                     $('#main tr:last input[type="text"]').focus();
                     $('#itemCode').val(null);
                 }
@@ -112,6 +122,28 @@
                     '</b><br /> Stock on Hand : ' + item.soh + '</a></li>' )
                     .appendTo( ul );
             };
+            
+            // VALIDATE | Minimum 1 (one) quantity
+            $("#tsForm").bind("submit", function() {
+                var b = true;
+                $("input[name='qty']").each(function() {
+                    if ($(this).val() > 0) {
+                        b = false;
+                    } else if ($(this).val() <= 0 && $(this).val() !== "" ) {
+                        b = true;
+                        return false;
+                    }
+                });
+
+                if (b) {
+                    return false;
+                } else {
+                    if (!confirm("Continue to save this document?")) {
+                        return false;
+                    }
+                }
+                    
+            });
             
             function numberWithCommas(x) {
                 var parts = x.toString().split(".");

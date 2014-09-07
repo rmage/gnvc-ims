@@ -112,10 +112,17 @@
                         data: {action: "getPO", key: $("#poCode").val()},
                         dataType: "json",
                         success: function(json) {
-                            $('#poDate').val(json[2]);
-                            $('#from').val(json[3]);
+                            if (json === null) {
+                                    alert("Purchase Order (PO) Number #" + $("#poCode").val() + " not found or already received!");
+                            } else {
+                                $("#poCode").data("detail", true);
+                                $('#poDate').val(json[2]);
+                                $('#from').val(json[3]);
+                            }
                         }
                     });
+                } else {
+                    $("#poCode").data("detail", false);
                 }
             });
 
@@ -131,20 +138,12 @@
             });
 
             $('#save').bind('click', function() {
-//                var f = 0;
-//                $('#main tr').each(function(i) {
-//                    if($(this).find('input[type="checkbox"]')[0].checked) {
-//                        $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(2)').html() + 
-//                            ':' + $(this).find('td:eq(3)').html() + ':' + $(this).find('td:eq(6)>input').val() + 
-//                            ':' + $(this).find('td:eq(7)>input').val() + ':' + $(this).find('td:eq(5)').html() + ':' + i + '" />'); f = 1;
-//                    }
-//                });
-//                
-//                if(f === 1) {
-//                    $('#poster').append('<input name="master" type="hidden" value="' + $('#rrCode').val() + 
-//                        ':' + $('#rrDate').val() + ':' + $('#poCode').val() + ':' + $('#from').val() + '" />');
-//                    $('#poster').submit();
-//                }
+                // VALIDATE | PO information must be triggered
+                if ($("#poCode").data("detail") !== true) {
+                    alert("Please press right arrow key (-->) in PO Number field or fill PO Number first!");
+                    return false;
+                }
+                
                 var data = "";
                 $("#main input[type='checkbox']:checked").each(function() {
                     var $r = $(this).parent().parent();
@@ -164,7 +163,9 @@
 
                 if (data !== "") {
                     //console.log(data);
-                    window.location.replace("?action=save&data=" + data);
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + data);
+                    }
                 }
             });
 

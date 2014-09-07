@@ -163,8 +163,8 @@
                         } else {
                             cs = cs + parseFloat($(this).val().substring(0, io));
                             tin = tin + parseFloat($(this).val().substring(io + 1, $(this).val().length));
-                                    //+ Math.floor(( / divider)) + 
-                                    //(($(this).val().substring(io + 1, $(this).val().length) % divider) / 100);
+                            //+ Math.floor(( / divider)) + 
+                            //(($(this).val().substring(io + 1, $(this).val().length) % divider) / 100);
                         }
                     }
                 });
@@ -226,7 +226,9 @@
                 });
                 //console.log(data);
                 if (data !== "") {
-                    window.location.replace("?action=save&data=" + data);
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + data);
+                    }
                 }
 
                 return false;

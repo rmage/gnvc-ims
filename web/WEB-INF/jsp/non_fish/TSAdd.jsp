@@ -39,7 +39,7 @@
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><textarea name="tsInfo"></textarea></td>
+                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -149,7 +149,12 @@
 
                 if (b) {
                     return false;
+                } else {
+                    if (!confirm("Continue to save this document?")) {
+                        return false;
+                    }
                 }
+                    
             });
 
         </script>

@@ -195,6 +195,10 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.NFTsRegisterPerPeriod, "EXEC RPT_NF_TRANSFER_PER_PERIOD ?, ?, ?");
         ListMap.put(Report.NFDrRegisterPerPeriod, "EXEC RPT_NF_DELIVERY_PER_PERIOD ?, ?");
         //  ***END*** | Non-Fish Module | Form and Report List
+        
+        //  Finished Goods Module | Form and Report List
+        ListMap.put(Report.FGStockInventory, "EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?");
+        //  ***END*** | Finished Goods Module | Form and Report List        
 
         ListMap.put(Report.FWS,
                 "SELECT f.code AS kode, wdsd.description AS nama_barang, "
