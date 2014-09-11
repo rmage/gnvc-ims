@@ -17,9 +17,8 @@
             <div id="content" class="span-24 last">
                 <div class="box">
                     <form action="" id="search" method="post">
-                        <input type="hidden" name="action" value="index" />
+                        <input type="hidden" name="action" value="generate" />
                         <input type="hidden" name="item" value="FishStockCard" />
-                        <input type="hidden" name="type" value="xls" />
                         <input type="hidden" name="params" value="<%=cDateH%>" />
                         <table class="collapse tblForm row-select">
                             <caption>Stock Card Accounting &therefore; Fish</caption>
@@ -27,12 +26,11 @@
                                 <tr>
                                     <td style="width: 20%;">Fish Code</td>
                                     <td>
-                                        <select name="dropdownFishCode" id="dropdownFishCode" onchange="throwValue()">
-                                            <c:if test="${model.fishes!=null}">
-                                                <c:forEach items="${model.fishes}" var="fish">
-                                                    <option value=<c:out value="${fish.code}"/>
-                                                            <c:if test="${fish.code == model.selectedfishes}"> selected </c:if>>
-                                                        <c:out value="${fish.code}" />
+                                        <select name="dropdownSupplierCode" id="dropdownSupplierCode" >
+                                            <c:if test="${model.suppliers!=null}">
+                                                <c:forEach items="${model.suppliers}" var="supp">
+                                                    <option value=<c:out value="${supp.id}"/> >
+                                                        <c:out value="${supp.name}" />
                                                     </option>
                                                 </c:forEach>
                                             </c:if>
@@ -41,13 +39,13 @@
                                 </tr>
                                 <tr>
                                     <td style="width: 20%;">As Of</td>
-                                    <td><input id="asOfDate" type="date" name="date" value="<%=cDateH%>" readonly="true"/></td>
+                                    <td><input id="asOfDate" type="date" name="asOfDate" value="<%=cDateH%>" readonly="true"/></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2">
-                                        <input type="button" value="Generate Stock Card Accounting Fish" name="btnGenerate" id="btnGenerate"/>
+                                        <input type="submit" value="Generate Stock Card Accounting Fish" name="btnGenerate" id="btnGenerate"/>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -75,13 +73,6 @@
 
                 $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
             });
-
-            function throwValue() {
-                var elem = document.getElementById("dropdownFishCode");
-                elem.value = $('#dropdownFishCode').val();
-                var str = elem.value;
-                str = str.replace(/_/g, ' ');
-            }
 
             $('#asOfDate').datepicker({changeMonth: true, changeYear: true, dateFormat: "yy-mm-dd", altField: "#params", altFormat: "yy-mm-dd"});
         </script>

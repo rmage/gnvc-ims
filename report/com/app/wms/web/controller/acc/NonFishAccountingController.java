@@ -62,7 +62,7 @@ public class NonFishAccountingController extends MultiActionController {
     private final TsDao tsDao = DaoFactory.createTsDao();
 
     private final DrDao drDao = DaoFactory.createDrDao();
-    
+
     private final NonFishStockCardDao nonFishStockCardDao = DaoFactory.createNonFishStockCardDao();
 
     private final NonFishStockCardSummaryDao nonFishStockCardSummaryDao = DaoFactory.createNonFishStockCardSummaryDao();
@@ -164,7 +164,7 @@ public class NonFishAccountingController extends MultiActionController {
             /*UNIT COST*/
             nfTemp.setCurrencyCode(receiveReport.getPo().getCurrency());
             nfTemp.setAmount(BigDecimal.valueOf(receiveReport.getUnitCost()));
-            nfTemp.setRateValue(receiveReport.getPo().getCurrencyRate().getRateValue());
+            nfTemp.setRateValue(receiveReport.getCurrencyRate().getRateValue());
             System.out.println("-----RR------" + nfTemp.getRateValue() + "");
             System.out.println("-----RR------" + nfTemp.getAmount() + "");
             amountIDR = nfTemp.getRateValue().multiply(nfTemp.getAmount());
@@ -308,7 +308,7 @@ public class NonFishAccountingController extends MultiActionController {
             nFStockCardList.get(i).setAmountEND(totalAmountEND);
 
             nf = nFStockCardList.get(i);
-            
+
             nFStockCardList.get(i).setProductId(product.getProductId());
             nFStockCardList.get(i).setProductCategory(product.getProductCategory());
 
@@ -317,7 +317,7 @@ public class NonFishAccountingController extends MultiActionController {
         }
 
         balanceIDR = totalAmountEND;
-        
+
         /*INSERT OR UPDATE INTO TABLE nf_stock_card*/
         for (NonFishStockCardAccounting nf : nFStockCardList) {
             boolean isExist = false;
@@ -469,7 +469,7 @@ public class NonFishAccountingController extends MultiActionController {
             /*UNIT COST*/
             nfTemp.setCurrencyCode(receiveReport.getPo().getCurrency());
             nfTemp.setAmount(BigDecimal.valueOf(receiveReport.getUnitCost()));
-            nfTemp.setRateValue(receiveReport.getPo().getCurrencyRate().getRateValue());
+            nfTemp.setRateValue(receiveReport.getCurrencyRate().getRateValue());
             amountIDR = nfTemp.getRateValue().multiply(nfTemp.getAmount());
             nfTemp.setAmountIDR(amountIDR);
             /*IN*/

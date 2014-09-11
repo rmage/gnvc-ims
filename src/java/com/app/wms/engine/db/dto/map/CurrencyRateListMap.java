@@ -20,22 +20,23 @@ public class CurrencyRateListMap implements ParameterizedRowMapper <CurrencyRate
 		// TODO Auto-generated method stub
 		CurrencyRate cr = new CurrencyRate();
 		cr.setRateId(rs.getInt(1));
-		cr.setCurrencyCode(rs.getString(2));
+		cr.setcurrencyCodeFrom(rs.getString(2));
+                cr.setCurrencyCodeTo(rs.getString(3));
                 /*CONVERT STRING TO BIGINTEGER*/
-                double value = Double.parseDouble(rs.getString(3));
+                double value = Double.parseDouble(rs.getString(4));
                 BigDecimal db = BigDecimal.valueOf(value);
 		cr.setRateValue(db);
                 /*CONVERT STRING TO DATE*/
                 Date rateDate = null;
                 Date createdDate = null;
                 try {
-                    rateDate = df.parse(rs.getString(4));
-                    createdDate = df.parse(rs.getString(6));
+                    rateDate = df.parse(rs.getString(5));
+                    createdDate = df.parse(rs.getString(7));
                 } catch (ParseException ex) {
                     Logger.getLogger(CurrencyRateListMap.class.getName()).log(Level.SEVERE, null, ex);
                 }
 		cr.setRateDate(rateDate);
-		cr.setCreatedBy(rs.getString(5));
+		cr.setCreatedBy(rs.getString(6));
 		cr.setCreatedDate(createdDate);
 		
 		return cr;

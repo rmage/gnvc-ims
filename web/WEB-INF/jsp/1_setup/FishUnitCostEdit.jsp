@@ -55,7 +55,16 @@
                                     </td>
                                     <td>
                                        ${model.fs.code} - ${model.fs.name}
-                                       <input type="hidden" name="groupSupplierName" value="${model.fs.code}" />
+                                       <input type="hidden" name="groupSupplierId" value="${model.fs.id}" />
+                                    </td>
+                                </tr>
+                                    <tr>
+                                    <td width="20%">
+                                        Currency Code
+                                    </td>
+                                    <td>
+                                       ${model.currencyCode}
+                                       <input type="hidden" name="currencyCode" value="${model.currencyCode}" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -69,7 +78,7 @@
                                             ${fc.fish.code}
                                         </td>
                                         <td>
-                                            IDR <input type="text" id="unitCost-${i.index}" name="unitCost-${i.index}" onkeypress="validate(event)" value="${fc.unitCost}"/>
+                                            <input type="text" id="unitCost-${i.index}" name="unitCost-${i.index}" onkeypress="validate(event)" value="${fc.unitCost}"/>
                                         </td>
                                     </tr>
                                 </c:forEach>

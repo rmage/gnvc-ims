@@ -34,7 +34,7 @@
                                     <td width="20%">
                                         Contract Period
                                     </td>
-                                    <td >
+                                    <td>
                                         <input type="date" id="contractBeginDate" name="contractBeginDate" required="true" value="${model.startDate}" readonly="true"/> Start
                                     </td>
                                 </tr>
@@ -51,12 +51,28 @@
                                         Supplier Name
                                     </td>
                                     <td>
-                                        <select name="groupSupplierName" id="groupSupplierName" style="width: 40%">
+                                        <select name="groupSupplierId" id="groupSupplierId" style="width: 30%">
                                             <c:if test="${model.suppliers!=null}">
                                                 <c:forEach items="${model.suppliers}" var="supplier">
-                                                    <option value=<c:out value="${supplier.code}"/>
-                                                            <c:if test="${supplier.code == model.supplierCode}"> selected </c:if>>
+                                                    <option value=<c:out value="${supplier.id}"/> >
                                                         <c:out value="${supplier.name}" />
+                                                    </option>
+                                                </c:forEach>
+                                            </c:if>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%">
+                                        Currency Code
+                                    </td>
+                                    <td>
+                                        <select name="groupCurrencyCode" id="groupCurrencyCode" style="width: 30%">
+                                            <c:if test="${model.currs!=null}">
+                                                <c:forEach items="${model.currs}" var="curr">
+                                                    <option value=<c:out value="${curr.currencyCode}"/>
+                                                            <c:if test="${curr.currencyCode == model.currencyCode}"> selected </c:if>>
+                                                        <c:out value="${curr.currencyCode}" />
                                                     </option>
                                                 </c:forEach>
                                             </c:if>
@@ -74,7 +90,7 @@
                                             ${fish.code}
                                         </td>
                                         <td>
-                                            IDR <input type="text" id="unitCost-${i.index}" name="unitCost-${i.index}" onkeypress="validate(event)" value="0"/>
+                                            <input type="text" id="unitCost-${i.index}" name="unitCost-${i.index}" onkeypress="validate(event)" value="0"/>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -136,8 +152,8 @@
                 var key = theEvent.keyCode || theEvent.which;
 
                 if (key == 37 || key == 38 || key == 39 || key == 40 ||
-                    key == 8 || key == 46 || key == 9 || key == 10 || key == 36
-                     || key == 13) { 
+                        key == 8 || key == 46 || key == 9 || key == 10 || key == 36
+                        || key == 13) {
                     return;
                 }
                 key = String.fromCharCode(key);

@@ -61,7 +61,7 @@ public class CurrencyRateController extends MultiActionController {
             HashMap m = new HashMap();
 
             Date newerDate = null;
-            String currCode = request.getParameter("currency_code");
+            String currCode = request.getParameter("currency_code_from");
             String newerDateString;
             newerDateString = request.getParameter("rate_date");
 
@@ -141,7 +141,7 @@ public class CurrencyRateController extends MultiActionController {
         CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
 
         Date newerDate = null;
-        String currCode = request.getParameter("currency_code");
+        String currCode = request.getParameter("currency_code_from");
         String newerDateString;
         newerDateString = request.getParameter("rate_date");
         
@@ -172,11 +172,12 @@ public class CurrencyRateController extends MultiActionController {
                 pw.print(",");
             }
             pw.print("{\"1\": \"" + x.getRateId() + "\", ");
-            pw.print("\"2\": \"" + x.getCurrencyCode() + "\", ");
-            pw.print("\"3\": \"" + x.getRateValue() + "\", ");
-            pw.print("\"4\": \"" + x.getRateDate() + "\", ");
-            pw.print("\"5\": \"" + x.getCreatedBy() + "\", ");
-            pw.print("\"6\": \"" + x.getCreatedDate() + "\"}");
+            pw.print("\"2\": \"" + x.getCurrencyCodeFrom() + "\", ");
+            pw.print("\"3\": \"" + x.getCurrencyCodeTo() + "\", ");
+            pw.print("\"4\": \"" + x.getRateValue() + "\", ");
+            pw.print("\"5\": \"" + x.getRateDate() + "\", ");
+            pw.print("\"6\": \"" + x.getCreatedBy() + "\", ");
+            pw.print("\"7\": \"" + x.getCreatedDate() + "\"}");
             b = Boolean.TRUE;
         }
         pw.print("]}");
@@ -215,7 +216,8 @@ public class CurrencyRateController extends MultiActionController {
             String userId = "";
             userId = (String) user.getUserId();
             /*GATHER FROM FORM DATA*/
-            String currrencyCode = request.getParameter("groupCurrencyCode");
+            String currrencyCodeFrom = request.getParameter("groupCurrencyCodeFrom");
+            String currrencyCodeTo = request.getParameter("groupCurrencyCodeTo");
             String rateValueString = request.getParameter("rateValue");
             String rateDateString = request.getParameter("rateDate");
             Date createdDate = new Date();
@@ -230,7 +232,8 @@ public class CurrencyRateController extends MultiActionController {
             currencyRate.setCreatedDate(createdDate);
             currencyRate.setRateDate(rateDate);
             currencyRate.setRateValue(db);
-            currencyRate.setCurrencyCode(currrencyCode);
+            currencyRate.setcurrencyCodeFrom(currrencyCodeFrom);
+            currencyRate.setCurrencyCodeTo(currrencyCodeTo);
 
             int id = currencyRateDao.insert(currencyRate);
 
@@ -239,32 +242,32 @@ public class CurrencyRateController extends MultiActionController {
     }
 
     /*WE'RE NOT REALLY USE THIS CODE BELOW RIGHT NOW*/
-    public void setRate(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        /* DATA | get initial value */
-        PrintWriter pw = response.getWriter();
-        String currencyCode = request.getParameter("cc");
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        BigDecimal rateValue = new BigDecimal(request.getParameter("v"));
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
-        /* DAO | Define needed dao here */
-        CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
-
-        /* TRANSACTION | Something complex here */
-        CurrencyRate cr = new CurrencyRate();
-        cr.setCurrencyCode(currencyCode);
-        cr.setRateValue(rateValue);
-        cr.setRateDate(new Date());
-        cr.setCreatedBy(lu.getUsername());
-        cr.setCreatedDate(new Date());
-        if (currencyRateDao.insert(cr) > 0) {
-            pw.print("{\"status\": 1, \"date\": \"" + sdf.format(cr.getRateDate()) + "\", \"by\": \"" + cr.getCreatedBy() + "\"}");
-        } else {
-            pw.print("{\"status\": 0}");
-        }
-
-    }
+//    public void setRate(HttpServletRequest request, HttpServletResponse response)
+//            throws IOException {
+//
+//        /* DATA | get initial value */
+//        PrintWriter pw = response.getWriter();
+//        String currencyCode = request.getParameter("cc");
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//        BigDecimal rateValue = new BigDecimal(request.getParameter("v"));
+//        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+//
+//        /* DAO | Define needed dao here */
+//        CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
+//
+//        /* TRANSACTION | Something complex here */
+//        CurrencyRate cr = new CurrencyRate();
+//        cr.setCurrencyCode(currencyCode);
+//        cr.setRateValue(rateValue);
+//        cr.setRateDate(new Date());
+//        cr.setCreatedBy(lu.getUsername());
+//        cr.setCreatedDate(new Date());
+//        if (currencyRateDao.insert(cr) > 0) {
+//            pw.print("{\"status\": 1, \"date\": \"" + sdf.format(cr.getRateDate()) + "\", \"by\": \"" + cr.getCreatedBy() + "\"}");
+//        } else {
+//            pw.print("{\"status\": 0}");
+//        }
+//
+//    }
 
 }

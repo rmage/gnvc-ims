@@ -24,7 +24,6 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
-import static com.app.wms.web.util.Utility.isExist;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -39,6 +38,8 @@ public class FishUnitCostController extends MultiActionController {
     private final FishSupplierDao fishSupplierDao = DaoFactory.createFishSupplierDao();
 
     private final FishDao fishDao = DaoFactory.createFishDao();
+    
+    private final CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
 
     private final FishUnitCostDao fishUnitCostDao = DaoFactory.createFishUnitCostDao();
 
@@ -47,6 +48,8 @@ public class FishUnitCostController extends MultiActionController {
     private List<Fish> fishes = new ArrayList<Fish>();
 
     private List<FishUnitCost> fces = new ArrayList<FishUnitCost>();
+    
+    private List<Currency> currs = new ArrayList<Currency>();
 
     /**
      * Method 'findByPrimaryKey'
@@ -58,6 +61,15 @@ public class FishUnitCostController extends MultiActionController {
      */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
+            /*JSONParser parser = new JSONParser();
+            String jsonString = "{\"to\": \"IDR\", \"rate\": 11723.01, \"from\": \"USD\"}";
+            Object obj = parser.parse(jsonString);
+            JSONObject jsonObj = (JSONObject) obj;
+            System.out.println("The 1st element of array");
+            System.out.println(jsonObj.get("to"));
+            System.out.println(jsonObj.get("from"));
+            System.out.println(jsonObj.get("rate"));
+            System.out.println();*/
 
             HashMap<String, Object> modelMap = new HashMap<String, Object>();
             final String mode = request.getParameter("mode");
@@ -72,6 +84,9 @@ public class FishUnitCostController extends MultiActionController {
 
                 /*GET ALL FISH*/
                 fishes = fishDao.findAllActiveAndNotDelete();
+                
+                /*GET ALL CURRENCY*/
+                currs = currencyDao.findAll();
 
                 modelMap.put("suppliers", suppliers);
                 modelMap.put("fishes", fishes);
@@ -99,6 +114,7 @@ public class FishUnitCostController extends MultiActionController {
 
         modelMap.put("suppliers", suppliers);
         modelMap.put("fishes", fishes);
+        modelMap.put("currs", currs);
 
         return new ModelAndView("1_setup/FishUnitCostAdd", "model", modelMap);
     }
@@ -131,9 +147,12 @@ public class FishUnitCostController extends MultiActionController {
 
         /*GET FORM SUBMITTED VALUE*/
         String contractNumber = request.getParameter("contractNumber");
-        String supplierCode = request.getParameter("groupSupplierName");
+        String supplierId = request.getParameter("groupSupplierId");
+        String currencyCode = request.getParameter("groupCurrencyCode");
         String startDate = request.getParameter("contractBeginDate");
         String endDate = request.getParameter("contractEndDate");
+        
+        Integer supId = Integer.parseInt(supplierId);
 
         if (mode.equalsIgnoreCase("create")) {
 
@@ -160,7 +179,8 @@ public class FishUnitCostController extends MultiActionController {
             fc.setContractNumber(contractNumber);
             fc.setContractBeginDate(start);
             fc.setContractEndDate(end);
-            fc.setSupplierCode(supplierCode);
+            fc.setSupplierId(supId);
+            fc.setCurrencyCode(currencyCode);
             fc.setCreatedBy(user.getUserId());
             fc.setCreatedDate(now);
 
@@ -241,7 +261,7 @@ public class FishUnitCostController extends MultiActionController {
             }
             pw.print("{\"1\": \"" + fc.getId() + "\", ");
             pw.print("\"2\": \"" + fc.getContractNumber() + "\", ");
-            pw.print("\"3\": \"" + fc.getSupplierCode() + "\", ");
+            pw.print("\"3\": \"" + fc.getFishSupplier().getName() + "\", ");
             pw.print("\"4\": \"" + fc.getContractBeginDate() + "\", ");
             pw.print("\"5\": \"" + fc.getContractEndDate() + "\"}");
 
@@ -293,15 +313,16 @@ public class FishUnitCostController extends MultiActionController {
 
         String dateBegin = df.format(fishUnistCostList.get(0).getContractBeginDate());
         String dateEnd = df.format(fishUnistCostList.get(0).getContractEndDate());
-        String supplierCode = fishUnistCostList.get(0).getSupplierCode();
+        String currencyCode = fishUnistCostList.get(0).getCurrencyCode();
 
-        fs = fishSupplierDao.findBySupplierCode(supplierCode);
+        fs = fishUnistCostList.get(0).getFishSupplier();
 
         Map map = new HashMap();
         map.put("fces", fishUnistCostList);
         map.put("contractNumber", fces.get(index - 1).getContractNumber());
         map.put("dateBegin", dateBegin);
         map.put("dateEnd", dateEnd);
+        map.put("currencyCode", currencyCode);
         map.put("fs", fs);
         return new ModelAndView("1_setup/FishUnitCostEdit", "model", map);
     }
@@ -314,7 +335,9 @@ public class FishUnitCostController extends MultiActionController {
         FishUnitCost fc = new FishUnitCost();
 
         String contractNumber = request.getParameter("contractNumber");
-        String supplierCode = request.getParameter("groupSupplierName");
+        String supplierId = request.getParameter("groupSupplierId");
+        
+        Integer suppId = Integer.parseInt(supplierId);
 
         Integer fcId = 0;
         /*GET ALL FISH*/
@@ -322,7 +345,7 @@ public class FishUnitCostController extends MultiActionController {
         BigDecimal unitCost = BigDecimal.ZERO;
 
         fc.setContractNumber(contractNumber);
-        fc.setSupplierCode(supplierCode);
+        fc.setSupplierId(suppId);
 
         int size = fishes.size();
         for (int i = 0; i < size; i++) {

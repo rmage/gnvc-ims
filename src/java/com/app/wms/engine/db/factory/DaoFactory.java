@@ -934,6 +934,11 @@ public class DaoFactory {
         return (NonFishStockCardSummaryDao) bf.getBean("NonFishStockCardSummaryDao");
     }
     
+    public static FishTransactionDao createFishTransactionDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FishTransactionDao) bf.getBean("FishTransactionDao");
+    }
+    
     /*MASTER FISH UNIT COST*/
     public static FishUnitCostDao createFishUnitCostDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));

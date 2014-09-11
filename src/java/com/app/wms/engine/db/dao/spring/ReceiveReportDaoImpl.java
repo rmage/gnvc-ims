@@ -1,7 +1,9 @@
 package com.app.wms.engine.db.dao.spring;
 
+import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.PoDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
+import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Po;
 import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.PurchaseDtl;
@@ -9,7 +11,6 @@ import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -52,14 +53,21 @@ public class ReceiveReportDaoImpl extends AbstractDAO
         rr.setUpdatedDate(rs.getDate("updated_date"));
         rr.setQty(rs.getDouble("qty"));
 
+        Po po = new Po();
         /*INSERT PO*/
         try {
             PoDao poDao = DaoFactory.createPoDao();
-            Po po = poDao.findByPrimaryKey(rs.getLong("po_code"));
+            po = poDao.findByPrimaryKey(rs.getLong("po_code"));
             rr.setPo(po);
         } catch (DaoException e) {
             e.printStackTrace();
         }
+
+        /*INSERT CURR RATE*/
+        /*INSERT Currency Rate*/
+        CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
+        CurrencyRate cr = currencyRateDao.findLatestByCurrencyCodeAndDate(po.getCurrency(), rr.getRrDate());
+        rr.setCurrencyRate(cr);
 
         return rr;
     }
@@ -174,7 +182,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
                 + "rr.po_code = po.po_code left join dbo.assign_canv_prc acprice on "
                 + "rrd.prs_code = acprice.prsnumber "
                 + "where rrd.product_code = '" + productCode + "' and "
-                + "rr.rr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) "
+                + "rr.rr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) "
                 + "group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, acprice.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, "
                 + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
                 + "rr.updated_by, rr.updated_date order by rr.rr_date";
@@ -182,7 +190,5 @@ public class ReceiveReportDaoImpl extends AbstractDAO
         resultList = jdbcTemplate.query(sqlQuery, this);
         return resultList;
     }
-    
-    
 
 }

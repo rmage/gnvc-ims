@@ -33,10 +33,24 @@
                             <caption>Currency Rate - Add</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
-                                   <td style="width: 20%">Currency Code</td>
+                                   <td style="width: 20%">Currency Code From</td>
                                    <td class="style1" >
-                                       <select name="groupCurrencyCode" id="groupCurrencyCode" style="width: 40%">
-					    <option value="ALL">--- All Currency ---</option>
+                                       <select name="groupCurrencyCodeFrom" id="groupCurrencyCodeFrom" style="width: 40%">
+					    <c:if test="${model.currs!=null}">
+						<c:forEach items="${model.currs}" var="curr">
+						    <option value=<c:out value="${curr.currencyCode}"/>
+							    <c:if test="${curr.currencyCode==model.currencyCode}"> selected </c:if>>
+							<c:out value="${curr.currencyCode}" />
+                                                    </option>
+						</c:forEach>
+					    </c:if>
+					</select>
+				    </td>
+                                </tr>
+                                <tr>
+                                   <td style="width: 20%">Currency Code To</td>
+                                   <td class="style1" >
+                                       <select name="groupCurrencyCodeTo" id="groupCurrencyCodeTo" style="width: 40%">
 					    <c:if test="${model.currs!=null}">
 						<c:forEach items="${model.currs}" var="curr">
 						    <option value=<c:out value="${curr.currencyCode}"/>

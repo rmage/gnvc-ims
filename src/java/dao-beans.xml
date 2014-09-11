@@ -1,6 +1,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" 
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	   http://maven.apache.org/maven-v4_0_0.xsd 
 	   http://www.springframework.org/schema/beans 
 	   http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
@@ -8,10 +8,15 @@
 	   http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-	<property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://192.168.11.253:1433/inventory" />
-        <property name="username" value="sa" />
-        <property name="password" value="qts1n@r" />
+        <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
+        <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/IMS;instance=SQLEXPRESS" />
+        <!--        <property name="url" value="jdbc:jtds:sqlserver://7.51.9.228:1433/inventory" />-->
+        <!-- ravindo|<property name="url" value="jdbc:jtds:sqlserver://7.35.130.2:1433/inventory" />-->
+        <!--<property name="url" value="jdbc:jtds:sqlserver://192.168.0.213:1433/inventory" />-->
+        <property name="username" value="faridzif" />
+        <property name="password" value="123qweasd" />
+        <!--        <property name="username" value="sa" />
+        <property name="password" value="qts1n@r" />-->
     </bean>
     
     <tx:annotation-driven xmlns:tx="http://www.springframework.org/schema/tx" transaction-manager="txManager" />
@@ -53,7 +58,7 @@
     <bean id="PurchaseDao" class="com.app.wms.engine.db.dao.spring.PurchaseDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-     <bean id="GoodreceiveDao" class="com.app.wms.engine.db.dao.spring.GoodreceiveDaoImpl" scope="prototype">
+    <bean id="GoodreceiveDao" class="com.app.wms.engine.db.dao.spring.GoodreceiveDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="PutawayDao" class="com.app.wms.engine.db.dao.spring.PutawayDaoImpl" scope="prototype">
@@ -107,7 +112,7 @@
     <bean id="AppMenuRoleDao" class="com.app.wms.engine.db.dao.spring.AppMenuRoleDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-     <bean id="UserRoleDao" class="com.app.wms.engine.db.dao.spring.UserRoleDaoImpl" scope="prototype">
+    <bean id="UserRoleDao" class="com.app.wms.engine.db.dao.spring.UserRoleDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="ProductDao" class="com.app.wms.engine.db.dao.spring.ProductDaoImpl" scope="prototype">
@@ -197,7 +202,7 @@
     <bean id="VgrdetailproductcategoryDao" class="com.app.wms.engine.db.dao.spring.VgrdetailproductcategoryDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-     <bean id="CurrencyDao" class="com.app.wms.engine.db.dao.spring.CurrencyDaoImpl" scope="prototype">
+    <bean id="CurrencyDao" class="com.app.wms.engine.db.dao.spring.CurrencyDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="WarehouseDao" class="com.app.wms.engine.db.dao.spring.WarehouseDaoImpl" scope="prototype">
@@ -273,101 +278,101 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     
-	<!-- created by badr interactive for fish inventory system -->
+    <!-- created by badr interactive for fish inventory system -->
     <bean id="FishDao" class="com.app.wms.engine.db.dao.spring.FishDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishTypeDao" class="com.app.wms.engine.db.dao.spring.FishTypeDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWeightTypeDao" class="com.app.wms.engine.db.dao.spring.FishWeightTypeDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWsTypeDao" class="com.app.wms.engine.db.dao.spring.FishWsTypeDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishStorageDao" class="com.app.wms.engine.db.dao.spring.FishStorageDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWsDao" class="com.app.wms.engine.db.dao.spring.FishWsDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWsDetailDao" class="com.app.wms.engine.db.dao.spring.FishWsDetailDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishSpoilageDao" class="com.app.wms.engine.db.dao.spring.FishSpoilageDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishSupplierDao" class="com.app.wms.engine.db.dao.spring.FishSupplierDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishVesselDao" class="com.app.wms.engine.db.dao.spring.FishVesselDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishRrDao" class="com.app.wms.engine.db.dao.spring.FishRrDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishRrDetailDao" class="com.app.wms.engine.db.dao.spring.FishRrDetailDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishBalanceDao" class="com.app.wms.engine.db.dao.spring.FishBalanceDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWdsDao" class="com.app.wms.engine.db.dao.spring.FishWdsDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWdsDetailDao" class="com.app.wms.engine.db.dao.spring.FishWdsDetailDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishTsDao" class="com.app.wms.engine.db.dao.spring.FishTsDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishTsDetailDao" class="com.app.wms.engine.db.dao.spring.FishTsDetailDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishBalanceHistoryDao" class="com.app.wms.engine.db.dao.spring.FishBalanceHistoryDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishBadStockDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishBadStockDetailDao" class="com.app.wms.engine.db.dao.spring.FishBadStockDetailDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <!-- FYA : 07 January 2014 -->
     <bean id="AssignCanvasserDtlDao" class="com.app.wms.engine.db.dao.spring.AssignCanvasserDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="AssignCanvassingDao" class="com.app.wms.engine.db.dao.spring.AssignCanvassingDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="PurchaseDtlDao" class="com.app.wms.engine.db.dao.spring.PurchaseDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="ReceiveReportDao" class="com.app.wms.engine.db.dao.spring.ReceiveReportDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="ReceiveReportDtlDao" class="com.app.wms.engine.db.dao.spring.ReceiveReportDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="PtsDtlDao" class="com.app.wms.engine.db.dao.spring.PtsDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="OfalDao" class="com.app.wms.engine.db.dao.spring.OfalDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="OfalDtlDao" class="com.app.wms.engine.db.dao.spring.OfalDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishMealDao" class="com.app.wms.engine.db.dao.spring.FishMealDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishMealDtlDao" class="com.app.wms.engine.db.dao.spring.FishMealDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWsDtlActualDao" class="com.app.wms.engine.db.dao.spring.FishWsDtlActualDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="ProductPriceDao" class="com.app.wms.engine.db.dao.spring.ProductPriceDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
@@ -382,58 +387,58 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishOilDao" class="com.app.wms.engine.db.dao.spring.FishOilDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishOilDtlDao" class="com.app.wms.engine.db.dao.spring.FishOilDtlDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <!-- GNVS | Fish Module -->
     <bean id="BrineFreezingDao" class="com.spfi.ims.dao.BrineFreezingDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="AirBlastFreezingDao" class="com.spfi.ims.dao.AirBlastFreezingDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishReclassificationDao" class="com.spfi.ims.dao.FishReclassificationDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishMovingDao" class="com.spfi.ims.dao.FishMovingDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FishWsSummaryDao" class="com.spfi.ims.dao.FishWsSummaryDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <!-- GNVS | New Concept of Finish Goods -->
     <bean id="FGLocationDao" class="com.spfi.ims.dao.FGLocationDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGPackStyleDao" class="com.spfi.ims.dao.FGPackStyleDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGItemDao" class="com.spfi.ims.dao.FGItemDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGBookedOrderDao" class="com.spfi.ims.dao.FGBookedOrderDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGPalletTransferDao" class="com.spfi.ims.dao.FGPalletTransferDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGOrderFillDao" class="com.spfi.ims.dao.FGOrderFillDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGLabelingMonitoringDao" class="com.spfi.ims.dao.FGLabelingMonitoringDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGExportDeliveryDao" class="com.spfi.ims.dao.FGExportDeliveryDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <!-- GNVS | D3 Data-Driven Documents -->
     <bean id="D3Dao" class="com.spfi.ims.dao.D3DaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <!--ACCOUNTING STUFF-->
@@ -442,6 +447,10 @@
     </bean>
     
     <bean id="NonFishStockCardSummaryDao" class="com.app.wms.engine.db.dao.spring.NonFishStockCardSummaryDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="FishTransactionDao" class="com.app.wms.engine.db.dao.spring.FishTransactionDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     

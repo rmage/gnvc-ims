@@ -1,199 +1,146 @@
 package com.app.wms.engine.db.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.math.BigDecimal;
 
 public class FishStockCardAccounting implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private int id;
-    private String wsINNo;
-    private String wsINType;
-    private Date wsINDate;
-    private Double wsINQuantity;
-    private String wsOUTNo;
-    private String wsOUTType;
-    private Date wsOUTDate;
-    private String wlscOUTNo;
-    private Date wlscOUTDate;
-    private Double wsOUTQuantity;
-    private Double quantityBalance;
-    private String currencyCode;
-    private Double amount;
-    private Double rateIDR;
-    private Double amountIDR;
-    private Double totalINIDR;
-    private Double totalOUTIDR;
-    private Double balanceIDR;
-    private String createdBy;
-    private Date createdDate;
+    private Integer id;
+    private Integer fishId;
+    private Double begQuantity;
+    private BigDecimal begUnitCost;
+    private BigDecimal begAmount;
+    private Double receiveQuantity;
+    private BigDecimal receiveUnitCost;
+    private BigDecimal receiveAmount;
+    private Double withdrawalQuantity;
+    private BigDecimal withdrawalUnitCost;
+    private BigDecimal withdrawalAmount;
+    private Double endQuantity;
+    private BigDecimal endUnitCost;
+    private BigDecimal endAmount;
+    
+    private Fish fish;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getWsINNo() {
-        return wsINNo;
+    public Integer getFishId() {
+        return fishId;
     }
 
-    public void setWsINNo(String wsINNo) {
-        this.wsINNo = wsINNo;
+    public void setFishId(Integer fishId) {
+        this.fishId = fishId;
     }
 
-    public String getWsINType() {
-        return wsINType;
+    public Double getBegQuantity() {
+        return begQuantity;
     }
 
-    public void setWsINType(String wsINType) {
-        this.wsINType = wsINType;
+    public void setBegQuantity(Double begQuantity) {
+        this.begQuantity = begQuantity;
     }
 
-    public Date getWsINDate() {
-        return wsINDate;
+    public BigDecimal getBegUnitCost() {
+        return begUnitCost;
     }
 
-    public void setWsINDate(Date wsINDate) {
-        this.wsINDate = wsINDate;
+    public void setBegUnitCost(BigDecimal begUnitCost) {
+        this.begUnitCost = begUnitCost;
     }
 
-    public Double getWsINQuantity() {
-        return wsINQuantity;
+    public BigDecimal getBegAmount() {
+        return begAmount;
     }
 
-    public void setWsINQuantity(Double wsINQuantity) {
-        this.wsINQuantity = wsINQuantity;
+    public void setBegAmount(BigDecimal begAmount) {
+        this.begAmount = begAmount;
     }
 
-    public String getWsOUTNo() {
-        return wsOUTNo;
+    public Double getReceiveQuantity() {
+        return receiveQuantity;
     }
 
-    public void setWsOUTNo(String wsOUTNo) {
-        this.wsOUTNo = wsOUTNo;
+    public void setReceiveQuantity(Double receiveQuantity) {
+        this.receiveQuantity = receiveQuantity;
     }
 
-    public String getWsOUTType() {
-        return wsOUTType;
+    public BigDecimal getReceiveUnitCost() {
+        return receiveUnitCost;
     }
 
-    public void setWsOUTType(String wsOUTType) {
-        this.wsOUTType = wsOUTType;
+    public void setReceiveUnitCost(BigDecimal receiveUnitCost) {
+        this.receiveUnitCost = receiveUnitCost;
     }
 
-    public Date getWsOUTDate() {
-        return wsOUTDate;
+    public BigDecimal getReceiveAmount() {
+        return receiveAmount;
     }
 
-    public void setWsOUTDate(Date wsOUTDate) {
-        this.wsOUTDate = wsOUTDate;
+    public void setReceiveAmount(BigDecimal receiveAmount) {
+        this.receiveAmount = receiveAmount;
     }
 
-    public String getWlscOUTNo() {
-        return wlscOUTNo;
+    public Double getWithdrawalQuantity() {
+        return withdrawalQuantity;
     }
 
-    public void setWlscOUTNo(String wlscOUTNo) {
-        this.wlscOUTNo = wlscOUTNo;
+    public void setWithdrawalQuantity(Double withdrawalQuantity) {
+        this.withdrawalQuantity = withdrawalQuantity;
     }
 
-    public Date getWlscOUTDate() {
-        return wlscOUTDate;
+    public BigDecimal getWithdrawalUnitCost() {
+        return withdrawalUnitCost;
     }
 
-    public void setWlscOUTDate(Date wlscOUTDate) {
-        this.wlscOUTDate = wlscOUTDate;
+    public void setWithdrawalUnitCost(BigDecimal withdrawalUnitCost) {
+        this.withdrawalUnitCost = withdrawalUnitCost;
     }
 
-    public Double getWsOUTQuantity() {
-        return wsOUTQuantity;
+    public BigDecimal getWithdrawalAmount() {
+        return withdrawalAmount;
     }
 
-    public void setWsOUTQuantity(Double wsOUTQuantity) {
-        this.wsOUTQuantity = wsOUTQuantity;
+    public void setWithdrawalAmount(BigDecimal withdrawalAmount) {
+        this.withdrawalAmount = withdrawalAmount;
     }
 
-    public Double getQuantityBalance() {
-        return quantityBalance;
+    public Double getEndQuantity() {
+        return endQuantity;
     }
 
-    public void setQuantityBalance(Double quantityBalance) {
-        this.quantityBalance = quantityBalance;
+    public void setEndQuantity(Double endQuantity) {
+        this.endQuantity = endQuantity;
     }
 
-    public String getCurrencyCode() {
-        return currencyCode;
+    public BigDecimal getEndUnitCost() {
+        return endUnitCost;
     }
 
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
+    public void setEndUnitCost(BigDecimal endUnitCost) {
+        this.endUnitCost = endUnitCost;
     }
 
-    public Double getAmount() {
-        return amount;
+    public BigDecimal getEndAmount() {
+        return endAmount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setEndAmount(BigDecimal endAmount) {
+        this.endAmount = endAmount;
     }
 
-    public Double getRateIDR() {
-        return rateIDR;
+    public Fish getFish() {
+        return fish;
     }
 
-    public void setRateIDR(Double rateIDR) {
-        this.rateIDR = rateIDR;
-    }
-
-    public Double getAmountIDR() {
-        return amountIDR;
-    }
-
-    public void setAmountIDR(Double amountIDR) {
-        this.amountIDR = amountIDR;
-    }
-
-    public Double getTotalINIDR() {
-        return totalINIDR;
-    }
-
-    public void setTotalINIDR(Double totalINIDR) {
-        this.totalINIDR = totalINIDR;
-    }
-
-    public Double getTotalOUTIDR() {
-        return totalOUTIDR;
-    }
-
-    public void setTotalOUTIDR(Double totalOUTIDR) {
-        this.totalOUTIDR = totalOUTIDR;
-    }
-
-    public Double getBalanceIDR() {
-        return balanceIDR;
-    }
-
-    public void setBalanceIDR(Double balanceIDR) {
-        this.balanceIDR = balanceIDR;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setFish(Fish fish) {
+        this.fish = fish;
     }
 
 }

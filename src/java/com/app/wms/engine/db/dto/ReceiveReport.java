@@ -35,6 +35,8 @@ public class ReceiveReport implements Serializable {
 
     private Po po;
 
+    private CurrencyRate currencyRate;
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -172,6 +174,14 @@ public class ReceiveReport implements Serializable {
 
     public void setPo(Po po) {
         this.po = po;
+    }
+
+    public CurrencyRate getCurrencyRate() {
+        return currencyRate;
+    }
+
+    public void setCurrencyRate(CurrencyRate currencyRate) {
+        this.currencyRate = currencyRate;
     }
 
 }

@@ -11,12 +11,15 @@ public class FishUnitCost extends AbstractDTO implements Serializable {
     protected String contractNumber;
     protected Date contractBeginDate;
     protected Date contractEndDate;
-    protected String supplierCode;
+    protected Integer supplierId;
     protected Integer fishId;
     protected String fishDescription;
+    protected String currencyCode;
     protected BigDecimal unitCost;
 
     protected Fish fish;
+
+    protected FishSupplier fishSupplier;
 
     public int getId() {
         return id;
@@ -26,12 +29,12 @@ public class FishUnitCost extends AbstractDTO implements Serializable {
         this.id = id;
     }
 
-    public String getSupplierCode() {
-        return supplierCode;
+    public Integer getSupplierId() {
+        return supplierId;
     }
 
-    public void setSupplierCode(String supplierCode) {
-        this.supplierCode = supplierCode;
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 
     public Integer getFishId() {
@@ -88,6 +91,22 @@ public class FishUnitCost extends AbstractDTO implements Serializable {
 
     public void setFish(Fish fish) {
         this.fish = fish;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public FishSupplier getFishSupplier() {
+        return fishSupplier;
+    }
+
+    public void setFishSupplier(FishSupplier fishSupplier) {
+        this.fishSupplier = fishSupplier;
     }
 
 }

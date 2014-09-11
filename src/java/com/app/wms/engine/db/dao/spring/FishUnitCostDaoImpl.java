@@ -1,8 +1,10 @@
 package com.app.wms.engine.db.dao.spring;
 
 import com.app.wms.engine.db.dao.FishDao;
+import com.app.wms.engine.db.dao.FishSupplierDao;
 import com.app.wms.engine.db.dao.FishUnitCostDao;
 import com.app.wms.engine.db.dto.Fish;
+import com.app.wms.engine.db.dto.FishSupplier;
 import com.app.wms.engine.db.dto.FishUnitCost;
 import com.app.wms.engine.db.dto.map.FishUnitCostListMap;
 import com.app.wms.engine.db.exceptions.DaoException;
@@ -43,10 +45,11 @@ public class FishUnitCostDaoImpl extends AbstractDAO implements ParameterizedRow
         fc.setContractNumber(rs.getString("contract_number"));
         fc.setContractBeginDate(rs.getDate("contract_begin_date"));
         fc.setContractEndDate(rs.getDate("contract_end_date"));
-        fc.setSupplierCode(rs.getString("supplier_code"));
+        fc.setSupplierId(rs.getInt("supplier_id"));
         fc.setFishId(rs.getInt("fish_id"));
         fc.setFishDescription(rs.getString("fish_description"));
         fc.setUnitCost(rs.getBigDecimal("unit_cost"));
+        fc.setCurrencyCode(rs.getString("currency_code"));
         fc.setCreatedBy(rs.getString("created_by"));
         fc.setCreatedDate(rs.getDate("created_date"));
         fc.setUpdatedBy(rs.getString("updated_by"));
@@ -55,24 +58,32 @@ public class FishUnitCostDaoImpl extends AbstractDAO implements ParameterizedRow
         /*INSERT FISH*/
         FishDao fishDao = DaoFactory.createFishDao();
         Fish f = null;
+        /*INSERT FISH SUPPLIER*/
+        FishSupplierDao fishSupplierDao = DaoFactory.createFishSupplierDao();
+        FishSupplier fishSupplier = new FishSupplier();
+
         try {
             f = fishDao.findByPrimaryKey(fc.getFishId());
+            fc.setFish(f);
+
+            fishSupplier = fishSupplierDao.findByPrimaryKey(fc.getSupplierId());
+            fc.setFishSupplier(fishSupplier);
+
         } catch (DaoException ex) {
             Logger.getLogger(FishUnitCostDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        fc.setFish(f);
 
         return fc;
     }
 
     public int insert(FishUnitCost fc) {
-        return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?)",
-                fc.getContractNumber(), fc.getContractBeginDate(), fc.getContractEndDate(), fc.getSupplierCode(), fc.getFishId(), fc.getFishDescription(), fc.getUnitCost(), fc.getCreatedBy(), fc.getCreatedDate(), fc.getCreatedBy(), fc.getCreatedDate(), "Y", "N");
+        return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ? , ?, ? )",
+                fc.getContractNumber(), fc.getContractBeginDate(), fc.getContractEndDate(), fc.getSupplierId(), fc.getFishId(), fc.getFishDescription(), fc.getUnitCost(), fc.getCurrencyCode(), fc.getCreatedBy(), fc.getCreatedDate(), fc.getCreatedBy(), fc.getCreatedDate(), "Y", "N");
     }
 
     public int update(FishUnitCost fc) {
-        return jdbcTemplate.update("UPDATE " + getTableName() + " SET contract_number = ?,contract_begin_date = ?, contract_end_date = ?, supplier_code = ?, fish_id =  ?, unit_cost = ?, updated_by = ?, updated_date = ? where id = ? ",
-                fc.getContractNumber(), fc.getContractBeginDate(), fc.getContractEndDate(), fc.getSupplierCode(), fc.getFishId(), fc.getUnitCost(), fc.getUpdatedBy(), fc.getUpdatedDate(), fc.getId());
+        return jdbcTemplate.update("UPDATE " + getTableName() + " SET contract_number = ?,contract_begin_date = ?, contract_end_date = ?, supplier_id = ?, fish_id =  ?, unit_cost = ?, currency_code = ?, updated_by = ?, updated_date = ? where id = ? ",
+                fc.getContractNumber(), fc.getContractBeginDate(), fc.getContractEndDate(), fc.getSupplierId(), fc.getFishId(), fc.getUnitCost(), fc.getCurrencyCode(), fc.getUpdatedBy(), fc.getUpdatedDate(), fc.getId());
     }
 
     public int delete(FishUnitCost fc) {
@@ -86,10 +97,10 @@ public class FishUnitCostDaoImpl extends AbstractDAO implements ParameterizedRow
     public List<FishUnitCost> ajaxSearch(String where, String order, int page, int show) {
         String query = "declare @Page int, @PageSize int set @Page = ?; "
                 + "set @PageSize = ?; "
-                + "with PagedResult as (select ROW_NUMBER() over (ORDER BY supplier_code) as id, "
-                + "supplier_code, contract_number , contract_begin_date, contract_end_date , "
-                + " ROW_NUMBER() OVER (ORDER BY supplier_code) row from dbo.fish_unit_cost "
-                + "where supplier_code like '%' group by supplier_code, contract_number , contract_begin_date, contract_end_date ) "
+                + "with PagedResult as (select ROW_NUMBER() over (ORDER BY supplier_id) as id, "
+                + "supplier_id, contract_number , contract_begin_date, contract_end_date , "
+                + " ROW_NUMBER() OVER (ORDER BY supplier_id) row from dbo.fish_unit_cost "
+                + " group by supplier_id, contract_number , contract_begin_date, contract_end_date ) "
                 + "select * from PagedResult where id between  "
                 + " case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page";
         return jdbcTemplate.query(query, new FishUnitCostListMap(), page, show);
@@ -97,8 +108,8 @@ public class FishUnitCostDaoImpl extends AbstractDAO implements ParameterizedRow
 
     public boolean isExist(FishUnitCost fc) {
         boolean result = false;
-        String sqlQuery = "select count(*) from dbo.fish_unit_cost where contract_number like '" + fc.getContractNumber() + "' and supplier_code = "
-                + "'" + fc.getSupplierCode() + "' and fish_id = " + fc.getFishId() + "";
+        String sqlQuery = "select count(*) from dbo.fish_unit_cost where contract_number like '" + fc.getContractNumber() + "' and supplier_id = "
+                + fc.getSupplierId() + " and fish_id = " + fc.getFishId() + "";
         int temp = (int) jdbcTemplate.queryForInt(sqlQuery);
         if (temp > 0) {
             result = true;
@@ -108,8 +119,8 @@ public class FishUnitCostDaoImpl extends AbstractDAO implements ParameterizedRow
 
     public int findBySupplierCodeandFishCode(FishUnitCost fc) {
         Integer result = 0;
-        String sqlQuery = "select id from dbo.fish_unit_cost where contract_number like '" + fc.getContractNumber() + "' and supplier_code = "
-                + "'" + fc.getSupplierCode() + "' and fish_id = " + fc.getFishId() + "";
+        String sqlQuery = "select id from dbo.fish_unit_cost where contract_number like '" + fc.getContractNumber() + "' and supplier_id = "
+                + fc.getSupplierId() + " and fish_id = " + fc.getFishId() + "";
         result = (Integer) jdbcTemplate.queryForInt(sqlQuery);
 
         return result;

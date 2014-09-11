@@ -60,11 +60,11 @@
                             <tbody>
                                 <tr>
                                     <td width="20%">
-                                        Currency Type
+                                        Currency Code From 
                                     </td>
                                     <td class="style1">
-                                        <select name="currency_code" id="dropdownCurrCode" onchange="throwValue()">
-                                            <option value="ALL">--- All Currency ---</option>
+                                        <select name="currency_code_from" id="dropdownCurrCode" onchange="throwValue()">
+                                            <option value="%">--- All Currency ---</option>
                                             <c:if test="${model.currs!=null}">
                                                 <c:forEach items="${model.currs}" var="curr">
                                                     <option value=<c:out value="${curr.currencyCode}"/>
@@ -83,7 +83,7 @@
                                     <td>
                                         <label>
                                             <input type="date" id="queryNewerThanDate" name="rate_date" value="<%=queryNewerThanDate%>"/>
-                                            <input type="text" id="currCodeHidden" name="currency_code" value="" style="display: none"/>
+                                            <input type="text" id="currCodeHidden" name="currency_code_from" value="" style="display: none"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -113,8 +113,9 @@
                             <tr>
                                 <td>No</td>
                                 <td style="width: 0px"></td>
-                                <td column="currency_code">Currency</td>
-                                <td>Rate to IDR</td>
+                                <td column="currency_code_from">Currency From</td>
+                                <td>Currency To</td>
+                                <td>Rate Value</td>
                                 <td column="rate_date">Rate Date</td>
                                 <td>Created By</td>
                             </tr>
@@ -125,9 +126,10 @@
                                     <td>${i.index + 1}</td>
                                     <td style="width: 0px"></td>
                                     <td style="width: 0px" ></td>
-                                    <td>${x.currencyCode}</td>
+                                    <td>${x.currencyCodeFrom}</td>
+                                    <td>${x.currencyCodeTo}</td>
                                     <td>${x.rateValue}</td>
-                                    <td> <fmt:formatDate value="${x.rateDate}" pattern="yyyy-MM-dd" /> </td>
+                                    <td> <fmt:formatDate value="${x.rateDate}" pattern="yyyy-mm-dd" /> </td>
                                     <td>${x.createdBy}</td>
                                 </tr>
                             </c:forEach>

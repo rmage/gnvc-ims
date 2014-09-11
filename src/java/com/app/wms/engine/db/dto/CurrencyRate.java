@@ -4,28 +4,30 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class CurrencyRate  implements Serializable {
-    
+public class CurrencyRate implements Serializable {
+
     private int rateId;
-    
-    private String currencyCode;
-    
+
+    private String currencyCodeFrom;
+
+    private String currencyCodeTo;
+
     private BigDecimal rateValue;
-    
+
     private Date rateDate;
-    
+
     private String createdBy;
-    
+
     private Date createdDate;
-    
+
     private String rateDateString;
-    
+
     @Override
     public String toString() {
         //FIXME :: CurrencyRate @toString completion
         StringBuilder sb = new StringBuilder();
-        sb.append( "com.app.wms.engine.db.dto.CurrencyRate: " );
-        
+        sb.append("com.app.wms.engine.db.dto.CurrencyRate: ");
+
         return sb.toString();
     }
 
@@ -37,12 +39,12 @@ public class CurrencyRate  implements Serializable {
         this.rateId = rateId;
     }
 
-    public String getCurrencyCode() {
-        return currencyCode;
+    public String getCurrencyCodeFrom() {
+        return currencyCodeFrom;
     }
 
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
+    public void setcurrencyCodeFrom(String currencyCodeFrom) {
+        this.currencyCodeFrom = currencyCodeFrom;
     }
 
     public BigDecimal getRateValue() {
@@ -84,6 +86,13 @@ public class CurrencyRate  implements Serializable {
     public void setRateDateString(String rateDateString) {
         this.rateDateString = rateDateString;
     }
-    
-       
+
+    public String getCurrencyCodeTo() {
+        return currencyCodeTo;
+    }
+
+    public void setCurrencyCodeTo(String currencyCodeTo) {
+        this.currencyCodeTo = currencyCodeTo;
+    }
+
 }
