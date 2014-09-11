@@ -33,7 +33,15 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">PTS Number</td>
-                                    <td><input type="text" id="ptsCode" name="ptsCode" required="required" /></td>
+                                    <td>
+                                        <input type="text" id="ptsCode" name="ptsCode" required="required" />
+                                        Status: 
+                                        <select id="ptsStatus" name="ptsStatus" required>
+                                            <option value="">-</option>
+                                            <option value="N">RELEASE</option>
+                                            <option value="Y">HOLD</option>
+                                        </select>
+                                    </td>
                                     <td style="width: 200px;">PTS Date</td>
                                     <td><input type="text" id="ptsDatePicker" name="ptsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required" /></td>
                                 </tr>

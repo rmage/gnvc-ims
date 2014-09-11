@@ -36,7 +36,7 @@
                                     <td style="width: 200px;">EDS Code</td>
                                     <td><input type="text" id="edsCode" name="edsCode" required="required" /></td>
                                     <td style="width: 200px;">EDS Date</td>
-                                    <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10"" required /></td>
+                                    <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required /></td>
                                 </tr>
                                 <tr>
                                     <td>VAN</td>

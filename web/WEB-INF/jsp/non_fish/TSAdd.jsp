@@ -56,7 +56,7 @@
                             <thead>
                                 <tr>
                                     <td style="width: 100px;">Select SWS</td>
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         <input type="text" id="swsCode" name="swsCode" size="10" />
                                         <input type="button" id="select" name="select" value="Select" />
                                         <%--<select id="swsCode" name="swsCode" required="true">
@@ -75,6 +75,7 @@
                                     <td>Item Code</td>
                                     <td>Type</td>
                                     <td>Quantity Request</td>
+                                    <td>Current Stocks</td>
                                     <td>Quantity Out</td>
                                     <td>Uom</td>
                                 </tr>
@@ -125,7 +126,8 @@
                         $('#main').html(null);
                         for (var i = 0; i < json.length; i++) {
                             $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i][2] + '</td><td><input name="item" type="hidden" value="' + json[i][1] + '" />' + json[i][1] +
-                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") + '" type="text" /></td><td>' + json[i][5] + '</td></tr>');
+                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") + 
+                                    '" type="text" /></td><td>' + json[i][5] + '</td></tr>');
                         }
                     },
                     complete: function() {

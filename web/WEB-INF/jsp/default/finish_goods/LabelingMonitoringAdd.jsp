@@ -162,8 +162,9 @@
                         // DATA | Set item per cartons
                         $("#itemPerCs").val(json[0][7]);
 
+                        $("#detail").html("");
                         for (var i = 0; i < json.length; i++) {
-                            $("#detail").append('<tr data-id="' + json[i][12] + '"><td>' + json[i][8] + '</td><td>' + json[i][9] + '</td><td>' + json[i][10] + '</td><td><input type="text" value="" size="10" /></td><td><input type="text" class="qty-served" value="' + json[i][11] + '" data-max="' + json[i][11] + '" size="10" /></td>' +
+                            $("#detail").append('<tr data-id="' + json[i][12] + '"><td>' + json[i][8] + '</td><td>' + json[i][9] + '</td><td>' + json[i][10] + '</td><td><input type="text" value="" size="10" /></td><td><input type="text" class="qty-served" value="' + json[i][11] + '" data-max="' + json[i][11] + '" size="10" readonly /></td>' +
                                     '<td><input type="text" class="lmQty" value="0" size="10" /></td><td><input type="text" value="0" size="10" /></td><td><input type="text" value="0" size="10" /></td><td id="remainings">0</td><td><input type="text" value="" /></td></tr>');
                         }
                     },

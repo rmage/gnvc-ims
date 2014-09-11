@@ -157,7 +157,8 @@ public class TransferSlipController extends MultiActionController {
             pw.print("\"2\": \"" + x.get("product_name") + "\",");
             pw.print("\"3\": \"" + x.get("product_category") + "\",");
             pw.print("\"4\": \"" + NumberFormat.getNumberInstance().format(x.get("qty")) + "\",");
-            pw.print("\"5\": \"" + x.get("uom") + "\"}");
+            pw.print("\"5\": \"" + x.get("uom") + "\",");
+            pw.print("\"100\": \"" + NumberFormat.getNumberInstance().format(x.get("balance")) + "\"}");
 
             b = Boolean.TRUE;
         }

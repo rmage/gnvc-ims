@@ -917,6 +917,11 @@ public class DaoFactory {
         return (FGExportDeliveryDao) bf.getBean("FGExportDeliveryDao");
     }
     
+    public static FGTransferDao createFGTransferDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGTransferDao) bf.getBean("FGTransferDao");
+    }
+    
     /* GNVS | D3 Data-Driven Documents */
     public static D3Dao createD3Dao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
