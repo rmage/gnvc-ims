@@ -89,14 +89,15 @@ public class TransferSlipController extends MultiActionController {
 
             /* TRANSACTION | Something complex here */
             // insert transfer slip
-            t.setTsCode(Integer.parseInt(request.getParameter("tsCode")));
+            t.setTsCode(request.getParameter("tsCode"));
             t.setTsDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(request.getParameter("tsDate") + " "
                     + new SimpleDateFormat("HH:mm:ss").format(new Date())));
             t.setTsInfo(request.getParameter("tsInfo"));
             t.setTsTo(request.getParameter("tsTo"));
             t.setTsModule(request.getParameter("module"));
             t.setTsType(request.getParameter("type"));
-            t.setSwsCode(t.getTsType().equals("NORMAL") ? Integer.parseInt(request.getParameter("swsCode")) : 0);
+            t.setTsType(request.getParameter("type"));
+            t.setSwsCode(t.getTsType().equals("NORMAL") ? request.getParameter("swsCode") : "0");
             t.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
             t.setCreatedDate(new Date());
             tsDao.insert(t);
@@ -109,15 +110,15 @@ public class TransferSlipController extends MultiActionController {
             for (String x : items) {
                 td.setProductCode(x);
                 if (!qtys[i].equals("")) {
-                    td.setQty(Integer.parseInt(qtys[i]));
+                    td.setQty(new BigDecimal(qtys[i]));
                     tsDtlDao.insert(td);
 
                     // stock balance history for stock card
                     StockInventory si = stockInventoryDao.findWhereProductCodeEquals(td.getProductCode()).get(0);
                     if (t.getTsType().equals("NORMAL")) {
-                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 20);
+                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), td.getQty(), 20);
                     } else if (t.getTsType().equals("OTHERS")) {
-                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), new BigDecimal(td.getQty()), 21);
+                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), td.getQty(), 21);
                     }
 
                     // substract stock inventory balance
@@ -129,7 +130,7 @@ public class TransferSlipController extends MultiActionController {
             return new ModelAndView("redirect:TransferSlip.htm?module=" + t.getTsModule());
         } catch (Exception e) {
             e.printStackTrace();
-            return new ModelAndView("redirect:TransferSlip.htm?action=create&module=" + request.getParameter("module"));
+            return new ModelAndView("redirect:TransferSlip.htm?action=create&module=" + request.getParameter("module") + "&type=" + request.getParameter("type"));
         }
 
     }

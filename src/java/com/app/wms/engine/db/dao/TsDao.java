@@ -10,7 +10,7 @@ public interface TsDao {
 
     public void insert(Ts t);
 
-    public void updateStockInventory(String productCode, int qty);
+    public void updateStockInventory(String productCode, BigDecimal qty);
 
     public List<Sws> findWhereNotInTs();
 

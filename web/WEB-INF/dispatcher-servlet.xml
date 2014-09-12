@@ -374,6 +374,9 @@
     <bean name="/FGTransfer.htm" class="com.spfi.ims.controller.FGTransferController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FGReclassification.htm" class="com.spfi.ims.controller.FGRecclassificationController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     
     <!-- GNVS | D3 Data-Driven Documents -->
     <bean name="/D3.htm" class="com.spfi.ims.controller.D3Controller">

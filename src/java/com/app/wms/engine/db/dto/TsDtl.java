@@ -1,17 +1,18 @@
 package com.app.wms.engine.db.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class TsDtl implements Serializable {
     
     private int id;
     
-    private int tsCode;
+    private String tsCode;
     
     private String productCode;
     
-    private int qty;
+    private BigDecimal qty;
     
     private String createdBy;
     
@@ -38,11 +39,11 @@ public class TsDtl implements Serializable {
         this.id = id;
     }
 
-    public int getTsCode() {
+    public String getTsCode() {
         return tsCode;
     }
 
-    public void setTsCode(int tsCode) {
+    public void setTsCode(String tsCode) {
         this.tsCode = tsCode;
     }
 
@@ -54,11 +55,11 @@ public class TsDtl implements Serializable {
         this.productCode = productCode;
     }
 
-    public int getQty() {
+    public BigDecimal getQty() {
         return qty;
     }
 
-    public void setQty(int qty) {
+    public void setQty(BigDecimal qty) {
         this.qty = qty;
     }
 

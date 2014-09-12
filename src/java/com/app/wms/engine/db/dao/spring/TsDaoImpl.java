@@ -31,13 +31,13 @@ public class TsDaoImpl extends AbstractDAO
 
     public Ts mapRow(ResultSet rs, int i) throws SQLException {
         Ts t = new Ts();
-        t.setTsCode(rs.getInt("ts_code"));
+        t.setTsCode(rs.getString("ts_code"));
         t.setTsDate(rs.getDate("ts_date"));
         t.setTsInfo(rs.getString("ts_info"));
         t.setTsTo(rs.getString("ts_to"));
         t.setTsModule(rs.getString("ts_module"));
         t.setTsType(rs.getString("ts_type"));
-        t.setSwsCode(rs.getInt("sws_code"));
+        t.setSwsCode(rs.getString("sws_code"));
         t.setNotedBy(rs.getString("noted_by"));
         t.setNotedDate(rs.getDate("noted_date"));
         t.setApprovedBy(rs.getString("approved_by"));
@@ -59,7 +59,7 @@ public class TsDaoImpl extends AbstractDAO
                 t.getCreatedDate(), null, null);
     }
 
-    public void updateStockInventory(String productCode, int qty) {
+    public void updateStockInventory(String productCode, BigDecimal qty) {
         jdbcTemplate.update("UPDATE stock_inventory SET balance = balance - ? WHERE product_code = ?",
                 qty, productCode);
     }

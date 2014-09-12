@@ -27,9 +27,9 @@ public class TsDtlDaoImpl extends AbstractDAO
     public TsDtl mapRow(ResultSet rs, int i) throws SQLException {
         TsDtl td = new TsDtl();
         td.setId(rs.getInt("id"));
-        td.setTsCode(rs.getInt("ts_code"));
+        td.setTsCode(rs.getString("ts_code"));
         td.setProductCode(rs.getString("product_code"));
-        td.setQty(rs.getInt("qty"));
+        td.setQty(rs.getBigDecimal("qty"));
         td.setCreatedBy(rs.getString("created_by"));
         td.setCreatedDate(rs.getDate("created_date"));
         td.setUpdatedBy(rs.getString("updated_by"));

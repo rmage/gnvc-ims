@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Ts implements Serializable {
     
-    private int tsCode;
+    private String tsCode;
     
     private Date tsDate;
     
@@ -17,7 +17,7 @@ public class Ts implements Serializable {
     
     private String tsType;
     
-    private int swsCode;
+    private String swsCode;
     
     private String notedBy;
     
@@ -62,11 +62,11 @@ public class Ts implements Serializable {
         return sb.toString();
     }
 
-    public int getTsCode() {
+    public String getTsCode() {
         return tsCode;
     }
 
-    public void setTsCode(int tsCode) {
+    public void setTsCode(String tsCode) {
         this.tsCode = tsCode;
     }
 
@@ -86,11 +86,11 @@ public class Ts implements Serializable {
         this.tsInfo = tsInfo;
     }
 
-    public int getSwsCode() {
+    public String getSwsCode() {
         return swsCode;
     }
 
-    public void setSwsCode(int swsCode) {
+    public void setSwsCode(String swsCode) {
         this.swsCode = swsCode;
     }
 
