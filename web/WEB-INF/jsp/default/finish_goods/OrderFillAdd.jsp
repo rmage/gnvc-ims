@@ -28,6 +28,7 @@
                 <div class="box">
                     <form action="#" id="fOfal" name="fOfal" method="post">
                         <input type="hidden" id="ofalDate" name="ofalDate" value="<%=sdf.format(cDate)%>" />
+                        <input type="hidden" id="itemId" name="itemId" value="" />
                         <table class="collapse tblForm row-select">
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
@@ -165,7 +166,7 @@
                 // PTS | Get data
                 $.ajax({
                     url: "?", type: "post",
-                    data: {action: "getPts", key: $("#ptsCode").val()},
+                    data: {action: "getPts", pts: $("#ptsCode").val(), item: $('#itemId').val()},
                     dataType: "json",
                     success: function(json) {
                         if (json.length > 0) {
@@ -211,6 +212,8 @@
                     $(".bor-info,#aNw,#aDw").each(function(i) {
                         $(this).val(ui.item[i + 3]);
                     });
+                    $('#itemId').val(ui.item[101]);
+                    
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {

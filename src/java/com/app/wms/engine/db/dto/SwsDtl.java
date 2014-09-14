@@ -1,6 +1,7 @@
 package com.app.wms.engine.db.dto;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class SwsDtl implements Serializable {
@@ -11,7 +12,7 @@ public class SwsDtl implements Serializable {
     
     private String productCode;
     
-    private int qty;
+    private BigDecimal qty;
     
     private int soh;
     
@@ -66,11 +67,11 @@ public class SwsDtl implements Serializable {
         this.productCode = productCode;
     }
 
-    public int getQty() {
+    public BigDecimal getQty() {
         return qty;
     }
 
-    public void setQty(int qty) {
+    public void setQty(BigDecimal qty) {
         this.qty = qty;
     }
 

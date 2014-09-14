@@ -87,7 +87,7 @@ public class StoreWithdrawalSlipController extends MultiActionController {
             sd.setSwsCode(s.getSwsCode());
             sd.setProductCode(detail[0]);
             sd.setSoh(Integer.parseInt(detail[1]));
-            sd.setQty(Integer.parseInt(detail[2]));
+            sd.setQty(new BigDecimal(detail[2]));
             sd.setUom(detail[3]);
             sd.setCreatedBy(s.getCreatedBy());
             sd.setCreatedDate(new Date());

@@ -436,6 +436,12 @@
     <bean id="FGReclassificationDao" class="com.spfi.ims.dao.FGReclassificationDaoImpl" scope="prototype">
     	<property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="FGDeliveryDao" class="com.spfi.ims.dao.FGDeliveryDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGReturnCargoDao" class="com.spfi.ims.dao.FGReturnCargoDaoImpl" scope="prototype">
+    	<property name="dataSource" ref="dataSource" />
+    </bean>
     
     <!-- GNVS | D3 Data-Driven Documents -->
     <bean id="D3Dao" class="com.spfi.ims.dao.D3DaoImpl" scope="prototype">

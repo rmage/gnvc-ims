@@ -130,7 +130,7 @@
                         var i = 0;
                         $('#main tr').each(function() {
                             $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(1)').html() + ':' + 
-                                parseInt($(this).find('td:eq(4)').html()) + ':' + $(this).find('input[type="text"]').val() + ':' +
+                                parseFloat($(this).find('td:eq(4)').html()) + ':' + $(this).find('input[type="text"]').val() + ':' +
                                 $(this).find('td:eq(6)').html() + ':' + i + '" />'); i++;
                         });
                         $('#poster').submit();

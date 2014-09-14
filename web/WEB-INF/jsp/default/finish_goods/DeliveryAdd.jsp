@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Reclassification &therefore; Create</title>
+        <title>IMS &therefore; Delivery &therefore; Create</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -26,38 +26,44 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="#" id="fReclassification" name="fReclassification" method="post">
-                        <input type="hidden" id="reccDate" name="reccDate" value="<%=sdf.format(cDate)%>" />
+                    <form action="#" id="fDelivery" name="fDelivery" method="post">
+                        <input type="hidden" id="drDate" name="drDate" value="<%=sdf.format(cDate)%>" />
                         <table class="collapse tblForm row-select">
-                            <caption>Reclassification &therefore; Header</caption>
+                            <caption>Delivery &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">Reclassification Number</td>
-                                    <td><input type="text" id="reccCode" name="reccCode" required="required"></td>
-                                    <td>Reclassification Date</td>
-                                    <td><input type="text" id="reccDatePicker" name="reccDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required></td>
+                                    <td style="width: 200px;">Delivery Number</td>
+                                    <td><input type="text" id="drCode" name="drCode" required="required"></td>
+                                    <td>Delivery Date</td>
+                                    <td><input type="text" id="drDatePicker" name="drDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required></td>
+                                </tr>
+                                <tr>
+                                    <td>From</td>
+                                    <td><input type="text" id="drFrom" name="drFrom" size="50"></td>
+                                    <td>To</td>
+                                    <td><input type="text" id="drTo" name="drTo" size="50"></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="reccRemarks" name="reccRemarks" size="50" pattern="[^#\^@]+" title="accept all, except: [#][^][@]" /></td>
+                                    <td colspan="3"><input type="text" id="drRemarks" name="drRemarks" size="50" pattern="[^#\^@]+" title="accept all, except: [#][^][@]" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGReclassification.htm');" />
+                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGDelivery.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </form>
                     <table class="collapse tblForm row-select" id="list">
-                        <caption>Reclassification &therefore; Detail</caption>
+                        <caption>Delivery &therefore; Detail</caption>
                         <thead>
                             <tr>
                                 <th>Pallet Number</th>
-                                <th colspan="8">
+                                <th colspan="7">
                                     <input type="text" id="ptsCode" name="ptsCode">
                                     <input type="button" id="btnAdd" name="btnAdd" value="Add Item">
                                 </th>
@@ -67,10 +73,9 @@
                                 <td>Pack Style</td>
                                 <td>Pack Size</td>
                                 <td>Pallet Number</td>
-                                <td>From Item</td>
-                                <td>To Item</td>
+                                <td>Item Name</td>
                                 <td>Quantity</td>
-                                <td>Reclassification Quantity</td>
+                                <td>Delivery Quantity</td>
                                 <td>Action</td>
                             </tr>
                         </thead>
@@ -89,22 +94,17 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#reccDatePicker").datepicker({
+            $("#drDatePicker").datepicker({
                 dateFormat: "dd/mm/yy",
                 altFormat: "yy-mm-dd",
-                altField: "#reccDate",
+                altField: "#drDate",
                 changeYear: true,
                 changeMonth: true
             });
 
-//            // BIND | Search PTS button
+            // BIND | Search PTS button
             $("#btnAdd").bind("click", function() {
-                // VALIDATE | No same pts number in list
                 var ptsCode = $('#ptsCode').val();
-                if ($('tbody#detail tr td:nth-child(4):contains("' + ptsCode + '")').length > 0) {
-                    alert('Pallet Reclassification Number #' + ptsCode + ' is in detail! Duplicate detected.');
-                    return false;
-                }
 
                 // VALIDATE | pallet transfer number is empty
                 if (ptsCode !== '') {
@@ -117,8 +117,8 @@
                             for (var i = 0; i < json.length; i++) {
                                 var x = json[i][1].split('^');
                                 $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[i][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
-                                        '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + ptsCode + '</td><td>' + json[i][4] + '</td><td><select>' + $("<div/>").html(json[i][5]).text() + '</select>' + '</td><td>' + json[i][6] +
-                                        '</td><td><input type="text" value="' + json[i][6] + '" data-max="' + json[i][6] + '"></td><td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>').text();
+                                        '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + ptsCode + '</td><td>' + json[i][4] + '</td><td>' + json[i][5] +
+                                        '</td><td><input type="text" value="0.00" data-max="' + json[i][5] + '"></td><td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                             }
                         },
                         complete: function() {
@@ -130,7 +130,7 @@
             });
 
             // BIND | Save function
-            $("#fReclassification").bind("submit", function() {
+            $("#fDelivery").bind("submit", function() {
                 // VALIDATE | Pallet has been added
                 if ($("tbody#detail tr").length <= 0) {
                     alert('[Error] No pallet number added? Try adding one.');
@@ -147,11 +147,10 @@
 
                 var data = "";
 
-                var header = $('#reccCode').val() + '^' + $('#reccDate').val() + '^' + $('#reccRemarks').val() + '^';
+                var header = $('#drCode').val() + '^' + $('#drDate').val() + '^' + $('#drFrom').val() + '^' + $('#drTo').val() + '^' + $('#drRemarks').val() + '^';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').html() + '^' + $(this).data('item') + '^' +
-                            $(this).find('select').val() + '^' + $(this).find('input').val() + '^@';
+                    data = data + header + $(this).find('td:eq(3)').html() + '^' + $(this).data('item') + '^' + $(this).find('input').val() + '^@';
                 });
 
 //                console.log(data);

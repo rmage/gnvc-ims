@@ -125,7 +125,7 @@
                 changeYear: true,
                 changeMonth: true
             });
-            // BIND | Search OFAL button
+            // BIND | Search PTS button
             $("#btnAdd").bind("click", function() {
                 // VALIDATE | No same pts number in list
                 var ptsCode = $('#ptsCode').val();
@@ -150,11 +150,11 @@
                             data: {action: "getPalletTransfer", key: ptsCode},
                             dataType: "json",
                             success: function(json) {
-                                if (json.length > 0) {
-                                    var x = json[0][1].split('^');
-                                    $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[0][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
-                                            '</td><td>' + x[0] + '</td><td>' + json[0][2] + '</td><td>' + json[0][4] + '</td><td>' + json[0][5] +
-                                            '</td><td>' + json[0][6] + '</td><td><input type="text" class="quantity-bad" value="0.00" size="6"></td><td>' + json[0][6] + '</td><td>' +
+                                for (var i = 0; i < json.length; i++) {
+                                    var x = json[i][1].split('^');
+                                    $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[i][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
+                                            '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + json[i][4] + '</td><td>' + json[i][5] +
+                                            '</td><td>' + json[i][6] + '</td><td><input type="text" class="quantity-bad" value="0.00" size="6"></td><td>' + json[i][6] + '</td><td>' +
                                             '<input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                                 }
                             },
@@ -169,11 +169,11 @@
                             data: {action: "getBadPalletTransfer", key: ptsCode},
                             dataType: "json",
                             success: function(json) {
-                                if (json.length > 0) {
-                                    var x = json[0][1].split('^');
-                                    $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[0][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
-                                            '</td><td>' + x[0] + '</td><td>' + json[0][2] + '</td><td>' + json[0][4] + '</td><td>' + json[0][5] +
-                                            '</td><td>' + json[0][6] + '</td><td><input type="text" class="quantity-bad" value="0.00" size="6"></td><td>' + json[0][6] + '</td><td>' +
+                                for (var i = 0; i < json.length; i++) {
+                                    var x = json[i][1].split('^');
+                                    $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[i][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
+                                            '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + json[i][4] + '</td><td>' + json[i][5] +
+                                            '</td><td>' + json[i][6] + '</td><td><input type="text" class="quantity-bad" value="0.00" size="6"></td><td>' + json[i][6] + '</td><td>' +
                                             '<input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                                 }
                             },

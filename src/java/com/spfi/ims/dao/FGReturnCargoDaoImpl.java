@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-public class FGOrderFillDaoImpl extends AbstractDAO implements FGOrderFillDao {
+public class FGReturnCargoDaoImpl extends AbstractDAO implements FGReturnCargoDao {
     
     protected SimpleJdbcTemplate jdbcTemplate;
     protected DataSource dataSource;
@@ -21,8 +20,8 @@ public class FGOrderFillDaoImpl extends AbstractDAO implements FGOrderFillDao {
     
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC FG_ORDER_FILL_MAX_PAGE ?, ?", show, where);
-        } catch(DataAccessException e) {
+            return jdbcTemplate.queryForInt("EXEC FG_RETURN_CARGO_MAX_PAGE ?, ?", show, where);
+        } catch(Exception e) {
             e.printStackTrace();
             return 1;
         }
@@ -30,25 +29,16 @@ public class FGOrderFillDaoImpl extends AbstractDAO implements FGOrderFillDao {
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC FG_ORDER_FILL_LIST ?, ?, ?, ?", page, show, where, order);
-        } catch(DataAccessException e) {
-            e.printStackTrace();
-            return new ArrayList<Map<String, Object>>();
-        }
-    }
-    
-    public List<Map<String, Object>> getBor(String borCode) {
-        try {
-            return jdbcTemplate.queryForList("EXEC FG_BOOKED_ORDER_DTL_FIND_BY_BOR_CODE ?", borCode);
+            return jdbcTemplate.queryForList("EXEC FG_RETURN_CARGO_LIST ?, ?, ?, ?", page, show, where, order);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
     }
     
-    public List<Map<String, Object>> getPalletTransfer(String ptsCode, int itemId) {
+    public List<Map<String, Object>> getPalletTransfer(String edsCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC FG_PALLET_TRANSFER_DTL_FIND_BY_PTSCODE ?, ?", ptsCode, itemId);
+            return jdbcTemplate.queryForList("EXEC FG_PALLET_TRANSFER_FIND_BY_EDSCODE ?", edsCode);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -56,7 +46,7 @@ public class FGOrderFillDaoImpl extends AbstractDAO implements FGOrderFillDao {
     }
     
     public void insert(String data, String createdBy) {
-        jdbcTemplate.update("EXEC FG_ORDER_FILL_INSERT ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC FG_RETURN_CARGO_INSERT ?, ?", data, createdBy);
     }
     
 }

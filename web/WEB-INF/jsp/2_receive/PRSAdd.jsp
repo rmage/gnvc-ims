@@ -29,11 +29,18 @@
                         dateFormat: "dd/mm/yy"
                     });
 
-                    /*
-                     * button add
-                     */
+                    $('#productcode,#productname').bind('keyup', function() {
+                        $(this).data('select', '0');
+                    });
+                    
                     var queryArr = [];
                     $('#btnAddItem').click(function() {
+                        // VALIDATE | Only type and didn't select from list
+                        if ($('#productcode').data('select') === '0' || $('#productname').data('select') === '0') {
+                            alert('[Error] Item typing detected! Please choose from list or create new item in Master Product.');
+                            return false;
+                        }
+                        
                         var productname = $("#productname").val();
                         var jumlah = $("#jumlah").val();
                         var stockonhand = $("#stockonhand").val();
@@ -206,7 +213,7 @@
 
                                         <td width="10%">Item Code</td>
                                         <td width="20%">
-                                            <input type="text" id="productcode" name="productcode" value="" size="30" /> 
+                                            <input type="text" id="productcode" name="productcode" value="" size="30" data-select="0" /> 
                                             <img width="16" height="16" src="resources/images/search.png" alt="Search Items" />
                                         </td>
                                         <td width="10%">Stock On Hand</td>
@@ -222,7 +229,7 @@
                                     <tr class="detail_genap">
                                         <td width="10%">Item Name</td>
                                         <td width="20%">
-                                            <input type="text" id="productname" name="productname" value="" size="30" />
+                                            <input type="text" id="productname" name="productname" value="" size="30" data-select="0" />
                                         </td>
                                         <td width="10%">Qty</td>
                                         <td width="20%">
@@ -344,6 +351,8 @@
                     $("#uomName").val(ui.item.uom);
                     $("#stockonhand").val(ui.item.soh);
                     $('#jumlah').focus();
+                    
+                    $('#productcode,#productname').data('select', '1');
 
                     return false;
                 }
@@ -365,6 +374,8 @@
                     $("#uomName").val(ui.item.uom);
                     $("#stockonhand").val(ui.item.soh);
                     $('#jumlah').focus();
+                    
+                    $('#productcode,#productname').data('select', '1');
 
                     return false;
                 }

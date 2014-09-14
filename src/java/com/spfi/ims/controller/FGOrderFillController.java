@@ -115,7 +115,8 @@ public class FGOrderFillController extends MultiActionController {
             sb.append("\"9\": \"").append(x.get("pack_style")).append(" / ").append(x.get("pack_size")).append("\", ");
             sb.append("\"10\": \"").append(x.get("bor_nw")).append("\", ");
             sb.append("\"11\": \"").append(x.get("bor_ocancodemax")).append("\", ");
-            sb.append("\"12\": \"").append(x.get("bor_odw")).append("\"}");
+            sb.append("\"12\": \"").append(x.get("bor_odw")).append("\", ");
+            sb.append("\"101\": \"").append(x.get("item_id")).append("\"}");
             
             b = Boolean.TRUE;
         }
@@ -139,7 +140,7 @@ public class FGOrderFillController extends MultiActionController {
 
         /* TRANSACTION | Something complex here */
         sb.append("[");
-        List<Map<String, Object>> ms = fgofDao.getPalletTransfer(request.getParameter("key"));
+        List<Map<String, Object>> ms = fgofDao.getPalletTransfer(request.getParameter("pts"), Integer.parseInt(request.getParameter("item")));
         for (Map<String, Object> x : ms) {
             if (b) {
                 sb.append(",");
