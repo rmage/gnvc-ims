@@ -6,6 +6,7 @@ import com.app.wms.engine.db.dao.DrDao;
 import com.app.wms.engine.db.dao.NonFishStockCardDao;
 import com.app.wms.engine.db.dao.NonFishStockCardSummaryDao;
 import com.app.wms.engine.db.dao.ProductDao;
+import com.app.wms.engine.db.dao.ProductPriceDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.TsDao;
@@ -13,6 +14,7 @@ import com.app.wms.engine.db.dto.Dr;
 import com.app.wms.engine.db.dto.NonFishStockCardAccounting;
 import com.app.wms.engine.db.dto.NonFishStockCardSummary;
 import com.app.wms.engine.db.dto.Product;
+import com.app.wms.engine.db.dto.ProductPrice;
 import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.dto.StockInventory;
 import com.app.wms.engine.db.dto.Ts;
@@ -66,6 +68,8 @@ public class NonFishAccountingController extends MultiActionController {
     private final NonFishStockCardDao nonFishStockCardDao = DaoFactory.createNonFishStockCardDao();
 
     private final NonFishStockCardSummaryDao nonFishStockCardSummaryDao = DaoFactory.createNonFishStockCardSummaryDao();
+
+    private final ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
 
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
@@ -194,7 +198,7 @@ public class NonFishAccountingController extends MultiActionController {
             nfTemp = new NonFishStockCardAccounting();
             nfTemp.setStockCardDate(ts.getTsDate());
             nfTemp.setCode("TS");
-            nfTemp.setNumber(ts.getTsCode() + "");
+            nfTemp.setNumber(ts.getTsCode());
             /*UNIT COST*/
             /*UNIT COST HERE WILL BE CALCULATE WITH AVERAGE COST*/
 
@@ -450,11 +454,17 @@ public class NonFishAccountingController extends MultiActionController {
         List<ReceiveReport> receiveReportList;
         List<Ts> tsList;
         List<Dr> drList;
-
+        StockInventory stockInventory = new StockInventory();
+        ProductPrice productPrice = new ProductPrice();
         BeginningBalance result = new BeginningBalance();
 
         List<NonFishStockCardAccounting> nFStockCardList = new ArrayList<NonFishStockCardAccounting>();
         NonFishStockCardAccounting nfTemp;
+
+        /*GET INITIALIZE QUANTITY*/
+        stockInventory = stockInventoryDao.findByProductCode(productCode);
+
+        productPrice = productPriceDao.findByProduct(productCode);
 
         /*GET RR LIST*/
         receiveReportList = receiveReportDao.findByProductCodeAndBeforeThan(productCode, lastMonth);
@@ -494,7 +504,7 @@ public class NonFishAccountingController extends MultiActionController {
             nfTemp = new NonFishStockCardAccounting();
             nfTemp.setStockCardDate(ts.getTsDate());
             nfTemp.setCode("TS");
-            nfTemp.setNumber(ts.getTsCode() + "");
+            nfTemp.setNumber(ts.getTsCode());
             /*UNIT COST*/
             /*UNIT COST HERE WILL BE CALCULATE WITH AVERAGE COST*/
 
@@ -539,16 +549,17 @@ public class NonFishAccountingController extends MultiActionController {
         });
 
         /*COUNT AVERAGE COST HERE*/
-        Double tempTotalQty = 0d;
+        BigDecimal initPrice = productPrice.getUnitPrice();
+        Double tempTotalQty = stockInventory.getStartBalance().doubleValue();
         Double tempAmount = 0d;
-        BigDecimal tempTotalINIDR = BigDecimal.ZERO;
+        BigDecimal tempTotalINIDR = initPrice.multiply(BigDecimal.valueOf(tempTotalQty));
         int size = nFStockCardList.size();
         boolean isOut = false;
 
         /*INITIALIZE VAR FOR TOTALING*/
-        Double totalQTY = 0d;
+        Double totalQTY = stockInventory.getStartBalance().doubleValue();
         Double totalQTYEnd = 0d;
-        BigDecimal totalAmountEND = BigDecimal.ZERO;
+        BigDecimal totalAmountEND = tempTotalINIDR;
         BigDecimal totalAmountIDR = BigDecimal.ZERO;
         BigDecimal totalINIDR = BigDecimal.ZERO;
         BigDecimal totalOUTIDR = BigDecimal.ZERO;

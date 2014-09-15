@@ -1,5 +1,6 @@
 package com.spfi.ims.dao;
 
+import com.app.wms.engine.db.dto.FGItem;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -19,5 +20,9 @@ public interface FGItemDao {
     public void edit(int key, String data, String updatedBy);
     
     public void delete(int key, String updatedBy);
+    
+    public List<FGItem> findAllActive();
+    
+    public FGItem findById(Integer id);
     
 }

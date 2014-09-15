@@ -965,5 +965,11 @@ public class DaoFactory {
         return (FishUnitCostDao) bf.getBean("FishUnitCostDao");
     }
     
+    /*FG UNIT COST DAO*/
+    public static FgUnitCostDao createFgUnitCostDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FgUnitCostDao) bf.getBean("FgUnitCostDao");
+    }
+    
     
 }
