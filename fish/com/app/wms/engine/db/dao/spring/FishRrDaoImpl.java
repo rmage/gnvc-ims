@@ -171,6 +171,13 @@ public class FishRrDaoImpl extends AbstractDAO implements
         return "fish_rr";
     }
 
+    public FishRr findById(Integer rrId) {
+        FishRr result;
+        String query = "SELECT * FROM " + getTableName() + " WHERE rr_id = ?";
+        result = jdbcTemplate.query(query, this, rrId).get(0);
+        return result;
+    }
+
     @Override
     public Boolean checkIsRrNoExist(String rrNo) {
         String query = "SELECT * FROM " + getTableName() + " WHERE rr_no=?";
@@ -209,36 +216,36 @@ public class FishRrDaoImpl extends AbstractDAO implements
         List<FishRr> resultList = jdbcTemplate.query(query, this, limit, offset, "%" + rrNo + "%");
         return resultList;
     }
-    
+
     /* GNVS | 2014 Update */
     public void insert(String rrNo, Date rrDate, String batchNo, String dateFrom, String dateTo, String type, String wsNo, String createdBy) {
         jdbcTemplate.update("EXEC RR_INSERT ?, ?, ?, ?, ?, ?, ?, ?", rrNo, rrDate, batchNo, dateFrom, dateTo, type, wsNo, createdBy);
     }
-    
+
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
             return jdbcTemplate.queryForInt("EXEC RR_F_MAX_PAGE ?, ?", show, where);
-        } catch(DataAccessException e) {
+        } catch (DataAccessException e) {
             e.printStackTrace();
             return 1;
         }
     }
-    
+
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
             return jdbcTemplate.queryForList("EXEC RR_F_LIST ?, ?, ?, ?", page, show, where, order);
-        } catch(DataAccessException e) {
+        } catch (DataAccessException e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
     }
-    
+
     public List<Map<String, Object>> getBatchInfo(String batchNo) {
         return jdbcTemplate.queryForList("SELECT fv.batch_no, fs.name as supplier, fv.name as boat FROM fish_vessel fv INNER JOIN fish_supplier fs ON fs.id = fv.supplier_id WHERE fv.batch_no LIKE '%" + batchNo + "%'");
     }
-    
+
     public List<Map<String, Object>> getWeightSlip(String batchNo, String dateFrom, String dateTo, String type) {
         return jdbcTemplate.queryForList("EXEC RR_GET_WEIGHT_SLIP ?, ?, ?, ?", batchNo, dateFrom, dateTo, type);
     }
-    
+
 }

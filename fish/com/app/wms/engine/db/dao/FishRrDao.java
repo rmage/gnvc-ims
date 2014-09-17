@@ -17,6 +17,8 @@ public interface FishRrDao extends GeneralDao<FishRr> {
 
     public Boolean checkIsRrNoExist(String rrNo);
     
+    public FishRr findById(Integer rrId);
+    
     /* GNVS | 2014 Update */
     public void insert(String rrNo, Date rrDate, String batchNo, String dateFrom, String dateTo, String type, String wsNo, String createdBy);
     

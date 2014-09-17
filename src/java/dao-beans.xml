@@ -431,16 +431,16 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGTransferDao" class="com.spfi.ims.dao.FGTransferDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGReclassificationDao" class="com.spfi.ims.dao.FGReclassificationDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGDeliveryDao" class="com.spfi.ims.dao.FGDeliveryDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGReturnCargoDao" class="com.spfi.ims.dao.FGReturnCargoDaoImpl" scope="prototype">
-    	<property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
     
     <!-- GNVS | D3 Data-Driven Documents -->
@@ -471,4 +471,14 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     
+    <!--FISH RR ACCOUNTING-->
+    <bean id="FishRRAccountingDao" class="com.app.wms.engine.db.dao.spring.FishRRAccountingDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean id="FishRRAccountingDetailDao" class="com.app.wms.engine.db.dao.spring.FishRRAccountingDetailDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+        
 </beans>
