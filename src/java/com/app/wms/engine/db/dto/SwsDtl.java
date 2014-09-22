@@ -14,7 +14,7 @@ public class SwsDtl implements Serializable {
     
     private BigDecimal qty;
     
-    private int soh;
+    private BigDecimal soh;
     
     private String uom;
     
@@ -75,11 +75,11 @@ public class SwsDtl implements Serializable {
         this.qty = qty;
     }
 
-    public int getSoh() {
+    public BigDecimal getSoh() {
         return soh;
     }
 
-    public void setSoh(int soh) {
+    public void setSoh(BigDecimal soh) {
         this.soh = soh;
     }
 

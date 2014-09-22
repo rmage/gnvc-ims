@@ -53,6 +53,7 @@
                                 <td>Reff</td>
                                 <td>Location</td>
                                 <td>Quantity</td>
+                                <td>Hold Status</td>
                                 <td>Creator</td>
                             </tr>
                         </thead>

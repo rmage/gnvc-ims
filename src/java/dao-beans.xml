@@ -9,9 +9,9 @@
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/IMS;instance=SQLEXPRESS" />
-        <property name="username" value="faridzif" />
-        <property name="password" value="123qweasd" />
+        <property name="url" value="jdbc:jtds:sqlserver://192.168.11.253:1433/inventory" />
+        <property name="username" value="sa" />
+        <property name="password" value="qts1n@r" />
     </bean>
     
     <tx:annotation-driven xmlns:tx="http://www.springframework.org/schema/tx" transaction-manager="txManager" />
@@ -440,6 +440,12 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGReturnCargoDao" class="com.spfi.ims.dao.FGReturnCargoDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGPalletDispositionDao" class="com.spfi.ims.dao.FGPalletDispositionDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGPalletRejectionDao" class="com.spfi.ims.dao.FGPalletRejectionDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     

@@ -97,7 +97,7 @@
                 changeMonth: true
             });
 
-//            // BIND | Search PTS button
+            // BIND | Search PTS button
             $("#btnAdd").bind("click", function() {
                 // VALIDATE | No same pts number in list
                 var ptsCode = $('#ptsCode').val();
@@ -115,10 +115,19 @@
                         dataType: "json",
                         success: function(json) {
                             for (var i = 0; i < json.length; i++) {
-                                var x = json[i][1].split('^');
-                                $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[i][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
-                                        '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + ptsCode + '</td><td>' + json[i][4] + '</td><td><select>' + $("<div/>").html(json[i][5]).text() + '</select>' + '</td><td>' + json[i][6] +
-                                        '</td><td><input type="text" value="' + json[i][6] + '" data-max="' + json[i][6] + '"></td><td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>').text();
+                                var x = json[i][1].split('^'),
+                                        qty = json[i][6].split('.');
+                                $('tbody#detail').append('<tr data-ppc="' + parseInt(x[1]) + '" data-item="' + json[i][3] + '">' +
+                                        '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
+                                        '<td>' + x[0] + '</td>' +
+                                        '<td>' + json[i][2] + '</td>' +
+                                        '<td>' + ptsCode + '</td>' +
+                                        '<td>' + json[i][4] + '</td>' +
+                                        '<td><select>' + $("<div/>").html(json[i][5]).text() + '</select>' + '</td>' +
+                                        '<td>' + json[i][6] + '</td>' +
+                                        '<td><input type="text" class="cs" value="' + qty[0] + '" data-max="' + parseInt(qty[0]) + '" size="6"><input type="text" class="tin" value="' + qty[1] + '" data-max="' + parseInt(qty[1]) + '" size="2"></td>' +
+                                        '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
+                                        '</tr>');
                             }
                         },
                         complete: function() {
@@ -138,9 +147,10 @@
                 }
 
                 // VALIDATE | 0 (zero) value in bad quantity
-                if ($('tbody#detail tr input').filter(function() {
-                    return parseFloat($(this).val()) <= 0;
-                }).length > 0) {
+                if ($('tbody#detail input.cs')
+                        .filter(function() {
+                            return parseInt($(this).val()) <= 0 && parseInt($(this).next().val()) <= 0;
+                        }).length > 0) {
                     alert('[Error] 0 (zero) value detected! Please remove or fill quantity greater than 0 (zero).');
                     return false;
                 }
@@ -150,8 +160,10 @@
                 var header = $('#reccCode').val() + '^' + $('#reccDate').val() + '^' + $('#reccRemarks').val() + '^';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').html() + '^' + $(this).data('item') + '^' +
-                            $(this).find('select').val() + '^' + $(this).find('input').val() + '^@';
+                    data = data + header + $(this).find('td:eq(3)').html() + '^' + 
+                            $(this).data('item') + '^' +
+                            $(this).find('select').val() + '^' + 
+                            (parseFloat($(this).find('.cs').val()) + (parseInt($(this).find('.tin').val()) / 100)) + '^@';
                 });
 
 //                console.log(data);
@@ -165,9 +177,21 @@
             });
 
             // LIVE | validate maximum quantity
-            $('tbody#detail tr input').live('blur', function() {
-                if (parseFloat($(this).val()) > parseFloat($(this).data('max'))) {
-                    $(this).val($(this).data('max'));
+            $('tbody#detail .cs,tbody#detail .tin').live('blur', function() {
+                var ppc = $(this).parent().parent().data('ppc');
+                
+                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
+                    if ($(this).hasClass('tin')) {
+                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+                            $(this).val($(this).data('max'));
+                        } else if (parseInt($(this).val()) > (ppc - 1)) {
+                            $(this).val(ppc - 1);
+                        }
+                    } else {
+                        $(this).val($(this).data('max'));
+                        $(this).next().trigger('blur');
+                        return false;
+                    }
                 }
             });
 

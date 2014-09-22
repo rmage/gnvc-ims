@@ -383,6 +383,12 @@
     <bean name="/FGReturnCargo.htm" class="com.spfi.ims.controller.FGReturnCargoController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/FGPalletDisposition.htm" class="com.spfi.ims.controller.FGPalletDispositionController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGPalletRejection.htm" class="com.spfi.ims.controller.FGPalletRejectionController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     
     <!--FG ACCOUNTING-->
     <bean name="/FGUnitCost.htm" class="com.app.wms.web.controller.acc.FGUnitCostController">

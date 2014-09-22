@@ -50,6 +50,7 @@
                                 <td>Brand</td>
                                 <td>Reff</td>
                                 <td>Destination Port</td>
+                                <td>Special Instructions</td>
                                 <td>Creator</td>
                             </tr>
                         </thead>

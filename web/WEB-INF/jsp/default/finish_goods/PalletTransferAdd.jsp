@@ -164,13 +164,14 @@
                 var tin = 0.00;
                 var divider = $("#packStyle option:selected").data("ppc");
                 $(".i4").each(function() {
-                    if ($(this).val() > 0) {
-                        var io = $(this).val().indexOf(".");
-                        if (io < 0) {
+                    if ($(this).val() >= 0) {
+                        var io = $(this).next().val();
+                        //var io = $(this).val().indexOf(".");
+                        if (io <= 0) {
                             cs = cs + parseFloat($(this).val());
                         } else {
-                            cs = cs + parseFloat($(this).val().substring(0, io));
-                            tin = tin + parseFloat($(this).val().substring(io + 1, $(this).val().length));
+                            cs = cs + parseFloat($(this).val());
+                            tin = tin + parseFloat(io);
                             //+ Math.floor(( / divider)) + 
                             //(($(this).val().substring(io + 1, $(this).val().length) % divider) / 100);
                         }
@@ -225,14 +226,14 @@
                                 + $("#forBrand").val() + "," + $("#canCode").val() + "," + $("#borId").data("id") + ","
                                 + $("#ptsLocation").val() + "," + $("#ptsQty").val() + "," + $r.find(".i0").val() + ","
                                 + $r.find(".i1").val() + "," + $r.find(".i2").val() + "," + $r.find(".i3").val() + ","
-                                + $r.find(".i4").val() + "," + $r.find(".i5").val() + "," + $r.find(".i6").val() + ","
+                                + (parseFloat($r.find(".i4").val()) + (parseFloat($r.find('.i101').val()) / 100)) + "," + $r.find(".i5").val() + "," + $r.find(".i6").val() + ","
                                 + $r.find(".i7").val() + "," + $r.find(".i8").val() + "," + $r.find(".i9").val() + ","
-                                + $r.find(".i10").val() + "," + $("#itemId").val() + ",";
+                                + $r.find(".i10").val() + "," + $("#itemId").val() + "," + $('#ptsStatus').val() + ',';
 
                         data = data + "@";
                     }
                 });
-                //console.log(data);
+//                console.log(data);
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
                         window.location.replace("?action=save&data=" + data);
@@ -247,7 +248,7 @@
             function addNewDetail(mode) {
                 var detail = '<tr><td><select class="i0"><option value="NS">Night Shift</option><option value="DS">Day Shift</option><option value="2ND">Second Shift</option></select></td>'
                         + '<td><input type="hidden" id="date' + counter + '" class="i1" /><input type="text" id="datePicker' + counter + '" class="i1Picker" size="8" /></td><td><input type="text" class="i2" size="11" /></td>'
-                        + '<td><input type="text" class="i3" size="11" /></td><td><input type="text" class="i4" size="11" /></td><td><input type="text" class="i5" size="11" /></td>'
+                        + '<td><input type="text" class="i3" size="11" /></td><td><input type="text" class="i4" size="3" value="0" /><input type="text" class="i101" size="2" value="0" /></td><td><input type="text" class="i5" size="11" /></td>'
                         + '<td><input type="text" class="i6" size="11" /></td><td><input type="text" class="i7" size="11" /></td><td><input type="text" class="i8" size="11" /></td>'
                         + '<td><input type="text" class="i9" size="11" /></td><td><input type="text" class="i10" size="11" /></td><td><input type="button" class="detailAdd ui-button ui-widget ui-state-default ui-corner-all" value="Add" style="font-size: smaller;" /></td></tr>';
                 $("#detail").append(detail);
@@ -265,6 +266,14 @@
                 counter = counter + 1;
             }
             addNewDetail();
+            
+            // VALIDATE | i101 for maximum tin
+            $('.i101').live('blur', function() {
+                if (parseInt($(this).val()) >= parseInt($("#packStyle option:selected").data("ppc"))) {
+                    $(this).val(parseInt($("#packStyle option:selected").data("ppc")) - 1);
+                }
+                calculateCs();
+            });
         </script>
     </body>
 </html>

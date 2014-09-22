@@ -9,4 +9,9 @@ public interface D3Dao {
     
     public List<Map<String, Object>> NFPriceList (String itemCode, String dateFrom, String dateTo);
     
+    /*
+     * REPORT PREVIEW
+     */
+    public List<Map<String, Object>> getFGStockInventoryPreview (String param1, String param2);
+    
 }

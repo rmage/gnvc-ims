@@ -10,6 +10,8 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.D3Dao;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -167,6 +169,49 @@ public class D3Controller extends MultiActionController {
             sb.append("{\"1\": \"").append(x.get("d3_date")).append("\", ");
             sb.append("\"2\": \"").append(x.get("d3_currency")).append("\", ");
             sb.append("\"3\": \"").append(x.get("d3_price")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+        
+    }
+    
+    /*
+     * REPORT PREVIEW
+     */
+    public void getFGStockInventoryPreview(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        D3Dao d3Dao = DaoFactory.createD3Dao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("[");
+        List<Map<String, Object>> ms = d3Dao.getFGStockInventoryPreview(request.getParameter("param1"), request.getParameter("param2"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("col1")).append("\", ");
+            sb.append("\"2\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col2").toString()))).append("\", ");
+            sb.append("\"3\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col3").toString()))).append("\", ");
+            sb.append("\"4\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col4").toString()))).append("\", ");
+            sb.append("\"5\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col5").toString()))).append("\", ");
+            sb.append("\"6\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col11").toString()))).append("\", ");
+            sb.append("\"7\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col6").toString()))).append("\", ");
+            sb.append("\"8\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col7").toString()))).append("\", ");
+            sb.append("\"9\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col8").toString()))).append("\", ");
+            sb.append("\"10\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col9").toString()))).append("\", ");
+            sb.append("\"11\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col10").toString()))).append("\", ");
+            sb.append("\"12\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col12").toString()))).append("\"}");
             
             b = Boolean.TRUE;
         }

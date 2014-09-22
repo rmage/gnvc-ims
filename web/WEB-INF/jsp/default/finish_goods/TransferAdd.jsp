@@ -40,7 +40,7 @@
                                             <option value="">-</option>
                                             <option value="B">Bad Stocks</option>
                                             <option value="O">Others</option>
-                                            <option value="R">Re-Production</option>
+                                            <option value="R">Reprocess</option>
                                         </select>
                                     </td>
                                     <td>TS Date</td>
@@ -48,22 +48,10 @@
                                 </tr>
                                 <tr>
                                     <td>From</td>
-                                    <td>
-                                        <select id="tsFrom" name="tsFrom" required>
-                                            <option value="">-</option>
-                                            <c:forEach items="${ims.ds}" var="x">
-                                                <option value="${x.departmentCode}">${x.departmentCode} | ${x.departmentName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </td>
+                                    <td><input type="text" id="tsFrom" name="tsFrom" size="50" required></td>
                                     <td>To</td>
                                     <td>
-                                        <select id="tsTo" name="tsTo" required>
-                                            <option value="">-</option>
-                                            <c:forEach items="${ims.ds}" var="x">
-                                                <option value="${x.departmentCode}">${x.departmentCode} | ${x.departmentName}</option>
-                                            </c:forEach>
-                                        </select>
+                                        <input type="text" id="tsTo" name="tsTo" size="50" required>
                                     </td>
                                 </tr>
                                 <tr>
@@ -151,11 +139,16 @@
                             dataType: "json",
                             success: function(json) {
                                 for (var i = 0; i < json.length; i++) {
-                                    var x = json[i][1].split('^');
-                                    $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[i][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
-                                            '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + json[i][4] + '</td><td>' + json[i][5] +
-                                            '</td><td>' + json[i][6] + '</td><td><input type="text" class="quantity-bad" value="0.00" size="6"></td><td>' + json[i][6] + '</td><td>' +
-                                            '<input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
+                                    var x = json[i][1].split('^'),
+                                            qty = json[i][6].split('.');
+                                    $('tbody#detail').append('<tr data-ppc="' + parseInt(x[1]) + '" data-item="' + json[i][3] + '">' +
+                                            '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
+                                            '<td>' + x[0] + '</td><td>' + json[i][2] + '</td>' +
+                                            '<td>' + json[i][4] + '</td><td>' + json[i][5] + '</td>' +
+                                            '<td>' + json[i][6] + '</td>' +
+                                            '<td><input type="text" class="qtyOutCs" value="0" size="6" data-max="' + parseInt(qty[0]) + '"><input type="text" class="qtyOutTin" value="0" size="2" data-max="' + parseInt(qty[1]) + '"></td>' +
+                                            '<td>' + json[i][6] + '</td>' +
+                                            '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                                 }
                             },
                             complete: function() {
@@ -170,11 +163,17 @@
                             dataType: "json",
                             success: function(json) {
                                 for (var i = 0; i < json.length; i++) {
-                                    var x = json[i][1].split('^');
-                                    $('tbody#detail').append('<tr data-ppcs="' + x[1] + '" data-item="' + json[i][3] + '"><td>' + ($('tbody#detail tr').length + 1) +
-                                            '</td><td>' + x[0] + '</td><td>' + json[i][2] + '</td><td>' + json[i][4] + '</td><td>' + json[i][5] +
-                                            '</td><td>' + json[i][6] + '</td><td><input type="text" class="quantity-bad" value="0.00" size="6"></td><td>' + json[i][6] + '</td><td>' +
-                                            '<input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
+                                    var x = json[i][1].split('^'),
+                                            qty = json[i][6].split('.');
+                                    $('tbody#detail').append('<tr data-ppc="' + parseInt(x[1]) + '" data-item="' + json[i][3] + '">' +
+                                            '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
+                                            '<td>' + x[0] + '</td><td>' + json[i][2] + '</td>' +
+                                            '<td>' + json[i][4] + '</td>' +
+                                            '<td>' + json[i][5] + '</td>' +
+                                            '<td>' + json[i][6] + '</td>' +
+                                            '<td><input type="text" class="qtyOutCs" value="0" size="6" data-max="' + parseInt(qty[0]) + '"><input type="text" class="qtyOutTin" value="0" size="2" data-max="' + parseInt(qty[1]) + '"></td>' +
+                                            '<td>' + json[i][6] + '</td>' +
+                                            '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                                 }
                             },
                             complete: function() {
@@ -193,9 +192,12 @@
                     alert('[Error] No pallet number added? Try adding one.');
                     return false;
                 }
-                
+
                 // VALIDATE | 0 (zero) value in bad quantity
-                if ($('tbody#detail tr input.quantity-bad').filter(function() { return parseFloat($(this).val()) <= 0; }).length > 0) {
+                if ($('tbody#detail tr input.qtyOutCs')
+                        .filter(function() {
+                            return parseInt($(this).val()) <= 0 && parseInt($(this).next().val()) <= 0;
+                        }).length > 0) {
                     alert('[Error] 0 (zero) value detected! Please remove or fill quantity greater than 0 (zero).');
                     return false;
                 }
@@ -206,7 +208,9 @@
                         $('#tsFrom').val() + '^' + $('#tsTo').val() + '^' + $('#tsRemarks').val() + '^';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(4)').html() + '^' + $(this).data('item') + '^' + $(this).find('.quantity-bad').val() + '^@';
+                    data = data + header + $(this).find('td:eq(4)').html() + '^' + 
+                            $(this).data('item') + '^' + 
+                            (parseFloat($(this).find('.qtyOutCs').val()) + (parseInt($(this).find('.qtyOutTin').val()) / 100)) + '^@';
                 });
 
 //                console.log(data);
@@ -219,29 +223,31 @@
                 return false;
             });
 
-            // LIVE | onBlur bad quantity
-            $('.quantity-bad').live('blur', function() {
-                var $r = $(this).parent().parent();
-                var m = $r.data('ppcs');
-                var gQty = csToTin($r.find('td:eq(5)').html(), m) - csToTin($r.find('input.quantity-bad').val(), m);
+            // LIVE | onBlur out quantity
+            $('.qtyOutCs,.qtyOutTin').live('blur', function() {
+                var ppc = $(this).parent().parent().data('ppc'),
+                        $td = $(this).parent(),
+                        qty = parseInt($td.find('input:eq(0)').data('max')) * ppc + parseInt($td.find('input:eq(1)').data('max'));
 
-                $r.find('td:eq(7)').html(tinToCs(gQty, m).toFixed(2));
+                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
+                    if ($(this).hasClass('qtyOutTin')) {
+                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+                            $(this).val($(this).data('max'));
+                        } else if (parseInt($(this).val()) > (ppc - 1)) {
+                            $(this).val(ppc - 1);
+                        }
+                    } else {
+                        $(this).val($(this).data('max'));
+                        $(this).next().trigger('blur');
+                        return false;
+                    }
+                }
+
+                var qtyLess = parseInt($td.find('input:eq(0)').val()) * ppc + parseInt($td.find('input:eq(1)').val());
+                $td.next().html(tinToCs(qty - qtyLess, ppc).toFixed(2));
             });
 
             // FUNCTION | Cs to Tin conversation
-            function csToTin(v, m) {
-                var cs = 0.00;
-                var tin = 0.00;
-                var io = v.indexOf(".");
-
-                if (io < 0) {
-                    return (v * m);
-                } else {
-                    cs = parseFloat(v.substring(0, io));
-                    tin = parseFloat(v.substring(io + 1, v.length));
-                    return (cs * m) + tin;
-                }
-            }
 
             function tinToCs(v, m) {
                 var cs = Math.floor(v / m);

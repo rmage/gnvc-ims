@@ -124,14 +124,15 @@
                                 $('#rrFrom').val(json[0][2]);
 
                                 for (var i = 0; i < json.length; i++) {
-                                    $('tbody#detail').append('<tr data-item="' + json[i][101] + '">' +
+                                    var qtyReturn = json[i][7].split('.');
+                                    $('tbody#detail').append('<tr data-item="' + json[i][101] + '" data-ppc="' + json[i][102] + '">' +
                                             '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
                                             '<td>' + json[i][3] + '</td>' +
                                             '<td>' + json[i][4] + '</td>' +
                                             '<td>' + json[i][5] + '</td>' +
                                             '<td>' + json[i][6] + '</td>' +
                                             '<td>' + json[i][7] + '</td>' +
-                                            '<td><input type="text" value="' + json[i][7] + '" size="8" data-max="' + json[i][7] + '"></td>' +
+                                            '<td><input type="text" class="cs" value="0" size="6" data-max="' + parseInt(qtyReturn[0]) + '"><input type="text" class="tin" value="0" size="2" data-max="' + parseInt(qtyReturn[1]) + '"></td>' +
                                             '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
                                             '</tr>');
                                 }
@@ -153,9 +154,10 @@
                 }
 
                 // VALIDATE | 0 (zero) value in quantity
-                if ($('tbody#detail tr input').filter(function() {
-                    return parseFloat($(this).val()) <= 0;
-                }).length > 0) {
+                if ($('tbody#detail input.cs')
+                        .filter(function() {
+                            return parseInt($(this).val()) <= 0 && parseInt($(this).next().val()) <= 0;
+                        }).length > 0) {
                     alert('[Error] 0 (zero) value detected! Please remove or fill quantity greater than 0 (zero).');
                     return false;
                 }
@@ -165,7 +167,9 @@
                 var header = $('#rrCode').val() + '^' + $('#rrDate').val() + '^' + $('#edsCode').val() + '^' + $('#rrFrom').val() + '^' + $('#rrRemarks').val() + '^' + $('#isReplace').val() + '^';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').html() + '^' + $(this).data('item') + '^' + $(this).find('input').val() + '^@';
+                    data = data + header + $(this).find('td:eq(3)').html() + '^' + 
+                            $(this).data('item') + '^' + 
+                            (parseFloat($(this).find('.cs').val()) + (parseInt($(this).find('.tin').val()) / 100)) + '^@';
                 });
 
 //                console.log(data);
@@ -180,8 +184,20 @@
 
             // LIVE | validate maximum quantity
             $('tbody#detail tr input').live('blur', function() {
-                if (parseFloat($(this).val()) > parseFloat($(this).data('max'))) {
-                    $(this).val($(this).data('max'));
+                var ppc = $(this).parent().parent().data('ppc');
+                
+                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
+                    if ($(this).hasClass('tin')) {
+                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+                            $(this).val($(this).data('max'));
+                        } else if (parseInt($(this).val()) > (ppc - 1)) {
+                            $(this).val(ppc - 1);
+                        }
+                    } else {
+                        $(this).val($(this).data('max'));
+                        $(this).next().trigger('blur');
+                        return false;
+                    }
                 }
             });
 

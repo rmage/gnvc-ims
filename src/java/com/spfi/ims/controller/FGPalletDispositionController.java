@@ -2,7 +2,7 @@ package com.spfi.ims.controller;
 
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
-import com.spfi.ims.dao.FGReturnCargoDao;
+import com.spfi.ims.dao.FGPalletDispositionDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -13,20 +13,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-public class FGReturnCargoController extends MultiActionController {
-
+public class FGPalletDispositionController extends MultiActionController {
+    
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         /* DATA | get initial value */
         /* DAO | Define needed dao here */
         /* TRANSACTION | Something complex here */
-        return new ModelAndView("default/finish_goods/ReturnCargoList");
+        return new ModelAndView("default/finish_goods/PalletDispositionList");
     }
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
         /* DATA | get initial value */
         /* DAO | Define needed dao here */
         /* TRANSACTION | Something complex here */
-        return new ModelAndView("default/finish_goods/ReturnCargoAdd");
+        return new ModelAndView("default/finish_goods/PalletDispositionAdd");
     }
 
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
@@ -36,15 +36,15 @@ public class FGReturnCargoController extends MultiActionController {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
             /* DAO | Define needed dao here */
-            FGReturnCargoDao fgrcDao = DaoFactory.createFGReturnCargoDao();
+            FGPalletDispositionDao fgpdDao = DaoFactory.createFGPalletDispositionDao();
 
             /* TRANSACTION | Something complex here */
-            fgrcDao.insert(data, lu.getUserId());
+            fgpdDao.insert(data, lu.getUserId());
 
-            return new ModelAndView("redirect:FGReturnCargo.htm");
+            return new ModelAndView("redirect:FGPalletDisposition.htm");
         } catch (Exception e) {
             e.printStackTrace();
-            return new ModelAndView("redirect:FGReturnCargo.htm?action=create");
+            return new ModelAndView("redirect:FGPalletDisposition.htm?action=create");
         }
     }
 
@@ -56,22 +56,24 @@ public class FGReturnCargoController extends MultiActionController {
         StringBuilder sb = new StringBuilder();
 
         /* DAO | Define needed dao here */
-        FGReturnCargoDao fgrcDao = DaoFactory.createFGReturnCargoDao();
+        FGPalletDispositionDao fgpdDao = DaoFactory.createFGPalletDispositionDao();
 
         /* TRANSACTION | Something complex here */
-        sb.append("{\"maxpage\": ").append(fgrcDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
-        List<Map<String, Object>> ms = fgrcDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        sb.append("{\"maxpage\": ").append(fgpdDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = fgpdDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
         for (Map<String, Object> x : ms) {
             if (b) {
                 sb.append(",");
             }
-            sb.append("{\"1\": \"").append(x.get("rr_code")).append("\", ");
-            sb.append("\"2\": \"").append(x.get("rr_code")).append("\", ");
-            sb.append("\"3\": \"").append(x.get("rr_date")).append("\", ");
-            sb.append("\"4\": \"").append(x.get("eds_code")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("rr_from")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("rr_remarks")).append("\", ");
-            sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
+            sb.append("{\"1\": \"").append(x.get("qa_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("qa_code")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("qa_date")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("pts_code")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("evaluated_date")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("disposition_date")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("qa_reason")).append("\", ");
+            sb.append("\"8\": \"").append(x.get("qa_remarks")).append("\", ");
+            sb.append("\"9\": \"").append(x.get("created_by")).append("\"}");
 
             b = Boolean.TRUE;
         }
@@ -90,24 +92,21 @@ public class FGReturnCargoController extends MultiActionController {
         StringBuilder sb = new StringBuilder();
 
         /* DAO | Define needed dao here */
-        FGReturnCargoDao fgrcDao = DaoFactory.createFGReturnCargoDao();
+        FGPalletDispositionDao fgpdDao = DaoFactory.createFGPalletDispositionDao();
 
         /* TRANSACTION | Something complex here */
         sb.append("[");
-        List<Map<String, Object>> ms = fgrcDao.getPalletTransfer(request.getParameter("key"));
+        List<Map<String, Object>> ms = fgpdDao.getPalletTransfer(request.getParameter("key"));
         for (Map<String, Object> x : ms) {
             if (b) {
                 sb.append(",");
             }
-            sb.append("{\"1\": \"").append(x.get("eds_code")).append("\", ");
-            sb.append("\"2\": \"").append(x.get("bor_buyer")).append("\", ");
+            sb.append("{\"1\": \"").append(x.get("pts_can_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("pts_pdate")).append("\", ");
             sb.append("\"3\": \"").append(x.get("pack_style")).append("\", ");
             sb.append("\"4\": \"").append(x.get("pack_size")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("pts_code")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("item_name")).append("\", ");
-            sb.append("\"7\": \"").append(x.get("lmr_labeled")).append("\", ");
-            sb.append("\"101\": \"").append(x.get("item_id")).append("\", ");
-            sb.append("\"102\": \"").append(x.get("pack_per_cs")).append("\"}");
+            sb.append("\"5\": \"").append(x.get("item_name")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("pts_pqty")).append("\"}");
 
             b = Boolean.TRUE;
         }
@@ -117,5 +116,5 @@ public class FGReturnCargoController extends MultiActionController {
         pw.close();
 
     }
-
+    
 }

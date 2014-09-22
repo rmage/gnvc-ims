@@ -29,15 +29,9 @@ public class FGTransferController extends MultiActionController {
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response)
             throws DepartmentDaoException {
         /* DATA | get initial value */
-        HashMap<String, Object> model = new HashMap<String, Object>();
-
         /* DAO | Define needed dao here */
-        DepartmentDao dDao = DaoFactory.createDepartmentDao();
-
         /* TRANSACTION | Something complex here */
-        model.put("ds", dDao.findAll());
-
-        return new ModelAndView("default/finish_goods/TransferAdd", "ims", model);
+        return new ModelAndView("default/finish_goods/TransferAdd");
     }
 
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {

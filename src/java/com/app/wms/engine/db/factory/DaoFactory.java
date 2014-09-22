@@ -936,6 +936,16 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGReturnCargoDao) bf.getBean("FGReturnCargoDao");
     }
+    
+    public static FGPalletDispositionDao createFGPalletDispositionDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGPalletDispositionDao) bf.getBean("FGPalletDispositionDao");
+    }
+    
+    public static FGPalletRejectionDao createFGPalletRejectionDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGPalletRejectionDao) bf.getBean("FGPalletRejectionDao");
+    }
 
     /* GNVS | D3 Data-Driven Documents */
     public static D3Dao createD3Dao() {

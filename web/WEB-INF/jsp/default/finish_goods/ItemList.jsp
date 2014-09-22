@@ -59,8 +59,10 @@
                                 <td style="width: 50px">Action</td>
                                 <td column="item_code">Item Code</td>
                                 <td column="item_name">Item Name</td>
-                                <td column="item_pack_style">Pack Style</td>
-                                <td column="item_pack_size">Pack Size</td>
+                                <td column="fgps.pack_style">Pack Style</td>
+                                <td column="fgps.pack_size">Pack Size</td>
+                                <td column="item_oil">Oil</td>
+                                <td column="item_lid">Lid</td>
                                 <td>Created By</td>
                                 <td>Created Date</td>
                             </tr>

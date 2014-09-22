@@ -75,7 +75,8 @@ public class FGOrderFillController extends MultiActionController {
             sb.append("\"7\": \"").append(x.get("bor_brand")).append("\", ");
             sb.append("\"8\": \"").append(x.get("bor_reff")).append("\", ");
             sb.append("\"9\": \"").append(x.get("bor_destport")).append("\", ");
-            sb.append("\"10\": \"").append(x.get("created_by")).append("\"}");
+            sb.append("\"10\": \"").append(x.get("ofal_remarks")).append("\", ");
+            sb.append("\"11\": \"").append(x.get("created_by")).append("\"}");
 
             b = Boolean.TRUE;
         }
@@ -116,7 +117,9 @@ public class FGOrderFillController extends MultiActionController {
             sb.append("\"10\": \"").append(x.get("bor_nw")).append("\", ");
             sb.append("\"11\": \"").append(x.get("bor_ocancodemax")).append("\", ");
             sb.append("\"12\": \"").append(x.get("bor_odw")).append("\", ");
-            sb.append("\"101\": \"").append(x.get("item_id")).append("\"}");
+            sb.append("\"13\": \"").append(x.get("bor_opercentflakes")).append("\", ");
+            sb.append("\"101\": \"").append(x.get("item_id")).append("\", ");
+            sb.append("\"102\": \"").append(x.get("pack_per_cs")).append("\"}");
             
             b = Boolean.TRUE;
         }

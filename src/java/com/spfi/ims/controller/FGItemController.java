@@ -56,9 +56,9 @@ public class FGItemController extends MultiActionController {
             /* DATA | get initial value */
             String mode = request.getParameter("mode");
             String data = request.getParameter("itemPackStyle") + "," + request.getParameter("itemCode") + ","
-                    + request.getParameter("itemName") + ",";
+                    + request.getParameter("itemName") + "," + request.getParameter("itemOil") + "," + request.getParameter("itemLid") + ",";
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            fyaPrepareData(request, "item");
+//            fyaPrepareData(request, "item");
             /* DAO | Define needed dao here */
             FGItemDao fglDao = DaoFactory.createFGItemDao();
             
@@ -110,8 +110,10 @@ public class FGItemController extends MultiActionController {
             sb.append("\"3\": \"").append(x.get("item_name")).append("\", ");
             sb.append("\"4\": \"").append(x.get("pack_style")).append("\", ");
             sb.append("\"5\": \"").append(x.get("pack_size")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("created_by")).append("\", ");
-            sb.append("\"7\": \"").append(sdf.format(x.get("created_date"))).append("\"}");
+            sb.append("\"6\": \"").append(x.get("item_oil")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("item_lid")).append("\", ");
+            sb.append("\"8\": \"").append(x.get("created_by")).append("\", ");
+            sb.append("\"9\": \"").append(sdf.format(x.get("created_date"))).append("\"}");
 
             b = Boolean.TRUE;
         }
@@ -134,7 +136,7 @@ public class FGItemController extends MultiActionController {
                 sb.append(s).append(",");
             }
         }
-        System.err.println("IMS:DEBUG::" + sb.toString());
+//        System.err.println("IMS:DEBUG::" + sb.toString());
         return sb.toString();
     }
     

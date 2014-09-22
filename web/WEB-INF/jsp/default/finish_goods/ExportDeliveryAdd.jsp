@@ -41,7 +41,7 @@
                                 <tr>
                                     <td>VAN</td>
                                     <td><input type="text" id="edsVan" name="edsVan" size="50" /></td>
-                                    <td>Pelayaran Seal</td>
+                                    <td>Seal Number</td>
                                     <td><input type="text" id="edsPelayaranSeal" name="edsPelayaranSeal" size="50" /></td>
                                 </tr>
                                 <tr>

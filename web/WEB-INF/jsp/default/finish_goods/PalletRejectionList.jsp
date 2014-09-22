@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Delivery</title>
+        <title>IMS &therefore; Pallet Rejection</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -17,13 +17,13 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="FGDelivery.htm" id="search" method="post">
+                    <form action="FGPalletRejection.htm" id="search" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>Delivery &therefore; Search</caption>
+                            <caption>Pallet Rejection &therefore; Search</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">Delivery Number</td>
-                                    <td><input type="text" name="dr_code" /></td>
+                                    <td style="width: 200px;">Rejection Number</td>
+                                    <td><input type="text" name="reje_code" /></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -32,22 +32,23 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Search" name="btnSearch" />
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('FGDelivery.htm?action=create');" />
+                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('FGPalletRejection.htm?action=create');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </form>
                     <table class="collapse tblForm row-select" id="list">
-                        <caption>Delivery &therefore; List</caption>
+                        <caption>Pallet Rejection &therefore; List</caption>
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td column="dr_code">Delivery Code</td>
-                                <td column="dr_date">Delivery Date</td>
-                                <td>From</td>
-                                <td>To</td>
+                                <td column="reje_code">Rejection Number</td>
+                                <td column="reje_date">Rejection Date</td>
+                                <td>PTS Number</td>
+                                <td>Rejection Type</td>
+                                <td>Reason</td>
                                 <td>Remarks</td>
                                 <td>Created By</td>
                             </tr>
@@ -67,7 +68,7 @@
         <!-- javascript block HERE -->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_Delivery Report (xls)');
+            util.initListTable($('#list'), 'R_Pallet Rejection Report (xls)');
         </script>
     </body>
 </html>

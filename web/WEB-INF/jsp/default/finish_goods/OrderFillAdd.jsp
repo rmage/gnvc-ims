@@ -28,69 +28,73 @@
                 <div class="box">
                     <form action="#" id="fOfal" name="fOfal" method="post">
                         <input type="hidden" id="ofalDate" name="ofalDate" value="<%=sdf.format(cDate)%>" />
-                        <input type="hidden" id="itemId" name="itemId" value="" />
+                        <input type="hidden" id="itemId" name="itemId" value="" data-ppc="" />
                         <table class="collapse tblForm row-select">
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">Bor Code</td>
-                                    <td><input type="text" class="bor-info" id="borId" name="borId" required="required" data-id="" /></td>
+                                    <td><input type="text" class="bor-info" id="borId" name="borId" required="required" data-id=""></td>
                                     <td style="width: 200px;">OFAL Code</td>
-                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" required="required" /></td>
+                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" required="required"></td>
                                 </tr>
                                 <tr>
                                     <td>Buyer</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" class="bor-info" readonly></td>
                                     <td>OFAL Date</td>
-                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required" /></td>
+                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required"></td>
                                 </tr>
                                 <tr>
                                     <td>Brand</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" class="bor-info" readonly></td>
                                     <td><b>Label Declaration</b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td>Reference Number</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" class="bor-info" readonly></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="lNw" value="0" /> g</td>
+                                    <td><input type="text" id="lNw" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Destination Port</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" class="bor-info" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="lDw" value="0" /> g</td>
+                                    <td><input type="text" id="lDw" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Quantity</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" class="bor-info" readonly></td>
                                     <td>BBE</td>
-                                    <td><input type="text" id="lBbe" value="0" /> g</td>
+                                    <td><input type="text" id="lBbe" value="0"></td>
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" class="bor-info" readonly></td>
                                     <td><b>Actual Specification</b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td>Can Code</td>
-                                    <td><input type="text" id="canCode" name="canCode" readonly="readonly"</td>
+                                    <td><input type="text" id="canCode" name="canCode" size="50" readonly></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="aNw" /> g</td>
+                                    <td><input type="text" id="aNw" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Max Code</td>
-                                    <td><input type="text" class="bor-info" readonly="readonly"</td>
+                                    <td><input type="text" id="vMaxCOde" name="vMaxCOde" class="bor-info" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="aDw" /> g</td>
+                                    <td><input type="text" id="aDw" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Shipment Schedule</td>
-                                    <td><input type="text" id="shipment" name="shipment"</td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><input type="text" id="shipment" name="shipment"></td>
+                                    <td>Flakes</td>
+                                    <td><input type="text" id="aFlk" name="aFlk" readonly></td>
+                                </tr>
+                                <tr>
+                                    <td>Special Instruction</td>
+                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -156,52 +160,83 @@
                 changeYear: true,
                 changeMonth: true
             });
-
             // BIND | Add PTS button
             $("#btnAdd").bind("click", function() {
-                if ($("#detail tr td:nth-child(2):contains('" + $("#ptsCode").val() + "')").size() > 0) {
+                // VALIDATE | no same pts number in list
+                var ptsCode = $("#ptsCode").val();
+                if ($("#detail tr td:nth-child(2):contains('" + ptsCode + "')").size() > 0) {
+                    alert('[Error] Pallet Transfer Number #' + ptsCode + ' is in detail! Duplicate detected.');
                     return false;
                 }
-                $(this).after('<img id="load" src="resources/ui-anim_basic_16x16.gif" />');
-                // PTS | Get data
-                $.ajax({
-                    url: "?", type: "post",
-                    data: {action: "getPts", pts: $("#ptsCode").val(), item: $('#itemId').val()},
-                    dataType: "json",
-                    success: function(json) {
-                        if (json.length > 0) {
-                            $("#detail").append('<tr><td>' + ($("#detail tr").size() + 1) + '</td><td>' + json[0][1] +
-                                    '</td><td>' + json[0][2] + '</td><td>' + json[0][3] + '</td><td>' + json[0][4] +
-                                    '</td><td>' + json[0][5] + '</td><td><input type="text" class="quantity" value="' + parseFloat(json[0][6]).toFixed(2) + '" size="6" data-max="' + parseFloat(json[0][6]).toFixed(2) + '" data-code="' + json[0][1] + '" /></td><td>' + parseFloat(json[0][7]).toFixed(2) +
-                                    '</td><td>' + parseFloat(json[0][8]).toFixed(2) + '</td><td>' + parseFloat(json[0][9]).toFixed(2) + '</td><td>' + json[0][10] +
-                                    '</td><td><input type="text" class="remarks" /></td><td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this)"></td></tr>');
-                            $("#ptsCode").val("");
-                            setCanCode();
-                        }
-                    },
-                    complete: function() {
-                        $('#load').remove();
-                    }
-                });
-            });
 
-            // BIND | Quantity maximu and minimum value
-            $(".quantity").live("blur", function() {
-                if (parseFloat($(this).val()) < 0.01 || parseFloat($(this).val()) > parseFloat($(this).data("max")) || !/^\d+(\.\d{1,2})?$/.test($(this).val())) {
-                    $(this).val($(this).data("max"));
+                // VALIDATE | before pick bor id
+                if ($('#itemId').val() === '') {
+                    alert('[Error] Please select approriate Booked Order Report first!');
+                    return false;
+                }
+
+                if (ptsCode !== '') {
+                    $(this).after('<img id="load" src="resources/ui-anim_basic_16x16.gif" />');
+                    // PTS | Get data
+                    $.ajax({
+                        url: "?", type: "post",
+                        data: {action: "getPts", pts: ptsCode, item: $('#itemId').val()},
+                        dataType: "json",
+                        success: function(json) {
+                            if (json.length > 0) {
+                                var ptsQty = json[0][6].split('.');
+                                $("#detail").append('<tr>' +
+                                        '<td>' + ($("#detail tr").size() + 1) + '</td>' +
+                                        '<td>' + json[0][1] + '</td>' +
+                                        '<td>' + json[0][2] + '</td>' +
+                                        '<td>' + json[0][3] + '</td>' +
+                                        '<td>' + json[0][4] + '</td>' +
+                                        '<td>' + json[0][5] + '</td>' +
+                                        '<td><input type="text" class="qtyCs" value="' + parseInt(ptsQty[0]) + '" size="3" data-code="' + json[0][1] + '" data-max="' + parseInt(ptsQty[0]) + '"><input type="text" class="qtyTin" size="2" value="' + parseInt(ptsQty[1]) + '" data-max="' + parseInt(ptsQty[1]) + '"></td>' +
+                                        '<td>' + json[0][7] + '</td>' +
+                                        '<td>' + json[0][8] + '</td>' +
+                                        '<td>' + json[0][9] + '</td>' +
+                                        '<td>' + json[0][10] + '</td>' +
+                                        '<td><input type="text" class="remarks" /></td>' +
+                                        '<td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this)"></td>' +
+                                        '</tr>');
+                                $("#ptsCode").val("");
+                                setCanCode();
+                            }
+                        },
+                        complete: function() {
+                            $('#load').remove();
+                        }
+                    });
                 }
             });
+            // BIND | Quantity maximu and minimum value
+            $(".qtyCs,.qtyTin").live("blur", function() {
+                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
 
+                    if ($(this).hasClass('qtyTin')) {
+                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+                            $(this).val($(this).data('max'));
+                        } else if (parseInt($(this).val()) > (parseInt($('#itemId').data('ppc')) - 1)) {
+                            $(this).val((parseInt($('#itemId').data('ppc')) - 1));
+                        }
+                    } else {
+                        $(this).val($(this).data('max'));
+                        $(this).next().trigger('blur');
+                    }
+
+                }
+            });
             // BIND | Reset form if bor change
             $("#borId").bind("keyup", function() {
                 if ($(this).data("id") !== "") {
-                    $(".bor-info,#aNw,#aDw").each(function(i) {
+                    $(".bor-info,#aNw,#aDw,#aFlk").each(function(i) {
                         $(this).val("");
                     });
                     $(this).data("id", "");
+                    $('#itemId').val('');
                 }
             });
-
             // AUTOCOMPLETE | Get bor info
             $("#borId").autocomplete({
                 source: "?action=getBor",
@@ -209,11 +244,10 @@
                 delay: 1000,
                 select: function(event, ui) {
                     $(this).data("id", ui.item[1]);
-                    $(".bor-info,#aNw,#aDw").each(function(i) {
+                    $(".bor-info,#aNw,#aDw,#aFlk").each(function(i) {
                         $(this).val(ui.item[i + 3]);
                     });
-                    $('#itemId').val(ui.item[101]);
-                    
+                    $('#itemId').val(ui.item[101]).data('ppc', ui.item[102]);
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
@@ -222,7 +256,6 @@
                         .append('<a><b>' + item[3] + ' | ' + item[2] + '</b><br />Buyer: ' + item[4] + '</a></li>')
                         .appendTo(ul);
             };
-
             $("#fOfal").bind("submit", function() {
                 //  VALIDATION
                 //  BOR | not selected from list
@@ -234,16 +267,14 @@
                 }
 
                 var data = "";
-
-                var $x = $(".quantity");
+                var $x = $(".qtyCs");
                 var $y = $(".remarks");
-
                 for (var i = 0; i < $x.size(); i++) {
                     data = data + $("#ofalCode").val() + "," + $("#borId").data("id") + "," + $("#ofalDate").val() + "," + $("#canCode").val() + "," +
                             $("#lNw").val() + "," + $("#lDw").val() + "," + $("#lBbe").val() + "," + $("#shipment").val() + "," + $x[i].getAttribute("data-code") + "," +
-                            $x[i].value + "," + $y[i].value + ",@";
+                            (parseFloat($x[i].value) + ($($x[i]).next().val()/100)) + "," + $y[i].value + ',' + $('#remarks').val() + ",@";
                 }
-//                console.log(data);
+                console.log(data);
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
                         window.location.replace("?action=save&data=" + data);
@@ -252,8 +283,7 @@
 
                 return false;
             });
-
-            // FUNCTION | Remove row
+            // FUNCTION | remove row
             function removeRow(e) {
                 $(e).parent().parent().remove();
                 $("#detail tr td:nth-child(1)").each(function(i) {
@@ -262,12 +292,17 @@
                 setCanCode();
             }
 
-            // FUNCTION | SEt can code
+            // FUNCTION | set can code
             function setCanCode() {
                 $("#canCode").val("");
                 $("#detail tr td:nth-child(3)").each(function() {
-                    if ($("#canCode").val().indexOf($(this).html()) === -1) {
-                        $("#canCode").val($("#canCode").val() + $(this).html() + ";");
+                    if ((parseInt($('#vMaxCOde').val()) > ($('#canCode').val().split(';').length - 1))) {
+                        if ($("#canCode").val().indexOf($(this).html()) === -1) {
+                            $("#canCode").val($("#canCode").val() + $(this).html() + ";");
+                        }
+                    } else {
+                        alert('[Error] Maximum CAN CODE reached!');
+                        $(this).parent().remove();
                     }
                 });
             }

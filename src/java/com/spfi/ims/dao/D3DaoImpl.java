@@ -36,4 +36,16 @@ public class D3DaoImpl extends AbstractDAO implements D3Dao {
         }
     }
     
+    /*
+     * REPORT PREVIEW
+     */
+    public List<Map<String, Object>> getFGStockInventoryPreview (String param1, String param2) {
+        try {
+            return jdbcTemplate.queryForList("EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?", param1, param2);
+        } catch(DataAccessException e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+    
 }

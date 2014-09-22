@@ -114,7 +114,7 @@ public class FGLabelingMonitoringController extends MultiActionController {
             sb.append("\"8\": \"").append(x.get("pts_code")).append("\", ");
             sb.append("\"9\": \"").append(x.get("pts_pprodbatch")).append("\", ");
             sb.append("\"10\": \"").append(x.get("pts_pdate")).append("\", ");
-            sb.append("\"11\": \"").append(x.get("ofal_qty")).append("\", ");
+            sb.append("\"11\": \"").append(x.get("sc_cqty")).append("\", ");
             sb.append("\"12\": \"").append(x.get("ofal_id")).append("\"}");
             
             b = Boolean.TRUE;

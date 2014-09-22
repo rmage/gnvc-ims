@@ -44,8 +44,8 @@
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td column="recc_code">Return Cargo Code</td>
-                                <td column="recc_date">Return Cargo Date</td>
+                                <td column="rr_code">Return Cargo Code</td>
+                                <td column="rr_date">Return Cargo Date</td>
                                 <td>EDS Number</td>
                                 <td>From</td>
                                 <td>Remarks</td>

@@ -21,7 +21,7 @@ public class FGPalletTransferController extends MultiActionController {
         /* DATA | get initial value */
         /* DAO | Define needed dao here */
         /* TRANSACTION | Something complex here */
-        return new ModelAndView("default/finish_goods/PalletTranferList");
+        return new ModelAndView("default/finish_goods/PalletTransferList");
     }
     
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
@@ -35,7 +35,7 @@ public class FGPalletTransferController extends MultiActionController {
         model.put("pss", fgptDao.getPackStyle());
         model.put("ls", fgptDao.getLocation());
         
-        return new ModelAndView("default/finish_goods/PalletTranferAdd", "ims", model);
+        return new ModelAndView("default/finish_goods/PalletTransferAdd", "ims", model);
     }
     
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
@@ -72,6 +72,9 @@ public class FGPalletTransferController extends MultiActionController {
         List<Map<String, Object>> ms = fgptDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
         for (Map<String, Object> x : ms) {
             if (b) sb.append(",");
+            
+            String[] ptsQty = new BigDecimal(x.get("pts_total_qty").toString()).setScale(2).toString().split("[.]");
+            
             sb.append("{\"1\": \"").append(x.get("pts_code")).append("\", ");
             sb.append("\"2\": \"").append(x.get("pts_code")).append("\", ");
             sb.append("\"3\": \"").append(x.get("pts_date")).append("\", ");
@@ -80,8 +83,9 @@ public class FGPalletTransferController extends MultiActionController {
             sb.append("\"6\": \"").append(x.get("pts_can_code")).append("\", ");
             sb.append("\"7\": \"").append(x.get("bor_code") == null ? "" : x.get("bor_code")).append("\", ");
             sb.append("\"8\": \"").append(x.get("loca_code")).append("\", ");
-            sb.append("\"9\": \"").append(NumberFormat.getNumberInstance().format(x.get("pts_total_qty"))).append("\", ");
-            sb.append("\"10\": \"").append(x.get("created_by")).append("\"}");
+            sb.append("\"9\": \"").append(NumberFormat.getNumberInstance().format(Double.parseDouble(ptsQty[0]))).append(" Cs ").append(Integer.parseInt(ptsQty[1])).append(" Tin").append("\", ");
+            sb.append("\"10\": \"").append((x.get("is_hold").equals("N") ? (x.get("is_reject").equals("N") ? "RELEASE" : "<b style=\\\"color: #cccccc;\\\">REJECT</b>") : "<b style=\\\"color: #ff0000;\\\">HOLD</b>")).append("\", ");
+            sb.append("\"11\": \"").append(x.get("created_by")).append("\"}");
 
             b = Boolean.TRUE;
         }

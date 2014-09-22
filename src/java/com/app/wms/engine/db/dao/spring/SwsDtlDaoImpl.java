@@ -32,7 +32,7 @@ public class SwsDtlDaoImpl extends AbstractDAO
         sd.setSwsCode(rs.getString("sws_code"));
         sd.setProductCode(rs.getString("product_code"));
         sd.setQty(rs.getBigDecimal("qty"));
-        sd.setSoh(rs.getInt("soh"));
+        sd.setSoh(rs.getBigDecimal("soh"));
         sd.setUom(rs.getString("uom"));
         sd.setCreatedBy(rs.getString("created_by"));
         sd.setCreatedDate(rs.getDate("created_date"));
