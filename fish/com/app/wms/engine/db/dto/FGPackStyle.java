@@ -6,25 +6,20 @@
 package com.app.wms.engine.db.dto;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  *
  * @author Faridzi
  */
-public class FGUnitCost extends AbstractDTO implements Serializable {
+public class FGPackStyle extends AbstractDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Integer id;
-    private Integer fgItemId;
-    private String currencyCode;
-    private BigDecimal amountTotal;
-    private BigDecimal amountFixCost;
-    private BigDecimal amountVarCost;
-    private Date unitCostDate;
 
-    private FGItem fgItem;
+    private Integer id;
+    private String packStyle;
+    private String packSize;
+    private Double packPerCs;
 
     public Integer getId() {
         return id;
@@ -34,52 +29,38 @@ public class FGUnitCost extends AbstractDTO implements Serializable {
         this.id = id;
     }
 
-    public Integer getFgItemId() {
-        return fgItemId;
+    public String getPackStyle() {
+        return packStyle;
     }
 
-    public void setFgItemId(Integer fgItemId) {
-        this.fgItemId = fgItemId;
+    public void setPackStyle(String packStyle) {
+        this.packStyle = packStyle;
     }
 
-    public String getCurrencyCode() {
-        return currencyCode;
+    public String getPackSize() {
+        return packSize;
     }
 
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
+    public void setPackSize(String packSize) {
+        this.packSize = packSize;
     }
 
-    public BigDecimal getAmountTotal() {
-        return amountTotal;
+    public Double getPackPerCs() {
+        return packPerCs;
     }
 
-    public void setAmountTotal(BigDecimal amountTotal) {
-        this.amountTotal = amountTotal;
+    public void setPackPerCs(Double packPerCs) {
+        this.packPerCs = packPerCs;
     }
 
-    public BigDecimal getAmountFixCost() {
-        return amountFixCost;
+    @Override
+    public void setIsActive(String isActive) {
+        super.setIsActive(isActive); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void setAmountFixCost(BigDecimal amountFixCost) {
-        this.amountFixCost = amountFixCost;
-    }
-
-    public BigDecimal getAmountVarCost() {
-        return amountVarCost;
-    }
-
-    public void setAmountVarCost(BigDecimal amountVarCost) {
-        this.amountVarCost = amountVarCost;
-    }
-
-    public Date getUnitCostDate() {
-        return unitCostDate;
-    }
-
-    public void setUnitCostDate(Date unitCostDate) {
-        this.unitCostDate = unitCostDate;
+    @Override
+    public String getIsActive() {
+        return super.getIsActive(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -120,14 +101,6 @@ public class FGUnitCost extends AbstractDTO implements Serializable {
     @Override
     public Date getCreatedDate() {
         return super.getCreatedDate(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public FGItem getFgItem() {
-        return fgItem;
-    }
-
-    public void setFgItem(FGItem fgItem) {
-        this.fgItem = fgItem;
     }
 
 }

@@ -936,12 +936,12 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGReturnCargoDao) bf.getBean("FGReturnCargoDao");
     }
-    
+
     public static FGPalletDispositionDao createFGPalletDispositionDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGPalletDispositionDao) bf.getBean("FGPalletDispositionDao");
     }
-    
+
     public static FGPalletRejectionDao createFGPalletRejectionDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGPalletRejectionDao) bf.getBean("FGPalletRejectionDao");
@@ -979,6 +979,12 @@ public class DaoFactory {
     public static FgUnitCostDao createFgUnitCostDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FgUnitCostDao) bf.getBean("FgUnitCostDao");
+    }
+
+    /*FG STOCK CARD DAO*/
+    public static FGStockCardDao createFGStockCardDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGStockCardDao) bf.getBean("FGStockCardDao");
     }
 
     /*FISH RR ACCOUNTING FishRRAccountingDao*/

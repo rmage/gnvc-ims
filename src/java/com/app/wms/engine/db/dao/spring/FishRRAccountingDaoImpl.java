@@ -69,17 +69,19 @@ public class FishRRAccountingDaoImpl extends AbstractDAO
     }
 
     public int update(FishRRAccounting frrAcc) {
-        return jdbcTemplate.update("UPDATE " + getTableName() + " SET updated_by = ? , updated_date = ? WHERE rr_id = ?", frrAcc.getUpdatedBy(), frrAcc.getUpdatedDate(), frrAcc.getRrId() );
+        return jdbcTemplate.update("UPDATE " + getTableName() + " SET updated_by = ? , updated_date = ? WHERE rr_id = ?", frrAcc.getUpdatedBy(), frrAcc.getUpdatedDate(), frrAcc.getRrId());
     }
 
     public int ajaxMaxPage(BigDecimal show, String where) {
-        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE 1=1 " : where + " "), show);
+        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(fracc.id)/?) maxpage FROM " + getTableName() + " fracc left join fish_rr fr "
+                + "on fracc.rr_id = fr.id" + " " + (where.isEmpty() ? "WHERE 1=1 " : where + " "), show);
     }
 
     public List<FishRRAccounting> ajaxSearch(String where, String order, int page, int show) {
         return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize = ?; "
-                + "with PagedResult as (select ROW_NUMBER() over (ORDER BY id) as id, "
-                + "rr_id, updated_by, updated_date, ROW_NUMBER() OVER (ORDER BY id) row from " + getTableName() + " " + (where.isEmpty() ? "WHERE 1=1 " : where + " ") + " ) "
+                + "with PagedResult as (select ROW_NUMBER() over (ORDER BY fracc.id) as id, "
+                + "rr_id, fracc.updated_by, fracc.updated_date, ROW_NUMBER() OVER (ORDER BY fracc.id) row from " + getTableName() + " fracc left join fish_rr fr on "
+                + "fracc.rr_id = fr.id " + (where.isEmpty() ? "WHERE 1=1 " : where + " ") + " ) "
                 + " select * from PagedResult where id between   case when @Page > 1 then  "
                 + "  (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", this, page, show);
     }

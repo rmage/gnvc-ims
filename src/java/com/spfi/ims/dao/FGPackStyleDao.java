@@ -1,5 +1,6 @@
 package com.spfi.ims.dao;
 
+import com.app.wms.engine.db.dto.FGPackStyle;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -17,5 +18,7 @@ public interface FGPackStyleDao {
     public void edit(int key, String data, String updatedBy);
     
     public void delete(int key, String updatedBy);
+    
+    public List<FGPackStyle> findAllActive();
     
 }

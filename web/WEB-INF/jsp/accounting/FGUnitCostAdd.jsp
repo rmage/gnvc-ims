@@ -32,7 +32,7 @@
                                     FG Item
                                 </td>
                                 <td>
-                                    <select name="fg_item_id" id="fg_item_id" style="width: 40%">
+                                    <select name="fg_item_id" id="fg_item_id" style="width: 40%" required="true">
                                         <c:if test="${model.fgItems!=null}">
                                             <c:forEach items="${model.fgItems}" var="fgi">
                                                 <option value=<c:out value="${fgi.itemId}"/>
@@ -49,7 +49,7 @@
                                     Currency Code
                                 </td>
                                 <td>
-                                    <select name="currency_code" id="currency_code" style="width: 40%">
+                                    <select name="currency_code" id="currency_code" style="width: 40%" required="true">
                                         <c:if test="${model.currencies!=null}">
                                             <c:forEach items="${model.currencies}" var="currency">
                                                 <option value=<c:out value="${currency.currencyCode}"/>
@@ -63,10 +63,18 @@
                             </tr>
                             <tr>
                                 <td width="20%">
-                                    FG Unit Cost Amount
+                                    FG Fix Cost
                                 </td>
                                 <td>
-                                    <input type="text" id="amount" name="amount" onkeypress="validate(event)" value="0"/>
+                                    <input type="text" id="amountFix" name="amountFix" onkeypress="validate(event)" value="0" required="true"/>
+                                </td>
+                            </tr>
+                             <tr>
+                                <td width="20%">
+                                    FG Variable Cost
+                                </td>
+                                <td>
+                                    <input type="text" id="amountVar" name="amountVar" onkeypress="validate(event)" value="0" required="true"/>
                                 </td>
                             </tr>
                             <tr>
@@ -74,7 +82,7 @@
                                     FG Unit Cost Date
                                 </td>
                                 <td>
-                                    <input type="date" id="queryDate" name="queryDate" />
+                                    <input type="date" id="queryDate" name="queryDate" required="true" />
                                 </td>
                             </tr>
                         </tbody>
@@ -102,6 +110,10 @@
 
             $('#queryDate').datepicker({
                 dateFormat: "dd/mm/yy"
+            });
+
+            $('#btnCancel').click(function() {
+                window.history.back();
             });
 
             function validate(evt) {

@@ -46,6 +46,9 @@
                                 <td>Action </td>
                                 <td>RR Number</td>
                                 <td>RR Date</td>
+                                <td>WS Number</td>
+                                <td>Supplier</td>
+                                <td>Batch Number</td>
                                 <td>Updated By</td>
                                 <td>Updated Date</td>
                             </tr>

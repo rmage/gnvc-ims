@@ -32,7 +32,7 @@
                                 </td>
                                 <td>
                                     <select name="ddFgItem" id="ddFgItem" style="width: 40%" onchange="throwValueFG()">
-                                        <option value="ALL">--- All FG Item ---</option>
+                                        <option value="">--- All FG Item ---</option>
                                         <c:if test="${model.fgItems!=null}">
                                             <c:forEach items="${model.fgItems}" var="fgi">
                                                 <option value=<c:out value="${fgi.itemId}"/>
@@ -94,7 +94,8 @@
                             <td column="contract_number">FG Item Code</td>
                             <td >FG Item Name</td>
                             <td column="currency_code">Currency Code</td>
-                            <td>Amount</td>
+                            <td>Fixed Cost </td>
+                            <td>Variable Cost </td>
                             <td>Date</td>
                         </tr>
                     </thead>

@@ -395,6 +395,10 @@
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
+    <bean name="/FGStockAccounting.htm" class="com.app.wms.web.controller.acc.FGStockAccountingController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
     <!--FISH RR ACCOUNTING-->
     <bean name="/FishRRAccounting.htm" class="com.app.wms.web.controller.acc.FishRRAccountingController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />

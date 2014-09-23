@@ -14,16 +14,16 @@
         <title>IMS &therefore; Fish RR Update Price</title>
         <%@include file="../metaheader.jsp" %>
     </head>
-    <body>
+    <body onload="onload();">
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
             <div id="content" class="span-24 last">
                 <div class="box">
                     <form action="FishRRAccounting.htm" method="post" id="addForm">
-                        <input type="hidden" name="action" value="save" />
+                        <!--<input type="hidden" name="action" value="save" />-->
                         <table class="collapse tblForm row-select">
-                            <caption>Update Fish RR Price</caption>
+                            <caption>Fish RR Detail</caption>
                             <tbody>
                                 <tr>
                                     <td>
@@ -41,50 +41,62 @@
                                         Supplier Name : <b>${model.supplierName}</b>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <table style="width: 50%">
-                                            <thead>
-                                            <th>
-                                                Fish Type
-                                            </th>
-                                            <th>
-                                                Price
-                                            </th>
-                                            <th>
-                                                Contract Price
-                                            </th>
-                                            <th>
-                                                Total Weight  
-                                            </th>
-                                            </thead>
-                                            <tbody>
-                                                </tr>
-                                                <c:forEach items="${model.frrDetailList}" var="frrDetail" varStatus="i">
-                                                    <tr>
-                                                        <td style="width: 10%">
-                                                            ${frrDetail.fish.code}
-                                                        </td>
-                                                        <td style="width: 10%">
-                                                            <input type="text" id="amount-${i.index}" name="amount-${i.index}" onkeypress="validate(event)" value="${frrDetail.amount}"/>
-                                                        </td>
-                                                        <td style="width: 10%">
-                                                            <fmt:formatNumber type="number" maxFractionDigits="2" value="${frrDetail.contractPrice}" /> 
-                                                        </td>
-                                                        <td style="width: 10%">
-                                                            <b> <fmt:formatNumber pattern="#,##0" value="${frrDetail.totalWeight}" /> </b> 
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                            <tfoot>
-                                            </tfoot>
-                                        </table>
-                                    </td>
-                                </tr>
                             </tbody>
                             <tfoot>
-                            <td colspan="4">
+                            </tfoot>
+                        </table>
+                    </form>
+                    <form action="FishRRAccounting.htm" method="post" id="addForm">
+                        <input type="hidden" name="action" value="save" />
+                        <table class="collapse tblForm row-select">
+                            <caption>Update Fish RR Price</caption>
+                            <thead>
+                            <th>
+                                Fish Type
+                            </th>
+                            <th>
+                                Quantity
+                            </th>
+                            <th>
+                                Unit Cost
+                            </th>
+                            <th>
+                                Currency Code
+                            </th>
+                            <th>
+                                Adjusted Cost 
+                            </th>
+                            <th>
+                                Amount
+                            </th>
+                            </thead>
+                            <tbody>
+                                </tr>
+                                <c:forEach items="${model.frrDetailList}" var="frrDetail" varStatus="i">
+                                    <tr>
+                                        <td style="width: 10%">
+                                            ${frrDetail.fish.code}
+                                        </td>
+                                        <td style="width: 10%">
+                                            <b> <fmt:formatNumber pattern="#,##0" value="${frrDetail.totalWeight}" /> </b> 
+                                        </td>
+                                        <td style="width: 10%">
+                                            <fmt:formatNumber type="number" maxFractionDigits="2" value="${frrDetail.contractPrice}" /> 
+                                        </td>
+                                        <td style="width: 10%">
+                                            ${frrDetail.currencyCode}
+                                        </td>
+                                        <td style="width: 10%">
+                                            <input type="text" id="amount-${i.index}" name="amount-${i.index}" onkeypress="validate(event)" value="${frrDetail.amount}" onchange="calAmount(this.value, ${frrDetail.totalWeight}, ${i.index})"/>
+                                        </td>
+                                        <td style="width: 10%">
+                                            <b> <label id="lblAmount-${i.index}" > <fmt:formatNumber type="number" maxFractionDigits="2" value="${frrDetail.totalWeight * frrDetail.amount}" /> </label> </b>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                            <tfoot>
+                            <td colspan="6">
                                 <span>
                                     <input class="simpan" type="submit" value="Save" id="btnSave" name="btnSave" onclick="return confirm('Are you sure you want to continue ?')" />
                                     <label>
@@ -99,7 +111,7 @@
             </div>
         </div>
 
-        <script>
+        <script type="text/javascript">
             function validate(evt) {
                 var theEvent = evt || window.event;
                 var key = theEvent.keyCode || theEvent.which;
@@ -116,6 +128,11 @@
                     if (theEvent.preventDefault)
                         theEvent.preventDefault();
                 }
+            }
+
+            function calAmount(val, qty, idx) {
+                var amount = val * qty;
+                document.getElementById('lblAmount-' + idx + '').innerHTML = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');;
             }
 
             $(function() {

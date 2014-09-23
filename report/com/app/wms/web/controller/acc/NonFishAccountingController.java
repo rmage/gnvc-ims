@@ -189,7 +189,12 @@ public class NonFishAccountingController extends MultiActionController {
         }
 
         /*GET TS LIST*/
-        tsList = tsDao.findByProductCode(productCode, dateAsOfString);
+        aCalendar.setTime(now);
+        aCalendar.add(Calendar.DATE, 1);
+        Date tomorrowDate = aCalendar.getTime();
+        String tomorrowDateString = df.format(tomorrowDate);
+
+        tsList = tsDao.findByProductCode(productCode, tomorrowDateString);
 
         for (Ts ts : tsList) {
             BigDecimal amountIDR;

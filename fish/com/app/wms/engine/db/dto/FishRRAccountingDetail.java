@@ -22,6 +22,7 @@ public class FishRRAccountingDetail implements Serializable {
     private Double totalWeight;
     private BigDecimal amount;
     private BigDecimal contractPrice;
+    private String currencyCode;
 
     private Fish fish;
 
@@ -79,6 +80,14 @@ public class FishRRAccountingDetail implements Serializable {
 
     public void setFishId(Integer fishId) {
         this.fishId = fishId;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
     public Fish getFish() {

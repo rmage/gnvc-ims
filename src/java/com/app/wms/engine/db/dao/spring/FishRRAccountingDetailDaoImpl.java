@@ -50,6 +50,7 @@ public class FishRRAccountingDetailDaoImpl extends AbstractDAO
         fishRRAccountingDetail.setAmount(rs.getBigDecimal("amount"));
         fishRRAccountingDetail.setContractPrice(rs.getBigDecimal("contract_price"));
         fishRRAccountingDetail.setTotalWeight(rs.getDouble("total_weight"));
+        fishRRAccountingDetail.setCurrencyCode(rs.getString("currency_code"));
 
         /*GET FISH BY ID*/
         FishDao fishDao = DaoFactory.createFishDao();
@@ -65,8 +66,8 @@ public class FishRRAccountingDetailDaoImpl extends AbstractDAO
     }
 
     public void copyFromRRDetail() {
-        String query = "insert into " + getTableName() + " (rr_id, fish_id , supplier_id , total_weight ,amount,  contract_price ) "
-                + "select rr_id , frrd.fish_id , fv.supplier_id , total_weight , fuc.unit_cost, fuc.unit_cost from fish_rr_detail frrd left join "
+        String query = "insert into " + getTableName() + " (rr_id, fish_id , supplier_id , total_weight ,amount,  contract_price , currency_code ) "
+                + "select rr_id , frrd.fish_id , fv.supplier_id , total_weight , fuc.unit_cost, fuc.unit_cost , fuc.currency_code from  fish_rr_detail frrd left join "
                 + "fish_rr frr on frrd.rr_id = frr.id left join fish_vessel fv on "
                 + "fv.id = frr.vessel_id left join fish_unit_cost fuc on "
                 + "fuc.fish_id = frrd.fish_id "

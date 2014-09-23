@@ -7,6 +7,7 @@ package com.spfi.ims.dao;
 
 import com.app.wms.engine.db.dto.FGUnitCost;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,7 +19,9 @@ public interface FgUnitCostDao {
     public int ajaxMaxPage(BigDecimal show, String where);
 
     public List<FGUnitCost> ajaxSearch(String where, String order, int page, int show);
-    
+
     public int save(FGUnitCost fgUc);
+
+    public FGUnitCost findLatest(Date date, Integer fgItemId);
 
 }

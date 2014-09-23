@@ -144,6 +144,7 @@ public class FishRrDaoImpl extends AbstractDAO implements
         FishRr dto = new FishRr();
         dto.setId(rs.getInt("id"));
         dto.setRrNo(rs.getString("rr_no"));
+        dto.setWsNo(rs.getString("ws_no"));
         dto.setRrDate(rs.getDate("rr_date"));
         dto.setVesselId(rs.getInt("vessel_id"));
         dto.setReceivedBy(rs.getString("received_by"));

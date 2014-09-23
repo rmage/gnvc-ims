@@ -151,20 +151,19 @@ public class ReceiveReportDaoImpl extends AbstractDAO
 
     public List<ReceiveReport> findByProductCode(String productCode, String asOf) {
         List<ReceiveReport> resultList = null;
-        String sqlQuery = "select rr.rr_code,rr.rr_date, rr.po_code, "
-                + "rr.rr_from, acprice.unit_price, rr.evaluated_by,rr.evaluated_date, "
-                + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
-                + "rr.updated_by, rr.updated_date,"
-                + "sum(rrd.qty_g) qty from dbo.rr rr left join dbo.rr_detail rrd on "
-                + "rr.rr_code = rrd.rr_code left join dbo.product prod on "
-                + "prod.product_code = rrd.product_code left join dbo.po po on "
-                + "rr.po_code = po.po_code left join dbo.assign_canv_prc acprice on "
-                + "rrd.prs_code = acprice.prsnumber "
-                + "where rrd.product_code = '" + productCode + "' and "
-                + "rr.rr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) AND '" + asOf + "' "
-                + "group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, acprice.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, "
-                + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
-                + "rr.updated_by, rr.updated_date order by rr.rr_date";
+        String sqlQuery = "select rr.rr_code,rr.rr_date, rr.po_code, rr.rr_from, "
+                + "acprice.unit_price, rr.evaluated_by,rr.evaluated_date, "
+                + " rr.approved_by, rr.approved_date , rr.created_by , "
+                + "  rr.created_date,rr.updated_by, rr.updated_date,sum(rrd.qty_g) qty from "
+                + "  dbo.rr rr left join dbo.rr_detail rrd on rr.rr_code = rrd.rr_code "
+                + "  left join dbo.product prod on prod.product_code = rrd.product_code left join "
+                + "   dbo.po po on rr.po_code = po.po_code left join dbo.assign_canv_prc acprice "
+                + "    on rrd.prs_code = acprice.prsnumber "
+                + "     where rrd.product_code = '" + productCode + "' and acprice.productcode = '" + productCode + "' "
+                + "    and rr.rr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) "
+                + "     AND '" + asOf + "' group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, "
+                + "     acprice.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, rr.approved_by, "
+                + "     rr.approved_date , rr.created_by , rr.created_date,rr.updated_by, rr.updated_date order by rr.rr_date";
 
         resultList = jdbcTemplate.query(sqlQuery, this);
         return resultList;

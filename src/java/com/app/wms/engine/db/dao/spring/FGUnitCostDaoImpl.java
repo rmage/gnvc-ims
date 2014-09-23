@@ -13,6 +13,7 @@ import com.spfi.ims.dao.FgUnitCostDao;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -47,7 +48,9 @@ public class FGUnitCostDaoImpl extends AbstractDAO implements ParameterizedRowMa
         fgUc.setId(rs.getInt("id"));
         fgUc.setFgItemId(rs.getInt("fg_item_id"));
         fgUc.setCurrencyCode(rs.getString("currency_code"));
-        fgUc.setAmount(rs.getBigDecimal("amount"));
+        fgUc.setAmountFixCost(rs.getBigDecimal("amount_fix_cost"));
+        fgUc.setAmountVarCost(rs.getBigDecimal("amount_var_cost"));
+        fgUc.setAmountTotal(rs.getBigDecimal("amount_total"));
         fgUc.setUnitCostDate(rs.getDate("unit_cost_date"));
         fgUc.setCreatedBy(rs.getString("created_by"));
         fgUc.setCreatedDate(rs.getDate("created_date"));
@@ -69,7 +72,7 @@ public class FGUnitCostDaoImpl extends AbstractDAO implements ParameterizedRowMa
         return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; "
                 + "set @PageSize = ?; with PagedResult as (select ROW_NUMBER() "
                 + "over (ORDER BY id) as id, fg_item_id, currency_code , "
-                + "amount, unit_cost_date , created_by , created_date , updated_by , updated_date, "
+                + "amount_fix_cost, amount_var_cost, amount_total, unit_cost_date , created_by , created_date , updated_by , updated_date, "
                 + " ROW_NUMBER() OVER (ORDER BY id) "
                 + "row from " + getTableName() + " " + (where.isEmpty() ? "WHERE 1=1 " : where + " ") + " ) "
                 + " select * from PagedResult where id between   case when @Page > 1 then "
@@ -77,8 +80,17 @@ public class FGUnitCostDaoImpl extends AbstractDAO implements ParameterizedRowMa
     }
 
     public int save(FGUnitCost fgUc) {
-        return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ? , ?) ",
-                fgUc.getFgItemId(), fgUc.getCurrencyCode(), fgUc.getAmount(), fgUc.getUnitCostDate(), fgUc.getCreatedBy(), fgUc.getCreatedDate(),fgUc.getCreatedBy(), fgUc.getCreatedDate());
+        return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ? , ?) ",
+                fgUc.getFgItemId(), fgUc.getCurrencyCode(), fgUc.getAmountFixCost(), fgUc.getAmountVarCost(), fgUc.getAmountTotal(), fgUc.getUnitCostDate(), fgUc.getCreatedBy(), fgUc.getCreatedDate(), fgUc.getCreatedBy(), fgUc.getCreatedDate());
+    }
+
+    public FGUnitCost findLatest(Date date, Integer fgItemId) {
+        FGUnitCost result = new FGUnitCost();
+        String queryString;
+
+        queryString = "select top 1 * from " + getTableName() + " where unit_cost_date <= ? and fg_item_id = ? order by unit_cost_date desc";
+        result = (FGUnitCost) jdbcTemplate.query(queryString, this, date, fgItemId).get(0);
+        return result;
     }
 
 }

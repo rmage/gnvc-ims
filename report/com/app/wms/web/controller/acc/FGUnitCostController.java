@@ -96,22 +96,29 @@ public class FGUnitCostController extends MultiActionController {
         FGUnitCost fgUc = new FGUnitCost();
 
         /*GET FORM SUBMITTED VALUE*/
-        Integer fgItemId = Integer.parseInt(request.getParameter("fg_item_id"));
+        Integer fgItemId = 0;
+        if (request.getParameter("fg_item_id") != null) {
+            fgItemId = Integer.parseInt(request.getParameter("fg_item_id"));
+        }
         String currencyCode = request.getParameter("currency_code");
-        BigDecimal amount = new BigDecimal(request.getParameter("amount"));
+        BigDecimal amountFix = new BigDecimal(request.getParameter("amountFix"));
+        BigDecimal amountVar = new BigDecimal(request.getParameter("amountVar"));
+        BigDecimal amountTotal = amountFix.add(amountVar);
 
         fgUcDate = df.parse(request.getParameter("queryDate"));
 
         /*BIND DATA TO OBJ*/
         fgUc.setFgItemId(fgItemId);
         fgUc.setCurrencyCode(currencyCode);
-        fgUc.setAmount(amount);
+        fgUc.setAmountFixCost(amountFix);
+        fgUc.setAmountVarCost(amountVar);
+        fgUc.setAmountTotal(amountTotal);
         fgUc.setUnitCostDate(fgUcDate);
 
         /*SET AUDITABLE*/
         fgUc.setCreatedBy(user.getUserId());
         fgUc.setCreatedDate(now);
-        
+
         /*SAVE OBJ*/
         fgUnitCostDao.save(fgUc);
 
@@ -132,8 +139,9 @@ public class FGUnitCostController extends MultiActionController {
             pw.print("\"2\": \"" + fgUc.getFgItem().getItemCode() + "\", ");
             pw.print("\"3\": \"" + fgUc.getFgItem().getItemName() + "\", ");
             pw.print("\"4\": \"" + fgUc.getCurrencyCode() + "\", ");
-            pw.print("\"5\": \"" + fgUc.getAmount() + "\", ");
-            pw.print("\"6\": \"" + fgUc.getUnitCostDate() + "\"}");
+            pw.print("\"5\": \"" + fgUc.getAmountFixCost() + "\", ");
+            pw.print("\"6\": \"" + fgUc.getAmountVarCost() + "\", ");
+            pw.print("\"7\": \"" + fgUc.getUnitCostDate() + "\"}");
 
             b = Boolean.TRUE;
         }

@@ -42,16 +42,15 @@ public class FishTransactionDaoImpl extends AbstractDAO implements Parameterized
     public List<FishTransaction> findByTransactionIn(Integer fishSupplierId, Integer fishId, Date date) {
         String queryString;
         List<FishTransaction> result;
-        queryString = "select frr.id, f.id as fish_id ,fuc.unit_cost,fuc.currency_code, frr.rr_no as doc_num , frr.rr_date as doc_date ,fv.supplier_id , sum(frrd.total_weight) as qty from dbo.fish_rr frr "
-                + "inner join dbo.fish_rr_detail frrd on "
-                + "frr.id = frrd.rr_id left join dbo.fish f on "
-                + "frrd.fish_id = f.id left join dbo.fish_vessel fv on "
-                + "frr.vessel_id = fv.id left join dbo.fish_unit_cost fuc on "
-                + "fv.supplier_id = fuc.supplier_id "
-                + "where f.id = ? AND "
-                + "frr.rr_date < ? and "
-                + "fv.supplier_id = ? and fuc.fish_id = ? "
-                + "group by frr.id,frr.rr_no, frr.rr_date,fuc.currency_code, frr.vessel_id, fuc.unit_cost,fv.supplier_id,f.id order by frr.rr_date";
+        queryString = "select frr.id, f.id as fish_id ,fracd.amount as unit_cost,fracd.currency_code, "
+                + "frr.rr_no as doc_num , frr.rr_date as doc_date ,fv.supplier_id , "
+                + "sum(frrd.total_weight) as qty "
+                + "from dbo.fish_rr frr inner join "
+                + "dbo.fish_rr_detail frrd on frr.id = frrd.rr_id "
+                + "left join dbo.fish f on frrd.fish_id = f.id left join dbo.fish_vessel fv on "
+                + "frr.vessel_id = fv.id left join dbo.fish_rr_accounting_detail fracd on fv.supplier_id = fracd.supplier_id where "
+                + "f.id = ? AND frr.rr_date < ? and fv.supplier_id = ? "
+                + "and fracd.fish_id = ? group by frr.id,frr.rr_no, frr.rr_date,fracd.currency_code, frr.vessel_id, fracd.amount,fv.supplier_id,f.id order by frr.rr_date";
 
         result = jdbcTemplate.query(queryString, new FishTransactionListMap(), fishId, date, fishSupplierId, fishId);
         return result;
@@ -77,16 +76,17 @@ public class FishTransactionDaoImpl extends AbstractDAO implements Parameterized
     public List<FishTransaction> findByTransactionInThisMonth(Integer fishSupplierId, Integer fishId, Date date) {
         String queryString;
         List<FishTransaction> result;
-        queryString = "select frr.id, f.id as fish_id ,fuc.unit_cost,fuc.currency_code, frr.rr_no as doc_num , frr.rr_date as doc_date ,fv.supplier_id , sum(frrd.total_weight) as qty from dbo.fish_rr frr "
-                + "inner join dbo.fish_rr_detail frrd on "
-                + "frr.id = frrd.rr_id left join dbo.fish f on "
-                + "frrd.fish_id = f.id left join dbo.fish_vessel fv on "
-                + "frr.vessel_id = fv.id left join dbo.fish_unit_cost fuc on "
-                + "fv.supplier_id = fuc.supplier_id "
-                + "where f.id = ? AND "
-                + "frr.rr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, ? ) - 1, 0) AND ? and "
-                + "fv.supplier_id = ? and fuc.fish_id = ? "
-                + "group by frr.id,frr.rr_no, frr.rr_date,fuc.currency_code, frr.vessel_id, fuc.unit_cost,fv.supplier_id,f.id order by frr.rr_date";
+        queryString = "select frr.id, f.id as fish_id ,fracd.amount as unit_cost ,fracd.currency_code, "
+                + "frr.rr_no as doc_num , frr.rr_date as doc_date ,fv.supplier_id , "
+                + "sum(frrd.total_weight) as qty from dbo.fish_rr frr inner join "
+                + "dbo.fish_rr_detail frrd on frr.id = frrd.rr_id left join dbo.fish f "
+                + " on frrd.fish_id = f.id left join dbo.fish_vessel fv on "
+                + " frr.vessel_id = fv.id left join dbo.fish_rr_accounting_detail fracd on "
+                + " fv.supplier_id = fracd.supplier_id where f.id = ? AND frr.rr_date "
+                + " BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, ? ) - 1, 0) AND ? and \n"
+                + " fv.supplier_id = ? and fracd.fish_id = ? "
+                + " group by frr.id,frr.rr_no, frr.rr_date,fracd.currency_code, frr.vessel_id, fracd.amount,fv.supplier_id,f.id order by frr.rr_date "
+                + "  ";
 
         result = jdbcTemplate.query(queryString, new FishTransactionListMap(), fishId, date, date, fishSupplierId, fishId);
         return result;

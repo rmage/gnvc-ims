@@ -192,7 +192,13 @@ public class CurrencyRateDaoImpl extends AbstractDAO
 
         queryString = "SELECT TOP 1 * FROM " + getTableName()
                 + " WHERE rate_date <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
-        result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).get(0);
+        if (jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).size() > 0) {
+            result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).get(0);
+        } else {
+            queryString = "SELECT TOP 1 * FROM " + getTableName()
+                + " WHERE rate_date <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+            result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).get(0);
+        }
         return result;
     }
 

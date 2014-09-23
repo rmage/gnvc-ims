@@ -3,6 +3,8 @@ package com.app.wms.web.controller.acc;
 import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.FishDao;
+import com.app.wms.engine.db.dao.FishRRAccountingDao;
+import com.app.wms.engine.db.dao.FishRRAccountingDetailDao;
 import com.app.wms.engine.db.dao.FishSupplierDao;
 import com.app.wms.engine.db.dao.FishTransactionDao;
 import com.app.wms.engine.db.dao.FishWsDao;
@@ -47,6 +49,10 @@ public class FishAccountingController extends MultiActionController {
 
     private final FishTransactionDao fishTransactionDao = DaoFactory.createFishTransactionDao();
 
+    private final FishRRAccountingDao fishRRAccountingDao = DaoFactory.createFishRRAccountingDao();
+
+    private final FishRRAccountingDetailDao fishRRAccountingDetailDao = DaoFactory.createFishRRAccountingDetailDao();
+
     private List<Fish> fishes = new ArrayList<Fish>();
 
     /* GNVS | New Fish Created Fish Inventory */
@@ -60,6 +66,9 @@ public class FishAccountingController extends MultiActionController {
         } catch (DaoException ex) {
             Logger.getLogger(FishAccountingController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        /*COPY ROW FROM FISH RR*/
+        fishRRAccountingDetailDao.copyFromRRDetail();
 
         modelMap.put("suppliers", suppliers);
         return new ModelAndView("accounting/FishStockAccounting", "model", modelMap);
