@@ -63,6 +63,8 @@
                                 <td column="fgps.pack_size">Pack Size</td>
                                 <td column="item_oil">Oil</td>
                                 <td column="item_lid">Lid</td>
+                                <td column="item_nw">Net Weight</td>
+                                <td coulmn="item_dwpw">Drained\Pressed Weight</td>
                                 <td>Created By</td>
                                 <td>Created Date</td>
                             </tr>

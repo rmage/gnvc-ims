@@ -14,4 +14,6 @@ public interface D3Dao {
      */
     public List<Map<String, Object>> getFGStockInventoryPreview (String param1, String param2);
     
+    public List<Map<String, Object>> getFGActualInventoryPreview (String param1, String param2);
+    
 }

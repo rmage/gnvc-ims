@@ -946,6 +946,12 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGPalletRejectionDao) bf.getBean("FGPalletRejectionDao");
     }
+    
+    /* GNVS | Rendering Fish Module */
+    public static RenderingFishDao createRenderingFishDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (RenderingFishDao) bf.getBean("RenderingFishDao");
+    }
 
     /* GNVS | D3 Data-Driven Documents */
     public static D3Dao createD3Dao() {

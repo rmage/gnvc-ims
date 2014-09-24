@@ -19,12 +19,13 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import com.app.wms.engine.util.ctrlKoneksiDB;
 import com.report.test.ReportFactory;
 import com.report.test.ReportFactory.Report;
+import java.util.EnumMap;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class GenerateReportController extends MultiActionController {
 
-    public static Map<Report, Object> ListMap = new HashMap<Report, Object>();
-    public static Map<Report, PostProcess> PostProcess = new HashMap<Report, PostProcess>();
+    public static final Map<Report, Object> ListMap = new EnumMap<Report, Object>(Report.class);
+    public static final Map<Report, PostProcess> PostProcess = new EnumMap<Report, PostProcess>(Report.class);
 
     static {
         //  Fish Module | Form and Report List
@@ -169,7 +170,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FishWsSF, "EXEC PRT_WEIGHT_SLIP_SUMMARY ?");
         ListMap.put(Report.FishWsSZ, "EXEC PRT_WEIGHT_SLIP_SUMMARY ?");
         //  ***END*** | Fish Module | Form and Report List
-        
+
         //  Purcashing Module | Form and Report List
         ListMap.put(Report.PRCPrs, "EXEC PRT_PRC_PURCHASE_REQUISITION_SLIP ?");
         ListMap.put(Report.PRCPo, "EXEC PRT_PRC_PURCHASE_ORDER ?, ?");
@@ -181,7 +182,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.PRCPoRegisteredPerItem, "EXEC RPT_PRC_PO_PER_ITEM ?");
         ListMap.put(Report.PRCPoRegisteredPerSupplier, "EXEC RPT_PRC_PO_PER_SUPPLIER ?");
         //  ***END*** | Purcashing Module | Form and Report List
-        
+
         //  Non-Fish Module | Form and Report List
         ListMap.put(Report.NFRr, "EXEC PRT_NF_RECEIVING ?");
         ListMap.put(Report.NFSws, "EXEC PRT_NF_STORES_WITHDRAWAL ?");
@@ -195,10 +196,11 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.NFTsRegisterPerPeriod, "EXEC RPT_NF_TRANSFER_PER_PERIOD ?, ?, ?");
         ListMap.put(Report.NFDrRegisterPerPeriod, "EXEC RPT_NF_DELIVERY_PER_PERIOD ?, ?");
         //  ***END*** | Non-Fish Module | Form and Report List
-        
+
         //  Finished Goods Module | Form and Report List
         ListMap.put(Report.FGStockInventory, "EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?");
         ListMap.put(Report.FGPtsCheckList, "EXEC RPT_FG_PTS_CHECKLIST");
+        ListMap.put(Report.FGActualInventory, "EXEC RPT_FG_INVENTORY_PER_COUNT ?, ?");
         //  ***END*** | Finished Goods Module | Form and Report List        
 
         ListMap.put(Report.FWS,
@@ -1062,7 +1064,7 @@ public class GenerateReportController extends MultiActionController {
                 + "WHERE p.product_category = ? "
                 + "ORDER BY z.doc_date, p.product_name"
         );
-        
+
         ListMap.put(Report.PCanvassingForm,
                 //                "SELECT * " +
                 //                "FROM canvassing cv " +
@@ -1190,7 +1192,7 @@ public class GenerateReportController extends MultiActionController {
         Report reportType = Report.valueOf(map.get("item").toString());
 
         List data = getDataForType(reportType, map);
-        
+
         //  DEBUG | Data that will be injected to excel template
 //        System.out.println("Data:" + data);
         if (data != null) {
@@ -1237,7 +1239,7 @@ public class GenerateReportController extends MultiActionController {
         if (process != null) {
             process.process(data, map);
         }
-        byte[] item = null;
+        byte[] item;
         if ("PDF".equalsIgnoreCase(request.getParameter("type"))) {
             response.setHeader("Content-disposition", "attachment; filename=" + reportType + ".pdf");
             response.setContentType("application/pdf");
@@ -1273,7 +1275,7 @@ public class GenerateReportController extends MultiActionController {
             }
             if (o instanceof String) {
 
-                String paramString = params.containsKey("params") ? params.get("params").toString() : null;
+                String paramString = params.containsKey("params") ? params.get("params").toString() : "";
 
                 // added by edw, override FSummaryWSSlip
                 if (reportType.toString().equals("FSummaryWSSlip")) {
@@ -1325,13 +1327,12 @@ public class GenerateReportController extends MultiActionController {
                     }
                 }
                 conn.close();
-                
+
                 //  DEBUG | Purposes uncomment it if you want to see the report data
 //                System.out.println("size list >>>> " + list.size());
 //                for (ResultSetRow resultSetRow : list) {
 //                    System.out.println("disiini >>> " + resultSetRow.toString());
 //                }
-
                 return list;
             } else if (o instanceof String[]) {
                 Connection conn = new ctrlKoneksiDB().openConnection();

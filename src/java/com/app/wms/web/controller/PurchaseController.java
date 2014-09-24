@@ -238,7 +238,7 @@ public class PurchaseController extends MultiActionController {
             pw.print("\"qty\": \"" + pd.getQty() + "\", ");
             pw.print("\"unit\": \"" + pd.getUomName() + "\", ");
             pw.print("\"price\": \"" + ac.getUnitPrice() + "\", ");
-            pw.print("\"amount\": \"" + pd.getQty().multiply(ac.getUnitPrice()).setScale(2) + "\"}");
+            pw.print("\"amount\": \"" + pd.getQty().multiply(ac.getUnitPrice()).setScale(4) + "\"}");
 
             b = Boolean.TRUE;
         }

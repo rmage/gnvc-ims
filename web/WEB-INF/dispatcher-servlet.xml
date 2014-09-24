@@ -390,6 +390,11 @@
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
+    <!-- GNVS | Rendering Fish Module -->
+    <bean name="/RenderingFish.htm" class="com.spfi.ims.controller.RenderingFishController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
     <!--FG ACCOUNTING-->
     <bean name="/FGUnitCost.htm" class="com.app.wms.web.controller.acc.FGUnitCostController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />

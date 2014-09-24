@@ -502,6 +502,10 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("default/finish_goods/InventoryReport");
     }
     
+    public ModelAndView getFGActualInventoryReport(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/finish_goods/ReportActualInventory");
+    }
+    
     public boolean isLogin(HttpServletRequest request) {
         return request.getSession().getAttribute("user") != null;
     }

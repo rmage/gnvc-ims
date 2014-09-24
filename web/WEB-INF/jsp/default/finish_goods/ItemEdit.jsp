@@ -27,8 +27,6 @@
                                 <tr>
                                     <td style="width: 175px;">Item Code <span style="float: right">*</span></td>
                                     <td><input type="text" id="itemCode" name="itemCode" value="${ims.i.item_code}" required="required" /></td>
-                                </tr>
-                                <tr>
                                     <td>Item Name <span style="float: right">*</span></td>
                                     <td><input type="text" id="itemName" name="itemName" value="${ims.i.item_name}" required="required" /></td>
                                 </tr>
@@ -47,12 +45,15 @@
                                             </c:forEach>
                                         </select>
                                     </td>
+                                    <td>Net Weight</td>
+                                    <td>
+                                        <input type="text" id="itemNw" name="itemNw" size="5" value="${ims.i.item_nw}">
+                                        <span style="display: inline-block; text-align: center; width: 150px;">Drained/Pressed Weight</span> <input type="text" id="itemDw" name="itemDw" size="5" value="${ims.i.item_dw}">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Oil</td>
                                     <td><input type="text" id="itemOil" name="itemOil" size="10" value="${ims.i.item_oil}"></td>
-                                </tr>
-                                <tr>
                                     <td>Lid</td>
                                     <td><input type="text" id="itemLid" name="itemLid" size="5" value="${ims.i.item_lid}"></td>
                                 </tr>

@@ -221,6 +221,60 @@ public class D3Controller extends MultiActionController {
         pw.close();
         
     }
+    
+    public void getFGActualInventoryPreview(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        D3Dao d3Dao = DaoFactory.createD3Dao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("[");
+        List<Map<String, Object>> ms = d3Dao.getFGActualInventoryPreview(request.getParameter("param1"), request.getParameter("param2"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("pts_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("item_name")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("item_oil")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("pack_style")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("pack_size")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("pts_cancode")).append("\", ");
+            sb.append("\"7\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("pts_quantity").toString()))).append("\", ");
+            sb.append("\"8\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_prodyear").toString()))).append("\", ");
+            sb.append("\"9\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_prodyear1").toString()))).append("\", ");
+            sb.append("\"10\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_prodyear2").toString()))).append("\", ");
+            sb.append("\"11\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_prodyear3").toString()))).append("\", ");
+            sb.append("\"12\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_prodyear4").toString()))).append("\", ");
+            sb.append("\"13\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_nocode").toString()))).append("\", ");
+            sb.append("\"14\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_mcyear").toString()))).append("\", ");
+            sb.append("\"15\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_mcyear1").toString()))).append("\", ");
+            sb.append("\"16\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_mcyear2").toString()))).append("\", ");
+            sb.append("\"17\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_mcyear3").toString()))).append("\", ");
+            sb.append("\"18\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_mcyear4").toString()))).append("\", ");
+            sb.append("\"19\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("x_labeled").toString()))).append("\", ");
+            sb.append("\"20\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("pts_coenw").toString()))).append("\", ");
+            sb.append("\"21\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("pts_coedw").toString()))).append("\", ");
+            sb.append("\"22\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("pts_coeflk").toString()))).append("\", ");
+            sb.append("\"23\": \"").append(x.get("pts_brand")).append("\", ");
+            sb.append("\"24\": \"").append(x.get("pts_lid")).append("\", ");
+            sb.append("\"25\": \"").append(x.get("location_name")).append("\", ");
+            sb.append("\"26\": \"").append(x.get("ctag_code")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+        
+    }
 
     /*
      * UTILITY FUNCTION
