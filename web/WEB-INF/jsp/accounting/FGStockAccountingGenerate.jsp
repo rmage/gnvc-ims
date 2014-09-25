@@ -39,7 +39,7 @@
                                 <tr>
                                     <td style="width: 20%;">Currency Rate</td>
                                     <td>
-                                        <b><fmt:formatNumber type="number" maxFractionDigits="2" value="${model.cr.rateValue}" /></b>
+                                        <b> ${model.fromTo} : <fmt:formatNumber type="number" maxFractionDigits="8" value="${model.cr.rateValue}" /></b>
                                     </td>
                                 </tr>
                             </tbody>

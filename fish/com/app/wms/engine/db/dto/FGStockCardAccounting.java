@@ -30,6 +30,13 @@ public class FGStockCardAccounting implements Serializable {
     private BigDecimal amountFixCost;
     private BigDecimal amountTotalCost;
 
+    /*CURRENCY*/
+    private Date rateDate;
+    private BigDecimal rateValue;
+
+    /*HELP VAR*/
+    private String currencyCodeFrom;
+
     private FGUnitCost fgUnitCost;
 
     public Integer getItemId() {
@@ -126,6 +133,30 @@ public class FGStockCardAccounting implements Serializable {
 
     public void setFgUnitCost(FGUnitCost fgUnitCost) {
         this.fgUnitCost = fgUnitCost;
+    }
+
+    public String getCurrencyCodeFrom() {
+        return currencyCodeFrom;
+    }
+
+    public void setCurrencyCodeFrom(String currencyCodeFrom) {
+        this.currencyCodeFrom = currencyCodeFrom;
+    }
+
+    public Date getRateDate() {
+        return rateDate;
+    }
+
+    public void setRateDate(Date rateDate) {
+        this.rateDate = rateDate;
+    }
+
+    public BigDecimal getRateValue() {
+        return rateValue;
+    }
+
+    public void setRateValue(BigDecimal rateValue) {
+        this.rateValue = rateValue;
     }
 
 }

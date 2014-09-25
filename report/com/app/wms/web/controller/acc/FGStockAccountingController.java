@@ -87,47 +87,29 @@ public class FGStockAccountingController extends MultiActionController {
         BigDecimal totalTotalIDR = BigDecimal.ZERO;
 
         /*GET CURRENCY RATE FROM USD TO IDR */
+        String fromTo = "USD to IDR";
         CurrencyRate cr = new CurrencyRate();
         cr = currencyRateDao.findLatestByCurrencyCodeFromToAndDate("USD", "IDR", asOf);
 
-        for (FGStockCardAccounting fgAcc : fgStockCardAccountingList) {
-            FGUnitCost fgUc = new FGUnitCost();
-            fgUc = fgUnitCostDao.findLatest(fgAcc.getScDate(), fgAcc.getItemId());
-            /*CALCULATE TOTAL*/
-            Double qty = fgAcc.getEndQuantity();
-            amountFixIDR = fgUc.getAmountFixCost().multiply(BigDecimal.valueOf(qty));
-            amountVarIDR = fgUc.getAmountVarCost().multiply(BigDecimal.valueOf(qty));
-            amountTotalIDR = fgUc.getAmountTotal().multiply(BigDecimal.valueOf(qty));
-
-            BigDecimal rateValue = cr.getRateValue();
-            amountFixIDR = amountFixIDR.multiply(rateValue);
-            amountVarIDR = amountVarIDR.multiply(rateValue);
-            amountTotalIDR = amountTotalIDR.multiply(rateValue);
-
-            /*SET TO LIST*/
-            fgStockCardAccountingList.get(i).setFixCost(fgUc.getAmountFixCost());
-            fgStockCardAccountingList.get(i).setVarCost(fgUc.getAmountVarCost());
-            fgStockCardAccountingList.get(i).setTotalCost(fgUc.getAmountTotal());
-            fgStockCardAccountingList.get(i).setAmountFixCost(amountFixIDR);
-            fgStockCardAccountingList.get(i).setAmountVarCost(amountVarIDR);
-            fgStockCardAccountingList.get(i).setAmountTotalCost(amountTotalIDR);
-
-            i++;
-            /*TOTALING*/
-            totalQty += fgAcc.getEndQuantity();
-            totalFixUSD = totalFixUSD.add(fgUc.getAmountFixCost());
-            totalVarUSD = totalVarUSD.add(fgUc.getAmountVarCost());
-            totalTotalUSD = totalTotalUSD.add(fgUc.getAmountTotal());
-            totalFixIDR = totalFixIDR.add(amountFixIDR);
-            totalVarIDR = totalVarIDR.add(amountVarIDR);
-            totalTotalIDR = totalTotalIDR.add(amountTotalIDR);
+        if (cr.getCurrencyCodeFrom().equalsIgnoreCase("IDR")) {
+            fromTo = "IDR to USD";
         }
 
-        System.out.println("GENERATE " + asOfDate + " " + idxString);
+        for (FGStockCardAccounting fgAcc : fgStockCardAccountingList) {
+            /*TOTALING*/
+            totalQty += fgAcc.getEndQuantity();
+            totalFixUSD = totalFixUSD.add(fgAcc.getFixCost());
+            totalVarUSD = totalVarUSD.add(fgAcc.getVarCost());
+            totalTotalUSD = totalTotalUSD.add(fgAcc.getTotalCost());
+            totalFixIDR = totalFixIDR.add(fgAcc.getAmountFixCost());
+            totalVarIDR = totalVarIDR.add(fgAcc.getAmountVarCost());
+            totalTotalIDR = totalTotalIDR.add(fgAcc.getAmountTotalCost());
+        }
 
         modelMap.put("fgPs", fgPs);
         modelMap.put("asOfDate", asOfDate);
         modelMap.put("cr", cr);
+        modelMap.put("fromTo", fromTo);
         /*TOTALING TO MAP*/
         modelMap.put("totalQty", totalQty);
         modelMap.put("totalFixUSD", totalFixUSD);
@@ -136,7 +118,7 @@ public class FGStockAccountingController extends MultiActionController {
         modelMap.put("totalFixIDR", totalFixIDR);
         modelMap.put("totalVarIDR", totalVarIDR);
         modelMap.put("totalTotalIDR", totalTotalIDR);
-        
+
         modelMap.put("fgStockCardAccountingList", fgStockCardAccountingList);
 
         return new ModelAndView("accounting/FGStockAccountingGenerate", "model", modelMap);

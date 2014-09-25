@@ -85,11 +85,16 @@ public class FGUnitCostDaoImpl extends AbstractDAO implements ParameterizedRowMa
     }
 
     public FGUnitCost findLatest(Date date, Integer fgItemId) {
-        FGUnitCost result = new FGUnitCost();
+        FGUnitCost result = null;
         String queryString;
 
         queryString = "select top 1 * from " + getTableName() + " where unit_cost_date <= ? and fg_item_id = ? order by unit_cost_date desc";
-        result = (FGUnitCost) jdbcTemplate.query(queryString, this, date, fgItemId).get(0);
+        List<FGUnitCost> list = jdbcTemplate.query(queryString, this, date, fgItemId);
+        if (!list.isEmpty()) {
+            result = list.get(0);
+        } else {
+            result = new FGUnitCost();
+        }
         return result;
     }
 

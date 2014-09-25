@@ -25,6 +25,16 @@ public class FGUnitCost extends AbstractDTO implements Serializable {
     private Date unitCostDate;
 
     private FGItem fgItem;
+    
+    public FGUnitCost() {
+        this.id = 0;
+        this.fgItemId = 0;
+        this.currencyCode = "USD";
+        this.amountFixCost = BigDecimal.ZERO;
+        this.amountVarCost = BigDecimal.ZERO;
+        this.amountTotal = BigDecimal.ZERO;
+        this.unitCostDate = new Date();
+    }
 
     public Integer getId() {
         return id;
