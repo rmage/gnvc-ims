@@ -37,8 +37,7 @@ public class AppMenuRoleDaoImpl extends AbstractDAO implements ParameterizedRowM
      */
     @Transactional
     public AppMenuRolePk insert(AppMenuRole dto) {
-    	System.out.println("appmenurole-dto ="+dto);
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " ( ROLE_CODE, MENU_CODE, IS_VIEW, IS_CREATE, IS_EDIT, IS_DELETE, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", dto.getRoleCode(), dto.getMenuCode(), dto.getIsView(), dto.getIsCreate(), dto.getIsEdit(), dto.getIsDelete(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate());
+        jdbcTemplate.update("EXEC M_ROLE_ACCESS_UPSERT ?, ?, ?, ?, ?, ?, ?", dto.getRoleCode(), dto.getMenuCode(), dto.getIsView(), dto.getIsCreate(), dto.getIsEdit(), dto.getIsDelete(), dto.getCreatedBy());
         return dto.createPk();
     }
 

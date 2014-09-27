@@ -34,15 +34,15 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">Bor Code</td>
-                                    <td><input type="text" class="bor-info" id="borId" name="borId" required="required" data-id=""></td>
+                                    <td><input type="text" class="bor-info" id="borId" name="borId" tabindex="1" required="required" data-id=""></td>
                                     <td style="width: 200px;">OFAL Code</td>
-                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" required="required"></td>
+                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" tabindex="2" required="required"></td>
                                 </tr>
                                 <tr>
                                     <td>Buyer</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" size="50" readonly></td>
                                     <td>OFAL Date</td>
-                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required"></td>
+                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" tabindex="3" required="required"></td>
                                 </tr>
                                 <tr>
                                     <td>Brand</td>
@@ -52,21 +52,21 @@
                                 </tr>
                                 <tr>
                                     <td>Reference Number</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" size="30" readonly></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="lNw" value="0"></td>
+                                    <td><input type="text" id="lNw" value="0" tabindex="4"></td>
                                 </tr>
                                 <tr>
                                     <td>Destination Port</td>
                                     <td><input type="text" class="bor-info" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="lDw" value="0"></td>
+                                    <td><input type="text" id="lDw" value="0" tabindex="5"></td>
                                 </tr>
                                 <tr>
                                     <td>Quantity</td>
                                     <td><input type="text" class="bor-info" readonly></td>
                                     <td>BBE</td>
-                                    <td><input type="text" id="lBbe" value="0"></td>
+                                    <td><input type="text" id="lBbe" value="0" tabindex="6"></td>
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
@@ -82,19 +82,19 @@
                                 </tr>
                                 <tr>
                                     <td>Max Code</td>
-                                    <td><input type="text" id="vMaxCOde" name="vMaxCOde" class="bor-info" readonly></td>
+                                    <td><input type="text" id="vMaxCOde" name="vMaxCOde" class="bor-info" size="1" readonly></td>
                                     <td>Drained Weight</td>
                                     <td><input type="text" id="aDw" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Shipment Schedule</td>
-                                    <td><input type="text" id="shipment" name="shipment"></td>
+                                    <td><input type="text" id="shipment" name="shipment" tabindex="7"></td>
                                     <td>Flakes</td>
                                     <td><input type="text" id="aFlk" name="aFlk" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Special Instruction</td>
-                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50"></td>
+                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="8"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -113,8 +113,8 @@
                             <tr>
                                 <th style="width: 75px">PTS Number</th>
                                 <th colspan="12">
-                                    <input type="text" id="ptsCode" name="ptsCode" />
-                                    <input type="button" id="btnAdd" name="btnAdd" value="Add" />
+                                    <input type="text" id="ptsCode" name="ptsCode" tabindex="9" />
+                                    <input type="button" id="btnAdd" name="btnAdd" value="Add" tabindex="10" />
                                 </th>
                             </tr>
                             <tr>
@@ -164,7 +164,7 @@
             $("#btnAdd").bind("click", function() {
                 // VALIDATE | no same pts number in list
                 var ptsCode = $("#ptsCode").val();
-                if ($("#detail tr td:nth-child(2):contains('" + ptsCode + "')").size() > 0) {
+                if ($("#detail tr td:nth-child(2):containsCI('" + ptsCode + "')").size() > 0) {
                     alert('[Error] Pallet Transfer Number #' + ptsCode + ' is in detail! Duplicate detected.');
                     return false;
                 }
@@ -202,6 +202,7 @@
                                         '</tr>');
                                 $("#ptsCode").val("");
                                 setCanCode();
+                                $('#ptsCode').focus();
                             }
                         },
                         complete: function() {

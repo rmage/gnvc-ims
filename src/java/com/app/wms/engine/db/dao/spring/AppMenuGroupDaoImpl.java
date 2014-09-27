@@ -56,7 +56,7 @@ public class AppMenuGroupDaoImpl extends AbstractDAO implements ParameterizedRow
                     + "INNER JOIN APP_MENU_ROLE R on D.MENU_CODE=R.MENU_CODE "
                     + "INNER JOIN \"USER\" u on r.ROLE_CODE=u.ROLE_CODE "
                     + "INNER JOIN " + getTableName() + " G ON D.GROUP_CODE=G.GROUP_CODE   "
-                    + "WHERE u.USER_ID= ? ORDER BY G.SORT_NO,G.NAME", this, userID);
+                    + "WHERE u.USER_ID = ? AND r.is_delete = 'N' ORDER BY G.SORT_NO,G.NAME", this, userID);
         } catch (Exception e) {
             throw new AppMenuGroupDaoException("Query failed", e);
         }

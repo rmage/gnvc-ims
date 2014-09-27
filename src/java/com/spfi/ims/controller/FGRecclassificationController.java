@@ -97,7 +97,8 @@ public class FGRecclassificationController extends MultiActionController {
             sb.append("\"3\": \"").append(x.get("item_id")).append("\", ");
             sb.append("\"4\": \"").append(x.get("item_name")).append("\", ");
             sb.append("\"5\": \"").append(x.get("x")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("sc_cqty")).append("\"}");
+            sb.append("\"6\": \"").append(x.get("sc_cqty")).append("\", ");
+            sb.append("\"100\": \"").append(x.get("pts_code")).append("\"}");
 
             b = Boolean.TRUE;
         }

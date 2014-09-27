@@ -117,7 +117,7 @@
             $("#btnAdd").bind("click", function() {
                 // VALIDATE | No same pts number in list
                 var ptsCode = $('#ptsCode').val();
-                if ($('tbody#detail tr td:nth-child(5):contains("' + ptsCode + '")').length > 0) {
+                if ($('#detail tr td:nth-child(5):containsCI("' + ptsCode + '")').length > 0) {
                     alert('Pallet Transfer Number #' + ptsCode + ' is in detail! Duplicate detected.');
                     return false;
                 }
@@ -150,10 +150,14 @@
                                             '<td>' + json[i][6] + '</td>' +
                                             '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                                 }
+
+                                if (json.length > 0) {
+                                    $('#ptsCode').val("");
+                                }
                             },
                             complete: function() {
                                 $('#load').remove();
-                                $('#ptsCode').val("");
+                                $('#ptsCode').focus();
                             }
                         });
                     } else {
@@ -175,10 +179,14 @@
                                             '<td>' + json[i][6] + '</td>' +
                                             '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td></tr>');
                                 }
+                                
+                                if (json.length > 0) {
+                                    $('#ptsCode').val("");
+                                }
                             },
                             complete: function() {
                                 $('#load').remove();
-                                $('#ptsCode').val("");
+                                $('#ptsCode').focus();
                             }
                         });
                     }
@@ -208,8 +216,8 @@
                         $('#tsFrom').val() + '^' + $('#tsTo').val() + '^' + $('#tsRemarks').val() + '^';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(4)').html() + '^' + 
-                            $(this).data('item') + '^' + 
+                    data = data + header + $(this).find('td:eq(4)').html() + '^' +
+                            $(this).data('item') + '^' +
                             (parseFloat($(this).find('.qtyOutCs').val()) + (parseInt($(this).find('.qtyOutTin').val()) / 100)) + '^@';
                 });
 

@@ -498,6 +498,10 @@ public class NewReportController extends MultiActionController {
     }
     
     //  Finished Goods Module | Form and Report List
+    public ModelAndView getPtsRegisterPerPeriod(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/finish_goods/PtsRegisterPerPeriod");
+    }
+    
     public ModelAndView getFGInventoryReport(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/finish_goods/InventoryReport");
     }

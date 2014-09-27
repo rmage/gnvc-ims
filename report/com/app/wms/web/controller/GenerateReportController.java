@@ -198,6 +198,7 @@ public class GenerateReportController extends MultiActionController {
         //  ***END*** | Non-Fish Module | Form and Report List
 
         //  Finished Goods Module | Form and Report List
+        ListMap.put(Report.FGPtsPerPeriod, "EXEC RPT_FG_PALLET_TRANSFER_REGISTER ?, ?, ?");
         ListMap.put(Report.FGStockInventory, "EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?");
         ListMap.put(Report.FGPtsCheckList, "EXEC RPT_FG_PTS_CHECKLIST");
         ListMap.put(Report.FGActualInventory, "EXEC RPT_FG_INVENTORY_PER_COUNT ?, ?");

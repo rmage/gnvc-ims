@@ -98,7 +98,8 @@ public class FGDeliveryController extends MultiActionController {
             sb.append("\"2\": \"").append(x.get("pack_size")).append("\", ");
             sb.append("\"3\": \"").append(x.get("item_id")).append("\", ");
             sb.append("\"4\": \"").append(x.get("item_name")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("sc_cqty")).append("\"}");
+            sb.append("\"5\": \"").append(x.get("sc_cqty")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("pts_code")).append("\"}");
 
             b = Boolean.TRUE;
         }

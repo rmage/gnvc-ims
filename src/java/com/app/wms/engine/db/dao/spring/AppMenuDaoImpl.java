@@ -177,7 +177,7 @@ public class AppMenuDaoImpl extends AbstractDAO implements ParameterizedRowMappe
                     .append(getTableName()).append(" appm WHERE appm.IS_DELETED='N' ");
             
             if (filter != null && !filter.trim().equals("")) {
-                sb.append(" AND ").append(filter).append(" AND NOT EXISTS (SELECT 1 FROM app_menu_role appmr WHERE appmr.menu_code = appm.menu_code AND appmr.role_code = ?) ");
+                sb.append(" AND ").append(filter).append(" AND NOT EXISTS (SELECT 1 FROM app_menu_role appmr WHERE appmr.menu_code = appm.menu_code AND appmr.is_delete != 'Y' AND appmr.role_code = ?) ");
             }
          
             sb.append("ORDER BY MENU_CODE ");

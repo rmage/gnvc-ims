@@ -105,6 +105,10 @@
             // BIND | Search PTS button
             $("#btnAdd").bind("click", function() {
                 var ptsCode = $('#ptsCode').val();
+                if ($('tbody#detail tr td:nth-child(4):containsCI("' + ptsCode + '")').length > 0) {
+                    alert('Pallet Reclassification Number #' + ptsCode + ' is in detail! Duplicate detected.');
+                    return false;
+                }
 
                 // VALIDATE | pallet transfer number is empty
                 if (ptsCode !== '') {
@@ -121,17 +125,21 @@
                                         '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
                                         '<td>' + x[0] + '</td>' +
                                         '<td>' + json[i][2] + '</td>' +
-                                        '<td>' + ptsCode + '</td>' +
+                                        '<td>' + json[i][6] + '</td>' +
                                         '<td>' + json[i][4] + '</td>' +
                                         '<td>' + json[i][5] + '</td>' +
                                         '<td><input type="text" class="cs" value="0" data-max="' + parseInt(qty[0]) + '" size="6"><input type="text" class="tin" value="0" data-max="' + parseInt(qty[1]) + '" size="2"></td>' +
                                         '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
                                         '</tr>');
                             }
+
+                            if (json.length > 0) {
+                                $('#ptsCode').val("");
+                            }
                         },
                         complete: function() {
                             $('img#load').remove();
-                            $('#ptsCode').val("");
+                            $('#ptsCode').focus();
                         }
                     });
                 }
@@ -159,8 +167,8 @@
                 var header = $('#drCode').val() + '^' + $('#drDate').val() + '^' + $('#drFrom').val() + '^' + $('#drTo').val() + '^' + $('#drRemarks').val() + '^';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').html() + '^' + 
-                            $(this).data('item') + '^' + 
+                    data = data + header + $(this).find('td:eq(3)').html() + '^' +
+                            $(this).data('item') + '^' +
                             (parseFloat($(this).find('.cs').val()) + (parseInt($(this).find('.tin').val()) / 100)) + '^@';
                 });
 
@@ -177,7 +185,7 @@
             // LIVE | validate maximum quantity
             $('tbody#detail .cs,tbody#detail .tin').live('blur', function() {
                 var ppc = $(this).parent().parent().data('ppc');
-                
+
                 if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
                     if ($(this).hasClass('tin')) {
                         if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
