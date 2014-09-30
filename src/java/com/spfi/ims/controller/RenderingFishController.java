@@ -1,5 +1,6 @@
 package com.spfi.ims.controller;
 
+import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.RenderingFishDao;
 import java.io.IOException;
@@ -27,6 +28,25 @@ public class RenderingFishController extends MultiActionController {
         /* DAO | Define needed dao here */
         /* TRANSACTION | Something complex here */
         return new ModelAndView("default/rendering/FishAdd");
+    }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            /* DATA | get initial value */
+            String data = request.getParameter("data");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
+            /* DAO | Define needed dao here */
+            RenderingFishDao rfDao = DaoFactory.createRenderingFishDao();
+            
+            /* TRANSACTION | Something complex here */
+            rfDao.insert(data, lu.getUserId());
+
+            return new ModelAndView("redirect:FGReclassification.htm");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:FGReclassification.htm?action=create");
+        }
     }
     
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)

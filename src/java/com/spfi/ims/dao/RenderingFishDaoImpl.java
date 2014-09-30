@@ -36,4 +36,8 @@ public class RenderingFishDaoImpl extends AbstractDAO implements RenderingFishDa
         }
     }
     
+    public void insert(String data, String createdBy) {
+        jdbcTemplate.update("EXEC REND_FISH_INSERT ?, ?", data, createdBy);
+    }
+    
 }

@@ -54,19 +54,19 @@
                                     <td>Reference Number</td>
                                     <td><input type="text" class="bor-info" size="30" readonly></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="lNw" value="0" tabindex="4"></td>
+                                    <td><input type="text" id="lNw" tabindex="4"></td>
                                 </tr>
                                 <tr>
                                     <td>Destination Port</td>
                                     <td><input type="text" class="bor-info" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="lDw" value="0" tabindex="5"></td>
+                                    <td><input type="text" id="lDw" tabindex="5"></td>
                                 </tr>
                                 <tr>
                                     <td>Quantity</td>
                                     <td><input type="text" class="bor-info" readonly></td>
                                     <td>BBE</td>
-                                    <td><input type="text" id="lBbe" value="0" tabindex="6"></td>
+                                    <td><input type="text" id="lBbe" tabindex="6"></td>
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
@@ -76,7 +76,7 @@
                                 </tr>
                                 <tr>
                                     <td>Can Code</td>
-                                    <td><input type="text" id="canCode" name="canCode" size="50" readonly></td>
+                                    <td><input type="text" id="canCode" name="canCode" size="50" tabindex="7"></td>
                                     <td>Net Weight</td>
                                     <td><input type="text" id="aNw" readonly></td>
                                 </tr>
@@ -88,13 +88,13 @@
                                 </tr>
                                 <tr>
                                     <td>Shipment Schedule</td>
-                                    <td><input type="text" id="shipment" name="shipment" tabindex="7"></td>
+                                    <td><input type="text" id="shipment" name="shipment" tabindex="8"></td>
                                     <td>Flakes</td>
                                     <td><input type="text" id="aFlk" name="aFlk" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Special Instruction</td>
-                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="8"></td>
+                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="9"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -113,8 +113,8 @@
                             <tr>
                                 <th style="width: 75px">PTS Number</th>
                                 <th colspan="12">
-                                    <input type="text" id="ptsCode" name="ptsCode" tabindex="9" />
-                                    <input type="button" id="btnAdd" name="btnAdd" value="Add" tabindex="10" />
+                                    <input type="text" id="ptsCode" name="ptsCode" tabindex="10" />
+                                    <input type="button" id="btnAdd" name="btnAdd" value="Add" tabindex="11" />
                                 </th>
                             </tr>
                             <tr>
@@ -201,7 +201,7 @@
                                         '<td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this)"></td>' +
                                         '</tr>');
                                 $("#ptsCode").val("");
-                                setCanCode();
+//                                setCanCode();
                                 $('#ptsCode').focus();
                             }
                         },
@@ -271,11 +271,11 @@
                 var $x = $(".qtyCs");
                 var $y = $(".remarks");
                 for (var i = 0; i < $x.size(); i++) {
-                    data = data + $("#ofalCode").val() + "," + $("#borId").data("id") + "," + $("#ofalDate").val() + "," + $("#canCode").val() + "," +
-                            $("#lNw").val() + "," + $("#lDw").val() + "," + $("#lBbe").val() + "," + $("#shipment").val() + "," + $x[i].getAttribute("data-code") + "," +
-                            (parseFloat($x[i].value) + ($($x[i]).next().val()/100)) + "," + $y[i].value + ',' + $('#remarks').val() + ",@";
+                     data = data + $("#ofalCode").val() + '^' + $("#borId").data("id") + '^' + $("#ofalDate").val() + '^' + $("#canCode").val() + '^' +
+                            $("#lNw").val() + '^' + $("#lDw").val() + '^' + $("#lBbe").val() + '^' + $("#shipment").val() + '^' + $x[i].getAttribute("data-code") + '^' +
+                            (parseFloat($x[i].value) + ($($x[i]).next().val()/100)) + '^' + $y[i].value + '^' + $('#remarks').val() + '^@';
                 }
-                console.log(data);
+//                console.log(data);
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
                         window.location.replace("?action=save&data=" + data);
@@ -290,23 +290,23 @@
                 $("#detail tr td:nth-child(1)").each(function(i) {
                     $(this).html(i + 1);
                 });
-                setCanCode();
+//                setCanCode();
             }
 
             // FUNCTION | set can code
-            function setCanCode() {
-                $("#canCode").val("");
-                $("#detail tr td:nth-child(3)").each(function() {
-                    if ((parseInt($('#vMaxCOde').val()) > ($('#canCode').val().split(';').length - 1))) {
-                        if ($("#canCode").val().indexOf($(this).html()) === -1) {
-                            $("#canCode").val($("#canCode").val() + $(this).html() + ";");
-                        }
-                    } else {
-                        alert('[Error] Maximum CAN CODE reached!');
-                        $(this).parent().remove();
-                    }
-                });
-            }
+//            function setCanCode() {
+//                $("#canCode").val("");
+//                $("#detail tr td:nth-child(3)").each(function() {
+//                    if ((parseInt($('#vMaxCOde').val()) > ($('#canCode').val().split(';').length - 1))) {
+//                        if ($("#canCode").val().indexOf($(this).html()) === -1) {
+//                            $("#canCode").val($("#canCode").val() + $(this).html() + ";");
+//                        }
+//                    } else {
+//                        alert('[Error] Maximum CAN CODE reached!');
+//                        $(this).parent().remove();
+//                    }
+//                });
+//            }
 
         </script>
     </body>
