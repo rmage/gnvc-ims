@@ -22,6 +22,14 @@ public class CurrencyRate implements Serializable {
 
     private String rateDateString;
 
+    private String currencyType;
+
+    private Date weekStartDate;
+
+    private Date weekEndDate;
+
+    private Date monthDate;
+
     @Override
     public String toString() {
         //FIXME :: CurrencyRate @toString completion
@@ -93,6 +101,38 @@ public class CurrencyRate implements Serializable {
 
     public void setCurrencyCodeTo(String currencyCodeTo) {
         this.currencyCodeTo = currencyCodeTo;
+    }
+
+    public String getCurrencyType() {
+        return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
+    }
+
+    public Date getWeekStartDate() {
+        return weekStartDate;
+    }
+
+    public void setWeekStartDate(Date weekStartDate) {
+        this.weekStartDate = weekStartDate;
+    }
+
+    public Date getWeekEndDate() {
+        return weekEndDate;
+    }
+
+    public void setWeekEndDate(Date weekEndDate) {
+        this.weekEndDate = weekEndDate;
+    }
+
+    public Date getMonthDate() {
+        return monthDate;
+    }
+
+    public void setMonthDate(Date monthDate) {
+        this.monthDate = monthDate;
     }
 
 }

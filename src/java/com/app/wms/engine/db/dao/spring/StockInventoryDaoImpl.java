@@ -422,4 +422,18 @@ public class StockInventoryDaoImpl extends AbstractDAO implements ParameterizedR
         return result;
     }
 
+    public List<String> findByProductCategoryAndNotEmpty(String productCategory) {
+        List<String> resultList = null;
+        String sqlQuery = "select si.product_code from stock_inventory si left join product p on "
+                + "si.product_code = p.product_code where p.product_category = ? and si.balance > 0";
+
+        resultList = (List<String>) jdbcTemplate.query(sqlQuery, new ParameterizedRowMapper<String>() {
+
+            public String mapRow(ResultSet rs, int arg1) throws SQLException {
+                return rs.getString(1);
+            }
+        }, productCategory);
+        return resultList;
+    }
+
 }

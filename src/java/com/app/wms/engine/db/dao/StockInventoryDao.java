@@ -132,4 +132,6 @@ public interface StockInventoryDao {
     public StockInventory findId(int id);
 
     public StockInventory findByProductCode(String productCode);
+    
+    public List<String> findByProductCategoryAndNotEmpty(String productCategory);
 }

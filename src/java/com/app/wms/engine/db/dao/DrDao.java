@@ -2,6 +2,7 @@ package com.app.wms.engine.db.dao;
 
 import com.app.wms.engine.db.dto.Dr;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public interface DrDao {
@@ -17,5 +18,7 @@ public interface DrDao {
     public List<Dr> findByProductCode(String productCode, String asOf);
     
     public List<Dr> findByProductCodeAndBeforeThan(String productCode, String asOf);
+    
+    public List<String> findProductCodeWithRR(String productCategory, Date asOf);
 
 }

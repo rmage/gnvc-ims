@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -171,22 +172,45 @@ public class ReceiveReportDaoImpl extends AbstractDAO
 
     public List<ReceiveReport> findByProductCodeAndBeforeThan(String productCode, String asOf) {
         List<ReceiveReport> resultList = null;
-        String sqlQuery = "select rr.rr_code,rr.rr_date, rr.po_code, "
-                + "rr.rr_from, acprice.unit_price, rr.evaluated_by,rr.evaluated_date, "
-                + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
-                + "rr.updated_by, rr.updated_date,"
-                + "sum(rrd.qty_g) qty from dbo.rr rr left join dbo.rr_detail rrd on "
-                + "rr.rr_code = rrd.rr_code left join dbo.product prod on "
-                + "prod.product_code = rrd.product_code left join dbo.po po on "
-                + "rr.po_code = po.po_code left join dbo.assign_canv_prc acprice on "
-                + "rrd.prs_code = acprice.prsnumber "
-                + "where rrd.product_code = '" + productCode + "' and "
+        /*String sqlQuery = "select rr.rr_code,rr.rr_date, rr.po_code, "
+         + "rr.rr_from, acprice.unit_price, rr.evaluated_by,rr.evaluated_date, "
+         + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
+         + "rr.updated_by, rr.updated_date,"
+         + "sum(rrd.qty_g) qty from dbo.rr rr left join dbo.rr_detail rrd on "
+         + "rr.rr_code = rrd.rr_code left join dbo.product prod on "
+         + "prod.product_code = rrd.product_code left join dbo.po po on "
+         + "rr.po_code = po.po_code left join dbo.assign_canv_prc acprice on "
+         + "rrd.prs_code = acprice.prsnumber "
+         + "where rrd.product_code = '" + productCode + "' and "
+         + "rr.rr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) "
+         + "group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, acprice.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, "
+         + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
+         + "rr.updated_by, rr.updated_date order by rr.rr_date";*/
+        String sqlQuery = "select rr.rr_code,rr.rr_date, rr.po_code, rr.rr_from, ACPR.unit_price, rr.evaluated_by,rr.evaluated_date, "
+                + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,rr.updated_by, "
+                + "rr.updated_date, sum(rrd.qty_g) qty  from rr , (select * from rr_detail) RRD , (select prsnumber , product_code from po left join po_detail pod on "
+                + "po.po_code = pod.po_code) PO , (select * from assign_canv_prc) ACPR "
+                + "where rr.rr_code = RRD.rr_code and ACPR.prsnumber = RRD.prs_code AND RRD.product_code = '" + productCode + "' and PO.prsnumber = RRD.prs_code and PO.product_code = '" + productCode + "' AND ACPR.productcode = '" + productCode + "' AND "
                 + "rr.rr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) "
-                + "group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, acprice.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, "
-                + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
-                + "rr.updated_by, rr.updated_date order by rr.rr_date";
+                + "group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, ACPR.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,rr.updated_by, rr.updated_date ";
 
         resultList = jdbcTemplate.query(sqlQuery, this);
+        return resultList;
+    }
+
+    public List<String> findProductCodeWithRR(String productCategory, Date asOf) {
+        List<String> resultList = null;
+        String sqlQuery = "select distinct rrd.product_code from dbo.rr rr left join dbo.rr_detail rrd on "
+                + "rr.rr_code = rrd.rr_code left join dbo.product prod on "
+                + "prod.product_code = rrd.product_code where prod.product_category = ? AND "
+                + "(rr.rr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, ?) - 1, 0) AND ?) ";
+
+        resultList = (List<String>) jdbcTemplate.query(sqlQuery, new ParameterizedRowMapper<String>() {
+
+            public String mapRow(ResultSet rs, int arg1) throws SQLException {
+                return rs.getString(1);
+            }
+        }, productCategory, asOf, asOf);
         return resultList;
     }
 

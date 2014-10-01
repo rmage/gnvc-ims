@@ -7,7 +7,6 @@ import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.CurrencyDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
-import com.app.wms.web.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -28,83 +27,30 @@ public class CurrencyRateController extends MultiActionController {
 
     private final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
+    private static final String DAILY_TYPE = "DAILY";
+    private static final String WEEKLY_TYPE = "WEEKLY";
+    private static final String MONTHLY_TYPE = "MONTHLY";
+
+    private final SimpleDateFormat sdfIn = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+
+    private final SimpleDateFormat sdfOut = new SimpleDateFormat("dd/MM/yyyy");
+
+    private final SimpleDateFormat sdfOutMonth = new SimpleDateFormat("MMM yyyy");
+
+
+    /* DAO | Define needed dao here */
+    private final CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
+    private final CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
+
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         try {
             System.out.println("-----------findByPrimaryKey--------------");
             HashMap m = new HashMap();
 
-            String btnGroup = request.getParameter("btnGroup");           
+            String btnGroup = request.getParameter("btnGroup");
 
             final String mode = request.getParameter("mode");
-            if (StringHelper.emptyIfNull(btnGroup).equals("Add")) {
-                System.out.println("ADD");
-                return create(request, response);
-            } else if (StringHelper.emptyIfNull(btnGroup).equals("Clear")) {
-                System.out.println("CLEAR ");
-                return new ModelAndView("accounting/CurrencyRate", "model", m);
-            } else {
-                HashMap model = this.searchAndPaging(request, response);
-                return new ModelAndView("accounting/CurrencyRate", "model", model);
-            }
 
-        } catch (Throwable e) {
-            e.printStackTrace();
-            return new ModelAndView("Error", "th", e);
-        }
-
-    }
-
-    private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {
-            System.out.println("-----------searchAndPaging--------------");
-            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            HashMap m = new HashMap();
-
-            Date newerDate = null;
-            String currCode = request.getParameter("currency_code_from");
-            String newerDateString;
-            newerDateString = request.getParameter("rate_date");
-
-            if (currCode == null) {
-                currCode = "ALL";
-            }
-
-            if (newerDateString != null) {
-                if (newerDateString.equalsIgnoreCase("")) {
-                    newerDate = null;
-                } else {
-                    newerDate = df.parse(newerDateString);
-                }
-            }
-
-            /* DAO | Define needed dao here */
-            CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
-            CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
-
-            Integer page = null;
-            Integer paging = null;
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-            }
-            if (request.getParameter("paging") != null) {
-                paging = Integer.parseInt(request.getParameter("paging"));
-            }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
-
-            System.out.println("WHERE " + request.getParameter("where"));
-            System.out.println("PAGE " + page);
-            System.out.println("PAGING " + paging);
-            System.out.println("currCode " + currCode);
-            System.out.println("newerDateString " + newerDateString);
-            int start = (page - 1) * paging + 1;
-            int end = start + paging - 1;
-
-            List<CurrencyRate> crs = new ArrayList<CurrencyRate>();
             List<Currency> currs = new ArrayList<Currency>();
 
             try {
@@ -114,24 +60,13 @@ public class CurrencyRateController extends MultiActionController {
             }
 
             m.put("currs", currs);
+            return new ModelAndView("accounting/CurrencyRate", "model", m);
 
-            crs = currencyRateDao.findByCurrencyCodeAndDate(currCode, newerDate, page, paging);
-
-            System.out.println("SIZE " + crs.size());
-
-            int total = 2000;
-            m.put("totalRows", total);
-            m.put("page", page);
-            m.put("paging", paging);
-            m.put("crs", crs);
-            m.put("queryNewerThanDate", newerDateString);
-            m.put("selectedCurrCode", currCode);
-
-            return m;
-
-        } catch (NumberFormatException e) {
-            throw e;
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
         }
+
     }
 
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -144,7 +79,7 @@ public class CurrencyRateController extends MultiActionController {
         String currCode = request.getParameter("currency_code_from");
         String newerDateString;
         newerDateString = request.getParameter("rate_date");
-        
+
         System.out.println("WHERE " + request.getParameter("where"));
         System.out.println("currCode " + currCode);
         System.out.println("newerDateString " + newerDateString);
@@ -171,13 +106,60 @@ public class CurrencyRateController extends MultiActionController {
             if (b) {
                 pw.print(",");
             }
+            Date dateTemp = null;
+            Date dateWeekStartTemp = null;
+            Date dateWeekEndTemp = null;
+            Date dateMontTemp = null;
+            Date dateCreate = null;
+            try {
+                if (x.getRateDate() != null) {
+                    dateTemp = sdfIn.parse(x.getRateDate().toString());
+                }
+                if (x.getWeekStartDate() != null) {
+                    dateWeekStartTemp = sdfIn.parse(x.getWeekStartDate().toString());
+                }
+                if (x.getWeekEndDate() != null) {
+                    dateWeekEndTemp = sdfIn.parse(x.getWeekEndDate().toString());
+                }
+                if (x.getMonthDate() != null) {
+                    dateMontTemp = sdfIn.parse(x.getMonthDate().toString());
+                }
+                if (x.getCreatedDate() != null) {
+                    dateCreate = sdfIn.parse(x.getCreatedDate().toString());
+                }
+
+            } catch (ParseException ex) {
+                Logger.getLogger(CurrencyRateController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             pw.print("{\"1\": \"" + x.getRateId() + "\", ");
-            pw.print("\"2\": \"" + x.getCurrencyCodeFrom() + "\", ");
-            pw.print("\"3\": \"" + x.getCurrencyCodeTo() + "\", ");
-            pw.print("\"4\": \"" + x.getRateValue() + "\", ");
-            pw.print("\"5\": \"" + x.getRateDate() + "\", ");
-            pw.print("\"6\": \"" + x.getCreatedBy() + "\", ");
-            pw.print("\"7\": \"" + x.getCreatedDate() + "\"}");
+            pw.print("\"2\": \"" + x.getCurrencyType() + "\", ");
+            pw.print("\"3\": \"" + x.getCurrencyCodeFrom() + "\", ");
+            pw.print("\"4\": \"" + x.getCurrencyCodeTo() + "\", ");
+            pw.print("\"5\": \"" + x.getRateValue() + "\", ");
+            if (dateTemp != null) {
+                pw.print("\"6\": \"" + sdfOut.format(dateTemp) + "\", ");
+            } else {
+                pw.print("\"6\": \"" + " " + "\", ");
+            }
+            if (dateWeekStartTemp != null) {
+                pw.print("\"7\": \"" + sdfOut.format(dateWeekStartTemp) + "\", ");
+            } else {
+                pw.print("\"7\": \"" + " " + "\", ");
+            }
+            if (dateWeekEndTemp != null) {
+                pw.print("\"8\": \"" + sdfOut.format(dateWeekEndTemp) + "\", ");
+            } else {
+                pw.print("\"8\": \"" + " " + "\", ");
+            }
+            if (dateMontTemp != null) {
+                pw.print("\"9\": \"" + sdfOutMonth.format(dateMontTemp) + "\", ");
+            } else {
+                pw.print("\"9\": \"" + " " + "\", ");
+            }
+
+            pw.print("\"10\": \"" + sdfOut.format(dateCreate) + "\"}");
+            
             b = Boolean.TRUE;
         }
         pw.print("]}");
@@ -220,9 +202,23 @@ public class CurrencyRateController extends MultiActionController {
             String currrencyCodeTo = request.getParameter("groupCurrencyCodeTo");
             String rateValueString = request.getParameter("rateValue");
             String rateDateString = request.getParameter("rateDate");
+            String currrencyType = request.getParameter("groupCurrencyType");
+            String dateWeekStartString = request.getParameter("rateWeekStart");
+            String dateWeekEndString = request.getParameter("rateWeekEnd");
+            String dateMonthString = "01/";
+            Date rateDateMonth = null;
+
+            if (request.getParameter("monthPicker").length() > 0) {
+                dateMonthString += request.getParameter("monthPicker");
+                rateDateMonth = df.parse(dateMonthString);
+            }
+
             Date createdDate = new Date();
             String createdBy = userId;
             Date rateDate = df.parse(rateDateString);
+            Date rateDateWeekStart = df.parse(dateWeekStartString);
+            Date rateDateWeekEnd = df.parse(dateWeekEndString);
+
             double value = Double.parseDouble(rateValueString);
             BigDecimal db = BigDecimal.valueOf(value);
 
@@ -231,12 +227,30 @@ public class CurrencyRateController extends MultiActionController {
             currencyRate.setCreatedBy(userId);
             currencyRate.setCreatedDate(createdDate);
             currencyRate.setRateDate(rateDate);
+            currencyRate.setWeekStartDate(rateDateWeekStart);
+            currencyRate.setWeekEndDate(rateDateWeekEnd);
+            currencyRate.setMonthDate(rateDateMonth);
             currencyRate.setRateValue(db);
             currencyRate.setcurrencyCodeFrom(currrencyCodeFrom);
             currencyRate.setCurrencyCodeTo(currrencyCodeTo);
 
-            int id = currencyRateDao.insert(currencyRate);
+            if (currrencyType.equalsIgnoreCase(CurrencyRateController.DAILY_TYPE)) {
+                currencyRate.setWeekStartDate(null);
+                currencyRate.setWeekEndDate(null);
+                currencyRate.setMonthDate(null);
+                currencyRate.setCurrencyType(CurrencyRateController.DAILY_TYPE);
+            } else if (currrencyType.equalsIgnoreCase(CurrencyRateController.WEEKLY_TYPE)) {
+                currencyRate.setMonthDate(null);
+                currencyRate.setRateDate(null);
+                currencyRate.setCurrencyType(CurrencyRateController.WEEKLY_TYPE);
+            } else {
+                currencyRate.setWeekStartDate(null);
+                currencyRate.setWeekEndDate(null);
+                currencyRate.setRateDate(null);
+                currencyRate.setCurrencyType(CurrencyRateController.MONTHLY_TYPE);
+            }
 
+            int id = currencyRateDao.insert(currencyRate);
             return findByPrimaryKey(request, response);
         }
     }
@@ -269,5 +283,4 @@ public class CurrencyRateController extends MultiActionController {
 //        }
 //
 //    }
-
 }

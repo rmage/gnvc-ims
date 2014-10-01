@@ -5,6 +5,7 @@ import com.app.wms.engine.db.dto.Dr;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -78,9 +79,9 @@ public class DrDaoImpl extends AbstractDAO
         String sqlQuery = "select * from dbo.dr dr left join dbo.dr_detail drd on "
                 + "dr.dr_code = drd.dr_code left join dbo.product prod on "
                 + "prod.product_code = drd.product_code where drd.product_code = '" + productCode + "' and "
-                + "dr.dr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) AND '"+asOf+"' "
+                + "dr.dr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) AND '" + asOf + "' "
                 + "order by dr.dr_date";
-                
+
         resultList = jdbcTemplate.query(sqlQuery, this);
         return resultList;
     }
@@ -90,13 +91,27 @@ public class DrDaoImpl extends AbstractDAO
         String sqlQuery = "select * from dbo.dr dr left join dbo.dr_detail drd on "
                 + "dr.dr_code = drd.dr_code left join dbo.product prod on "
                 + "prod.product_code = drd.product_code where drd.product_code = '" + productCode + "' and "
-                + "dr.dr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) "
+                + "dr.dr_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) "
                 + "order by dr.dr_date";
-                
+
         resultList = jdbcTemplate.query(sqlQuery, this);
         return resultList;
     }
-    
-    
+
+    public List<String> findProductCodeWithRR(String productCategory, Date asOf) {
+        List<String> resultList = null;
+        String sqlQuery = "select distinct drd.product_code from dbo.dr dr left join dbo.dr_detail drd on "
+                + "dr.dr_code = drd.dr_code left join dbo.product prod on "
+                + "prod.product_code = drd.product_code where prod.product_category = ? AND "
+                + "(dr.dr_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, ?) - 1, 0) AND ?)";
+
+        resultList = (List<String>) jdbcTemplate.query(sqlQuery, new ParameterizedRowMapper<String>() {
+
+            public String mapRow(ResultSet rs, int arg1) throws SQLException {
+                return rs.getString(1);
+            }
+        }, productCategory, asOf, asOf);
+        return resultList;
+    }
 
 }

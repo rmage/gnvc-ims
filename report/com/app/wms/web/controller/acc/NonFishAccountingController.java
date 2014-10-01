@@ -48,7 +48,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  */
 public class NonFishAccountingController extends MultiActionController {
 
-    private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     /* DAO | Define needed dao here */
     private final CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
@@ -190,11 +190,13 @@ public class NonFishAccountingController extends MultiActionController {
 
         /*GET TS LIST*/
         aCalendar.setTime(now);
-        aCalendar.add(Calendar.DATE, 1);
-        Date tomorrowDate = aCalendar.getTime();
-        String tomorrowDateString = df.format(tomorrowDate);
+        Date tsDate = aCalendar.getTime();
+        df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String tsDateString = df.format(tsDate);
+        
+        df = new SimpleDateFormat("yyyy-MM-dd");
 
-        tsList = tsDao.findByProductCode(productCode, tomorrowDateString);
+        tsList = tsDao.findByProductCode(productCode, tsDateString);
 
         for (Ts ts : tsList) {
             BigDecimal amountIDR;
@@ -620,13 +622,16 @@ public class NonFishAccountingController extends MultiActionController {
 
         }
 
-//        balanceIDR = totalINIDR.subtract(totalOUTIDR);
         balanceIDR = totalAmountEND;
 
         result.balance = balanceIDR;
         result.qty = totalQTY;
         /*THIS IS FOR NEXT AVERAGE COST*/
         result.unitCost = amountOut;
+        
+        System.out.println("BAL IDR " + result.balance );
+        System.out.println("BEG QTY " + result.qty );
+        System.out.println("BEG UC " + result.unitCost );
 
         return result;
     }

@@ -413,4 +413,10 @@
     <bean name="/D3.htm" class="com.spfi.ims.controller.D3Controller">
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    
+    <!--SETUP CATEGORY CURRENCY TYPE-->
+    <bean name="/CategoryItemCurrencyType.htm" class="com.app.wms.web.controller.CategoryItemCurrencyTypeController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
 </beans>

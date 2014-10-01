@@ -946,7 +946,7 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGPalletRejectionDao) bf.getBean("FGPalletRejectionDao");
     }
-    
+
     /* GNVS | Rendering Fish Module */
     public static RenderingFishDao createRenderingFishDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
@@ -1002,6 +1002,11 @@ public class DaoFactory {
     public static FishRRAccountingDetailDao createFishRRAccountingDetailDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FishRRAccountingDetailDao) bf.getBean("FishRRAccountingDetailDao");
+    }
+
+    public static CategoryItemCurrencyTypeDao createCategoryItemCurrencyTypeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (CategoryItemCurrencyTypeDao) bf.getBean("CategoryItemCurrencyTypeDao");
     }
 
 }

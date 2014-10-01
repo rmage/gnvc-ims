@@ -48,8 +48,8 @@ public class CurrencyRateDaoImpl extends AbstractDAO
     }
 
     public int insert(CurrencyRate cr) {
-        return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?)",
-                cr.getCurrencyCodeFrom(), cr.getCurrencyCodeTo(), cr.getRateValue(), cr.getRateDate(), cr.getCreatedBy(), cr.getCreatedDate());
+        return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                cr.getCurrencyCodeFrom(), cr.getCurrencyCodeTo(), cr.getRateValue(), cr.getCurrencyType(), cr.getWeekStartDate(), cr.getWeekEndDate(), cr.getMonthDate(), cr.getRateDate(), cr.getCreatedBy(), cr.getCreatedDate());
     }
 
     public CurrencyRate findByCurrency(String currencyCode) {
@@ -154,7 +154,8 @@ public class CurrencyRateDaoImpl extends AbstractDAO
                 + "set @Page = " + i + "; "
                 + "set @PageSize = " + show + "; "
                 + "with PagedResult "
-                + "as (select ROW_NUMBER() over (order by currency_code_from desc) as rate_id, currency_code_from, currency_code_to, rate_value, rate_date, created_by, created_date from dbo.[currency_rate] " + condition + ") "
+                + "as (select ROW_NUMBER() over (order by currency_code_from desc) as rate_id, currency_type, currency_code_from, currency_code_to, rate_value, rate_date, "
+                + "rate_week_start , rate_week_end , rate_month, created_by, created_date from dbo.[currency_rate] " + condition + ") "
                 + "select * from PagedResult where rate_id between "
                 + "case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
                 + "else @Page end and @PageSize * @Page");

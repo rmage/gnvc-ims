@@ -4,6 +4,7 @@ import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.PurchaseDtl;
 import com.app.wms.engine.db.dto.ReceiveReport;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public interface ReceiveReportDao {
     public List<PurchaseDtl> findByPo(int poCode);
 
     public List<ReceiveReport> findAll();
+    
+    public List<String> findProductCodeWithRR(String productCategory, Date asOf);
 
     public int ajaxMaxPage(BigDecimal show, String where);
 

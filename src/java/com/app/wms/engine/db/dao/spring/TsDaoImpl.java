@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -104,8 +105,8 @@ public class TsDaoImpl extends AbstractDAO
         List<Ts> resultList = null;
         String sqlQuery = "select * from dbo.ts ts left join dbo.ts_detail tsd on "
                 + "ts.ts_code = tsd.ts_code left join dbo.product prod on "
-                + "prod.product_code = tsd.product_code where tsd.product_code = '"+productCode+"' and "
-                + "ts.ts_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) AND '"+asOf+"' "
+                + "prod.product_code = tsd.product_code where tsd.product_code = '" + productCode + "' and "
+                + "ts.ts_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) AND '" + asOf + "' "
                 + "order by ts.ts_date";
 
         resultList = jdbcTemplate.query(sqlQuery, this);
@@ -116,14 +117,28 @@ public class TsDaoImpl extends AbstractDAO
         List<Ts> resultList = null;
         String sqlQuery = "select * from dbo.ts ts left join dbo.ts_detail tsd on "
                 + "ts.ts_code = tsd.ts_code left join dbo.product prod on "
-                + "prod.product_code = tsd.product_code where tsd.product_code = '"+productCode+"' and "
-                + "ts.ts_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '"+asOf+"') - 1, 0) "
+                + "prod.product_code = tsd.product_code where tsd.product_code = '" + productCode + "' and "
+                + "ts.ts_date < DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + asOf + "') - 1, 0) "
                 + "order by ts.ts_date";
 
         resultList = jdbcTemplate.query(sqlQuery, this);
         return resultList;
     }
-    
-    
+
+    public List<String> findProductCodeWithRR(String productCategory, Date asOf) {
+        List<String> resultList = null;
+        String sqlQuery = "select distinct tsd.product_code from dbo.ts ts left join dbo.ts_detail tsd on "
+                + "ts.ts_code = tsd.ts_code left join dbo.product prod on "
+                + "prod.product_code = tsd.product_code where prod.product_category = ? AND "
+                + "(ts.ts_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, ?) - 1, 0) AND ? )";
+
+        resultList = (List<String>) jdbcTemplate.query(sqlQuery, new ParameterizedRowMapper<String>() {
+
+            public String mapRow(ResultSet rs, int arg1) throws SQLException {
+                return rs.getString(1);
+            }
+        }, productCategory, asOf, asOf);
+        return resultList;
+    }
 
 }

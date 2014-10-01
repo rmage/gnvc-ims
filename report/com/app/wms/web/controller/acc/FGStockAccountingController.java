@@ -9,7 +9,6 @@ import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.FGPackStyle;
 import com.app.wms.engine.db.dto.FGStockCardAccounting;
-import com.app.wms.engine.db.dto.FGUnitCost;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.FGPackStyleDao;
 import com.spfi.ims.dao.FGStockCardDao;

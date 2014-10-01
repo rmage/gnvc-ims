@@ -63,7 +63,7 @@
                                         Currency Code From 
                                     </td>
                                     <td class="style1">
-                                        <select name="currency_code_from" id="dropdownCurrCode" onchange="throwValue()">
+                                        <select name="currency_code_from" id="dropdownCurrCode" style="width: 20%" onchange="throwValue()">
                                             <option value="%">--- All Currency ---</option>
                                             <c:if test="${model.currs!=null}">
                                                 <c:forEach items="${model.currs}" var="curr">
@@ -78,12 +78,45 @@
                                 </tr>
                                 <tr>
                                     <td width="20%">
+                                        Currency Code To 
+                                    </td>
+                                    <td class="style1">
+                                        <select name="currency_code_to" id="dropdownCurrCodeTo" style="width: 20%" onchange="throwValueTo()">
+                                            <option value="%">--- All Currency ---</option>
+                                            <c:if test="${model.currs!=null}">
+                                                <c:forEach items="${model.currs}" var="curr">
+                                                    <option value=<c:out value="${curr.currencyCode}"/>
+                                                            <c:if test="${curr.currencyCode == model.selectedCurrCode}"> selected </c:if>>
+                                                        <c:out value="${curr.currencyCode}" />
+                                                    </option>
+                                                </c:forEach>
+                                            </c:if>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%">
+                                        Currency Type
+                                    </td>
+                                    <td>
+                                        <select name="groupCurrencyType" id="groupCurrencyType" style="width: 20%" onchange="throwType()">
+                                            <option value="%">--- All Type ---</option>
+                                            <option value="DAILY">DAILY</option>
+                                            <option value="WEEKLY">WEEKLY</option>
+                                            <option value="MONTHLY">MONTHLY</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="20%">
                                         Newer Than
                                     </td>
                                     <td>
                                         <label>
                                             <input type="date" id="queryNewerThanDate" name="rate_date" value="<%=queryNewerThanDate%>"/>
+                                            <input type="text" id="currTypeToHidden" name="currency_code_to" value="" style="display: none"/>
                                             <input type="text" id="currCodeHidden" name="currency_code_from" value="" style="display: none"/>
+                                            <input type="text" id="currTypeHidden" name="currency_type" value="" style="display: none"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -112,27 +145,19 @@
                         <thead>
                             <tr>
                                 <td>No</td>
-                                <td style="width: 0px"></td>
+                                <td></td>
+                                <td column="currency_type">Currency Type</td>
                                 <td column="currency_code_from">Currency From</td>
                                 <td>Currency To</td>
                                 <td>Rate Value</td>
                                 <td column="rate_date">Rate Date</td>
+                                <td>Week Rate Start</td>
+                                <td>Week Rate End</td>
+                                <td>Month</td>
                                 <td>Created By</td>
                             </tr>
                         </thead>
                         <tbody id="main">
-                            <c:forEach items="${model.crs}" var="x" varStatus="i">
-                                <tr>
-                                    <td>${i.index + 1}</td>
-                                    <td style="width: 0px"></td>
-                                    <td style="width: 0px" ></td>
-                                    <td>${x.currencyCodeFrom}</td>
-                                    <td>${x.currencyCodeTo}</td>
-                                    <td>${x.rateValue}</td>
-                                    <td> <fmt:formatDate value="${x.rateDate}" pattern="yyyy-mm-dd" /> </td>
-                                    <td>${x.createdBy}</td>
-                                </tr>
-                            </c:forEach>
                         </tbody>
                         <tfoot></tfoot>
                     </table>
@@ -158,11 +183,22 @@
 
                 $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
             });
-            
+
             function throwValue() {
                 var elem = document.getElementById("currCodeHidden");
                 elem.value = $('#dropdownCurrCode').val();
             }
+
+            function throwType() {
+                var elem = document.getElementById("currTypeHidden");
+                elem.value = $('#groupCurrencyType').val();
+            }
+
+            function throwValueTo() {
+                var elem = document.getElementById("currTypeToHidden");
+                elem.value = $('#dropdownCurrCodeTo').val();
+            }
+
 
 
             /*global $, confirm*/
