@@ -158,29 +158,31 @@
                             $("#itemPerCs").val(json[0][7]);
 
                             $("#detail").html("");
+                            var sAppend = [], cAppend = 0;
                             for (var i = 0; i < json.length; i++) {
                                 var ppc = parseInt($("#itemPerCs").val()) - 1,
                                         qtyServed = json[i][11].split('.');
-                                $("#detail").append('<tr data-id="' + json[i][12] + '">' +
-                                        '<td>' + json[i][8] + '</td>' +
-                                        '<td>' + json[i][9] + '</td>' +
-                                        '<td>' + json[i][10] + '</td>' +
-                                        '<td><input type="text" value="" size="10" /></td>' +
-                                        '<td><input type="text" class="qtyServedCs" value="' + (parseInt(qtyServed[0])) + '" data-max="' + qtyServed[0] + '" size="6" readonly><input type="text" id="qtyServedTin" name="qtyServedTin" value="' + parseInt(qtyServed[1]) + '" data-max="' + qtyServed[1] + '" readonly></td>' +
-                                        '<td><input type="text" class="lmQtyCs" value="0"><input type="text" class="lmQtyTin" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td id="remainings">0.00</td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>' +
-                                        '<td><input type="text" value="" style="width: 100px;"></td>' +
-                                        '</tr>');
-                                $('#detail tr:last-child() td:eq(5) input:eq(0)').trigger('blur');
+                                sAppend[cAppend++] = '<tr data-id="' + json[i][12] + '">';
+                                sAppend[cAppend++] = '<td>' + json[i][8] + '</td>';
+                                sAppend[cAppend++] = '<td>' + json[i][9] + '</td>';
+                                sAppend[cAppend++] = '<td>' + json[i][10] + '</td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="" size="10" /></td>';
+                                sAppend[cAppend++] = '<td><input type="text" class="qtyServedCs" value="' + (parseInt(qtyServed[0])) + '" data-max="' + qtyServed[0] + '" size="6" readonly><input type="text" id="qtyServedTin" name="qtyServedTin" value="' + parseInt(qtyServed[1]) + '" data-max="' + qtyServed[1] + '" readonly></td>';
+                                sAppend[cAppend++] = '<td><input type="text" class="lmQtyCs" value="0"><input type="text" class="lmQtyTin" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td id="remainings">0.00</td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td><input type="text" value="" style="width: 100px;"></td>';
+                                sAppend[cAppend++] = '</tr>';
                             }
+                            $("#detail").append(sAppend.join(''));
+                            bindEvents();
                         }
                     },
                     complete: function() {
@@ -189,51 +191,56 @@
                 });
             });
 
-            // VALIDATE | Quantity maximum and minimum value
-            $('#detail td:gt(4):lt(6) input:nth-child(2),#detail td:gt(7):lt(10) input:nth-child(2)')
-                    .live("blur", function() {
-                        if ($(this).val() < 0 ||
-                                parseInt($(this).val()) > $(this).data('max')) {
-                            $(this).val($(this).data('max'));
+            function bindEvents() {
+
+                $('#detail tr').each(function() {
+                    // VALIDATE | Quantity maximum and minimum value
+                    $(this).find('td:gt(4):lt(6) input:nth-child(2),td:gt(7):lt(10) input:nth-child(2)')
+                            .bind("blur", function() {
+                                if ($(this).val() < 0 ||
+                                        parseInt($(this).val()) > $(this).data('max')) {
+                                    $(this).val($(this).data('max'));
+                                }
+                            });
+
+                    // VALIDATE | Remaining quantity
+                    $(this).find('td:gt(4):lt(6) input').live("blur", function() {
+                        var $td = $(this).parent().parent().find('td:eq(4)'),
+                                ppc = parseInt($("#itemPerCs").val()),
+                                qtyCs = parseInt($td.find('input:nth-child(2n+1)').val()) * ppc,
+                                qtyTin = parseInt($td.find('input:nth-child(2n)').val()),
+                                qtyTotal = qtyCs + qtyTin,
+                                qtyLess = 0;
+
+                        $(this).parent().parent().find('td:gt(4):lt(6)').each(function(i) {
+                            qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
+                        });
+
+                        if (qtyTotal - qtyLess < 0) {
+                            $(this).val(0).trigger('blur');
+                            return false;
+                        }
+
+                        $(this).parent().parent().find('td:eq(11)').html(tinToCs(qtyTotal - qtyLess, ppc).toFixed(2));
+                    }).trigger('blur');
+                    $(this).find('td:gt(11):lt(3) input').live("blur", function() {
+                        var re = $(this).parent().parent().find('td:eq(11)').html().split('.'),
+                                ppc = parseInt($("#itemPerCs").val()),
+                                qtyCs = parseInt(re[0]) * ppc,
+                                qtyTin = parseInt(re[1]),
+                                qtyTotal = qtyCs + qtyTin,
+                                qtyLess = 0;
+
+                        $(this).parent().parent().find('td:gt(11):lt(3)').each(function(i) {
+                            qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
+                        });
+
+                        if (qtyTotal - qtyLess < 0) {
+                            $(this).val(0).trigger('blur');
                         }
                     });
-
-            // VALIDATE | Remaining quantity
-            $('#detail td:gt(4):lt(6) input').live("blur", function() {
-                var $td = $(this).parent().parent().find('td:eq(4)'),
-                        ppc = parseInt($("#itemPerCs").val()),
-                        qtyCs = parseInt($td.find('input:nth-child(2n+1)').val()) * ppc,
-                        qtyTin = parseInt($td.find('input:nth-child(2n)').val()),
-                        qtyTotal = qtyCs + qtyTin,
-                        qtyLess = 0;
-
-                $(this).parent().parent().find('td:gt(4):lt(6)').each(function(i) {
-                    qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
                 });
-
-                if (qtyTotal - qtyLess < 0) {
-                    $(this).val(0).trigger('blur');
-                    return false;
-                }
-
-                $(this).parent().parent().find('td:eq(11)').html(tinToCs(qtyTotal - qtyLess, ppc).toFixed(2));
-            });
-            $('#detail td:gt(11):lt(3) input').live("blur", function() {
-                var re = $(this).parent().parent().find('td:eq(11)').html().split('.'),
-                        ppc = parseInt($("#itemPerCs").val()),
-                        qtyCs = parseInt(re[0]) * ppc,
-                        qtyTin = parseInt(re[1]),
-                        qtyTotal = qtyCs + qtyTin,
-                        qtyLess = 0;
-                
-                $(this).parent().parent().find('td:gt(11):lt(3)').each(function(i) {
-                    qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
-                });
-                
-                if (qtyTotal - qtyLess < 0) {
-                    $(this).val(0).trigger('blur');
-                }
-            });
+            }
 
             // BIND | Save function
             $("#fLabeling").bind("submit", function() {

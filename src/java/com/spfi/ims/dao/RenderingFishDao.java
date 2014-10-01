@@ -10,4 +10,6 @@ public interface RenderingFishDao {
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
+    public void insert(String data, String createdBy);
+    
 }

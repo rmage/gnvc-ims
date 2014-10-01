@@ -148,14 +148,26 @@
                     success: function(json) {
                         // DATA | Set header infor
                         if (json.length > 0) {
+                            $("#detail").html('');
                             $(".lmr-info").each(function(i) {
                                 $(this).val(json[0][i + 1]);
                             });
 
+                            var sAppend = [], cAppend = 0;
                             for (var i = 0; i < json.length; i++) {
-                                $("#detail").append("<tr><td>" + json[i][6] + "</td><td>" + json[i][7] + "</td><td>" + json[i][8] +
-                                        "</td><td>" + json[i][9] + "</td><td>" + json[i][10] + "</td></tr>");
+                                sAppend[cAppend++] = '<tr><td>';
+                                sAppend[cAppend++] = json[i][6];
+                                sAppend[cAppend++] = '</td><td>';
+                                sAppend[cAppend++] = json[i][7];
+                                sAppend[cAppend++] = '</td><td>';
+                                sAppend[cAppend++] = json[i][8];
+                                sAppend[cAppend++] = '</td><td>';
+                                sAppend[cAppend++] = json[i][9];
+                                sAppend[cAppend++] = '</td><td>';
+                                sAppend[cAppend++] = json[i][10];
+                                sAppend[cAppend++] = '</td></tr>';
                             }
+                            $("#detail").append(sAppend.join(''));
                         }
                     },
                     complete: function() {
