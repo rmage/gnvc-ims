@@ -285,16 +285,6 @@ public class DaoFactory {
     }
 
     /**
-     * Method 'createCrossdockDao'
-     *
-     * @return CrossdockDao
-     */
-    public static CrossDockDao createCrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (CrossDockDao) bf.getBean("CrossDockDao");
-    }
-
-    /**
      * Method 'createSalesOrderDao'
      *
      * @return SalesOrderDao
@@ -454,59 +444,9 @@ public class DaoFactory {
         return (ConsigneeDao) bf.getBean("ConsigneeDao");
     }
 
-    public static POCrossDockDao createPOCrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (POCrossDockDao) bf.getBean("POCrossDockDao");
-    }
-
-    public static POCrossDockDtlDao createPOCrossDockDtlDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (POCrossDockDtlDao) bf.getBean("POCrossDockDtlDao");
-    }
-
-    public static GRCrossDockDao createGRCrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (GRCrossDockDao) bf.getBean("GRCrossDockDao");
-    }
-
-    public static GRCrossDockDtlDao createGRCrossDockDtlDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (GRCrossDockDtlDao) bf.getBean("GRCrossDockDtlDao");
-    }
-
-    public static PACrossDockDao createPACrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (PACrossDockDao) bf.getBean("PACrossDockDao");
-    }
-
-    public static SOCrossDockDao createSOCrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (SOCrossDockDao) bf.getBean("SOCrossDockDao");
-    }
-
-    public static PCrossDockDao createPCrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (PCrossDockDao) bf.getBean("PCrossDockDao");
-    }
-
-    public static DOCrossDockDao createDOCrossDockDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (DOCrossDockDao) bf.getBean("DOCrossDockDao");
-    }
-
     public static WhLocatingAreaDao createWhLocatingAreaDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (WhLocatingAreaDao) bf.getBean("WhLocatingAreaDao");
-    }
-
-    public static QuarantineDao createQuarantineDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (QuarantineDao) bf.getBean("QuarantineDao");
-    }
-
-    public static QuarantineDtlDao createQuarantineDtlDao() {
-        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
-        return (QuarantineDtlDao) bf.getBean("QuarantineDtlDao");
     }
 
     public static UomDao createUomDao() {

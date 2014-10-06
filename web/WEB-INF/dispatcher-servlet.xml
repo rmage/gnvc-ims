@@ -12,29 +12,6 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
 
-    <!--
-    Most controllers will use the ControllerClassNameHandlerMapping above, but
-    for the index controller we are using ParameterizableViewController, so we must
-    define an explicit mapping for it.
-
-    <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-	<property name="mappings">
-	    <props>
-		<prop key="index.htm">indexController</prop>
-		<prop key="main.htm">mainController</prop>
-	 </props>
-	</property>
-    </bean>
-    <bean id="jsfViewResolver"
-	  class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-	<property name="viewClass"
-		  value="org.springframework.faces.mvc.JsfView" />
-	<property name="prefix" value="/WEB-INF/report/" />
-	<property name="suffix" value=".jsf" />
-	<property name="order"><value>0</value></property>
-	<property name="viewNames" value=".*"/>
-    </bean>
-    -->
     <bean id="viewResolver"
 	  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
@@ -79,12 +56,6 @@
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/Purchase.htm" class="com.app.wms.web.controller.PurchaseController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/GoodReceive.htm" class="com.app.wms.web.controller.GoodReceiveController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/Putaway.htm" class="com.app.wms.web.controller.PutawayController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/Replenish.htm" class="com.app.wms.web.controller.ReplenishController">
@@ -135,13 +106,7 @@
     <bean name="/Kitting.htm" class="com.app.wms.web.controller.KittingController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <bean name="/Return.htm" class="com.app.wms.web.controller.ReturnContoller">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
      <bean name="/stocktake2.htm" class="com.app.wms.web.controller.StockTake2Controller">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/Tallyman.htm" class="com.app.wms.web.controller.Tallyman2Controller">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/report.htm" class="com.app.wms.web.controller.report.ReportController">
@@ -320,11 +285,6 @@
     <bean name="/ReturnCargoDr.htm" class="com.app.wms.web.controller.ReturnCargoDrController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    
-    <!-- GNVS | New Concept of Finish Goods -->
-<!--    <bean name="/PalletTransfer.htm" class="com.spfi.ims.controller.PalletTransferController">
-    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>-->
     
     <!-- GNVS | Fish Module -->
     <bean name="/FishReceivingReport.htm" class="com.spfi.ims.controller.FishReceivingReportController">

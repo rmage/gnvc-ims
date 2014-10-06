@@ -33,9 +33,9 @@
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">Bor Code</td>
+                                    <td style="width: 200px;">Bor Number</td>
                                     <td><input type="text" class="bor-info" id="borId" name="borId" tabindex="1" required="required" data-id=""></td>
-                                    <td style="width: 200px;">OFAL Code</td>
+                                    <td style="width: 200px;">OFAL Number</td>
                                     <td><input type="text" id="ofalCode" name="ofalCode" size="10" tabindex="2" required="required"></td>
                                 </tr>
                                 <tr>
@@ -138,7 +138,16 @@
                             </tr>
                         </thead>
                         <tbody id="detail"></tbody>
-                        <tfoot></tfoot>
+                        <tfoot>
+                            <tr>
+                                <td colspan="13" class="right">
+                                    Total Cs
+                                    <input type="text" id="totalCs" name="totalCs" value="0" size="4" readonly>
+                                    Total Tin
+                                    <input type="text" id="totalTin" name="totalTin" value="0" size="2" readonly>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -198,10 +207,11 @@
                                         '<td>' + json[0][9] + '</td>' +
                                         '<td>' + json[0][10] + '</td>' +
                                         '<td><input type="text" class="remarks" /></td>' +
-                                        '<td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this)"></td>' +
+                                        '<td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this);"></td>' +
                                         '</tr>');
                                 $("#ptsCode").val("");
 //                                setCanCode();
+                                updateTotal();
                                 $('#ptsCode').focus();
                             }
                         },
@@ -213,20 +223,29 @@
             });
             // BIND | Quantity maximu and minimum value
             $(".qtyCs,.qtyTin").live("blur", function() {
+                var ppc = parseInt($('#itemId').data('ppc'));
                 if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
 
                     if ($(this).hasClass('qtyTin')) {
-                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+                        if (parseInt($(this).prev().val()) === $(this).prev().data('max') &&
+                                parseInt($(this).val()) > $(this).data('max')) {
                             $(this).val($(this).data('max'));
-                        } else if (parseInt($(this).val()) > (parseInt($('#itemId').data('ppc')) - 1)) {
-                            $(this).val((parseInt($('#itemId').data('ppc')) - 1));
+                            alert('[Error] Maximum number exceeded!');
+                        } else if (parseInt($(this).val()) > (ppc - 1)) {
+                            $(this).val(ppc - 1);
+                            alert('[Error] Maximum number exceeded!');
+                        } else if (parseInt($(this).val()) < 0) {
+                            $(this).val(0);
+                            alert('[Error] Maximum number exceeded!');
                         }
                     } else {
                         $(this).val($(this).data('max'));
                         $(this).next().trigger('blur');
+                        alert('[Error] Maximum number exceeded!');
                     }
-
                 }
+
+                updateTotal();
             });
             // BIND | Reset form if bor change
             $("#borId").bind("keyup", function() {
@@ -236,6 +255,8 @@
                     });
                     $(this).data("id", "");
                     $('#itemId').val('');
+                    $("#detail").html('');
+                    updateTotal();
                 }
             });
             // AUTOCOMPLETE | Get bor info
@@ -271,9 +292,9 @@
                 var $x = $(".qtyCs");
                 var $y = $(".remarks");
                 for (var i = 0; i < $x.size(); i++) {
-                     data = data + $("#ofalCode").val() + '^' + $("#borId").data("id") + '^' + $("#ofalDate").val() + '^' + $("#canCode").val() + '^' +
+                    data = data + $("#ofalCode").val() + '^' + $("#borId").data("id") + '^' + $("#ofalDate").val() + '^' + $("#canCode").val() + '^' +
                             $("#lNw").val() + '^' + $("#lDw").val() + '^' + $("#lBbe").val() + '^' + $("#shipment").val() + '^' + $x[i].getAttribute("data-code") + '^' +
-                            (parseFloat($x[i].value) + ($($x[i]).next().val()/100)) + '^' + $y[i].value + '^' + $('#remarks').val() + '^@';
+                            (parseFloat($x[i].value) + ($($x[i]).next().val() / 100)) + '^' + $y[i].value + '^' + $('#remarks').val() + '^@';
                 }
 //                console.log(data);
                 if (data !== "") {
@@ -290,6 +311,7 @@
                 $("#detail tr td:nth-child(1)").each(function(i) {
                     $(this).html(i + 1);
                 });
+                updateTotal();
 //                setCanCode();
             }
 
@@ -307,6 +329,18 @@
 //                    }
 //                });
 //            }
+
+            // FUNCTION | to set total
+            function updateTotal() {
+                var cs = 0, tin = 0, ppc = parseInt($('#itemId').data('ppc'));
+                $('#detail tr td:nth-child(7)').each(function() {
+                    var $i = $(this).find('input:eq(0)');
+                    cs = cs + parseInt($i.val());
+                    tin = tin + parseInt($i.next().val());
+                });
+                $('#totalCs').val((cs + Math.floor((tin / ppc))).toFixed(0));
+                $('#totalTin').val((tin % ppc).toFixed(0));
+            }
 
         </script>
     </body>

@@ -5,7 +5,6 @@
 package com.app.wms.web.controller.json;
 
 //import com.app.wms.engine.db.dao.spring.CrossDockDao;
-import com.app.wms.engine.db.dao.spring.GoodReceiveDao;
 import com.app.wms.web.bean.json.Alert;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,9 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping( {"/Alert.htm"})
 public class AlertJsonController {
-    
-    @Autowired
-    private GoodReceiveDao goodReceiveDao;
     
 //    @Autowired
 //    private CrossDockDao crossdockDao;

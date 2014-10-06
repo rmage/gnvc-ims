@@ -12,19 +12,6 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
-
-    <!--bean id="propertyConfigurer"
-          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-          p:location="/WEB-INF/jdbc.properties" />
-
-<bean id="dataSource"
-    class="org.springframework.jdbc.datasource.DriverManagerDataSource"
-    p:driverClassName="${jdbc.driverClassName}"
-    p:url="${jdbc.url}"
-    p:username="${jdbc.username}"
-    p:password="${jdbc.password}" /-->
-
-    <!-- ADD PERSISTENCE SUPPORT HERE (jpa, hibernate, etc) -->
     
     <context:component-scan base-package="com.app"/>
     <!-- XXX : FYA | Database Connection Setting -->
@@ -33,22 +20,6 @@
         <property name="url" value="jdbc:jtds:sqlserver://192.168.11.253:1433/inventory" />
         <property name="username" value="sa" />
         <property name="password" value="qts1n@r" />
-    </bean>  
-    
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"
-          p:dataSource-ref="dataSource"
-          p:configLocation="classpath:hibernate.cfg.xml">
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.cache.use_second_level_cache">true</prop>                
-                <prop key="hibernate.show_sql">true</prop>               
-            </props>
-        </property>
     </bean>
-    
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"
-          p:sessionFactory-ref="sessionFactory"/>
-    
-    <tx:annotation-driven/>
     
 </beans>

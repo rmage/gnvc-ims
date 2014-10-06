@@ -42,13 +42,13 @@
                             <caption>Labeling Monitoring &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">LM Code</td>
+                                    <td style="width: 200px;">LM Number</td>
                                     <td><input type="text" id="lmCode" name="lmCode" required="required" /></td>
                                     <td style="width: 200px;">LM Date</td>
                                     <td><input type="text" id="lmDatePicker" name="lmDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10"" required /></td>
                                 </tr>
                                 <tr>
-                                    <td>OFAL Code</td>
+                                    <td>OFAL Number</td>
                                     <td colspan="3">
                                         <input type="text" id="ofalCode" name="ofalCode" required />
                                         <input type="button" id="btnSearch" name="btnSearch" value="Search" />
@@ -197,9 +197,9 @@
                     // VALIDATE | Quantity maximum and minimum value
                     $(this).find('td:gt(4):lt(6) input:nth-child(2),td:gt(7):lt(10) input:nth-child(2)')
                             .bind("blur", function() {
-                                if ($(this).val() < 0 ||
-                                        parseInt($(this).val()) > $(this).data('max')) {
-                                    $(this).val($(this).data('max'));
+                                if ($(this).val() < 0 || parseInt($(this).val()) > $(this).data('max')) {
+                                    alert('[Error] Maximum number exceeded!');
+                                    $(this).val(0);
                                 }
                             });
 
@@ -217,6 +217,7 @@
                         });
 
                         if (qtyTotal - qtyLess < 0) {
+                            alert('[Error] Maximum number exceeded!');
                             $(this).val(0).trigger('blur');
                             return false;
                         }
@@ -236,6 +237,7 @@
                         });
 
                         if (qtyTotal - qtyLess < 0) {
+                            alert('[Error] Maximum number exceeded!');
                             $(this).val(0).trigger('blur');
                         }
                     });

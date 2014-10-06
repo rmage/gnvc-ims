@@ -33,7 +33,7 @@
                             <caption>Export Delivery &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">EDS Code</td>
+                                    <td style="width: 200px;">EDS Number</td>
                                     <td><input type="text" id="edsCode" name="edsCode" required="required" /></td>
                                     <td style="width: 200px;">EDS Date</td>
                                     <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required /></td>
@@ -66,7 +66,7 @@
                                     <td><input type="text" id="edsRemarks" name="edsRemarks" size="50" /></td>
                                 </tr>
                                 <tr>
-                                    <td>LMR Code</td>
+                                    <td>LM Number</td>
                                     <td colspan="3">
                                         <input type="text" id="lmrCode" name="lmrCode" class="lmr-info" required />
                                         <input type="button" id="btnSearch" name="btnSearch" value="Search" />

@@ -231,7 +231,7 @@
                 '<div class="fny2-notification-button" onclick="fny2_notification_fnc.showHide()">' +
                 '<span>Notification</span>' +
                 '<div class="fny2-notification-quantity"><div style="display: inline-block;">99</div></div>' +
-                '<img src="resources/default/images/fny2-icon-notification.png" class="roll" width="32">' +
+                '<img src="resources/default/images/fny2-icon-notification.png" class="roll!" width="32">' +
                 '</div>' +
                 '</div>');
     });

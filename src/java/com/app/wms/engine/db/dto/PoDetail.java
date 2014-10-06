@@ -122,8 +122,6 @@ public class PoDetail implements Serializable
 	protected boolean totalNull = true;
 	
 	protected Po po;
-	
-	protected com.app.wms.hbm.bean.Po poh;
 
 	/**
 	 * Method 'PoDetail'
@@ -131,14 +129,6 @@ public class PoDetail implements Serializable
 	 */
 	public PoDetail()
 	{
-	}
-
-	public com.app.wms.hbm.bean.Po getPoh() {
-		return poh;
-	}
-
-	public void setPoh(com.app.wms.hbm.bean.Po poh) {
-		this.poh = poh;
 	}
 
 	public BigDecimal getQty() {

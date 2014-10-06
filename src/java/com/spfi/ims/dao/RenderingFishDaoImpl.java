@@ -3,6 +3,7 @@ package com.spfi.ims.dao;
 import com.app.wms.engine.db.dao.spring.AbstractDAO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -24,6 +25,16 @@ public class RenderingFishDaoImpl extends AbstractDAO implements RenderingFishDa
         } catch(Exception e) {
             e.printStackTrace();
             return 1;
+        }
+    }
+    
+    public Map<String, Object> ajaxPrepare(String date) {
+        try {
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList("EXEC REND_FISH_PREPARE ?", date);
+            return rows.isEmpty() ? new HashMap<String, Object>() : rows.get(0);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new HashMap<String, Object>();
         }
     }
     

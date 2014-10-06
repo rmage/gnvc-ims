@@ -8,6 +8,8 @@ public interface RenderingFishDao {
     
     public int ajaxMaxPage(BigDecimal show, String where);
     
+    public Map<String, Object> ajaxPrepare(String date);
+    
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
     public void insert(String data, String createdBy);

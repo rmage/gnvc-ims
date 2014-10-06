@@ -9,9 +9,9 @@
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://localhost:1433/IMS;instance=SQLEXPRESS" />
-        <property name="username" value="faridzif" />
-        <property name="password" value="123qweasd" />
+        <property name="url" value="jdbc:jtds:sqlserver://192.168.11.253:1433/inventory" />
+        <property name="username" value="sa" />
+        <property name="password" value="qts1n@r" />
     </bean>
     
     <tx:annotation-driven xmlns:tx="http://www.springframework.org/schema/tx" transaction-manager="txManager" />
@@ -134,40 +134,7 @@
     <bean id="ConsigneeDao" class="com.app.wms.engine.db.dao.spring.ConsigneeDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
-    <bean id="CrossDockDao" class="com.app.wms.engine.db.dao.spring.CrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="POCrossDockDao" class="com.app.wms.engine.db.dao.spring.POCrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="POCrossDockDtlDao" class="com.app.wms.engine.db.dao.spring.POCrossDockDtlDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="GRCrossDockDao" class="com.app.wms.engine.db.dao.spring.GRCrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="GRCrossDockDtlDao" class="com.app.wms.engine.db.dao.spring.GRCrossDockDtlDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="PACrossDockDao" class="com.app.wms.engine.db.dao.spring.PACrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="SOCrossDockDao" class="com.app.wms.engine.db.dao.spring.SOCrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="PCrossDockDao" class="com.app.wms.engine.db.dao.spring.PCrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="DOCrossDockDao" class="com.app.wms.engine.db.dao.spring.DOCrossDockDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
     <bean id="WhLocatingAreaDao" class="com.app.wms.engine.db.dao.spring.WhLocatingAreaDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="QuarantineDao" class="com.app.wms.engine.db.dao.spring.QuarantineDaoImpl" scope="prototype">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-    <bean id="QuarantineDtlDao" class="com.app.wms.engine.db.dao.spring.QuarantineDtlDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="BundleDao" class="com.app.wms.engine.db.dao.spring.BundleDaoImpl" scope="prototype">

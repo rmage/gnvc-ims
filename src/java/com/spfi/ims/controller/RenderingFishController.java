@@ -83,4 +83,37 @@ public class RenderingFishController extends MultiActionController {
         pw.close();
     }
     
+    public void ajaxPrepareData(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        RenderingFishDao rfDao = DaoFactory.createRenderingFishDao();
+        
+        /* TRANSACTION | Something complex here */
+        Map<String, Object> data = rfDao.ajaxPrepare(request.getParameter("date"));
+        if (data.isEmpty()) {
+            sb.append("{\"status\": 0}");
+        } else {
+            if (data.get("status").equals(1)) {
+                sb.append("{\"status\": ").append(data.get("status")).append(", ");
+                sb.append("\"1\": ").append(data.get("col1")).append(", ");
+                sb.append("\"2\": ").append(data.get("col2")).append(", ");
+                sb.append("\"3\": ").append(data.get("col3")).append(", ");
+                sb.append("\"4\": ").append(data.get("col4")).append(", ");
+                sb.append("\"5\": ").append(data.get("col5")).append(", ");
+                sb.append("\"6\": ").append(data.get("col6")).append("}");
+            } else {
+                sb.append("{\"status\": ").append(data.get("status")).append("}");
+            }
+        }
+        
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+        
+    }
+    
 }

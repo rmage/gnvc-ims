@@ -502,15 +502,9 @@ public class PoDetailDaoImpl extends AbstractDAO implements ParameterizedRowMapp
             throw new PoDetailDaoException("Query failed", e);
         }
 	}
-	
-	public void update(PoDetail dto) throws PoDetailDaoException
-	{
-		SqlUpdate su = new SqlUpdate( dataSource, "update po set status = ?, status_date = ? where ponumber = ?");
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.declareParameter( new SqlParameter( java.sql.Types.TIMESTAMP) );
-		su.declareParameter( new SqlParameter( java.sql.Types.VARCHAR) );
-		su.compile();
-		su.update( new Object[] { dto.getPoh().getStatus(),dto.getPoh().getStatusdate(),dto.getPonumber()} );
-	}
+
+    public void update(PoDetail dto) throws PoDetailDaoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
