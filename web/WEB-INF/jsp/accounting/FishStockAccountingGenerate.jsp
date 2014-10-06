@@ -37,6 +37,12 @@
                                         ${model.asOfDate}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style="width: 20%;">Curency Type</td>
+                                    <td>
+                                        ${model.currencyType}
+                                    </td>
+                                </tr>
                             </tbody>
                             <tfoot>
                                 <tr>

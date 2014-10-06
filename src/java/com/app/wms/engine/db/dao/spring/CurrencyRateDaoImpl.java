@@ -19,6 +19,12 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 public class CurrencyRateDaoImpl extends AbstractDAO
         implements ParameterizedRowMapper<CurrencyRate>, CurrencyRateDao {
 
+    private static final String DAILY_TYPE = "DAILY";
+
+    private static final String WEEKLY_TYPE = "WEEKLY";
+
+    private static final String MONTHLY_TYPE = "MONTHLY";
+
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
     private SimpleJdbcTemplate jdbcTemplate;
@@ -197,9 +203,58 @@ public class CurrencyRateDaoImpl extends AbstractDAO
             result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).get(0);
         } else {
             queryString = "SELECT TOP 1 * FROM " + getTableName()
-                + " WHERE rate_date <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+                    + " WHERE rate_date <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
             result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).get(0);
         }
+        return result;
+    }
+
+    public CurrencyRate findLatestByCurrencyCodeFromToDateAndType(String currencyCodeFrom, String currencyCodeTo, Date date, String currencyType) {
+        CurrencyRate result = new CurrencyRate();
+        String queryString;
+        String dateString = df.format(date);
+
+        if (CurrencyRateDaoImpl.DAILY_TYPE.equalsIgnoreCase(currencyType)) {
+            /*USE DAILY RATE*/
+            queryString = "SELECT TOP 1 * FROM " + getTableName()
+                    + " WHERE rate_date <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+            if (jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).size() > 0) {
+                result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).get(0);
+            } else {
+                queryString = "SELECT TOP 1 * FROM " + getTableName()
+                        + " WHERE rate_date <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+                if (!jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).isEmpty()) {
+                    result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).get(0);
+                }
+            }
+        } else if (CurrencyRateDaoImpl.WEEKLY_TYPE.equalsIgnoreCase(currencyType)) {
+            /*USE WEEKLY RATE*/
+            queryString = "SELECT TOP 1 * FROM " + getTableName()
+                    + " WHERE rate_week_end <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+            if (jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).size() > 0) {
+                result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).get(0);
+            } else {
+                queryString = "SELECT TOP 1 * FROM " + getTableName()
+                        + " WHERE rate_week_end <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+                if (!jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).isEmpty()) {
+                    result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).get(0);
+                }
+            }
+        } else {
+            /*USE MONTHLY RATE*/
+            queryString = "SELECT TOP 1 * FROM " + getTableName()
+                    + " WHERE rate_month <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+            if (jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).size() > 0) {
+                result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeFrom, currencyCodeTo).get(0);
+            } else {
+                queryString = "SELECT TOP 1 * FROM " + getTableName()
+                        + " WHERE rate_month <= '" + dateString + "' and currency_code_from = ? and currency_code_to = ? ORDER BY rate_date DESC";
+                if (!jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).isEmpty()) {
+                    result = (CurrencyRate) jdbcTemplate.query(queryString, this, currencyCodeTo, currencyCodeFrom).get(0);
+                }
+            }
+        }
+
         return result;
     }
 

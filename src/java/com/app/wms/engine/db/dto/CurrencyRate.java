@@ -30,6 +30,21 @@ public class CurrencyRate implements Serializable {
 
     private Date monthDate;
 
+    public CurrencyRate() {
+        this.currencyCodeFrom = "";
+        this.currencyCodeTo = "";
+        this.rateId = 0;
+        this.rateValue = BigDecimal.ZERO;
+        this.rateDate = new Date();
+        this.createdBy = "";
+        this.createdDate = new Date();
+        this.rateDateString = "";
+        this.currencyType = "";
+        this.weekStartDate = new Date();
+        this.weekEndDate = new Date();
+        this.monthDate = new Date();
+    }
+
     @Override
     public String toString() {
         //FIXME :: CurrencyRate @toString completion

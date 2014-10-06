@@ -20,6 +20,12 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public class FGStockCardDaoImpl extends AbstractDAO implements FGStockCardDao {
 
+    private static final String DAILY = "DAILY";
+
+    private static final String WEEKLY = "WEEKLY";
+
+    private static final String MONTHLY = "MONTHLY";
+
     private SimpleJdbcTemplate jdbcTemplate;
 
     private DataSource dataSource;
@@ -33,9 +39,18 @@ public class FGStockCardDaoImpl extends AbstractDAO implements FGStockCardDao {
         return "fg_sc";
     }
 
-    public List<FGStockCardAccounting> findByDateAndPackId(Integer packId, Date date) {
+    public List<FGStockCardAccounting> findByDateAndPackId(Integer packId, Date date, String currencyType) {
         String queryString;
-        queryString = "select F.*, CR.rate_value , CR.rate_date , CR.currency_code_from from ( "
+        String rateDateFilter = "rate_date";
+        if (currencyType.equalsIgnoreCase(FGStockCardDaoImpl.DAILY)) {
+            rateDateFilter = "rate_date";
+        } else if (currencyType.equalsIgnoreCase(FGStockCardDaoImpl.WEEKLY)) {
+            rateDateFilter = "rate_week_end";
+        } else {
+            rateDateFilter = "rate_month";
+        }
+
+        queryString = "select F.*, CR.rate_value , CR." + rateDateFilter + " as rate_date , CR.currency_code_from from ( "
                 + "select a.item_id, a.sc_ending, a.sc_date, (select c.pack_id from fg_item c where a.item_id = c.item_id) as pack_id , "
                 + "(select i.item_name from fg_item i where a.item_id = i.item_id) as item_name , "
                 + "r.currency_code , r.amount_fix_cost, r.amount_var_cost , r.amount_total "
@@ -45,10 +60,10 @@ public class FGStockCardDaoImpl extends AbstractDAO implements FGStockCardDao {
                 + "(select fg_item_id , max(unit_cost_date) as unit_cost_date from fg_unit_cost group by fg_item_id) h "
                 + "where g.fg_item_id = h.fg_item_id and g.unit_cost_date = h.unit_cost_date) r "
                 + "where a.item_id = b.item_id and a.sc_date = b.sc_date and r.fg_item_id = a.item_id) F , "
-                + "(select top 1 rate_value , rate_date , cr.currency_code_from, cr.currency_code_to from currency_rate cr , "
-                + "(select currency_code_from, currency_code_to, max(rate_date) as r_date from currency_rate where (currency_code_from = 'USD' and currency_code_to='IDR' or currency_code_from = 'IDR' and currency_code_to='USD') and rate_date <= ? "
+                + "(select top 1 rate_value , " + rateDateFilter + " , cr.currency_code_from, cr.currency_code_to from currency_rate cr , "
+                + "(select currency_code_from, currency_code_to, max(" + rateDateFilter + ") as r_date from currency_rate where (currency_code_from = 'USD' and currency_code_to='IDR' or currency_code_from = 'IDR' and currency_code_to='USD') and " + rateDateFilter + " <= ? "
                 + "group by currency_code_from, currency_code_to) cra "
-                + "where cr.rate_date = cra.r_date and cra.currency_code_from = cr.currency_code_from and cra.currency_code_to = cr.currency_code_to) CR "
+                + "where cr." + rateDateFilter + " = cra.r_date and cra.currency_code_from = cr.currency_code_from and cra.currency_code_to = cr.currency_code_to) CR "
                 + "where F.pack_id = ? and (F.sc_date BETWEEN DATEADD(MONTH, DATEDIFF(MONTH, -1, ?) - 1, 0) AND ?)";
         List<FGStockCardAccounting> list = new ArrayList<FGStockCardAccounting>();
         list = jdbcTemplate.query(queryString, new FGAccountingListMap(), date, packId, date, date);

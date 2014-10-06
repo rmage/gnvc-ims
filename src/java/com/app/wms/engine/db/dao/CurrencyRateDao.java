@@ -22,6 +22,8 @@ public interface CurrencyRateDao {
     public CurrencyRate findLatestByCurrencyCodeAndDate(String currencyCode, Date date);
 
     public CurrencyRate findLatestByCurrencyCodeFromToAndDate(String currencyCodeFrom, String currencyCodeTo, Date date);
+    
+    public CurrencyRate findLatestByCurrencyCodeFromToDateAndType(String currencyCodeFrom, String currencyCodeTo, Date date, String currencyType);
 
     public List<CurrencyRate> findByCurrencyCodeAndDate(String currencyCode, Date newerDate);
 

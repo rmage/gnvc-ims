@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface FGStockCardDao {
 
-    public List<FGStockCardAccounting> findByDateAndPackId(Integer packId, Date date);
+    public List<FGStockCardAccounting> findByDateAndPackId(Integer packId, Date date, String currencyType);
 
 }

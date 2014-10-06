@@ -42,6 +42,12 @@
                                         <b> ${model.fromTo} : <fmt:formatNumber type="number" maxFractionDigits="8" value="${model.cr.rateValue}" /></b>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style="width: 20%;">Curency Type</td>
+                                    <td>
+                                        ${model.currencyType}
+                                    </td>
+                                </tr>
                             </tbody>
                             <tfoot>
                             </tfoot>

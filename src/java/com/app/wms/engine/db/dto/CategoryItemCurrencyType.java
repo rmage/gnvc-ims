@@ -20,6 +20,14 @@ public class CategoryItemCurrencyType extends AbstractDTO implements Serializabl
     private Integer productId;
     private String currencyType;
 
+    public CategoryItemCurrencyType() {
+        this.number = 0;
+        this.id = 0;
+        this.categoryCode = "";
+        this.productId = 0;
+        this.currencyType = "DAILY";
+    }
+
     public Integer getNumber() {
         return number;
     }
@@ -99,7 +107,5 @@ public class CategoryItemCurrencyType extends AbstractDTO implements Serializabl
     public Date getCreatedDate() {
         return super.getCreatedDate(); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
 }

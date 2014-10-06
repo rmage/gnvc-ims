@@ -1,5 +1,6 @@
 package com.app.wms.web.controller.acc;
 
+import com.app.wms.engine.db.dao.CategoryItemCurrencyTypeDao;
 import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.FishDao;
@@ -8,6 +9,7 @@ import com.app.wms.engine.db.dao.FishRRAccountingDetailDao;
 import com.app.wms.engine.db.dao.FishSupplierDao;
 import com.app.wms.engine.db.dao.FishTransactionDao;
 import com.app.wms.engine.db.dao.FishWsDao;
+import com.app.wms.engine.db.dto.CategoryItemCurrencyType;
 import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Fish;
 import com.app.wms.engine.db.dto.FishStockCardAccounting;
@@ -33,6 +35,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class FishAccountingController extends MultiActionController {
+    
+    private static final String FISH_CODE = "FISH";
 
     private final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -53,6 +57,8 @@ public class FishAccountingController extends MultiActionController {
 
     private final FishRRAccountingDetailDao fishRRAccountingDetailDao = DaoFactory.createFishRRAccountingDetailDao();
 
+    private final CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
+            
     private List<Fish> fishes = new ArrayList<Fish>();
 
     /* GNVS | New Fish Created Fish Inventory */
@@ -79,11 +85,14 @@ public class FishAccountingController extends MultiActionController {
         /*INITIALIZE VAR*/
         Calendar aCalendar = Calendar.getInstance();
         Date now = new Date();
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
         List<FishStockCardAccounting> fishStockCardAccountingList = new ArrayList<FishStockCardAccounting>();
         BeginningBalance tempBegBalance = new BeginningBalance();
         BeginningBalance tempIN = new BeginningBalance();
         BeginningBalance tempOUT = new BeginningBalance();
         BeginningBalance tempEND = new BeginningBalance();
+        
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(FishAccountingController.FISH_CODE);
 
         FishSupplier fs = new FishSupplier();
 
@@ -187,6 +196,7 @@ public class FishAccountingController extends MultiActionController {
         }
 
         /*PUT TOTALING TO MODEL*/
+        modelMap.put("currencyType", cri.getCurrencyType());
         modelMap.put("begTotalQty", begTotalQty);
         modelMap.put("begTotalAmount", begTotalAmount);
         modelMap.put("inTotalQty", inTotalQty);
@@ -218,6 +228,8 @@ public class FishAccountingController extends MultiActionController {
     private BeginningBalance calculateBeginning(Integer fishSupplierId, Integer fishId, Date date) {
         BeginningBalance begBalance = new BeginningBalance();
         CurrencyRate cr = new CurrencyRate();
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(FishAccountingController.FISH_CODE);
 
         List<FishTransaction> fishTransactionList = new ArrayList<FishTransaction>();
         List<FishTransaction> tempFishTransactionList = new ArrayList<FishTransaction>();
@@ -235,7 +247,7 @@ public class FishAccountingController extends MultiActionController {
             /*SUMMARY ALL QUANTITY IN*/
             tempQtyIN += fishTransactionList.get(i).getQuantity();
             /*GET CURRENCY RATE BASED ON DATE AND CURRENCY CODE*/
-            cr = currencyRateDao.findLatestByCurrencyCodeFromToAndDate("USD", fishTransactionList.get(i).getCurrencyCode(), date);
+            cr = currencyRateDao.findLatestByCurrencyCodeFromToDateAndType("USD", fishTransactionList.get(i).getCurrencyCode(), date, cri.getCurrencyType());
             tempUnitCost = tempUnitCost.add(fishTransactionList.get(i).getUnitCost().divide(cr.getRateValue(), 2, RoundingMode.HALF_UP));
         }
 
@@ -270,6 +282,8 @@ public class FishAccountingController extends MultiActionController {
         BeginningBalance balance = new BeginningBalance();
         CurrencyRate cr = new CurrencyRate();
         Double tempQtyIN = 0d;
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(FishAccountingController.FISH_CODE);
 
         BigDecimal tempUnitCost = BigDecimal.ZERO;
         BigDecimal averageUnitCost = BigDecimal.ZERO;
@@ -282,7 +296,7 @@ public class FishAccountingController extends MultiActionController {
             /*SUMMARY ALL QUANTITY IN*/
             tempQtyIN += fishTransactionList.get(i).getQuantity();
             /*GET CURRENCY RATE BASED ON DATE AND CURRENCY CODE*/
-            cr = currencyRateDao.findLatestByCurrencyCodeFromToAndDate("USD", fishTransactionList.get(i).getCurrencyCode(), date);
+            cr = currencyRateDao.findLatestByCurrencyCodeFromToDateAndType("USD", fishTransactionList.get(i).getCurrencyCode(), date , cri.getCurrencyType());
             tempUnitCost = tempUnitCost.add(fishTransactionList.get(i).getUnitCost().divide(cr.getRateValue(), 2, RoundingMode.HALF_UP));
         }
 

@@ -5,7 +5,9 @@
  */
 package com.app.wms.web.controller.acc;
 
+import com.app.wms.engine.db.dao.CategoryItemCurrencyTypeDao;
 import com.app.wms.engine.db.dao.CurrencyRateDao;
+import com.app.wms.engine.db.dto.CategoryItemCurrencyType;
 import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.FGPackStyle;
 import com.app.wms.engine.db.dto.FGStockCardAccounting;
@@ -30,6 +32,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
  */
 public class FGStockAccountingController extends MultiActionController {
 
+    private static final String FG_CODE = "F_G";
+
     private final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
     /* DAO | Define needed dao here */
@@ -40,6 +44,8 @@ public class FGStockAccountingController extends MultiActionController {
     private final FgUnitCostDao fgUnitCostDao = DaoFactory.createFgUnitCostDao();
 
     private final CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
+
+    private final CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
 
     /*INITIALIZE VAR*/
     private List<FGPackStyle> fgPackStyles = new ArrayList<FGPackStyle>();
@@ -59,6 +65,9 @@ public class FGStockAccountingController extends MultiActionController {
     public ModelAndView generate(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
         Date asOf = new Date();
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
+
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(FGStockAccountingController.FG_CODE);
 
         /*GET PARAMETER*/
         String asOfDate = request.getParameter("asOfDate");
@@ -70,7 +79,7 @@ public class FGStockAccountingController extends MultiActionController {
 
         asOf = df.parse(asOfDate);
 
-        fgStockCardAccountingList = fgStockCardDao.findByDateAndPackId(fgPs.getId(), asOf);
+        fgStockCardAccountingList = fgStockCardDao.findByDateAndPackId(fgPs.getId(), asOf, cri.getCurrencyType());
         int i = 0;
         BigDecimal amountFixIDR = BigDecimal.ZERO;
         BigDecimal amountVarIDR = BigDecimal.ZERO;
@@ -88,10 +97,14 @@ public class FGStockAccountingController extends MultiActionController {
         /*GET CURRENCY RATE FROM USD TO IDR */
         String fromTo = "USD to IDR";
         CurrencyRate cr = new CurrencyRate();
-        cr = currencyRateDao.findLatestByCurrencyCodeFromToAndDate("USD", "IDR", asOf);
+        cr = currencyRateDao.findLatestByCurrencyCodeFromToDateAndType("USD", "IDR", asOf, cri.getCurrencyType());
 
         if (cr.getCurrencyCodeFrom().equalsIgnoreCase("IDR")) {
             fromTo = "IDR to USD";
+        } else if (cr.getCurrencyCodeFrom().equalsIgnoreCase("USD")) {
+            fromTo = "USD to IDR";
+        } else {
+            fromTo = "Currency rate not available, please update";
         }
 
         for (FGStockCardAccounting fgAcc : fgStockCardAccountingList) {
@@ -105,6 +118,7 @@ public class FGStockAccountingController extends MultiActionController {
             totalTotalIDR = totalTotalIDR.add(fgAcc.getAmountTotalCost());
         }
 
+        modelMap.put("currencyType", cri.getCurrencyType());
         modelMap.put("fgPs", fgPs);
         modelMap.put("asOfDate", asOfDate);
         modelMap.put("cr", cr);

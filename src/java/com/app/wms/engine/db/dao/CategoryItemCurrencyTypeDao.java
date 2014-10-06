@@ -18,6 +18,8 @@ public interface CategoryItemCurrencyTypeDao {
     public int insert(CategoryItemCurrencyType ciCurrType);
 
     public int update(CategoryItemCurrencyType ciCurrType);
+    
+    public CategoryItemCurrencyType findCurrencyTypeByCategoryCode(String categoryCode);
 
     public int ajaxMaxPage(String where, BigDecimal show);
 
