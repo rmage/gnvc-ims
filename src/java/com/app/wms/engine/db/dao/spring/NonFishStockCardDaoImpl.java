@@ -134,19 +134,31 @@ public class NonFishStockCardDaoImpl extends AbstractDAO
         List<NonFishDocumentSummary> result;
         String queryString;
         if (docType.equalsIgnoreCase("RR")) {
-        queryString = "select product_id , sum(amount_in) total from nf_stock_card where "
-                + "product_category = '" + productCategory + "' AND code = '" + docType + "' AND "
-                + "stock_card_date BETWEEN "
-                + "DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + date + "') - 1, 0) AND '" + date + "' "
-                + "group by product_id";
+            queryString = "select product_id , sum(amount_in) total from nf_stock_card where "
+                    + "product_category = '" + productCategory + "' AND code = '" + docType + "' AND "
+                    + "stock_card_date BETWEEN "
+                    + "DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + date + "') - 1, 0) AND '" + date + "' "
+                    + "group by product_id";
         } else {
             queryString = "select product_id , sum(amount_out) total from nf_stock_card where "
-                + "product_category = '" + productCategory + "' AND code = '" + docType + "' AND "
-                + "stock_card_date BETWEEN "
-                + "DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + date + "') - 1, 0) AND '" + date + "' "
-                + "group by product_id";
+                    + "product_category = '" + productCategory + "' AND code = '" + docType + "' AND "
+                    + "stock_card_date BETWEEN "
+                    + "DATEADD(MONTH, DATEDIFF(MONTH, -1, '" + date + "') - 1, 0) AND '" + date + "' "
+                    + "group by product_id";
         }
         result = jdbcTemplate.query(queryString, new NonFishDocumentSummaryListMap());
+        return result;
+    }
+
+    public Integer exist(NonFishStockCardAccounting nfs) {
+        Integer result = 0;
+        String dateString = df.format(nfs.getStockCardDate());
+        String sqlQuery = " select id from dbo.nf_stock_card where "
+                + "product_id = '" + nfs.getProductId() + "' and stock_card_date = ' " + dateString + "' and code = '" + nfs.getCode() + "' and number = '" + nfs.getNumber() + "'";
+        Integer temp = (Integer) jdbcTemplate.queryForInt(sqlQuery);
+        if (temp != null) {
+            result = temp;
+        }
         return result;
     }
 

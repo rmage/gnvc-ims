@@ -49,6 +49,12 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td style="width: 20%;">Currency Type</td>
+                                <td>
+                                    <b>${model.cri.currencyType}</b>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td style="width: 20%;">As Of</td>
                                 <td>
                                     <b>${model.asOf}</b>

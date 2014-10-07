@@ -5,6 +5,7 @@
  */
 package com.app.wms.web.controller.acc;
 
+import com.app.wms.engine.db.dao.CategoryItemCurrencyTypeDao;
 import com.app.wms.engine.db.dao.DrDao;
 import com.app.wms.engine.db.dao.NonFishStockCardSummaryDao;
 import com.app.wms.engine.db.dao.ProductCategoryDao;
@@ -13,6 +14,7 @@ import com.app.wms.engine.db.dao.ProductPriceDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.TsDao;
+import com.app.wms.engine.db.dto.CategoryItemCurrencyType;
 import com.app.wms.engine.db.dto.Dr;
 import com.app.wms.engine.db.dto.NonFishStockCardAccounting;
 import com.app.wms.engine.db.dto.NonFishStockCardSummary;
@@ -66,6 +68,8 @@ public class NonFishStockCardReportController extends MultiActionController {
 
     private final ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
 
+    private final CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
+
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
 
@@ -91,7 +95,7 @@ public class NonFishStockCardReportController extends MultiActionController {
 
         /*INITIALIZE*/
         List<NonFishStockCardSummary> nonFishStockCardReportList = new ArrayList<NonFishStockCardSummary>();
-
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
         Calendar aCalendar = Calendar.getInstance();
         Date now = null;
         String lastDateOfThisMonthString = "";
@@ -99,6 +103,9 @@ public class NonFishStockCardReportController extends MultiActionController {
         /*GET PARAMETER*/
         String productCat = request.getParameter("productcat");
         String dateAsOf = request.getParameter("asOf");
+
+        /*GET CRI*/
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(productCat);
 
         try {
             now = df.parse(dateAsOf);
@@ -164,6 +171,7 @@ public class NonFishStockCardReportController extends MultiActionController {
         modelMap.put("nonFishStockCardReportList", nonFishStockCardReportList);
         modelMap.put("productCat", productCat);
         modelMap.put("dateAsOf", dateAsOf);
+        modelMap.put("cri", cri);
         /*PUT TOTALING TO MODEL*/
         modelMap.put("totalQuantity", totalQuantity);
         modelMap.put("totalAmountToDate", totalAmountToDate);

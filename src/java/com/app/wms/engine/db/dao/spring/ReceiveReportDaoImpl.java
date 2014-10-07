@@ -1,14 +1,19 @@
 package com.app.wms.engine.db.dao.spring;
 
+import com.app.wms.engine.db.dao.CategoryItemCurrencyTypeDao;
 import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.PoDao;
+import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
+import com.app.wms.engine.db.dto.CategoryItemCurrencyType;
 import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Po;
+import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.Purchase;
 import com.app.wms.engine.db.dto.PurchaseDtl;
 import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.exceptions.DaoException;
+import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -17,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -27,6 +34,8 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     private SimpleJdbcTemplate jdbcTemplate;
 
     private DataSource dataSource;
+
+    private String productCode = null;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -64,10 +73,25 @@ public class ReceiveReportDaoImpl extends AbstractDAO
             e.printStackTrace();
         }
 
+        /*GET PRODUCT BY PRODUCTCODE*/
+        Product product = new Product();
+        if (productCode != null) {
+            try {
+                ProductDao productDao = DaoFactory.createProductDao();
+                product = productDao.findByProductCode(productCode);
+            } catch (ProductDaoException ex) {
+                Logger.getLogger(ReceiveReportDaoImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        /*GET CURRENCY TYPE FROM CATEGORY*/
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
+        CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(product.getProductCategory());
         /*INSERT CURR RATE*/
         /*INSERT Currency Rate*/
         CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
-        CurrencyRate cr = currencyRateDao.findLatestByCurrencyCodeAndDate(po.getCurrency(), rr.getRrDate());
+        CurrencyRate cr = currencyRateDao.findLatestByCurrencyCodeFromToDateAndType(po.getCurrency(), "IDR", rr.getRrDate(), cri.getCurrencyType());
         rr.setCurrencyRate(cr);
 
         return rr;
@@ -186,6 +210,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
          + "group by rr.rr_code,rr.rr_date,rrd.qty_g,rr.po_code, acprice.unit_price, rr.rr_from, rr.evaluated_by,rr.evaluated_date, "
          + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,"
          + "rr.updated_by, rr.updated_date order by rr.rr_date";*/
+        this.productCode = productCode;
         String sqlQuery = "select rr.rr_code,rr.rr_date, rr.po_code, rr.rr_from, ACPR.unit_price, rr.evaluated_by,rr.evaluated_date, "
                 + "rr.approved_by, rr.approved_date , rr.created_by , rr.created_date,rr.updated_by, "
                 + "rr.updated_date, sum(rrd.qty_g) qty  from rr , (select * from rr_detail) RRD , (select prsnumber , product_code from po left join po_detail pod on "

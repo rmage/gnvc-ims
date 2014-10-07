@@ -12,6 +12,8 @@ public interface NonFishStockCardDao {
     
     public boolean isExist(NonFishStockCardAccounting nfs);
     
+    public Integer exist(NonFishStockCardAccounting nfs);
+    
     public List<NonFishStockCardAccounting> findByProductCategoryAndDateAndDoctype(String productCategory, String date, String docType);
     
     public List<NonFishDocumentSummary> findPerDocumentType(String productCategory, String date, String docType);

@@ -213,6 +213,10 @@ public class CurrencyRateDaoImpl extends AbstractDAO
         CurrencyRate result = new CurrencyRate();
         String queryString;
         String dateString = df.format(date);
+        
+        if (currencyCodeFrom.equalsIgnoreCase(currencyCodeTo)) {
+            result.setRateValue(BigDecimal.ONE);
+        }
 
         if (CurrencyRateDaoImpl.DAILY_TYPE.equalsIgnoreCase(currencyType)) {
             /*USE DAILY RATE*/

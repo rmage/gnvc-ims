@@ -1,5 +1,6 @@
 package com.app.wms.web.controller.acc;
 
+import com.app.wms.engine.db.dao.CategoryItemCurrencyTypeDao;
 import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.DrDao;
@@ -10,6 +11,7 @@ import com.app.wms.engine.db.dao.ProductPriceDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.TsDao;
+import com.app.wms.engine.db.dto.CategoryItemCurrencyType;
 import com.app.wms.engine.db.dto.Dr;
 import com.app.wms.engine.db.dto.NonFishStockCardAccounting;
 import com.app.wms.engine.db.dto.NonFishStockCardSummary;
@@ -71,6 +73,8 @@ public class NonFishAccountingController extends MultiActionController {
 
     private final ProductPriceDao productPriceDao = DaoFactory.createProductPriceDao();
 
+    private final CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
+
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
 
@@ -88,6 +92,7 @@ public class NonFishAccountingController extends MultiActionController {
 
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
         Product product = new Product();
+        CategoryItemCurrencyType cri = new CategoryItemCurrencyType();
         String productCode = request.getParameter("productcode");
         String dateAsOfString = request.getParameter("asOf");
         NonFishStockCardAccounting nfTemp;
@@ -120,6 +125,8 @@ public class NonFishAccountingController extends MultiActionController {
         } catch (ProductDaoException ex) {
             Logger.getLogger(NonFishAccountingController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        cri = categoryItemCurrencyTypeDao.findCurrencyTypeByCategoryCode(product.getProductCategory());
 
         /*CALCULATE LAST MONTH QTY FOR BEGINNING BALANCE*/
         /*BEGIN*/
@@ -193,7 +200,7 @@ public class NonFishAccountingController extends MultiActionController {
         Date tsDate = aCalendar.getTime();
         df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String tsDateString = df.format(tsDate);
-        
+
         df = new SimpleDateFormat("yyyy-MM-dd");
 
         tsList = tsDao.findByProductCode(productCode, tsDateString);
@@ -331,10 +338,13 @@ public class NonFishAccountingController extends MultiActionController {
 
         /*INSERT OR UPDATE INTO TABLE nf_stock_card*/
         for (NonFishStockCardAccounting nf : nFStockCardList) {
-            boolean isExist = false;
-            isExist = nonFishStockCardDao.isExist(nf);
-            if (isExist) {
+            Integer nfId = 0;
+            if (nonFishStockCardDao.isExist(nf)) {
+                nfId = nonFishStockCardDao.exist(nf);
+            }
+            if (nfId != 0) {
                 /*UPDATE*/
+                nf.setId(nfId);
                 nonFishStockCardDao.update(nf);
             } else {
                 /*INSERT*/
@@ -366,17 +376,21 @@ public class NonFishAccountingController extends MultiActionController {
             /*UPDATE*/
             NonFishStockCardSummary nfsTemp = new NonFishStockCardSummary();
             nfsTemp = nonFishStockCardSummaryDao.findByProductCodeAndDate(product.getProductCode(), lastDateOfThisMonthString);
-            if (now.compareTo(nfsTemp.getAsOFDate()) > 0) {
-                System.out.println("UPDATE");
+            if (now.compareTo(nfsTemp.getAsOFDate()) > 0 || now.compareTo(nfsTemp.getAsOFDate()) == 0) {
+                System.out.println("----UPDATE----");
                 nonFishStockCardSummary.setId(nfsTemp.getId());
                 nonFishStockCardSummaryDao.update(nonFishStockCardSummary);
+            } else {
+                System.out.println("----ELSE----");
             }
         } else {
             /*INSERT*/
+            System.out.println("----INSERT----");
             nonFishStockCardSummaryDao.insert(nonFishStockCardSummary);
         }
 
         modelMap.put("product", product);
+        modelMap.put("cri", cri);
         modelMap.put("productCat", product.getProductCategory());
         modelMap.put("asOf", dateAsOfString);
         modelMap.put("nFStockCardList", nFStockCardList);
@@ -628,10 +642,10 @@ public class NonFishAccountingController extends MultiActionController {
         result.qty = totalQTY;
         /*THIS IS FOR NEXT AVERAGE COST*/
         result.unitCost = amountOut;
-        
-        System.out.println("BAL IDR " + result.balance );
-        System.out.println("BEG QTY " + result.qty );
-        System.out.println("BEG UC " + result.unitCost );
+
+        System.out.println("BAL IDR " + result.balance);
+        System.out.println("BEG QTY " + result.qty);
+        System.out.println("BEG UC " + result.unitCost);
 
         return result;
     }
