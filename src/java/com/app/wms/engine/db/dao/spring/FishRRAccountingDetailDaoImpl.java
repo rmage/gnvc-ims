@@ -66,12 +66,25 @@ public class FishRRAccountingDetailDaoImpl extends AbstractDAO
     }
 
     public void copyFromRRDetail() {
-        String query = "insert into " + getTableName() + " (rr_id, fish_id , supplier_id , total_weight ,amount,  contract_price , currency_code ) "
-                + "select rr_id , frrd.fish_id , fv.supplier_id , total_weight , fuc.unit_cost, fuc.unit_cost , fuc.currency_code from  fish_rr_detail frrd left join "
-                + "fish_rr frr on frrd.rr_id = frr.id left join fish_vessel fv on "
-                + "fv.id = frr.vessel_id left join fish_unit_cost fuc on "
-                + "fuc.fish_id = frrd.fish_id "
-                + "where frrd.rr_id not in (select rr_id from " + getTableName() + ") and frrd.total_weight > 0";
+        String query = "insert into fish_rr_accounting_detail "
+                + "(rr_id, fish_id , supplier_id , total_weight ,amount,  contract_price , currency_code ) "
+                + " select rr_id , frrd.fish_id , fv.supplier_id , total_weight, fuc.unit_cost, fuc.unit_cost ,"
+                + " fuc.currency_code from  fish_rr_detail frrd left join fish_rr frr on "
+                + " frrd.rr_id = frr.id left join fish_vessel fv on fv.id = frr.vessel_id left join "
+                + " (select contract_number,"
+                + "       contract_end_date,"
+                + "       fish_id,"
+                + "       currency_code,"
+                + "       unit_cost "
+                + " from (select contract_number, "
+                + "             contract_end_date, "
+                + "             fish_id, "
+                + "             currency_code, "
+                + "             unit_cost, "
+                + "             row_number() over(partition by fish_id order by contract_end_date desc) as rn "
+                + "      from fish_unit_cost) as T "
+                + " where rn = 1 ) fuc on fuc.fish_id = frrd.fish_id where frrd.rr_id not in "
+                + "(select rr_id from fish_rr_accounting_detail) and frrd.total_weight > 0 ";
         jdbcTemplate.update(query);
     }
 

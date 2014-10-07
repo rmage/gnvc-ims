@@ -78,7 +78,7 @@ public class FishUnitCostDaoImpl extends AbstractDAO implements ParameterizedRow
 
     public int insert(FishUnitCost fc) {
         return jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ? , ?, ? )",
-                fc.getContractNumber(), fc.getContractBeginDate(), fc.getContractEndDate(), fc.getSupplierId(), fc.getFishId(), fc.getFishDescription(), fc.getUnitCost(), fc.getCurrencyCode(), fc.getCreatedBy(), fc.getCreatedDate(), fc.getCreatedBy(), fc.getCreatedDate(), "Y", "N");
+                fc.getContractNumber(), fc.getContractEndDate(), fc.getContractBeginDate(), fc.getSupplierId(), fc.getFishId(), fc.getFishDescription(), fc.getUnitCost(), fc.getCurrencyCode(), fc.getCreatedBy(), fc.getCreatedDate(), fc.getCreatedBy(), fc.getCreatedDate(), "Y", "N");
     }
 
     public int update(FishUnitCost fc) {
