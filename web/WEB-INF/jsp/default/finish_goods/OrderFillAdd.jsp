@@ -10,11 +10,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>IMS &therefore; Order Fill Authority to Label &therefore; Create</title>
         <%@include file="../../metaheader.jsp" %>
+        <link href="resources/default/css/style-table.css" rel="stylesheet" type="text/css">
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
-            .ui-datepicker {
-                display: none;
-            }
         </style>
     </head>
     <body>
@@ -201,10 +199,10 @@
                                         '<td>' + json[0][3] + '</td>' +
                                         '<td>' + json[0][4] + '</td>' +
                                         '<td>' + json[0][5] + '</td>' +
-                                        '<td><input type="text" class="qtyCs" value="' + parseInt(ptsQty[0]) + '" size="3" data-code="' + json[0][1] + '" data-max="' + parseInt(ptsQty[0]) + '"><input type="text" class="qtyTin" size="2" value="' + parseInt(ptsQty[1]) + '" data-max="' + parseInt(ptsQty[1]) + '"></td>' +
-                                        '<td>' + json[0][7] + '</td>' +
-                                        '<td>' + json[0][8] + '</td>' +
-                                        '<td>' + json[0][9] + '</td>' +
+                                        '<td class="bg-gray-1"><input type="text" class="qtyCs" value="' + parseInt(ptsQty[0]) + '" size="3" data-code="' + json[0][1] + '" data-max="' + parseInt(ptsQty[0]) + '"><input type="text" class="qtyTin" size="2" value="' + parseInt(ptsQty[1]) + '" data-max="' + parseInt(ptsQty[1]) + '"></td>' +
+                                        '<td class="bg-green-1">' + json[0][7] + '</td>' +
+                                        '<td class="bg-yellow-1">' + json[0][8] + '</td>' +
+                                        '<td class="bg-red-1">' + json[0][9] + '</td>' +
                                         '<td>' + json[0][10] + '</td>' +
                                         '<td><input type="text" class="remarks" /></td>' +
                                         '<td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="removeRow(this);"></td>' +

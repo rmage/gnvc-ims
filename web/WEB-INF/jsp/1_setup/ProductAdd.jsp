@@ -69,7 +69,7 @@
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
                                                    name="btnSave" id="btnSave" value="Save" class="simpan" />
                                         </label>
-                                        <input type="button" name="button" id="btnBack" value="Cancel" onclick="window.location.replace('Product.htm')" />
+                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('Product.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>

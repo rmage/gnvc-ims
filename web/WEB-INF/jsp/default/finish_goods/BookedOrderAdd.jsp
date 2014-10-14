@@ -36,7 +36,7 @@
                             <caption>Booked Order &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 175px;">Bor Code</td>
+                                    <td style="width: 175px;">Bor Number</td>
                                     <td><input tabindex="1" type="text" id="borCode" name="borCode" required="required" onblur="validateIt(this)" data-type="string" /></td>
                                     <td>Bor Date</td>
                                     <td><input tabindex="2" type="text" id="borDatePicker" name="borDatePicker" size="10" required="required" value="<%=sdfPicker.format(cDate)%>" /></td>

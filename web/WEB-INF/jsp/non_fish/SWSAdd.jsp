@@ -63,12 +63,18 @@
                                                 out.print("<option value=\"7034\">7034 - Production</option>");
                                                 out.print("<option value=\"7037\">7037 - Rendering</option>");
                                                 out.print("</select>");
+                                            } else if (lu.getDepartmentCode().equals("7042")) {
+                                                out.print("<select id=\"departmentCode\">");
+                                                out.print("<option value=\"7042\">7042 - Inventory Management</option>");
+                                                out.print("<option value=\"7040\">7040 - Fixed Labeling</option>");
+                                                out.print("<option value=\"7037\">7039 - Variable Labeling</option>");
+                                                out.print("</select>");
                                             } else {
                                                 String[] x = ((HashMap) request.getAttribute("model")).get("department").toString().split(":");
                                                 out.print("<input id=\"departmentCode\" size=\"4\" type=\"text\" value=\"" + x[0] + "\" readonly required> " + x[1]);
                                             }
 //                                            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-%>
+                                        %>
                                     </td>
                                     <td>Info</td>
                                     <td>

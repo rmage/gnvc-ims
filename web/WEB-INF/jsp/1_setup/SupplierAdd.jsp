@@ -39,7 +39,7 @@
                                     <td>Supplier Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="supplierName" maxlength="25" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                            <input type="text" name="supplierName" maxlength="100" size="50" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>
@@ -48,7 +48,7 @@
                                     <td>Supplier Address</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="supplierAddress" maxlength="55" size="55" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                            <input type="text" name="supplierAddress" maxlength="100" size="100" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
                                         </label>
                                         <label>*</label>
                                     </td>

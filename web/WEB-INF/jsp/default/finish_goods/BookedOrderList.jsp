@@ -23,7 +23,7 @@
                             <caption>Booked Order &therefore; Search</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">Bor Code</td>
+                                    <td style="width: 200px;">Bor Number</td>
                                     <td><input type="text" id="bor_code" name="bor_code" /></td>
                                     <td style="width: 200px;">Bor Date</td>
                                     <td><input type="text" id="bor_date" name="bor_date" /></td>
@@ -45,7 +45,7 @@
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 50px">Action</td>
-                                <td column="loca_code">Bor Code</td>
+                                <td column="loca_code">Bor Number</td>
                                 <td column="loca_name">Bor Date</td>
                                 <td>Created By</td>
                             </tr>

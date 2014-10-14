@@ -72,7 +72,7 @@ public class AppMenuGroupDaoImpl extends AbstractDAO implements ParameterizedRow
     @Transactional
     public void update(AppMenuGroupPk pk, AppMenuGroup dto) throws AppMenuGroupDaoException {
         jdbcTemplate.update("UPDATE " + getTableName() + " SET GROUP_CODE = ?,NAME = ?,SORT_NO = ?"
-                + ",UPDATED_BY = ?, UPDATED_DATE = ? WHERE GROUP_CODE = ?", dto.getGroupCode(), dto.getName(), dto.getSortNo(), dto.getUpdatedBy(), dto.getUpdatedDate(), pk.getGroupCode());
+                + ",UPDATED_BY = ?, UPDATED_DATE = ?, is_deleted = ? WHERE GROUP_CODE = ?", dto.getGroupCode(), dto.getName(), dto.getSortNo(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getIsDelete(), pk.getGroupCode());
     }
 
     @Transactional

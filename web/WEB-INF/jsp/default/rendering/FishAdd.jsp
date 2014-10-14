@@ -240,21 +240,21 @@
                                 <tr>
                                     <td class="bold">DS</td>
                                     <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="number" size="5" value="0" min="0" step="0.1" style="width: 30px;" required></td>
                                     <td><input class="data" type="text" size="5"></td>
                                     <td><input class="data" type="text" size="5"></td>
                                 </tr>
                                 <tr>
                                     <td class="bold">2nd</td>
                                     <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="number" size="5" value="0" min="0" step="0.1" style="width: 30px;" required></td>
                                     <td><input class="data" type="text" size="5"></td>
                                     <td><input class="data" type="text" size="5"></td>
                                 </tr>
                                 <tr>
                                     <td class="bold">NS</td>
                                     <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="number" size="5" value="0" min="0" step="0.1" style="width: 30px;" required></td>
                                     <td><input class="data" type="text" size="5"></td>
                                     <td><input class="data" type="text" size="5"></td>
                                 </tr>
@@ -496,6 +496,7 @@
                 $pLastTr.find('td:eq(8)').html(t.toFixed(2));
                 x = t / $pLastTr.find('td:eq(3)').html() * 100;
                 $pLastTr.find('td:eq(9)').html(isNaN(x) ? '0.00' : x.toFixed(0));
+                updateTotalFM();
             });
 
             // BIND | to direct rendering weight of scrap
@@ -558,8 +559,8 @@
             $('#breakdown tr td:nth-child(2) > input').bind('keyup change', function() {
                 var t = 0.00, c = 0, x = 0;
                 $('#breakdown tr td:nth-child(2) > input').each(function() {
-                    $(this).parent().next().html((100.00 - $(this).val()).toFixed(2));
-                    if (parseFloat($(this).val()) > 0.00) {
+                    if (!$(this).prop('readonly')) {
+                        $(this).parent().next().html((100.00 - $(this).val()).toFixed(2));
                         t = t + parseFloat($(this).val());
                         c = c + 1;
                     }
@@ -575,8 +576,8 @@
             $('#breakdown tr td:nth-child(4) > input').bind('keyup change', function() {
                 var t = 0.00, c = 0, x = 0;
                 $('#breakdown tr td:nth-child(4) > input').each(function() {
-                    $(this).parent().next().html((100.00 - $(this).val()).toFixed(2));
-                    if (parseFloat($(this).val()) > 0.00) {
+                    if (!$(this).prop('readonly')) {
+                        $(this).parent().next().html((100.00 - $(this).val()).toFixed(2));
                         t = t + parseFloat($(this).val());
                         c = c + 1;
                     }
@@ -586,6 +587,17 @@
                     x = (100 - (t / c));
                     $bLastTr.find('td:eq(4)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 });
+            });
+
+            // BIND | to NS shift to set disable or enable field
+            $('#breakdown input').bind('dblclick', function() {
+                if ($(this).prop('readonly')) {
+                    $(this).removeAttr('readonly')
+                            .css('opacity', 1).trigger('keyup');
+                } else {
+                    $(this).attr('readonly', 'readonly').val(0).css('opacity', 0.3).trigger('keyup')
+                            .parent().next().html(0);
+                }
             });
 
             /* -------------------------------------------------------------- */
@@ -640,6 +652,12 @@
                 $('#process tr:eq(0) input:lt(7)').trigger('keyup');
                 $('#breakdown tr:eq(0) input:lt(2)').trigger('keyup');
                 $('#spSack').trigger('keyup');
+
+                setTimeout(function() {
+                    if ($('#stock tr:eq(0) td:eq(1)').html() === '0') {
+                        $('#prepareData').trigger('click');
+                    }
+                }, 1000);
             }
 
             function updateTotalScraps() {
@@ -669,13 +687,13 @@
 
             function updateTotalFM() {
                 console.log("[EVENTS| updateTotalFM");
+                var x = 0, fo = 0;
                 $('#process tr').each(function(i) {
-                    var x = 0, fo = 0;
-
                     if (i !== 4) {
                         x = parseFloat($(this).find('td:eq(5) > input').val()) + parseFloat($(this).find('td:eq(11) > input').val()) + parseFloat($(this).find('td:eq(13) > input').val());
                     } else {
                         x = parseFloat($(this).find('td:eq(5)').html()) + parseFloat($(this).find('td:eq(11)').html()) + parseFloat($(this).find('td:eq(13)').html());
+                        fo = parseFloat($(this).find('td:eq(8)').html());
                     }
                     $(this).find('td:eq(18)').html(x.toFixed(2));
 
@@ -692,7 +710,7 @@
                         .next().html(x * 40)
                         .next().html(0)
                         .next().html(0)
-                        .next().next().html((fo / 40).toFixed(2))
+                        .next().next().html((fo / 180).toFixed(2))
                         .next().html(fo);
 
                 $('#stock input').trigger('keyup');
@@ -758,8 +776,8 @@
                             data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^' + $(this).find('td:eq(2)').html() + '^'
                                     + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(4)').html() + '^@';
                         } else {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').val() + '^' + $(this).find('td:eq(2)').html() + '^'
-                                    + $(this).find('td:eq(3)').val() + '^' + $(this).find('td:eq(4)').html() + '^@';
+                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^' + $(this).find('td:eq(2)').html() + '^'
+                                    + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(4)').html() + '^@';
                         }
                     });
                     data = data + '*';
@@ -775,30 +793,22 @@
                     // PREPARE | data for process
                     $('#process tr').each(function(i) {
                         if (i <= 3) {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^' + $(this).find('td:eq(2)').html() + '^'
-                                    + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(4)').html() + '^' + $(this).find('td:eq(5) > input').val() + '^'
-                                    + $(this).find('td:eq(6)').html() + '^' + $(this).find('td:eq(7)').html() + '^' + $(this).find('td:eq(8) > input').html() + '^'
-                                    + $(this).find('td:eq(9)').html() + '^' + $(this).find('td:eq(10) > input').val() + '^' + $(this).find('td:eq(11) > input').val() + '^'
-                                    + $(this).find('td:eq(12)').html() + '^' + $(this).find('td:eq(13) > input').val() + '^' + $(this).find('td:eq(14)').html() + '^'
-                                    + $(this).find('td:eq(15)').html() + '^' + $(this).find('td:eq(16)').html() + '^' + $(this).find('td:eq(17)').html() + '^'
-                                    + $(this).find('td:eq(18)').html() + '^' + $(this).find('td:eq(19)').html() + '^' + $(this).find('td:eq(20)').html() + '^@';
+                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^'
+                                    + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(5) > input').val() + '^' + $(this).find('td:eq(8) > input').val() + '^'
+                                    + $(this).find('td:eq(10) > input').val() + '^' + $(this).find('td:eq(11) > input').val() + '^' + $(this).find('td:eq(13) > input').val() + '^@';
                         } else {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^' + $(this).find('td:eq(2)').html() + '^'
-                                    + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(4)').html() + '^' + $(this).find('td:eq(5)').html() + '^'
-                                    + $(this).find('td:eq(6)').html() + '^' + $(this).find('td:eq(7)').html() + '^' + $(this).find('td:eq(8)').html() + '^'
-                                    + $(this).find('td:eq(9)').html() + '^' + $(this).find('td:eq(10)').html() + '^' + $(this).find('td:eq(11)').html() + '^'
-                                    + $(this).find('td:eq(12)').html() + '^' + $(this).find('td:eq(13)').html() + '^' + $(this).find('td:eq(14)').html() + '^'
-                                    + $(this).find('td:eq(15)').html() + '^' + $(this).find('td:eq(16)').html() + '^' + $(this).find('td:eq(17)').html() + '^'
-                                    + $(this).find('td:eq(18)').html() + '^' + $(this).find('td:eq(19)').html() + '^' + $(this).find('td:eq(20)').html() + '^@';
+                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^'
+                                    + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(5)').html() + '^' + $(this).find('td:eq(8)').html() + '^'
+                                    + $(this).find('td:eq(10)').html() + '^' + $(this).find('td:eq(11)').html() + '^' + $(this).find('td:eq(13)').html() + '^@';
                         }
                     });
                     data = data + '*#';
                 }
 
-                console.log(data);
+//                console.log(encodeURIComponent(data));
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data);
+                        window.location.replace("?action=save&data=" + encodeURIComponent(data));
                     }
                 }
 

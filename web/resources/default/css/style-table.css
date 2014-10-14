@@ -1,0 +1,7 @@
+.ui-datepicker {
+    display: none;
+}
+td.bg-gray-1 { background-color: #d9d5fa; }
+td.bg-green-1 { background-color: #d5fadb; }
+td.bg-yellow-1 { background-color: #f4fad5; }
+td.bg-red-1 { background-color: #ffd9d9; }

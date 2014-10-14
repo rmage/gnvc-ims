@@ -27,20 +27,20 @@
                     <caption>Menu Group - Detail</caption>
                     <tbody class="tbl-nohover">
                         <tr>
-                            <td class="style1">Menu Group Code</td>
-                            <td class="style1">
+                            <td style="width: 175px;">Menu Group Code</td>
+                            <td>
                                 <%= dto.getGroupCode()%>
                             </td>
                         </tr>
                         <tr>
-                            <td class="style1">Menu Group Name</td>
-                            <td class="style1">
+                            <td>Menu Group Name</td>
+                            <td>
                                 <%= dto.getName()%>
                             </td>
                         </tr>
                         <tr>
-                            <td class="style1">Sort Number</td>
-                            <td class="style1">
+                            <td>Sort Number</td>
+                            <td>
                                 <%=dto.getSortNo()%>
                             </td>
                         </tr>
@@ -51,7 +51,7 @@
                             <input type="hidden" name="action" value="findByPrimaryKey" />
                             <input type="hidden" name="groupCode" value="<%= dto.getGroupCode()%>" />
                             <input type="submit" value="Edit" name="btnGroup"/>
-                            <input type="button" class="style1" name="button" id="btnBack" value="Back" />
+                            <input type="button" name="button" id="btnBack" value="Back" />
                         </form>
 
                     </td>

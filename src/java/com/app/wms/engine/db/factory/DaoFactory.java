@@ -892,6 +892,11 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (RenderingFishDao) bf.getBean("RenderingFishDao");
     }
+    
+    public static RenderingSalesDao createRenderingSalesDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (RenderingSalesDao) bf.getBean("RenderingSalesDao");
+    }
 
     /* GNVS | D3 Data-Driven Documents */
     public static D3Dao createD3Dao() {

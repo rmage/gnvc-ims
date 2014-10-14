@@ -1,39 +1,17 @@
 package com.app.wms.web.controller;
 
-import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dao.ProductDao;
-import com.app.wms.engine.db.dao.ProductPriceDao;
-import com.app.wms.engine.db.dao.PrsDetailDao;
-import com.app.wms.engine.db.dao.PurchaseDao;
-import com.app.wms.engine.db.dao.PurchaseDtlDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dao.ReceiveReportDtlDao;
-import com.app.wms.engine.db.dao.StockBalanceDao;
-import com.app.wms.engine.db.dao.StockInventoryDao;
-import com.app.wms.engine.db.dao.SupplierDao;
-import com.app.wms.engine.db.dao.UserDao;
-import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Product;
-import com.app.wms.engine.db.dto.ProductPrice;
-import com.app.wms.engine.db.dto.PrsDetail;
-import com.app.wms.engine.db.dto.Purchase;
-import com.app.wms.engine.db.dto.PurchaseDtl;
-import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.dto.ReceiveReportDtl;
-import com.app.wms.engine.db.dto.StockInventory;
-import com.app.wms.engine.db.dto.Supplier;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
-import com.app.wms.engine.db.exceptions.SupplierDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -173,7 +151,6 @@ public class ReceiveReportController extends MultiActionController {
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         
         /* DAO | Define needed dao here */
         ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
@@ -187,7 +164,7 @@ public class ReceiveReportController extends MultiActionController {
             }
             sb.append("{\"1\": \"").append(x.get("rr_code")).append("\", ");
             sb.append("\"2\": \"").append(x.get("rr_code")).append("\", ");
-            sb.append("\"3\": \"").append(sdf.format(x.get("rr_date"))).append("\", ");
+            sb.append("\"3\": \"").append(x.get("rr_date")).append("\", ");
             sb.append("\"4\": \"").append(x.get("po_code")).append("\", ");
             sb.append("\"5\": \"").append(x.get("rr_from")).append("\", ");
             sb.append("\"6\": \"").append(x.get("created_by")).append("\"}");

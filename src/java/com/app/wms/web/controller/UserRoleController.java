@@ -125,7 +125,7 @@ public class UserRoleController extends MultiActionController
             if(isCreate){
                 dto = new UserRole();
             }else{
-                Integer id = Integer.parseInt(request.getParameter("key"));
+                Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
 

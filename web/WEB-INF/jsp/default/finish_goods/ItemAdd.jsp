@@ -54,7 +54,7 @@
                                     <td>Oil</td>
                                     <td><input type="text" id="itemOil" name="itemOil" size="10"></td>
                                     <td>Lid</td>
-                                    <td><input type="text" id="itemLid" name="itemLid" size="5"></td>
+                                    <td><input type="text" id="itemLid" name="itemLid" size="10"></td>
                                 </tr>
                             </tbody>
                             <tfoot>

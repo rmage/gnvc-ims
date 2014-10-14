@@ -1,5 +1,4 @@
 <%@page import="com.app.wms.engine.db.dto.UserRole"%>
-<%@page import="com.app.wms.hbm.bean.Tallyman"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -14,7 +13,7 @@
 //            String roleCode = (String) dto.getRoleCode();
 //            String roleName = (String) dto.getRoleName();
 //            String id = Integer.toString(dto.getId());
-        %>
+%>
         <div class="container">
             <%@include file="../../header.jsp" %>
             <jsp:include page="../../dynmenu.jsp" />

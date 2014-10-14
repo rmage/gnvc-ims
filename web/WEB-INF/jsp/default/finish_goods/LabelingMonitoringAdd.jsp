@@ -10,11 +10,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>IMS &therefore; Labeling Monitoring &therefore; Create</title>
         <%@include file="../../metaheader.jsp" %>
+        <link href="resources/default/css/style-table.css" rel="stylesheet" type="text/css">
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
-            .ui-datepicker {
-                display: none;
-            }
             #list thead td {
                 width: 60px;
             }
@@ -167,17 +165,17 @@
                                 sAppend[cAppend++] = '<td>' + json[i][9] + '</td>';
                                 sAppend[cAppend++] = '<td>' + json[i][10] + '</td>';
                                 sAppend[cAppend++] = '<td><input type="text" value="" size="10" /></td>';
-                                sAppend[cAppend++] = '<td><input type="text" class="qtyServedCs" value="' + (parseInt(qtyServed[0])) + '" data-max="' + qtyServed[0] + '" size="6" readonly><input type="text" id="qtyServedTin" name="qtyServedTin" value="' + parseInt(qtyServed[1]) + '" data-max="' + qtyServed[1] + '" readonly></td>';
-                                sAppend[cAppend++] = '<td><input type="text" class="lmQtyCs" value="0"><input type="text" class="lmQtyTin" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" class="qtyServedCs" value="' + (parseInt(qtyServed[0])) + '" data-max="' + qtyServed[0] + '" size="6" readonly><input type="text" id="qtyServedTin" name="qtyServedTin" value="' + parseInt(qtyServed[1]) + '" data-max="' + qtyServed[1] + '" readonly></td>';
+                                sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" class="lmQtyCs" value="0"><input type="text" class="lmQtyTin" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-red-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
                                 sAppend[cAppend++] = '<td id="remainings">0.00</td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
                                 sAppend[cAppend++] = '<td><input type="text" value="" style="width: 100px;"></td>';
                                 sAppend[cAppend++] = '</tr>';
                             }

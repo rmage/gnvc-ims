@@ -55,7 +55,7 @@
                                         </select>
                                     </td>
                                     <td>For Brand</td>
-                                    <td><input type="text" id="forBrand" name="forBrand" /></td>
+                                    <td><input type="text" id="forBrand" name="forBrand" size="30" /></td>
                                 </tr>
                                 <tr>
                                     <td>Can Code</td>

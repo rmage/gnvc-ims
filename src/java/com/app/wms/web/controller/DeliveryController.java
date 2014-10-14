@@ -237,7 +237,6 @@ public class DeliveryController extends MultiActionController {
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         
         /* DAO | Define needed dao here */
         DeliveryDao dDao = DaoFactory.createDeliveryDao();
@@ -251,7 +250,7 @@ public class DeliveryController extends MultiActionController {
             }
             sb.append("{\"1\": \"").append(x.get("dr_code")).append("\", ");
             sb.append("\"2\": \"").append(x.get("dr_code")).append("\", ");
-            sb.append("\"3\": \"").append(sdf.format(x.get("dr_date"))).append("\", ");
+            sb.append("\"3\": \"").append(x.get("dr_date")).append("\", ");
             sb.append("\"4\": \"").append(x.get("dr_from")).append("\", ");
             sb.append("\"5\": \"").append(x.get("dr_to")).append("\", ");
             sb.append("\"6\": \"").append(x.get("created_by")).append("\"}");

@@ -181,6 +181,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.PRCPoRegisteredPerDepartment, "EXEC RPT_PRC_PO_PER_DEPARTMENT ?, ?");
         ListMap.put(Report.PRCPoRegisteredPerItem, "EXEC RPT_PRC_PO_PER_ITEM ?");
         ListMap.put(Report.PRCPoRegisteredPerSupplier, "EXEC RPT_PRC_PO_PER_SUPPLIER ?");
+        ListMap.put(Report.PRCPrsRegister, "EXEC RPT_PRC_PRS_REGISTER ?, ?, ?");
         //  ***END*** | Purcashing Module | Form and Report List
 
         //  Non-Fish Module | Form and Report List
@@ -202,7 +203,13 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FGStockInventory, "EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?");
         ListMap.put(Report.FGPtsCheckList, "EXEC RPT_FG_PTS_CHECKLIST");
         ListMap.put(Report.FGActualInventory, "EXEC RPT_FG_INVENTORY_PER_COUNT ?, ?");
-        //  ***END*** | Finished Goods Module | Form and Report List        
+        //  ***END*** | Finished Goods Module | Form and Report List    
+
+        //  Rendering Module | Form and Report List
+        ListMap.put(Report.RendDailyReport, "EXEC RPT_REND_DAILY ?");
+        ListMap.put(Report.RendSummaryReport, "EXEC RPT_REND_SUMMARY ?, ?");
+        ListMap.put(Report.RendSales, "EXEC PRT_REND_SALES ?");
+        //  ***END*** | Finished Goods Module | Form and Report List    
 
         ListMap.put(Report.FWS,
                 "SELECT f.code AS kode, wdsd.description AS nama_barang, "

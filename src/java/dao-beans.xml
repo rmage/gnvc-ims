@@ -420,6 +420,9 @@
     <bean id="RenderingFishDao" class="com.spfi.ims.dao.RenderingFishDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="RenderingSalesDao" class="com.spfi.ims.dao.RenderingSalesDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
     
     <!-- GNVS | D3 Data-Driven Documents -->
     <bean id="D3Dao" class="com.spfi.ims.dao.D3DaoImpl" scope="prototype">

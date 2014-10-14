@@ -42,10 +42,10 @@ public class RenderingFishController extends MultiActionController {
             /* TRANSACTION | Something complex here */
             rfDao.insert(data, lu.getUserId());
 
-            return new ModelAndView("redirect:FGReclassification.htm");
+            return new ModelAndView("redirect:RenderingFish.htm");
         } catch (Exception e) {
             e.printStackTrace();
-            return new ModelAndView("redirect:FGReclassification.htm?action=create");
+            return new ModelAndView("redirect:RenderingFish.htm?action=create");
         }
     }
     
@@ -67,9 +67,9 @@ public class RenderingFishController extends MultiActionController {
             if (b) {
                 sb.append(",");
             }
-            sb.append("{\"1\": \"").append(x.get("rend_id")).append("\", ");
-            sb.append("\"2\": \"").append(x.get("rend_id")).append("\", ");
-            sb.append("\"3\": \"").append(x.get("rend_date")).append("\", ");
+            sb.append("{\"1\": \"").append(x.get("fmfo_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("fmfo_code")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("fmfo_date")).append("\", ");
             sb.append("\"4\": \"").append(x.get("fmfo_spsack")).append("\", ");
             sb.append("\"5\": \"").append(x.get("fmfo_spkg")).append("\", ");
             sb.append("\"6\": \"").append(x.get("created_by")).append("\", ");

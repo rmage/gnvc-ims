@@ -37,10 +37,10 @@ public class ReportFactory {
         //  Fish Module | Form and Report List
         , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
         //  Purchase Module | Form and Report List
-        , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier
+        , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod
         , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory
-        ; 
+        , RendDailyReport, RendSummaryReport, RendSales;
     }
 
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -118,6 +118,9 @@ public class ReportFactory {
         reportMap.put(Report.PRCPoRegisteredPerItem, reportTemplateMap.get("PRCPoRegisteredPerItem"));
         reportTemplateMap.put("PRCPoRegisteredPerSupplier", new ReportModel("purchase/porps", false));
         reportMap.put(Report.PRCPoRegisteredPerSupplier, reportTemplateMap.get("PRCPoRegisteredPerSupplier"));
+        reportTemplateMap.put("PRCPrsRegister", new ReportModel("purchase/prsrpp", false));
+        reportMap.put(Report.PRCPrsRegister, reportTemplateMap.get("PRCPrsRegister"));
+        
         
         //  Non-Fish Module | Form and Report List
         reportTemplateMap.put("NFRr", new ReportModel("non_fish/rr", false));
@@ -153,7 +156,13 @@ public class ReportFactory {
         reportTemplateMap.put("FGActualInventory", new ReportModel("finished_goods/fgair", false));
         reportMap.put(Report.FGActualInventory, reportTemplateMap.get("FGActualInventory"));
         
-        
+        // Rendering Module | Form and Report List
+        reportTemplateMap.put("RendDailyReport", new ReportModel("rendering/daily", false));
+        reportMap.put(Report.RendDailyReport, reportTemplateMap.get("RendDailyReport"));
+        reportTemplateMap.put("RendSummaryReport", new ReportModel("rendering/summary", false));
+        reportMap.put(Report.RendSummaryReport, reportTemplateMap.get("RendSummaryReport"));
+        reportTemplateMap.put("RendSales", new ReportModel("rendering/rs", false));
+        reportMap.put(Report.RendSales, reportTemplateMap.get("RendSales"));
         
         
         

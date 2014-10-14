@@ -510,6 +510,11 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("default/finish_goods/ReportActualInventory");
     }
     
+    // Rendering Module | Form and Report List
+    public ModelAndView getRenderingSummaryReport(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/rendering/ReportSummary");
+    }
+    
     public boolean isLogin(HttpServletRequest request) {
         return request.getSession().getAttribute("user") != null;
     }

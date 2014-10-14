@@ -240,7 +240,6 @@ public class TransferSlipController extends MultiActionController {
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         /* DAO | Define needed dao here */
         TsDao tsDao = DaoFactory.createTsDao();
@@ -254,7 +253,7 @@ public class TransferSlipController extends MultiActionController {
             }
             sb.append("{\"1\": \"").append(x.get("ts_code")).append("\", ");
             sb.append("\"2\": \"").append(x.get("ts_code")).append("\", ");
-            sb.append("\"3\": \"").append(sdf.format(x.get("ts_date"))).append("\", ");
+            sb.append("\"3\": \"").append(x.get("ts_date")).append("\", ");
             sb.append("\"4\": \"").append(x.get("ts_type")).append("\", ");
             sb.append("\"5\": \"").append(x.get("sws_code")).append("\", ");
             sb.append("\"6\": \"").append(x.get("ts_info")).append("\", ");
