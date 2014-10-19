@@ -1,5 +1,4 @@
 <%@page import="com.app.wms.engine.db.dto.Supplier"%>
-<%@page import="com.app.wms.hbm.bean.Tallyman"%>
 <!DOCTYPE html>
 <html>
     <head>

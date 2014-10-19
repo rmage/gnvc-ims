@@ -39,7 +39,7 @@ public class ReportFactory {
         //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod
-        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory
+        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor
         , RendDailyReport, RendSummaryReport, RendSales;
     }
 
@@ -147,6 +147,8 @@ public class ReportFactory {
         reportMap.put(Report.NFDrRegisterPerPeriod, reportTemplateMap.get("NFDrRegisterPerPeriod"));
         
         // Finished Goods Module | Form and Report List
+        reportTemplateMap.put("FGBor", new ReportModel("finished_goods/bor", false));
+        reportMap.put(Report.FGBor, reportTemplateMap.get("FGBor"));
         reportTemplateMap.put("FGPtsPerPeriod", new ReportModel("finished_goods/ptsr", false));
         reportMap.put(Report.FGPtsPerPeriod, reportTemplateMap.get("FGPtsPerPeriod"));
         reportTemplateMap.put("FGStockInventory", new ReportModel("finished_goods/fgir", false));

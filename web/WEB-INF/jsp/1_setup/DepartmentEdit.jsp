@@ -1,5 +1,3 @@
-<%@page import="com.app.wms.engine.db.dto.Department"%>
-<%@page import="com.app.wms.hbm.bean.Tallyman"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,13 +5,6 @@
         <%@include file="../metaheader.jsp" %>
     </head>    
     <body>
-        <%            //java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            //Department dto = (Department) m.get("dto");
-            //String mode = (String) m.get("mode");
-            //String departmentCode = (String) dto.getDepartmentCode();
-            //String departmentName = (String) dto.getDepartmentName();
-            //String id = Integer.toString(dto.getId());
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />

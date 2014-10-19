@@ -30,7 +30,6 @@ package com.app.wms.web.controller;
 //import com.app.wms.engine.db.dto.map.LoginUser;
 //import com.app.wms.engine.db.exceptions.TsDaoException;
 //import com.app.wms.engine.db.factory.DaoFactory;
-//import com.app.wms.hbm.bean.Vgrdetailproduct;
 
 public class AccountingController extends ReportManagerController {
 //	

@@ -49,8 +49,8 @@
                                     </td>
                                     <td style="width: 200px;">Second Pass</td>
                                     <td>
-                                        Sack: <input type="number" id="spSack" min="0" step="0.01" value="0" required>
-                                        Kg: <span>0</span>
+                                        Sack: <span class="bold" id="spSack">0</span>
+                                        Kg: <span class="bold">0</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -75,7 +75,7 @@
                                     <td rowspan="3">Raw Fish</td>
                                     <td rowspan="3">%</td>
                                     <td colspan="7">Tricanter, kgs</td>
-                                    <td colspan="6">Direct Rendering, kgs</td>
+                                    <td colspan="8">Direct Rendering, kgs</td>
                                     <td rowspan="2">Total Scraps</td>
                                     <td rowspan="2">%</td>
                                     <td colspan="2" rowspan="2">Total Fishmeal</td>
@@ -89,6 +89,7 @@
                                     <td rowspan="2">%</td>
                                     <td rowspan="2">Weight of Scrap</td>
                                     <td colspan="2">First Pass</td>
+                                    <td colspan="2">High Protein</td>
                                     <td colspan="2">Second Pass</td>
                                     <td rowspan="2">%</td>
                                 </tr>
@@ -96,6 +97,8 @@
                                     <td>Sack</td>
                                     <td>Kg</td>
                                     <td>%</td>
+                                    <td>Kg</td>
+                                    <td>Sack</td>
                                     <td>Kg</td>
                                     <td>Sack</td>
                                     <td>Kg</td>
@@ -125,6 +128,8 @@
                                     <td class="data">0</td>
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
+                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -144,6 +149,8 @@
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data">0</td>
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
@@ -171,6 +178,8 @@
                                     <td class="data">0</td>
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
+                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -194,6 +203,8 @@
                                     <td class="data">0</td>
                                     <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
+                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -203,6 +214,8 @@
                                 </tr>
                                 <tr>
                                     <td class="bold">Total</td>
+                                    <td class="data">0</td>
+                                    <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -349,7 +362,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold data">Today</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -495,7 +508,7 @@
                 });
                 $pLastTr.find('td:eq(8)').html(t.toFixed(2));
                 x = t / $pLastTr.find('td:eq(3)').html() * 100;
-                $pLastTr.find('td:eq(9)').html(isNaN(x) ? '0.00' : x.toFixed(0));
+                $pLastTr.find('td:eq(9)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 updateTotalFM();
             });
 
@@ -524,17 +537,18 @@
                     $(this).parent().next().html(($(this).val() * 40).toFixed(0));
                     wos = parseFloat($(this).parent().prev().children().val());
                     x = ((parseFloat($(this).val()) + parseFloat($(this).parent().next().next().children().val())) * 40) * 100 / wos;
-                    $(this).parent().parent().find('td:eq(15)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+                    $(this).parent().parent().find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 });
                 $pLastTr.find('td:eq(11)').html(t.toFixed(2));
                 $pLastTr.find('td:eq(12)').html(tk.toFixed(0));
-                $pLastTr.find('td:eq(15)').html(((tk + parseFloat($pLastTr.find('td:eq(14)').html())) * 100 / $pLastTr.find('td:eq(10)').html()).toFixed(2));
+                x = ((tk + parseFloat($pLastTr.find('td:eq(14)').html())) * 100 / $pLastTr.find('td:eq(10)').html());
+                $pLastTr.find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 updateTotalFM();
             });
 
-            // BIND | to direct rendering sack from second pass
+            // BIND | to direct rendering sack from high protein
             $('#process tr td:nth-child(14) > input').bind('keyup change', function() {
-                console.log("[EVENTS| BIND | to direct rendering sack from second pass");
+                console.log("[EVENTS| BIND | to direct rendering sack from high protein");
                 var t = 0, tk = 0, wos = 0, x = 0,
                         $i = $('#process tr td:nth-child(14) > input');
 
@@ -544,13 +558,34 @@
                     $(this).parent().next().html(($(this).val() * 40).toFixed(0));
                     wos = parseFloat($(this).parent().parent().find('td:eq(10) input').val());
                     x = ((parseFloat($(this).val()) + parseFloat($(this).parent().prev().prev().children().val())) * 40) * 100 / wos;
-                    $(this).parent().parent().find('td:eq(15)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+                    $(this).parent().parent().find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 });
                 $pLastTr.find('td:eq(13)').html(t.toFixed(2));
                 $pLastTr.find('td:eq(14)').html(tk.toFixed(0));
                 x = (tk + parseFloat($pLastTr.find('td:eq(12)').html())) * 100 / $pLastTr.find('td:eq(10)').html();
-                $pLastTr.find('td:eq(15)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+                $pLastTr.find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 updateTotalFM();
+            });
+
+            // BIND | direct rendering sack from second pass
+            $('#process tr td:nth-child(16) > input').bind('keyup change', function() {
+                var tSacks = 0, tKgs = 0;
+
+                // UPDATE | kilograms
+                $(this).parent().next().html(($(this).val() * 40).toFixed(2));
+
+                $('#process tr:not(:last-child) td:nth-child(16)').each(function() {
+                    if (parseFloat($(this).children().val()) !== 0 && parseFloat($(this).next().html()) === 0) {
+                        $(this).next().html((parseFloat($(this).children().val()) * 40).toFixed(2));
+                    }
+
+                    tSacks = tSacks + parseFloat($(this).children().val());
+                    tKgs = tKgs + parseFloat($(this).next().html());
+                });
+
+                // UPDATE | total sack and kilogram and summary second pass
+                $pLastTr.find('td:eq(15)').html(tSacks.toFixed(2)).next().html(tKgs.toFixed(2));
+                $('#spSack').html(tSacks.toFixed(2)).next().html(tKgs.toFixed(2));
             });
 
             /* -------------------------------------------------------------- */
@@ -602,16 +637,81 @@
 
             /* -------------------------------------------------------------- */
 
-            // BIND | to stock inventory standart fish meal quantity
-            $('#stock tr td:nth-child(2) > input').bind('keyup change', function() {
-                var qty = new Array(0, 0, 0, 0, 0, 0),
-                        s = $(this).data('sack') - $(this).val(),
-                        $s = $('#stock');
-                $(this).parent().next().html(($(this).val() * 40).toFixed(2))
-                        .next().html(s)
-                        .next().html(s * 40);
+            function dataRecalculate() {
+                console.log("[EVENTS| dataRecalculate");
+                $('#process tr:eq(0) input:lt(8)').trigger('keyup');
+                $('#breakdown tr:eq(0) input:lt(2)').trigger('keyup');
+                $('#spSack').trigger('keyup');
 
-                qty[0] = qty[0] + parseFloat($s.find('tr:eq(0) td:eq(1)').html()) + parseFloat($s.find('tr:eq(1) td:eq(1) > input').val());
+                setTimeout(function() {
+                    if ($('#stock tr:eq(0) td:eq(1)').html() === '0') {
+                        $('#prepareData').trigger('click');
+                    }
+                }, 1000);
+            }
+
+            function updateTotalScraps() {
+                console.log("[EVENTS| updateTotalScraps");
+                $('#process tr').each(function(i) {
+                    var x = 0;
+
+                    // TRIGGER | fish meal sack to recalculate any changes
+                    $(this).find('td:eq(5) > input,td:eq(11) > input,td:eq(13) > input').trigger('keyup');
+
+                    if (i !== 4) {
+                        x = parseFloat($(this).find('td:eq(3) > input').val()) + parseFloat($(this).find('td:eq(10) > input').val());
+                    } else {
+                        x = parseFloat($(this).find('td:eq(3)').html()) + parseFloat($(this).find('td:eq(10)').html());
+                    }
+                    $(this).find('td:eq(18)').html(x.toFixed(2));
+
+                    if (i !== 4) {
+                        x = x * 100 / $(this).find('td:eq(1) > input').val();
+                    } else {
+                        x = x * 100 / $(this).find('td:eq(1)').html();
+                    }
+                    $(this).find('td:eq(19)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+                });
+                updateTotalFM();
+            }
+
+            function updateTotalFM() {
+                console.log("[EVENTS| updateTotalFM");
+                var x = 0, fo = 0, hp = 0;
+                $('#process tr').each(function(i) {
+                    if (i !== 4) {
+                        x = parseFloat($(this).find('td:eq(5) > input').val()) + parseFloat($(this).find('td:eq(11) > input').val()) + parseFloat($(this).find('td:eq(13) > input').val());
+                    } else {
+                        x = parseFloat($(this).find('td:eq(5)').html()) + parseFloat($(this).find('td:eq(11)').html()) + parseFloat($(this).find('td:eq(13)').html());
+                        fo = parseFloat($(this).find('td:eq(8)').html());
+                    }
+                    $(this).find('td:eq(20)').html(x.toFixed(2));
+
+                    x = parseFloat($(this).find('td:eq(6)').html()) + parseFloat($(this).find('td:eq(12)').html()) + parseFloat($(this).find('td:eq(14)').html());
+                    $(this).find('td:eq(21)').html(x.toFixed(0));
+
+                    x = x * 100 / $(this).find('td:eq(18)').html();
+                    $(this).find('td:eq(22)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+                });
+
+                x = parseFloat($pLastTr.find('td:eq(11)').html()) + parseFloat($pLastTr.find('td:eq(5)').html());
+                hp = $pLastTr.find('td:eq(13)').html();
+                fo = $pLastTr.find('td:eq(8)').html();
+                $('#stock tr:eq(1) > td:eq(1)').html(x)
+                        .next().html(x * 40)
+                        .next().html(hp)
+                        .next().html(hp * 40)
+                        .next().next().html((fo / 180).toFixed(2))
+                        .next().html(fo);
+
+                updateEnding();
+            }
+
+            function updateEnding() {
+                var qty = new Array(0, 0, 0, 0, 0, 0),
+                        $s = $('#stock');
+
+                qty[0] = qty[0] + parseFloat($s.find('tr:eq(0) td:eq(1)').html()) + parseFloat($s.find('tr:eq(1) td:eq(1)').html());
                 qty[1] = qty[1] + parseFloat($s.find('tr:eq(0) td:eq(2)').html()) + parseFloat($s.find('tr:eq(1) td:eq(2)').html());
                 qty[2] = qty[2] + parseFloat($s.find('tr:eq(0) td:eq(3)').html()) + parseFloat($s.find('tr:eq(1) td:eq(3)').html());
                 qty[3] = qty[3] + parseFloat($s.find('tr:eq(0) td:eq(4)').html()) + parseFloat($s.find('tr:eq(1) td:eq(4)').html());
@@ -640,80 +740,6 @@
                         $s.find('tr:last-child td:eq(' + (i + 2) + ')').html(qty[i].toFixed(2));
                     }
                 }
-            });
-
-            /* -------------------------------------------------------------- */
-            $('#spSack').bind('keyup change', function() {
-                $(this).next().html(($(this).val() * 40).toFixed(2));
-            });
-
-            function dataRecalculate() {
-                console.log("[EVENTS| dataRecalculate");
-                $('#process tr:eq(0) input:lt(7)').trigger('keyup');
-                $('#breakdown tr:eq(0) input:lt(2)').trigger('keyup');
-                $('#spSack').trigger('keyup');
-
-                setTimeout(function() {
-                    if ($('#stock tr:eq(0) td:eq(1)').html() === '0') {
-                        $('#prepareData').trigger('click');
-                    }
-                }, 1000);
-            }
-
-            function updateTotalScraps() {
-                console.log("[EVENTS| updateTotalScraps");
-                $('#process tr').each(function(i) {
-                    var x = 0;
-
-                    // TRIGGER | fish meal sack to recalculate any changes
-                    $(this).find('td:eq(5) > input,td:eq(11) > input,td:eq(13) > input').trigger('keyup');
-
-                    if (i !== 4) {
-                        x = parseFloat($(this).find('td:eq(3) > input').val()) + parseFloat($(this).find('td:eq(10) > input').val());
-                    } else {
-                        x = parseFloat($(this).find('td:eq(3)').html()) + parseFloat($(this).find('td:eq(10)').html());
-                    }
-                    $(this).find('td:eq(16)').html(x.toFixed(2));
-
-                    if (i !== 4) {
-                        x = x * 100 / $(this).find('td:eq(1) > input').val();
-                    } else {
-                        x = x * 100 / $(this).find('td:eq(1)').html();
-                    }
-                    $(this).find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
-                });
-                updateTotalFM();
-            }
-
-            function updateTotalFM() {
-                console.log("[EVENTS| updateTotalFM");
-                var x = 0, fo = 0;
-                $('#process tr').each(function(i) {
-                    if (i !== 4) {
-                        x = parseFloat($(this).find('td:eq(5) > input').val()) + parseFloat($(this).find('td:eq(11) > input').val()) + parseFloat($(this).find('td:eq(13) > input').val());
-                    } else {
-                        x = parseFloat($(this).find('td:eq(5)').html()) + parseFloat($(this).find('td:eq(11)').html()) + parseFloat($(this).find('td:eq(13)').html());
-                        fo = parseFloat($(this).find('td:eq(8)').html());
-                    }
-                    $(this).find('td:eq(18)').html(x.toFixed(2));
-
-                    x = parseFloat($(this).find('td:eq(6)').html()) + parseFloat($(this).find('td:eq(12)').html()) + parseFloat($(this).find('td:eq(14)').html());
-                    $(this).find('td:eq(19)').html(x.toFixed(0));
-
-                    x = x * 100 / $(this).find('td:eq(16)').html();
-                    $(this).find('td:eq(20)').html(isNaN(x) ? '0.00' : x.toFixed(2));
-                });
-
-                x = $pLastTr.find('td:eq(18)').html();
-                fo = $pLastTr.find('td:eq(8)').html();
-                $('#stock input').data('sack', x).val(x).parent()
-                        .next().html(x * 40)
-                        .next().html(0)
-                        .next().html(0)
-                        .next().next().html((fo / 180).toFixed(2))
-                        .next().html(fo);
-
-                $('#stock input').trigger('keyup');
             }
 
             // TRIGGER | binding events
@@ -754,7 +780,7 @@
                 var data = '';
                 if ($('#prepareData').attr('disabled') === 'disabled') {
                     // PREPARE | data for master fish meal and fish oil
-                    data = $('#date').val() + '^' + $('#spSack').val() + '^' + $('#spSack').next().html() + '^@*';
+                    data = $('#date').val() + '^' + $('#spSack').html() + '^' + $('#spSack').next().html() + '^@*';
 
                     // PREPARE | data for master remark
                     var remarks = $('#remarks').val().split(/\n/);
@@ -784,7 +810,7 @@
 
                     // PREPARE | data for stock
                     $('#stock tr').each(function(i) {
-                        data = data + $(this).find('td:eq(0)').html() + '^' + (i === 1 ? $(this).find('td:eq(1) > input').val() : $(this).find('td:eq(1)').html()) + '^'
+                        data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^'
                                 + $(this).find('td:eq(2)').html() + '^' + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(4)').html() + '^'
                                 + $(this).find('td:eq(5)').html() + '^' + $(this).find('td:eq(6)').html() + '^' + $(this).find('td:eq(7)').html() + '^@';
                     });
@@ -795,17 +821,19 @@
                         if (i <= 3) {
                             data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^'
                                     + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(5) > input').val() + '^' + $(this).find('td:eq(8) > input').val() + '^'
-                                    + $(this).find('td:eq(10) > input').val() + '^' + $(this).find('td:eq(11) > input').val() + '^' + $(this).find('td:eq(13) > input').val() + '^@';
+                                    + $(this).find('td:eq(10) > input').val() + '^' + $(this).find('td:eq(11) > input').val() + '^' + $(this).find('td:eq(13) > input').val() + '^'
+                                    + $(this).find('td:eq(15) > input').val() + '^@';
                         } else {
                             data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^'
                                     + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(5)').html() + '^' + $(this).find('td:eq(8)').html() + '^'
-                                    + $(this).find('td:eq(10)').html() + '^' + $(this).find('td:eq(11)').html() + '^' + $(this).find('td:eq(13)').html() + '^@';
+                                    + $(this).find('td:eq(10)').html() + '^' + $(this).find('td:eq(11)').html() + '^' + $(this).find('td:eq(13)').html() + '^'
+                                    + $(this).find('td:eq(15)').html() + '^@';
                         }
                     });
                     data = data + '*#';
                 }
 
-//                console.log(encodeURIComponent(data));
+                console.log(encodeURIComponent(data));
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
                         window.location.replace("?action=save&data=" + encodeURIComponent(data));
