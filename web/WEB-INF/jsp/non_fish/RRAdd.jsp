@@ -155,10 +155,10 @@
                         return false;
                     }
 
-                    data = data + $("#rrCode").val() + "," + $("#rrDate").val() + "," + $("#poCode").val() + ","
-                            + $("#from").val() + "," + $("#remarks").val() + ","
-                            + $r.data("prs") + "," + $r.find("td:eq(2)").html() + "," + $r.find("td:eq(3)").html() + ","
-                            + $r.find(".qtyGood").val() + "," + $r.find(".qtyBad").val() + "," + $r.find("td:eq(5)").html() + ",@";
+                    data = data + $("#rrCode").val() + "^" + $("#rrDate").val() + "^" + $("#poCode").val() + "^"
+                            + $("#from").val() + "^" + $("#remarks").val() + "^"
+                            + $r.data("prs") + "^" + $r.find("td:eq(2)").html() + "^" + $r.find("td:eq(3)").html() + "^"
+                            + $r.find(".qtyGood").val() + "^" + $r.find(".qtyBad").val() + "^" + $r.find("td:eq(5)").html() + "^@";
                 });
 
                 if (data !== "") {
@@ -184,8 +184,8 @@
                         for (var i = 0; i < json.length; i++) {
                             $('#main').append('<tr data-prs="' + json[i][1] + '" data-qty="' + json[i][5].replace(/,/g, "") + '"><td><input title="Receive this item" type="checkbox" /></td><td>' +
                                     json[i][3] + '</td><td>' + json[i][2] + '</td><td>' + json[i][4] + '</td><td>' +
-                                    json[i][5] + '</td><td>' + json[i][6] + '</td><td><input class="qtyGood" size="2" type="text" value="0" style="font-size: x-small;" /></td><td>' +
-                                    '<input class="qtyBad" size="2" type="text" value="0" style="font-size: x-small;" /></td></tr>');
+                                    json[i][5] + '</td><td>' + json[i][6] + '</td><td><input class="qtyGood" size="10" type="text" value="0" style="font-size: x-small;" /></td><td>' +
+                                    '<input class="qtyBad" size="10" type="text" value="0" style="font-size: x-small;" /></td></tr>');
                         }
                     },
                     complete: function() {
