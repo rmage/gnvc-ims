@@ -1,7 +1,9 @@
 package com.spfi.ims.controller;
 
+import com.app.wms.engine.db.dao.FishDao;
 import com.app.wms.engine.db.dao.FishRrDao;
 import com.app.wms.engine.db.dao.FishStorageDao;
+import com.app.wms.engine.db.dto.Fish;
 import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DaoException;
@@ -36,59 +38,82 @@ public class FishAirBlastFreezingController extends MultiActionController {
         HashMap<String, Object> model = new HashMap<String, Object>();
         
         /* DAO | Define needed dao here */
+        FishDao fishDao = DaoFactory.createFishDao();
         FishStorageDao fishStorageDao = DaoFactory.createFishStorageDao();
         
         /* TRANSACTION | Something complex here */
+        List<Fish> fishes = fishDao.findAllActive();
         List<FishStorage> fishStorages = fishStorageDao.findAllActive();
+        
+        model.put("f", fishes);
         model.put("cs", fishStorages);
         
         return new ModelAndView("default/fish/AirBlastFreezingAdd", "model", model);
     }
     
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse
-            response) {
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
         try {
             /* DATA | get initial value */
-            String[] header = request.getParameter("header").split(":", -1);
-            String[] details = request.getParameterValues("detail");
+            String data = request.getParameter("data");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             
             /* DAO | Define needed dao here */
             AirBlastFreezingDao abfDao = DaoFactory.createAirBlastFreezingDao();
             
             /* TRANSACTION | Something complex here */
-            AirBlastFreezing abf = new AirBlastFreezing();
-            abf.setAbfNo(header[0]);
-            abf.setAbfDate(sdf.parse(header[1]));
-            abf.setWsId(Integer.parseInt(header[2]));
-            abf.setStorageId(Integer.parseInt(header[3]));
-            abf.setBatchNo(header[4]);
-            abf.setRegu(header[5]);
-            abf.setTimeShift(header[6]);
-            abf.setTimeStart(header[7]);
-            abf.setTimeFinish(header[8]);
-            abf.setCreatedBy(lu.getUserId());
-            abf.setId(abfDao.insertH(abf));
-            
-            AirBlastFreezingDetail abfd = new AirBlastFreezingDetail();
-            abfd.setAbfId(abf.getId());
-            abfd.setCreatedby(lu.getUserId());
-            for(String x : details) {
-                String[] detail = x.split(":", -1);
-                abfd.setFishId(Integer.parseInt(detail[0]));
-                abfd.setTotalWeight(new BigDecimal(detail[1]));
-                if(abfd.getTotalWeight().compareTo(BigDecimal.ZERO) > 0) {
-                    abfDao.insertD(abfd, abf.getAbfNo(), abf.getBatchNo(), abf.getStorageId());
-                }
-            }
-            
+            abfDao.insert(data, lu.getUserId());
+
             return new ModelAndView("redirect:AirBlastFreezing.htm");
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ModelAndView("redirect:AirBlastFreezing.htm?action=create");
         }
     }
+    
+//    public ModelAndView save(HttpServletRequest request, HttpServletResponse
+//            response) {
+//        try {
+//            /* DATA | get initial value */
+//            String[] header = request.getParameter("header").split(":", -1);
+//            String[] details = request.getParameterValues("detail");
+//            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//            
+//            /* DAO | Define needed dao here */
+//            AirBlastFreezingDao abfDao = DaoFactory.createAirBlastFreezingDao();
+//            
+//            /* TRANSACTION | Something complex here */
+//            AirBlastFreezing abf = new AirBlastFreezing();
+//            abf.setAbfNo(header[0]);
+//            abf.setAbfDate(sdf.parse(header[1]));
+//            abf.setWsId(Integer.parseInt(header[2]));
+//            abf.setStorageId(Integer.parseInt(header[3]));
+//            abf.setBatchNo(header[4]);
+//            abf.setRegu(header[5]);
+//            abf.setTimeShift(header[6]);
+//            abf.setTimeStart(header[7]);
+//            abf.setTimeFinish(header[8]);
+//            abf.setCreatedBy(lu.getUserId());
+//            abf.setId(abfDao.insertH(abf));
+//            
+//            AirBlastFreezingDetail abfd = new AirBlastFreezingDetail();
+//            abfd.setAbfId(abf.getId());
+//            abfd.setCreatedby(lu.getUserId());
+//            for(String x : details) {
+//                String[] detail = x.split(":", -1);
+//                abfd.setFishId(Integer.parseInt(detail[0]));
+//                abfd.setTotalWeight(new BigDecimal(detail[1]));
+//                if(abfd.getTotalWeight().compareTo(BigDecimal.ZERO) > 0) {
+//                    abfDao.insertD(abfd, abf.getAbfNo(), abf.getBatchNo(), abf.getStorageId());
+//                }
+//            }
+//            
+//            return new ModelAndView("redirect:AirBlastFreezing.htm");
+//        } catch(Exception e) {
+//            e.printStackTrace();
+//            return new ModelAndView("redirect:AirBlastFreezing.htm?action=create");
+//        }
+//    }
     
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -109,13 +134,12 @@ public class FishAirBlastFreezingController extends MultiActionController {
             sb.append("{\"1\": \"").append(x.get("id")).append("\", ");
             sb.append("\"2\": \"").append(x.get("abf_no")).append("\", ");
             sb.append("\"3\": \"").append(x.get("abf_date")).append("\", ");
-            sb.append("\"4\": \"").append(x.get("ws_no")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("supplier")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("batch_no")).append("\", ");
-            sb.append("\"7\": \"").append(x.get("regu")).append("\", ");
-            sb.append("\"8\": \"").append(x.get("time_shift")).append("\", ");
-            sb.append("\"9\": \"").append(x.get("time_start")).append("\", ");
-            sb.append("\"10\": \"").append(x.get("time_finish")).append("\"}");
+            sb.append("\"4\": \"").append(x.get("supplier")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("batch_no")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("regu")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("time_shift")).append("\", ");
+            sb.append("\"8\": \"").append(x.get("time_start")).append("\", ");
+            sb.append("\"9\": \"").append(x.get("time_finish")).append("\"}");
 
             b = Boolean.TRUE;
         }

@@ -1,195 +1,52 @@
-<%@page import="java.util.Date"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="freemarker.template.SimpleDate"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
-        <title>IMS &there4; Weight Slip</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>IMS &therefore; Weight Slip</title>
         <%@include file="../metaheader.jsp" %>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#queryWsDate').datepicker({
-                    dateFormat: "dd/mm/yy"
-                });
-
-                $('#btnSearch').click(function() {
-                    var wsNo = $('#queryWsNo').val();
-                    var wsDate = $('#queryWsDate').val();
-
-                    if (wsDate != '') {
-                        location.href = "FishWs.htm?search=true&wsNo=" + wsNo + "&wsDate=" + wsDate;
-                    }
-                    else {
-                        location.href = "FishWs.htm?search=true&wsNo=" + wsNo;
-                    }
-                });
-
-                $('#btnCleanFilter').click(function() {
-                    location.href = "FishWs.htm";
-                });
-            });
-
-            function showDetails(selectedRow) {
-                var title = 'WS Details: ' + selectedRow.innerHTML;
-                var wsId = selectedRow.getAttribute('id');
-                $('#dtl-panel').fadeIn(500, function() {
-                    $.ajax({
-                        url: "FishWs.htm",
-                        data: "action=ajaxDocument&wsId=" + wsId,
-                        success: function(html) {
-                            $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
-                            $('#dtl-panel').append(html);
-                        },
-                        error: function(jqXHR, textStatus) {
-                            $('#dtl-panel').html('<b>' + title + '</b><hr style="margin-bottom: 0px" />');
-                            $('#dtl-panel').append(jqXHR + " - " + textStatus);
-                        }
-                    });
-                });
-            }
-        </script>
     </head>
     <body>
-        <%            com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch();
-            if (request.getSession().getAttribute("FishWsDataSearch") != null) {
-                criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishWsDataSearch");
-            }
-
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-            String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
-            String queryWsNo = m.get("queryWsNo") == null ? "" : (String) m.get("queryWsNo");
-            String queryWsDate = m.get("queryWsDate") == null ? "" : (String) m.get("queryWsDate");
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
-            <div id="dtl-panel" class="div-dtl" style="width: 99%; display: block;" ondblclick="csbShowDetail(0, 0)"></div>
-            <div id="content" style="display: none" class="span-24 last">
+            <div id="content" class="span-24 last">
                 <div class="box">
-                    <form action="FishWs.htm" method="post">
+                    <form action="FishWs.htm" id="search" method="post">
                         <table class="collapse tblForm row-select">
-                            <caption>IMS &there4; Weight Slip &there4; Search</caption>
+                            <caption>Weight Slip &therefore; Search</caption>
                             <tbody>
                                 <tr>
-                                    <td width="20%">
-                                        WS No
-                                    </td>
-                                    <td>
-                                        <input type="text" id="queryWsNo" name="wsNo" value="<%=queryWsNo%>"/>
-                                    </td>
-                                    <td>
-                                        Date
-                                    </td>
-                                    <td>
-                                        <input type="text" id="queryWsDate" name="wsDate" value="<%=queryWsDate%>" />
-                                    </td>
-                                    <td colspan="2">
-                                    </td>
-                                </tr>
-                                <tr>
+                                    <td style="width: 200px;">WS Number</td>
+                                    <td><input type="text" name="fw.ws_no" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="4">
-                                    <span class="style1">
-                                        <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
-                                    </span>
-                                    <label>
-                                        <input type="button" name="button" id="btnAdd" value="Add" />
-                                    </label>
-                                    <label>
-                                        <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
-                                    </label>
-                                </td>
-                                <td></td>
+                                <tr>
+                                    <td colspan="2">
+                                        <input type="submit" value="Search" name="btnSearch" />
+                                        <input type="button" value="Add" name="btnAdd" onclick="location.replace('FishWs.htm?action=create');" />
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </form>
-                    <table class="collapse tblForm row-select">
-                        <caption>IMS &there4; Weight Slip &there4; List</caption>
+                    <table class="collapse tblForm row-select" id="list">
+                        <caption>Weight Slip &therefore; List</caption>
                         <thead>
                             <tr>
-                                <td class="left">No</td>
-                                <td class="left">Action</td>
-                                <td class="left">WS No</td>
-                                <td class="left">WS Type</td>
-                                <td class="left">Batch No</td>
-                                <td class="left">Supplier Name</td>
-                                <td class="left">Date Created</td>
+                                <td style="width: 15px">No</td>
+                                <td style="width: 50px">Action</td>
+                                <td>WS No</td>
+                                <td>WS Date</td>
+                                <td>WS Type</td>
+                                <td>Batch No</td>
+                                <td>Supplier Name</td>
+                                <td>Creator</td>
                             </tr>
                         </thead>
-                        <tbody id="main">
-                            <c:if test="${model.fishWsData!=null}">
-                                <c:set scope="page" value="${((model.page-1)*model.paging)+1}" var="nomor"/>
-                                <c:forEach items="${model.fishWsData}" var="wsData">
-                                    <tr class="ganjil">
-                                        <td class="left" width="1%">
-                                            <c:out value="${nomor}" />
-                                            <c:set scope="page" value="${nomor+1}" var="nomor"/>
-                                        </td>
-
-                                        <c:url value="FishWs.htm" var="urlEdit">
-                                            <c:param name="wsDataId" value="${wsData.id}"/>
-                                            <c:param name="page" value="${model.page}" />
-                                            <c:param name="mode" value="edit"/>
-                                        </c:url>
-
-                                        <c:url value="FishWs.htm" var="urlDelete">
-                                            <c:param name="id" value="${wsData.id}"/>
-                                            <c:param name="page" value="${model.page}" />
-                                            <c:param name="action" value="inactivate"/>
-                                        </c:url>
-
-                                        <%--<c:url value="GeneralReport.htm" var="urlReportXLS">
-                                            <c:param name="wsId" value="${wsData.id}"/>
-                                            <c:param name="wsType" value="${wsData.wsType.code}" />
-                                            <c:param name="format" value="xls" />
-                                            <c:param name="action" value="getWsReportById"/>
-                                        </c:url>--%>
-
-                                        <td class="left" width="10%">
-                                            <a href='GenerateReport.htm?action=index&item=Fish${wsData.wsType.code}&type=xls&params=${wsData.id}'>
-                                                <img src="resources/images/printxls.jpg" width="16" height="16" alt="xls" /></a>&nbsp;&nbsp;
-                                            <a class="urlDelete" href='<c:out value="${urlDelete}"/>'>
-                                                <img src="resources/images/delete.gif" width="16" height="16" /></a>
-                                        </td>
-                                        <td class="left"><a id="${wsData.id}" onclick="showDetails(this)"><c:out value="${wsData.wsNo}"/></a></td>
-                                        <td class="left"><c:out value="${wsData.wsType.code}"/></td>
-                                        <td class="left"><c:out value="${wsData.vessel.batchNo}"/></td>
-                                        <td class="left"><c:out value="${wsData.vessel.supplier.name}"/></td>
-                                        <td class="left"><c:out value="${wsData.createdDate}"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                            <tr>
-                                <td colspan="7">
-                                    <span class="style1">
-                                        <c:if test="${model.page !=null && model.page > 1}">
-                                            <a href="FishWs.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
-                                                &lt;
-                                            </a>
-                                        </c:if>
-                                        &nbsp;page: <c:out value="${model.page}" />&nbsp;
-                                        <c:if test="${model.page < model.totalRows/model.paging}">
-                                            <a href="FishWs.htm?page=<c:out value="${model.page+1}"/><%=querySearch%>">
-                                                &gt;
-                                            </a>
-                                        </c:if>
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <td colspan="7">
-                                <span class="style1"></span>
-                            </td>
-                        </tfoot>
-
+                        <tbody id="main"></tbody>
+                        <tfoot></tfoot>
                     </table>
-
                 </div>
             </div>
             <div class="span-24 last border-top">
@@ -198,25 +55,18 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
-            $(function() {
-                $('#btnAdd').click(function() {
-                    location.href = 'FishWs.htm?action=create';
-                });
-
-                $('#btnEdit').click(function() {
-                    location.href = '';
-                });
-
-                $('.tab').hide();
-                $('#btnEdit').click(function() {
-                    $('.tab').show();
-                });
-
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
+        
+        <script>
+            util.initSearchForm($('#search'));
+            util.initListTable($('#list'), 'R_Fish_Weight Slip Report (xls)_1-3');
+            
+            $('#main tr td:nth-child(2)').live('mouseenter', function() {
+                var $o = $(this).find('a');
+                if($o.attr('href').indexOf('FishWS') < 0) {
+                    $o.attr('href', $o.attr('href').replace('Fish', 'Fish' + $(this).parent().find('td:eq(4)').html()));
+                }
             });
         </script>
-
+        
     </body>
-
 </html>

@@ -22,15 +22,19 @@ import com.app.wms.engine.db.dto.FishWds;
 import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 
 public class FishWdsController extends MultiActionController {
 
     private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
-        return new ModelAndView("fish/WDSDataList", "model", modelMap);
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
+        /* DATA | get initial value */
+        /* DAO | Define needed dao here */
+        /* TRANSACTION | Something complex here */
+        return new ModelAndView("fish/WDSDataList");
     }
 
     private HashMap<String, Object> searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -88,97 +92,26 @@ public class FishWdsController extends MultiActionController {
         modelMap.put("mode", "create");
         return new ModelAndView("fish/WDSDataAdd", "model", modelMap);
     }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            /* DATA | get initial value */
+            String data = request.getParameter("data");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
+            /* DAO | Define needed dao here */
+            FishWdsDao fwDao = DaoFactory.createFishWdsDao();
+            
+            /* TRANSACTION | Something complex here */
+            fwDao.insert2(data, lu.getUserId());
 
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        LoginUser user = (LoginUser) request.getSession().getAttribute("user");
-        String mode = request.getParameter("mode");
-        HashMap<String, Object> modelMap = new HashMap<String, Object>();
-
-        if (user == null) {
-            String msg = "You haven't login or your session has been expired! Please do login again";
-            modelMap.put("msg", msg);
-            return new ModelAndView("login", "model", modelMap);
-        } else {
-            String wdsNo = request.getParameter("wdsNo");
-            Date wdsDate = df.parse(request.getParameter("wdsDate"));
-            Integer vesselId = Integer.parseInt(request.getParameter("vesselId"));
-            String requestedBy = request.getParameter("requestedBy");
-            String approvedBy = request.getParameter("approvedBy");
-
-            FishWds dto = new FishWds();
-            dto.setWdsNo(wdsNo);
-            dto.setWdsDate(wdsDate);
-            dto.setVesselId(vesselId);
-            dto.setRequestedBy(requestedBy);
-            dto.setApprovedBy(approvedBy);
-            dto.setCreatedDate(new Date());
-            dto.setCreatedBy(user.getUserId());
-            dto.setIsActive("Y");
-            dto.setIsDelete("N");
-
-            FishWdsDao dao = DaoFactory.createFishWdsDao();
-            int wdsId = dao.insert(dto);
-            int totalData = Integer.valueOf(request.getParameter("totalData"));
-
-            for (int i = 1; i <= totalData; i++) {
-                int fishId = Integer.valueOf(request.getParameter("fishId" + i));
-                int storageId = Integer.valueOf(request.getParameter("storageId" + i));
-                Double qty = Double.valueOf(request.getParameter("qty" + i));
-                String uomCode = request.getParameter("uomCode" + i);
-                String description = request.getParameter("description" + i);
-
-                FishWdsDetail wdsDetail = new FishWdsDetail();
-                wdsDetail.setWdsId(wdsId);
-                wdsDetail.setFishId(fishId);
-                wdsDetail.setDescription(description);
-                wdsDetail.setStorageId(storageId);
-                wdsDetail.setQuantity(qty);
-                wdsDetail.setUomCode(uomCode);
-                wdsDetail.setCreatedDate(new Date());
-                wdsDetail.setCreatedBy(user.getUserId());
-                wdsDetail.setIsActive("Y");
-                wdsDetail.setIsDelete("N");
-
-                FishWdsDetailDao wdsDetailDao = DaoFactory.createFishWdsDetailDao();
-                wdsDetailDao.insert(wdsDetail);
-
-                //Cut fish balance in DB
-                FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
-                FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(
-                        vesselId, wdsDetail.getStorageId(), wdsDetail.getFishId());
-
-                Double newBalance = fishBalance.getBalance() - wdsDetail.getQuantity();
-                fishBalance.setBalance(newBalance);
-                fishBalanceDao.update(fishBalance.getId(), fishBalance);
-                /* GNVS | Deduct Fish Actual Balance */
-                dao.updateFishBalanceActual(vesselId, wdsDetail.getStorageId(), wdsDetail.getFishId(), new BigDecimal(wdsDetail.getQuantity()), BigDecimal.ZERO,
-                        user.getUserId(), wdsNo);
-
-                //insert balance history
-                Double currentBalance = fishBalance.getBalance();
-                FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
-                fishBalanceHistory.setDocNo(wdsNo);
-                fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
-                fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
-                fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0
-                        ? "FROZEN" : fishBalance.getStorage().getCode());
-                fishBalanceHistory.setQtyIn(Double.valueOf("0"));
-                fishBalanceHistory.setQtyOut(wdsDetail.getQuantity());
-                fishBalanceHistory.setBalance(currentBalance);
-                fishBalanceHistory.setCreatedDate(new Date());
-                fishBalanceHistory.setCreatedBy(user.getUserId());
-                fishBalanceHistory.setIsActive("Y");
-                fishBalanceHistory.setIsDelete("N");
-
-                FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
-                balanceHistoryDao.insert(fishBalanceHistory);
-            }
+            return new ModelAndView("redirect:FishWds.htm");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:FishWds.htm?action=create");
         }
-
-        modelMap = this.searchAndPaging(request, response);
-        return new ModelAndView("fish/WDSDataList", "model", modelMap);
     }
-
+    
     public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int id = Integer.valueOf(request.getParameter("id"));
         FishWdsDao dao = DaoFactory.createFishWdsDao();
@@ -189,6 +122,40 @@ public class FishWdsController extends MultiActionController {
 
         HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
         return new ModelAndView("fish/WDSDataList", "model", modelMap);
+    }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        /* DAO | Define needed dao here */
+        FishWdsDao fwDao = DaoFactory.createFishWdsDao();
+
+        /* TRANSACTION | Something complex here */
+        sb.append("{\"maxpage\": ").append(fwDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = fwDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("id")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("wds_no")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("batch_no")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("supplier")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("requested_by")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("approved_by")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
+
+            b = Boolean.TRUE;
+        }
+        sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
     }
 
     public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response)

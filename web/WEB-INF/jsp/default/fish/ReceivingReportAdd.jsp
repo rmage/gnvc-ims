@@ -102,7 +102,7 @@
             $('#dateShiftT').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#dateTo", altFormat: "yy-mm-dd"});
             $('#batchNo').autocomplete({
                 source: '?action=getBatchInfo',
-                minLength: 3,
+                minLength: 2,
                 select: function(event, ui) {
                     $('#batchNo').val(ui.item.batchNo);
                     $('#info').html(ui.item.boat + ' / ' + ui.item.supplier);

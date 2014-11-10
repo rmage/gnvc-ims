@@ -187,8 +187,8 @@ public class FishDaoImpl extends AbstractDAO
                 + "inner join fish_ws_detail fwd on fwd.ws_id = ws.id "
                 + "inner join fish f on f.id = fwd.fish_id "
                 + "inner join fish_type ft on ft.id = f.fish_type_id "
-                + "where fwt.code in ('WSHR','WSNR','WSL') and batch_no = ? ";
-
+                + "where batch_no = ? ";
+        // fwt.code in ('WSHR','WSNR','WSL') and 
         List<Fish> resultList = jdbcTemplate.query(query, this, batchNo);
         return resultList;
     }

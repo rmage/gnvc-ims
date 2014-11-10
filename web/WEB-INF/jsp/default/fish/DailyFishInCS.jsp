@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Fish Stock Card</title>
+        <title>IMS &therefore; Daily Inventory of Frozen Fish in Cold Storage</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>
@@ -18,21 +18,31 @@
                 <div class="box">
                     <form action="GenerateReport.htm" id="search" method="post">
                         <input type="hidden" name="action" value="index" />
-                        <input type="hidden" name="item" value="FishStockCard" />
+                        <input type="hidden" name="item" value="FishDailyInCS" />
                         <input type="hidden" name="type" value="xls" />
-                        <input type="hidden" id="params" name="params" value="<%=cDateH %>" />
+                        <input type="hidden" id="params" name="params" value="" />
+                        <input type="hidden" id="date" name="date" value="<%=cDateH%>">
                         <table class="collapse tblForm row-select">
                             <caption>Stock Card &therefore; Fish</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">As Of</td>
-                                    <td><input id="date" type="text" name="date" value="<%=cDate %>" /></td>
+                                    <td><input id="datePicker" type="text" name="datePicker" value="<%=cDate%>" /></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 200px;">Storage</td>
+                                    <td>
+                                        <select id="storage" name="storage">
+                                            <option value="%SPFI%">SPFI Storage</option>
+                                            <option value="%EXTERNAL%">External Storage</option>
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2">
-                                        <input type="submit" value="Generate Stock Card" name="btnGenerate" />
+                                        <input type="submit" value="Generate Stock Card" id="btnGenerate" name="btnGenerate" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -48,12 +58,16 @@
         </div>
 
         <script>
-            $('#date').datepicker({
+            $('#datePicker').datepicker({
                 changeMonth: true, 
                 changeYear: true, 
                 dateFormat: "dd/mm/yy", 
-                altField: "#params", 
+                altField: "#date", 
                 altFormat: "yy-mm-dd"
+            });
+            
+            $("#btnGenerate").bind("focus", function() {
+                $('#params').val($("#date").val() + ":" + $("#storage").val());
             });
         </script>
 

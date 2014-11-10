@@ -20,14 +20,17 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 
 public class FishSpoilageDataController extends MultiActionController {
 
     private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
-    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
-        return new ModelAndView("fish/FishSpoilageList", "model", modelMap);
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
+        /* DATA | get initial value */
+        /* DAO | Define needed dao here */
+        /* TRANSACTION | Something complex here */
+        return new ModelAndView("fish/FishSpoilageList");
     }
 
     private HashMap<String, Object> searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -123,53 +126,23 @@ public class FishSpoilageDataController extends MultiActionController {
 
         return new ModelAndView("fish/FishSpoilageAdd", "model", modelMap);
     }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            /* DATA | get initial value */
+            String data = request.getParameter("data");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
+            /* DAO | Define needed dao here */
+            FishSpoilageDao fsDao = DaoFactory.createFishSpoilageDao();
+            
+            /* TRANSACTION | Something complex here */
+            fsDao.insert2(data, lu.getUserId());
 
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
-
-        LoginUser user = (LoginUser) request.getSession().getAttribute("user");
-        HashMap<String, Object> modelMap = new HashMap<String, Object>();
-
-        if (user == null) {
-            String msg = "You haven't login or your session has been expired! Please do login again";
-            modelMap.put("msg", msg);
-
-            return new ModelAndView("login", "model", modelMap);
-        } else {
-            int totalData = Integer.valueOf(request.getParameter("totalData"));
-            Date dateShift = df.parse(request.getParameter("dateShift"));
-            String timeShift = request.getParameter("timeShift");
-            int vesselId = Integer.valueOf(request.getParameter("vesselId"));
-
-            for (int i = 1; i <= totalData; i++) {
-                String area = request.getParameter("area" + i);
-                int fishId = Integer.valueOf(request.getParameter("fishId" + i));
-                Double cookedWeight = Double.valueOf(request.getParameter("cookedWeight" + i));
-                Double rawWeight = Double.valueOf(request.getParameter("rawWeight" + i));
-                Double totalProcessed = Double.valueOf(request.getParameter("totalProcessed" + i));
-                String reason = request.getParameter("reason" + i);
-
-                FishSpoilage dto = new FishSpoilage();
-                dto.setCatcherNo(area);
-                dto.setDateShift(dateShift);
-                dto.setTimeShift(timeShift);
-                dto.setVesselId(vesselId);
-                dto.setFishId(fishId);
-                dto.setCookedWeight(cookedWeight);
-                dto.setRawWeight(rawWeight);
-                dto.setTotalProcessed(totalProcessed);
-                dto.setReason(reason);
-                dto.setCreatedDate(new Date());
-                dto.setCreatedBy(user.getUserId());
-                dto.setIsActive("Y");
-                dto.setIsDelete("N");
-
-                FishSpoilageDao dao = DaoFactory.createFishSpoilageDao();
-                dao.insert(dto);
-            }
-
-            modelMap = this.searchAndPaging(request, response);
-            return new ModelAndView("fish/FishSpoilageList", "model", modelMap);
+            return new ModelAndView("redirect:FishSpoilageData.htm");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:FishSpoilageData.htm?action=create");
         }
     }
 
@@ -211,6 +184,41 @@ public class FishSpoilageDataController extends MultiActionController {
 
         HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
         return new ModelAndView("fish/FishSpoilageList", "model", modelMap);
+    }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        /* DAO | Define needed dao here */
+        FishSpoilageDao fsDao = DaoFactory.createFishSpoilageDao();
+
+        /* TRANSACTION | Something complex here */
+        sb.append("{\"maxpage\": ").append(fsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = fsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("id")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("batch_no")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("date_shift")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("time_shift")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("cooked_weight")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("raw_weight")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("processed_weight")).append("\", ");
+            sb.append("\"8\": \"").append(x.get("created_by")).append("\"}");
+
+            b = Boolean.TRUE;
+        }
+        sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
     }
 
     public void getFishType(HttpServletRequest request, HttpServletResponse response)

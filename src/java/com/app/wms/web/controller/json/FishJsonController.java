@@ -145,8 +145,8 @@ public class FishJsonController extends MultiActionController {
                     fishBalance.getStorageId() == 0 ? "FRESH" : fishBalance.getStorage().getCode());
             dataObject.put("fishCode", fishBalance.getFish().getCode());
             dataObject.put("balance", decf.format(fishBalance.getBalance()));
-//            dataObject.put("fishDesc", fishBalance.getFish().getFishType().getDescription()
-//                    + " " + fishBalance.getFish().getFishWeightType().getDescription());
+            dataObject.put("fishDesc", fishBalance.getFish().getFishType().getDescription()
+                    + " " + fishBalance.getFish().getFishWeightType().getDescription());
 
             jsonArray.put(dataObject);
         }

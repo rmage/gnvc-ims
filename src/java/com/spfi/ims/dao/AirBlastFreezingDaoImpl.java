@@ -55,4 +55,8 @@ public class AirBlastFreezingDaoImpl extends AbstractDAO implements AirBlastFree
         }
     }
     
+    public void insert(String data, String createdBy) {
+        jdbcTemplate.update("EXEC F_ABF_INSERT2 ?, ?", data, createdBy);
+    }
+    
 }

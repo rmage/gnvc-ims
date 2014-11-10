@@ -55,4 +55,8 @@ public class BrineFreezingDaoImpl extends AbstractDAO implements BrineFreezingDa
         }
     }
     
+    public void insert(String data, String createdBy) {
+        jdbcTemplate.update("EXEC F_BF_INSERT2 ?, ?", data, createdBy);
+    }
+    
 }

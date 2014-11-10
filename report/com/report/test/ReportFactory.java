@@ -35,11 +35,15 @@ public class ReportFactory {
 //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
 //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         //  Fish Module | Form and Report List
-        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR, FishSumPerSupp, FishSumPerCS, FishStockCard, FishTS, FishBF, FishABF, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
+        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
+        , FishDailyInCS
         //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister
+        //  Non-Fish Module | Form and Report List
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod
-        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor
+        //  Finished Goods Module | Form and Report List
+        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGPts, FGOfal, FGLmr
+        //  Rendering Module | Form and Report List
         , RendDailyReport, RendSummaryReport, RendSales;
     }
 
@@ -70,24 +74,26 @@ public class ReportFactory {
         reportMap.put(Report.FishWssFrozen, reportTemplateMap.get("FishWssFrozen"));
         reportTemplateMap.put("FishRR", new ReportModel("fish/rr", false));
         reportMap.put(Report.FishRR, reportTemplateMap.get("FishRR"));
-        reportTemplateMap.put("FishSumPerSupp", new ReportModel("fish/sumpsupp", false));
-        reportMap.put(Report.FishSumPerSupp, reportTemplateMap.get("FishSumPerSupp"));
-        reportTemplateMap.put("FishSumPerCS", new ReportModel("fish/sumpcs", false));
-        reportMap.put(Report.FishSumPerCS, reportTemplateMap.get("FishSumPerCS"));
-        reportTemplateMap.put("FishStockCard", new ReportModel("fish/sc", false));
-        reportMap.put(Report.FishStockCard, reportTemplateMap.get("FishStockCard"));
+//        reportTemplateMap.put("FishSumPerSupp", new ReportModel("fish/sumpsupp", false));
+//        reportMap.put(Report.FishSumPerSupp, reportTemplateMap.get("FishSumPerSupp"));
+//        reportTemplateMap.put("FishSumPerCS", new ReportModel("fish/sumpcs", false));
+//        reportMap.put(Report.FishSumPerCS, reportTemplateMap.get("FishSumPerCS"));
+//        reportTemplateMap.put("FishStockCard", new ReportModel("fish/sc", false));
+//        reportMap.put(Report.FishStockCard, reportTemplateMap.get("FishStockCard"));
         reportTemplateMap.put("FishTS", new ReportModel("fish/ts", false));
         reportMap.put(Report.FishTS, reportTemplateMap.get("FishTS"));
         reportTemplateMap.put("FishBF", new ReportModel("fish/bf", false));
         reportMap.put(Report.FishBF, reportTemplateMap.get("FishBF"));
         reportTemplateMap.put("FishABF", new ReportModel("fish/abf", false));
         reportMap.put(Report.FishABF, reportTemplateMap.get("FishABF"));
-        reportTemplateMap.put("FishSumPerSuppActual", new ReportModel("fish/sumpsuppa", false));
-        reportMap.put(Report.FishSumPerSuppActual, reportTemplateMap.get("FishSumPerSuppActual"));
-        reportTemplateMap.put("FishSumPerCSActual", new ReportModel("fish/sumpcsa", false));
-        reportMap.put(Report.FishSumPerCSActual, reportTemplateMap.get("FishSumPerCSActual"));
-        reportTemplateMap.put("FishStockCardActual", new ReportModel("fish/sca", false));
-        reportMap.put(Report.FishStockCardActual, reportTemplateMap.get("FishStockCardActual"));
+//        reportTemplateMap.put("FishSumPerSuppActual", new ReportModel("fish/sumpsuppa", false));
+//        reportMap.put(Report.FishSumPerSuppActual, reportTemplateMap.get("FishSumPerSuppActual"));
+//        reportTemplateMap.put("FishSumPerCSActual", new ReportModel("fish/sumpcsa", false));
+//        reportMap.put(Report.FishSumPerCSActual, reportTemplateMap.get("FishSumPerCSActual"));
+//        reportTemplateMap.put("FishStockCardActual", new ReportModel("fish/sca", false));
+//        reportMap.put(Report.FishStockCardActual, reportTemplateMap.get("FishStockCardActual"));
+        reportTemplateMap.put("FishDailyInCS", new ReportModel("fish/dfics", false));
+        reportMap.put(Report.FishDailyInCS, reportTemplateMap.get("FishDailyInCS"));
         reportTemplateMap.put("FishWDS", new ReportModel("fish/wds", false));
         reportMap.put(Report.FishWDS, reportTemplateMap.get("FishWDS"));
         reportTemplateMap.put("FishRECC", new ReportModel("fish/fr", false));
@@ -149,6 +155,12 @@ public class ReportFactory {
         // Finished Goods Module | Form and Report List
         reportTemplateMap.put("FGBor", new ReportModel("finished_goods/bor", false));
         reportMap.put(Report.FGBor, reportTemplateMap.get("FGBor"));
+        reportTemplateMap.put("FGPts", new ReportModel("finished_goods/pts", false));
+        reportMap.put(Report.FGPts, reportTemplateMap.get("FGPts"));
+        reportTemplateMap.put("FGOfal", new ReportModel("finished_goods/ofal", false));
+        reportMap.put(Report.FGOfal, reportTemplateMap.get("FGOfal"));
+        reportTemplateMap.put("FGLmr", new ReportModel("finished_goods/lmr", false));
+        reportMap.put(Report.FGLmr, reportTemplateMap.get("FGLmr"));
         reportTemplateMap.put("FGPtsPerPeriod", new ReportModel("finished_goods/ptsr", false));
         reportMap.put(Report.FGPtsPerPeriod, reportTemplateMap.get("FGPtsPerPeriod"));
         reportTemplateMap.put("FGStockInventory", new ReportModel("finished_goods/fgir", false));

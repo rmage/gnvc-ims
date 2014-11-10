@@ -5,8 +5,12 @@
 <%@page import="com.app.wms.engine.db.dto.FishType"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%    Date cDate = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
+%>
+<!DOCTYPE html>
+<html>
     <head>
         <title>IMS &there4; Transfer Slip &there4; Create</title>
         <%@include file="../metaheader.jsp" %>
@@ -16,8 +20,12 @@
                     this.value = this.value.replace(/[^0-9.]/g, '');
                 });
 
-                $('#tsDate').datepicker({
-                    dateFormat: "dd/mm/yy"
+                $('#tsDatePicker').datepicker({
+                    dateFormat: "dd/mm/yy",
+                    altFormat: "yy-mm-dd",
+                    altField: "#tsDate",
+                    changeYear: true,
+                    changeMonth: true
                 });
 
                 $('#wdsNo').click(function() {
@@ -142,7 +150,6 @@
     </head>
     <body>
         <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
             String mode = (String) m.get("mode");
         %>
 
@@ -153,10 +160,11 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishTs.htm" method="post" name="form" id="addForm">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
-                        <input type="hidden" id="totalData" name="totalData" value="" />
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" id="vesselId" name="vesselId" value="0"/>
+                        <input type="hidden" name="mode" value="<%=mode%>">
+                        <input type="hidden" id="totalData" name="totalData" value="">
+                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" id="vesselId" name="vesselId" value="0">
+                        <input type="hidden" id="tsDate" name="tsDate" value="<%=sdf.format(cDate)%>">
                         <table class="collapse tblForm row-select">
                             <caption>Transfer Slip &there4; Header</caption>
                             <tbody class="tbl-nohover">                          
@@ -173,7 +181,7 @@
                                     <td class="style1">Date</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="tsDate" name="tsDate" value="<%=df.format(new Date())%>" size="30" class="text-input"/>
+                                            <input type="text" id="tsDatePicker" name="tsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -193,7 +201,7 @@
                                     <td class="style1">Issued By</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="issuedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="issuedBy" name="issuedBy" value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -211,7 +219,7 @@
                                     <td class="style1">Approved By</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="approvedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="approvedBy" name="approvedBy" value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -228,7 +236,7 @@
                                     <td class="style1">Received By</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="approvedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="receivedBy" name="receivedBy" value="" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -379,5 +387,25 @@
             "TS No." is not unique
         </div>          
 
+        <script>
+            $('#addForm').bind('submit', function() {
+                var data = '';
+
+                var header = $('#wdsId').val() + '^' + $('#vesselId').val() + '^' + $('#tsNo').val() + '^' + $('#tsDate').val() + '^'
+                        + $('#issuedBy').val() + '^' + $('#notedBy').val() + '^' + $('#approvedBy').val() + '^' + $('#receivedBy').val() + '^';
+
+                $('#main tbody tr').each(function() {
+                    data = data + header + $(this).find('input:eq(0)').val() + '^' + $(this).find('input:eq(4)').val() + '^' +
+                            $(this).find('input:eq(1)').val() + '^' + $(this).find('input:eq(2)').val() + '^' + $(this).find('input:eq(3)').val() + '^@';
+                });
+
+                if (data !== '') {
+                    window.location.replace("?action=save&data=" + encodeURIComponent(data));
+//                    console.log(encodeURIComponent(data));
+                }
+
+                return false;
+            });
+        </script>
     </body>
 </html>

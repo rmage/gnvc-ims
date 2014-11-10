@@ -20,204 +20,229 @@ import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.dto.FishWds;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class FishTsDaoImpl extends AbstractDAO implements
-		ParameterizedRowMapper<FishTs>, FishTsDao {
+        ParameterizedRowMapper<FishTs>, FishTsDao {
 
-	protected SimpleJdbcTemplate jdbcTemplate;
-	protected DataSource dataSource;
-	
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-		jdbcTemplate = new SimpleJdbcTemplate(dataSource);
-	}
-	
-	@Override
-	public int insert(FishTs dto) {
-		String query = "INSERT INTO " + getTableName() +
-				" (wds_id, vessel_id, ts_no, ts_date, issued_by, noted_by," +
-				" approved_by, received_by, created_date, created_by," +
-				" is_active, is_delete) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-		
-		SqlUpdate su = new SqlUpdate(dataSource, query);
-		su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-		su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.DATE));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
-		su.compile();
-		
-		su.update(new Object[] {dto.getWdsId(), dto.getVesselId(), dto.getTsNo(), dto.getTsDate(),
-				dto.getIssuedBy(), dto.getNotedBy(), dto.getApprovedBy(), dto.getReceivedBy(),
-				dto.getCreatedDate(), dto.getCreatedBy(), dto.getIsActive(), dto.getIsDelete()});
-		
-		int primaryKey = jdbcTemplate.queryForInt("SELECT @@IDENTITY");
-		return primaryKey;
-	}
+    protected SimpleJdbcTemplate jdbcTemplate;
+    protected DataSource dataSource;
 
-	@Override
-	public void update(int id, FishTs dto) throws DaoException {
-		String query = "UPDATE " + getTableName() +
-				" SET wds_id=?, vessel_id=?, ts_no=?, ts_date=?, issued_by=?, noted_by=?," +
-				" approved_by=?, received_by=?, updated_date=?, updated_by," +
-				" is_active=?, is_delete=? WHERE id=?";
-		
-		SqlUpdate su = new SqlUpdate(dataSource, query);
-		su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-		su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.DATE));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
-		su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
-		su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-		su.compile();
-		
-		su.update(new Object[] {dto.getWdsId(), dto.getVesselId(), dto.getTsNo(), dto.getTsDate(),
-				dto.getIssuedBy(), dto.getNotedBy(), dto.getApprovedBy(), dto.getReceivedBy(),
-				dto.getUpdatedDate(), dto.getUpdatedBy(), dto.getIsActive(), dto.getIsDelete(), id});
-	}
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+        jdbcTemplate = new SimpleJdbcTemplate(dataSource);
+    }
 
-	@Override
-	public void delete(int id) throws DaoException {
-		String query = "UPDATE " + getTableName() +
-				" SET is_active='N', is_delete='Y' WHERE id=?";
-		
-		jdbcTemplate.update(query, id);
-	}
+    @Override
+    public int insert(FishTs dto) {
+        String query = "INSERT INTO " + getTableName()
+                + " (wds_id, vessel_id, ts_no, ts_date, issued_by, noted_by,"
+                + " approved_by, received_by, created_date, created_by,"
+                + " is_active, is_delete) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
-	@Override
-	public FishTs findByPrimaryKey(int id) throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE id=?";
-		List<FishTs> resultList = jdbcTemplate.query(query, this, id);
-		
-		return resultList.size() == 0 ? null : resultList.get(0);
-	}
+        SqlUpdate su = new SqlUpdate(dataSource, query);
+        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
+        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.DATE));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
+        su.compile();
 
-	@Override
-	public List<FishTs> findAll() throws DaoException {
-		String query = "SELECT * FROM " + getTableName();
-		List<FishTs> resultList = jdbcTemplate.query(query, this);
-		
-		return resultList;
-	}
+        su.update(new Object[]{dto.getWdsId(), dto.getVesselId(), dto.getTsNo(), dto.getTsDate(),
+            dto.getIssuedBy(), dto.getNotedBy(), dto.getApprovedBy(), dto.getReceivedBy(),
+            dto.getCreatedDate(), dto.getCreatedBy(), dto.getIsActive(), dto.getIsDelete()});
 
-	@Override
-	public List<FishTs> findAllActive() throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y'";
-		List<FishTs> resultList = jdbcTemplate.query(query, this);
-		
-		return resultList;
-	}
-	
-	@Override
-	public List<FishTs> findAllAndPaging(int limit, int offset) {
-		String query = "DECLARE @LIMIT int, @OFFSET int " +
-				"SET @LIMIT = ? " +
-				"SET @OFFSET = ? " +
-				"SELECT * FROM ( " +
-				"	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"	FROM "+getTableName()+" WHERE is_active = 'Y' " +
-				") AS RowConstrainedResult " +
-				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
-				"ORDER BY RowNum";
-		
-		List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset);
-		return resultList;
-	}
+        int primaryKey = jdbcTemplate.queryForInt("SELECT @@IDENTITY");
+        return primaryKey;
+    }
 
-	@Override
-	public FishTs mapRow(ResultSet rs, int row) throws SQLException {
-		FishTs dto = new FishTs();
-		dto.setId(rs.getInt("id"));
-		dto.setWdsId(rs.getInt("wds_id"));
-		dto.setVesselId(rs.getInt("vessel_id"));
-		dto.setTsNo(rs.getString("ts_no"));
-		dto.setTsDate(rs.getDate("ts_date"));
-		dto.setIssuedBy(rs.getString("issued_by"));
-		dto.setNotedBy(rs.getString("noted_by"));
-		dto.setApprovedBy(rs.getString("approved_by"));
-		dto.setReceivedBy(rs.getString("received_by"));
-		dto.setCreatedDate(rs.getDate("created_date"));
-		dto.setCreatedBy(rs.getString("created_by"));
-		dto.setUpdatedDate(rs.getDate("updated_date"));
-		dto.setUpdatedBy(rs.getString("updated_by"));
-		dto.setIsActive(rs.getString("is_active"));
-		dto.setIsDelete(rs.getString("is_delete"));
-		
-		try {
-			FishWdsDao wdsDao = DaoFactory.createFishWdsDao();
-			FishWds withdrawalSlip = wdsDao.findByPrimaryKey(dto.getWdsId());
-			dto.setWithdrawalSlip(withdrawalSlip);
-			
-			FishVesselDao vesselDao = DaoFactory.createFishVesselDao();
-			FishVessel vessel = vesselDao.findByPrimaryKey(dto.getVesselId());
-			dto.setVessel(vessel);
-		}
-		catch (DaoException e) {
-			e.printStackTrace();
-		}
-		
-		return dto;
-	}
-	
-	public String getTableName() {
-		return "fish_ts";
-	}
+    @Override
+    public void update(int id, FishTs dto) throws DaoException {
+        String query = "UPDATE " + getTableName()
+                + " SET wds_id=?, vessel_id=?, ts_no=?, ts_date=?, issued_by=?, noted_by=?,"
+                + " approved_by=?, received_by=?, updated_date=?, updated_by,"
+                + " is_active=?, is_delete=? WHERE id=?";
 
-	@Override
-	public Boolean checkIsTsNoExist(String tsNo) {
-		String query = "SELECT * FROM fish_ts ts "
+        SqlUpdate su = new SqlUpdate(dataSource, query);
+        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
+        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.DATE));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
+        su.compile();
+
+        su.update(new Object[]{dto.getWdsId(), dto.getVesselId(), dto.getTsNo(), dto.getTsDate(),
+            dto.getIssuedBy(), dto.getNotedBy(), dto.getApprovedBy(), dto.getReceivedBy(),
+            dto.getUpdatedDate(), dto.getUpdatedBy(), dto.getIsActive(), dto.getIsDelete(), id});
+    }
+
+    @Override
+    public void delete(int id) throws DaoException {
+        String query = "UPDATE " + getTableName()
+                + " SET is_active='N', is_delete='Y' WHERE id=?";
+
+        jdbcTemplate.update(query, id);
+    }
+
+    @Override
+    public FishTs findByPrimaryKey(int id) throws DaoException {
+        String query = "SELECT * FROM " + getTableName() + " WHERE id=?";
+        List<FishTs> resultList = jdbcTemplate.query(query, this, id);
+
+        return resultList.size() == 0 ? null : resultList.get(0);
+    }
+
+    @Override
+    public List<FishTs> findAll() throws DaoException {
+        String query = "SELECT * FROM " + getTableName();
+        List<FishTs> resultList = jdbcTemplate.query(query, this);
+
+        return resultList;
+    }
+
+    @Override
+    public List<FishTs> findAllActive() throws DaoException {
+        String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y'";
+        List<FishTs> resultList = jdbcTemplate.query(query, this);
+
+        return resultList;
+    }
+
+    @Override
+    public List<FishTs> findAllAndPaging(int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int "
+                + "SET @LIMIT = ? "
+                + "SET @OFFSET = ? "
+                + "SELECT * FROM ( "
+                + "	SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * "
+                + "	FROM " + getTableName() + " WHERE is_active = 'Y' "
+                + ") AS RowConstrainedResult "
+                + "WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT "
+                + "ORDER BY RowNum";
+
+        List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset);
+        return resultList;
+    }
+
+    @Override
+    public FishTs mapRow(ResultSet rs, int row) throws SQLException {
+        FishTs dto = new FishTs();
+        dto.setId(rs.getInt("id"));
+        dto.setWdsId(rs.getInt("wds_id"));
+        dto.setVesselId(rs.getInt("vessel_id"));
+        dto.setTsNo(rs.getString("ts_no"));
+        dto.setTsDate(rs.getDate("ts_date"));
+        dto.setIssuedBy(rs.getString("issued_by"));
+        dto.setNotedBy(rs.getString("noted_by"));
+        dto.setApprovedBy(rs.getString("approved_by"));
+        dto.setReceivedBy(rs.getString("received_by"));
+        dto.setCreatedDate(rs.getDate("created_date"));
+        dto.setCreatedBy(rs.getString("created_by"));
+        dto.setUpdatedDate(rs.getDate("updated_date"));
+        dto.setUpdatedBy(rs.getString("updated_by"));
+        dto.setIsActive(rs.getString("is_active"));
+        dto.setIsDelete(rs.getString("is_delete"));
+
+        try {
+            FishWdsDao wdsDao = DaoFactory.createFishWdsDao();
+            FishWds withdrawalSlip = wdsDao.findByPrimaryKey(dto.getWdsId());
+            dto.setWithdrawalSlip(withdrawalSlip);
+
+            FishVesselDao vesselDao = DaoFactory.createFishVesselDao();
+            FishVessel vessel = vesselDao.findByPrimaryKey(dto.getVesselId());
+            dto.setVessel(vessel);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+
+        return dto;
+    }
+
+    public String getTableName() {
+        return "fish_ts";
+    }
+
+    @Override
+    public Boolean checkIsTsNoExist(String tsNo) {
+        String query = "SELECT * FROM fish_ts ts "
                 + "WHERE ts.ts_no = ? "
                 + "UNION ALL "
                 + "SELECT 0, * FROM fish_bad_stock fbs "
                 + "WHERE fbs.bs_no = ?";
-        
-		List<FishTs> resultList = jdbcTemplate.query(query, this, tsNo, tsNo);
-		return resultList.size() == 0 ? false : true;
-	}
 
-	@Override
-	public List<FishTs> searchAndPaging(String tsNo, Date tsDate, int limit, int offset) {
-		String query = "DECLARE @LIMIT int, @OFFSET int " +
-				"SET @LIMIT = ? " +
-				"SET @OFFSET = ? " +
-				"SELECT * FROM ( " +
-				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM fish_ts WHERE ts_no LIKE ? AND ts_date = ? AND is_active = 'Y' ) " +
-				"AS RowConstrainedResult " +
-				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
-				"ORDER BY RowNum";
-		
-		List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+tsNo+"%", tsDate);
-		return resultList;
-	}
+        List<FishTs> resultList = jdbcTemplate.query(query, this, tsNo, tsNo);
+        return resultList.size() == 0 ? false : true;
+    }
+
+    @Override
+    public List<FishTs> searchAndPaging(String tsNo, Date tsDate, int limit, int offset) {
+        String query = "DECLARE @LIMIT int, @OFFSET int "
+                + "SET @LIMIT = ? "
+                + "SET @OFFSET = ? "
+                + "SELECT * FROM ( "
+                + "SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * "
+                + "FROM fish_ts WHERE ts_no LIKE ? AND ts_date = ? AND is_active = 'Y' ) "
+                + "AS RowConstrainedResult "
+                + "WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT "
+                + "ORDER BY RowNum";
+
+        List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset, "%" + tsNo + "%", tsDate);
+        return resultList;
+    }
 
     public List<FishTs> searchAndPagingWithoutDate(String tsNo, int limit, int offset) {
-        String query = "DECLARE @LIMIT int, @OFFSET int " +
-				"SET @LIMIT = ? " +
-				"SET @OFFSET = ? " +
-				"SELECT * FROM ( " +
-				"SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * " +
-				"FROM fish_ts WHERE ts_no LIKE ? AND is_active = 'Y' ) " +
-				"AS RowConstrainedResult " +
-				"WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT " +
-				"ORDER BY RowNum";
-		
-		List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset, "%"+tsNo+"%");
-		return resultList;
+        String query = "DECLARE @LIMIT int, @OFFSET int "
+                + "SET @LIMIT = ? "
+                + "SET @OFFSET = ? "
+                + "SELECT * FROM ( "
+                + "SELECT ROW_NUMBER() OVER (ORDER BY id DESC) AS RowNum, * "
+                + "FROM fish_ts WHERE ts_no LIKE ? AND is_active = 'Y' ) "
+                + "AS RowConstrainedResult "
+                + "WHERE RowNum >= @OFFSET AND RowNum < @OFFSET + @LIMIT "
+                + "ORDER BY RowNum";
+
+        List<FishTs> resultList = jdbcTemplate.query(query, this, limit, offset, "%" + tsNo + "%");
+        return resultList;
+    }
+
+    // UPDATE | FYA | October 28, 2014
+    public int ajaxMaxPage(BigDecimal show, String where) {
+        try {
+            return jdbcTemplate.queryForInt("EXEC F_TRANSFER_MAX_PAGE ?, ?", show, where);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
+
+    public void insert2(String data, String createdBy) {
+        jdbcTemplate.update("EXEC F_TRANSFER_INSERT ?, ?", data, createdBy);
+    }
+
+    public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
+        try {
+            return jdbcTemplate.queryForList("EXEC F_TRANSFER_LIST ?, ?, ?, ?", page, show, where, order);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
     }
 
 }

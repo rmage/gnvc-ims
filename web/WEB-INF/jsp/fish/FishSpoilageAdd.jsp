@@ -1,8 +1,9 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="com.app.wms.engine.db.dto.FishType"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%    Date cDate = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -11,8 +12,12 @@
         <script language="JavaScript">
             $(document).ready(function() {
 
-                $('#dateShift').datepicker({
-                    dateFormat: "dd/mm/yy"
+                $('#dateShiftPicker').datepicker({
+                    dateFormat: "dd/mm/yy",
+                    altFormat: "yy-mm-dd",
+                    altField: "#dateShift",
+                    changeYear: true,
+                    changeMonth: true
                 });
 
                 $('#batchNo').click(function() {
@@ -76,7 +81,7 @@
                         });
 
                         $("#dialog-spoilage").dialog({
-                            width: 500,
+                            width: 545,
                             height: 400,
                             position: "center",
                             modal: true,
@@ -144,25 +149,23 @@
         </script>
     </head>
     <body>
-        <%            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        %>
-
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishSpoilageData.htm" method="post" name="form" id="addForm">
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="isActive" value="Y"/>
-                        <input type="hidden" id="totalData" name="totalData" value="0"/>
+                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" name="isActive" value="Y">
+                        <input type="hidden" id="totalData" name="totalData" value="0">
+                        <input type="hidden" id="dateShift" name="dateShift" value="<%=sdf.format(cDate)%>">
                         <table class="collapse tblForm row-select">
                             <caption>Fish Spoilage &there4; Header</caption>
                             <tbody>
                                 <tr>
                                     <td width="30%">Date</td>
                                     <td>:</td>
-                                    <td><input type="text" id="dateShift" name="dateShift" value="<%=df.format(new Date())%>" 
+                                    <td><input type="text" id="dateShiftPicker" name="dateShiftPicker" value="<%=sdfPicker.format(cDate)%>" 
                                                readonly="readonly" size="30" class="validate[required] text-input"/></td>
                                 </tr>
                                 <tr>
@@ -170,7 +173,7 @@
                                     <td>:</td>
                                     <td>
                                         <label>    
-                                            <select name="timeShift">
+                                            <select id="timeShift" name="timeShift">
                                                 <option value="07-15">07:00 - 15:00</option>
                                                 <option value="15-23">15:00 - 23:00</option>
                                                 <option value="23-07">23:00 - 07:00</option>
@@ -384,7 +387,26 @@
 
         <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
             Please to fill mandatory data
-        </div>            
+        </div>
 
+        <script>
+            $('#addForm').bind('submit', function() {
+                var data = '';
+
+                var header = $('#dateShift').val() + '^' + $('#timeShift').val() + '^' + $('#vesselId').val() + '^';
+
+                $('#main tbody tr').each(function() {
+                    data = data + $(this).find('input:eq(0)').val() + '^' + header + $(this).find('input:eq(1)').val() + '^' +
+                            $(this).find('input:eq(2)').val() + '^' + $(this).find('input:eq(3)').val() + '^' + $(this).find('input:eq(4)').val() + '^' + $(this).find('input:eq(5)').val() + '^~';
+                });
+
+                if (data !== '') {
+                    window.location.replace("?action=save&data=" + encodeURIComponent(data));
+//                    console.log(encodeURIComponent(data));
+                }
+
+                return false;
+            });
+        </script>
     </body>
 </html>

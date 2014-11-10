@@ -29,15 +29,20 @@ import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.math.BigDecimal;
 
 public class FishWsController extends MultiActionController {
+    
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
+        /* DATA | get initial value */
+        /* DAO | Define needed dao here */
+        /* TRANSACTION | Something complex here */
+        return new ModelAndView("fish/WSDataList");
+    }
 
     private final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
-        return new ModelAndView("fish/WSDataList", "model", modelMap);
-    }
 
     private HashMap<String, Object> searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
@@ -121,157 +126,23 @@ public class FishWsController extends MultiActionController {
 
         return new ModelAndView("fish/WSDataAdd", "model", modelMap);
     }
+    
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            /* DATA | get initial value */
+            String data = request.getParameter("data");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
+            /* DAO | Define needed dao here */
+            FishWsDao fwDao = DaoFactory.createFishWsDao();
+            
+            /* TRANSACTION | Something complex here */
+            fwDao.insert2(data, lu.getUserId());
 
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        LoginUser user = (LoginUser) request.getSession().getAttribute("user");
-        String mode = request.getParameter("mode");
-        HashMap<String, Object> modelMap = new HashMap<String, Object>();
-
-        if (user == null) {
-            String msg = "You haven't login or your session has been expired! Please do login again";
-            modelMap.put("msg", msg);
-            return new ModelAndView("login", "model", modelMap);
-        } else {
-            String userId = "";
-            userId = (String) user.getUserId();
-
-            String wsNo = request.getParameter("wsNo");
-            Integer wsTypeId = Integer.valueOf(request.getParameter("wsTypeId"));
-            Integer vesselId = Integer.valueOf(request.getParameter("vesselId"));
-            Integer storageId = Integer.valueOf(request.getParameter("storageId"));
-            Date dateShift = df.parse(request.getParameter("dateShift"));
-            String timeShift = request.getParameter("timeShift");
-            String regu = request.getParameter("regu");
-
-            FishWs dto = new FishWs();
-            dto.setWsNo(wsNo);
-            dto.setWsTypeId(wsTypeId);
-            dto.setVesselId(vesselId);
-            dto.setStorageId(storageId);
-            dto.setDateShift(dateShift);
-            dto.setTimeShift(timeShift);
-            dto.setRegu(regu);
-            dto.setCreatedDate(new Date());
-            dto.setCreatedBy(userId);
-            dto.setIsActive("Y");
-            dto.setIsDelete("N");
-
-            FishWsDao dao = DaoFactory.createFishWsDao();
-            int id = dao.insert(dto);
-            dto.setId(id);
-
-            int totalData = Integer.valueOf(request.getParameter("totalData"));
-            for (int i = 1; i <= totalData; i++) {
-                Integer fishId = Integer.valueOf(request.getParameter("fishId" + i));
-                Double totalWeight = Double.valueOf(request.getParameter("totalWeight" + i));
-
-                FishWsDetail wsDetail = new FishWsDetail();
-                wsDetail.setWsId(dto.getId());
-                wsDetail.setFishId(fishId);
-                wsDetail.setTotalWeight(totalWeight);
-                wsDetail.setCreatedDate(new Date());
-                wsDetail.setCreatedBy(userId);
-                wsDetail.setIsActive("Y");
-                wsDetail.setIsDelete("N");
-
-                FishWsDetailDao wsDetailDao = DaoFactory.createFishWsDetailDao();
-                int wsid = wsDetailDao.insert(wsDetail);
-
-                if (wsid > 0) {
-                    FishWsTypeDao wsTypeDao = DaoFactory.createFishWsTypeDao();
-                    FishWSType wsTypesFrz = wsTypeDao.findTypeCodeById(wsTypeId.intValue());
-                    String wsTypeFrozen = wsTypesFrz.getCode();
-                    FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
-                    FishBalance fishBalance = fishBalanceDao.findUniqueFishBalance(vesselId, dto.getStorageId(), wsDetail.getFishId());
-
-                    /* GNVS | Actual Balance */
-                    FishBalance fishBalanceActual = fishBalanceDao.findUniqueFishBalanceActual(vesselId, dto.getStorageId(), wsDetail.getFishId());
-
-                    if (wsTypeFrozen.equalsIgnoreCase("WSBF") || wsTypeFrozen.equalsIgnoreCase("WSABF")
-                            || wsTypeFrozen.equalsIgnoreCase("WSNC")) {
-                        if (fishBalance != null) {
-                            Double balance = fishBalance.getBalance();
-                            fishBalance.setBalance(balance + wsDetail.getTotalWeight());
-                            fishBalance.setUpdatedDate(new Date());
-                            fishBalance.setUpdatedBy(user.getUserId());
-                            fishBalanceDao.update(fishBalance.getId(), fishBalance);
-                        } else {
-                            fishBalance = new FishBalance();
-                            fishBalance.setVesselId(vesselId);
-                            fishBalance.setStorageId(dto.getStorageId());
-                            fishBalance.setFishId(wsDetail.getFishId());
-                            fishBalance.setBalance(wsDetail.getTotalWeight());
-                            fishBalance.setCreatedDate(new Date());
-                            fishBalance.setCreatedBy(user.getUserId());
-                            fishBalance.setIsActive("Y");
-                            fishBalance.setIsDelete("N");
-                            int balanceId = fishBalanceDao.insert(fishBalance);
-                            fishBalance = fishBalanceDao.findByPrimaryKey(balanceId);
-                        }
-
-                        //insert balance history
-                        Double currentBalance = fishBalance.getBalance();
-                        FishBalanceHistory fishBalanceHistory = new FishBalanceHistory();
-                        fishBalanceHistory.setDocNo(wsNo);
-                        fishBalanceHistory.setBatchNo(fishBalance.getVessel().getBatchNo());
-                        fishBalanceHistory.setFishType(fishBalance.getFish().getCode());
-                        fishBalanceHistory.setStorage(fishBalance.getStorageId() == 0 ? "FROZEN" : fishBalance.getStorage().getCode());
-                        fishBalanceHistory.setQtyIn(wsDetail.getTotalWeight());
-                        fishBalanceHistory.setQtyOut(Double.valueOf("0"));
-                        fishBalanceHistory.setBalance(currentBalance);
-                        fishBalanceHistory.setCreatedDate(new Date());
-                        fishBalanceHistory.setCreatedBy(user.getUserId());
-                        fishBalanceHistory.setIsActive("Y");
-                        fishBalanceHistory.setIsDelete("N");
-
-                        FishBalanceHistoryDao balanceHistoryDao = DaoFactory.createFishBalanceHistoryDao();
-                        balanceHistoryDao.insert(fishBalanceHistory);
-
-                        /* GNVS | Actual Balance */
-                        if (wsTypeFrozen.equalsIgnoreCase("WSNC")) {
-                            if (fishBalanceActual != null) {
-                                Double balance = fishBalanceActual.getBalance();
-                                fishBalanceActual.setBalance(balance + wsDetail.getTotalWeight());
-                                fishBalanceActual.setUpdatedDate(new Date());
-                                fishBalanceActual.setUpdatedBy(user.getUserId());
-                                fishBalanceDao.updateActual(fishBalanceActual.getId(), fishBalanceActual);
-                            } else {
-                                fishBalanceActual = new FishBalance();
-                                fishBalanceActual.setVesselId(vesselId);
-                                fishBalanceActual.setStorageId(dto.getStorageId());
-                                fishBalanceActual.setFishId(wsDetail.getFishId());
-                                fishBalanceActual.setBalance(wsDetail.getTotalWeight());
-                                fishBalanceActual.setCreatedDate(new Date());
-                                fishBalanceActual.setCreatedBy(user.getUserId());
-                                fishBalanceActual.setIsActive("Y");
-                                fishBalanceActual.setIsDelete("N");
-                                int balanceId = fishBalanceDao.insertActual(fishBalanceActual);
-                                fishBalanceActual = fishBalanceDao.findByPrimaryKeyActual(balanceId);
-                            }
-
-                            //insert balance history actual
-                            Double currentBalanceActual = fishBalanceActual.getBalance();
-                            FishBalanceHistory fishBalanceHistoryActual = new FishBalanceHistory();
-                            fishBalanceHistoryActual.setDocNo(wsNo);
-                            fishBalanceHistoryActual.setBatchNo(fishBalanceActual.getVessel().getBatchNo());
-                            fishBalanceHistoryActual.setFishType(fishBalanceActual.getFish().getCode());
-                            fishBalanceHistoryActual.setStorage(fishBalanceActual.getStorageId() == 0 ? "FROZEN" : fishBalanceActual.getStorage().getCode());
-                            fishBalanceHistoryActual.setQtyIn(wsDetail.getTotalWeight());
-                            fishBalanceHistoryActual.setQtyOut(Double.valueOf("0"));
-                            fishBalanceHistoryActual.setBalance(currentBalanceActual);
-                            fishBalanceHistoryActual.setCreatedDate(new Date());
-                            fishBalanceHistoryActual.setCreatedBy(user.getUserId());
-                            fishBalanceHistoryActual.setIsActive("Y");
-                            fishBalanceHistoryActual.setIsDelete("N");
-
-                            balanceHistoryDao.insertActual(fishBalanceHistoryActual);
-                        }
-                    }
-                }
-            }
-
-            modelMap = this.searchAndPaging(request, response);
-            return new ModelAndView("fish/WSDataList", "model", modelMap);
+            return new ModelAndView("redirect:FishWs.htm");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:FishWs.htm?action=create");
         }
     }
 
@@ -320,27 +191,39 @@ public class FishWsController extends MultiActionController {
             return new ModelAndView("fish/WSDataView", "model", modelMap);
         }
     }
+    
+    public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-    public ModelAndView ajaxDocument(HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+        /* DAO | Define needed dao here */
+        FishWsDao fwDao = DaoFactory.createFishWsDao();
 
-        Map<String, Object> modelMap = new HashMap<String, Object>();
-        int wsId = Integer.valueOf(request.getParameter("wsId"));
-        FishWsDetailDao dao = DaoFactory.createFishWsDetailDao();
-        List<FishWsDetail> wsDetailList = dao.findByWsIdGroupByFish(wsId);
+        /* TRANSACTION | Something complex here */
+        sb.append("{\"maxpage\": ").append(fwDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        List<Map<String, Object>> ms = fwDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("id")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("ws_no")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("date_shift")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("ws_type")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("batch_no")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("supplier")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
 
-        Map tableMap = new HashMap();
-        for (FishWsDetail fishWsDetail : wsDetailList) {
-            Map<String, Object> returnMap = new HashMap<String, Object>();
-            returnMap.put("wsNo", fishWsDetail.getWeightSlip().getWsNo());
-            returnMap.put("fishType", fishWsDetail.getFish().getCode());
-            returnMap.put("fishName", fishWsDetail.getFish().getFishType().getDescription());
-            returnMap.put("totalWeight", fishWsDetail.getTotalWeight());
-
-            tableMap.put(returnMap, returnMap);
+            b = Boolean.TRUE;
         }
-
-        modelMap.put("tableMap", tableMap);
-        return new ModelAndView("fish/WSDataDetailList", "model", modelMap);
+        sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
     }
+    
 }

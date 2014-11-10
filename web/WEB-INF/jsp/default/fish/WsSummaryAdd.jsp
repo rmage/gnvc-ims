@@ -73,7 +73,7 @@
 
             $('#batchNo').autocomplete({
                 source: '?action=getBatchInfo',
-                minLength: 3,
+                minLength: 2,
                 select: function(event, ui) {
                     $('#batchNo').val(ui.item.batchNo);
 

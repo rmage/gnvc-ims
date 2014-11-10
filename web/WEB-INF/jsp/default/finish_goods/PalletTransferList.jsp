@@ -73,7 +73,7 @@
         <!--<div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>-->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FFGPTS_Print Pallet Transfer Slip (xls)');
+            util.initListTable($('#list'), 'R_FGPts_Print Pallet Transfer Slip (xls)');
             
 //            var cs = 0;
 //            var loc = '';

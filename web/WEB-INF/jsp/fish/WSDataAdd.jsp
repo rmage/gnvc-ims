@@ -1,8 +1,13 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.app.wms.engine.db.dto.FishWs"%>
 <%@page import="com.app.wms.engine.db.dto.Ws"%>
 <%@page import="java.util.Date"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%    Date cDate = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
+%>
+<!DOCTYPE html>
+<html>
     <head>
         <title>IMS &there4; Weight Slip &there4; Create</title>
         <%@include file="../metaheader.jsp" %>
@@ -40,7 +45,7 @@
                     var totalWeight = $('#totalWeight').val();
                     var dialogMode = $('#dialogMode').val();
 
-                    if (dialogMode == 'add') {
+                    if (dialogMode === 'add') {
                         var rowCount = $('#main tr').length - 2;
                         $("<tr class='ganjil'>" +
                                 "<td class='style1'>" + rowCount + "</td>" +
@@ -53,7 +58,7 @@
 
                         $('#totalData').val(rowCount);
                     }
-                    else if (dialogMode == 'edit') {
+                    else if (dialogMode === 'edit') {
                         var editId = $('#editId').val();
                         $('#fishId' + editId).val(fishId);
                         $('#fishType' + editId).html(fishType);
@@ -96,7 +101,7 @@
 
                 $('#ajaxSearchBtn').click(function() {
                     var query = $('#query').val();
-                    var ajaxUrl = 'FishJson.htm?action=findBatchNumber&query=' + query
+                    var ajaxUrl = 'FishJson.htm?action=findBatchNumber&query=' + query;
                     $("#list").jqGrid('setGridParam', {url: ajaxUrl, page: 1}).trigger("reloadGrid");
                     $("#list").jqGrid({
                         url: ajaxUrl,
@@ -169,7 +174,6 @@
     <body>
         <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
-            java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
         %>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -179,11 +183,12 @@
 
                 <div class="box">
                     <form action="FishWs.htm" method="post" id="addForm">
-                        <input type="hidden" name="mode" value="<%=mode%>" />
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" id="vesselId" name="vesselId" value="" />
-                        <input type="hidden" id="totalData" name="totalData" value="0" />
-                        <input type="hidden" name="isActive" value="Y"/>
+                        <input type="hidden" name="mode" value="<%=mode%>">
+                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" id="vesselId" name="vesselId" value="">
+                        <input type="hidden" id="totalData" name="totalData" value="0">
+                        <input type="hidden" name="isActive" value="Y">
+                        <input type="hidden" id="dateShift" name="dateShift" value="<%=sdf.format(cDate)%>">
 
                         <table class="collapse tblForm row-select">
                             <caption>Weight Slip &there4; Header</caption>
@@ -228,8 +233,7 @@
                                     <td width="20%">Date Shift</td>
                                     <td class="style1">
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="dateShift" size="25" id="dateShift" readonly 
-                                                   value="<%=dateFormat.format(new Date())%>" />                                                            
+                                            <input type="text" name="dateShiftPicker" size="25" id="dateShiftPicker" readonly value="<%=sdfPicker.format(cDate)%>">                                                            
                                         </label>
                                     </td>
 
@@ -248,7 +252,7 @@
                                     <td width="20%">Time Shift</td>
                                     <td class="style1">
                                         <label>    
-                                            <select name="timeShift">
+                                            <select id="timeShift" name="timeShift">
                                                 <option value="07-15">07:00 - 15:00</option>
                                                 <option value="15-23">15:00 - 23:00</option>
                                                 <option value="23-07">23:00 - 07:00</option>
@@ -307,8 +311,7 @@
                                     <td class="center">Action</td>
                                 </tr>
                             </thead>
-                            <tbody class="tbl-nohover">
-                            </tbody>
+                            <tbody class="tbl-nohover"></tbody>
                             <tfoot class="ui-widget-header">
                                 <tr>
                                     <th colspan="2"><b style="float: right;">Total Weight</b></th>
@@ -403,8 +406,12 @@
                     return false;
                 });
 
-                $('#dateShift').datepicker({
-                    dateFormat: "dd/mm/yy"
+                $('#dateShiftPicker').datepicker({
+                    dateFormat: "dd/mm/yy",
+                    altFormat: "yy-mm-dd",
+                    altField: "#dateShift",
+                    changeYear: true,
+                    changeMonth: true
                 });
             });
         </script>
@@ -485,6 +492,26 @@
 
         <div id="dialog-not-unique" title="incomplete" style="display:none;z-index:1;">
             "WS No." is not unique
-        </div>      
+        </div>
+
+        <script>
+            $('#addForm').bind('submit', function() {
+                var data = '';
+
+                var header = $('#wsTypeId').val() + '^' + $('#vesselId').val() + '^' + $('#storageId').val() + '^' + $('#wsNo').val() + '^' +
+                        $('#dateShift').val() + '^' + $('#timeShift').val() + '^' + $('#regu').val() + '^';
+
+                $('#main tbody tr').each(function() {
+                    data = data + header + $(this).find('input:eq(0)').val() + '^' + $(this).find('input:eq(1)').val() + '^@';
+                });
+
+                if (data !== '') {
+                    window.location.replace("?action=save&data=" + encodeURIComponent(data));
+                    //console.log(encodeURIComponent(data));
+                }
+
+                return false;
+            });
+        </script>
     </body>
 </html>

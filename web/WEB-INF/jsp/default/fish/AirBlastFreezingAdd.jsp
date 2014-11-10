@@ -1,5 +1,9 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
+<%    Date cDate = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,18 +20,14 @@
         </style>
     </head>
     <body>
-        <%            String cDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-        %>
         <div class="container">
             <%@include file="../../header.jsp" %>
             <jsp:include page="../../dynmenu.jsp" />
             <div id="content" class="span-24 last">
                 <div class="box">
-                    <form id="poster" method="post" action="AirBlastFreezing.htm">
-                        <input type="hidden" name="action" value="save" />
-                    </form>
-                    <form id="bfForm" method="post">
-                        <input type="hidden" id="wsId" />
+                    <form id="abfForm" method="post">
+                        <input type="hidden" id="wsId">
+                        <input type="hidden" id="abfDate" name="abfDate" value="<%=sdf.format(cDate)%>">
                         <table class="collapse tblForm row-select">
                             <caption>Air Blast Freezing &therefore; Header</caption>
                             <tbody class="tbl-nohover">
@@ -35,7 +35,7 @@
                                     <td style="width: 10%;">ABF Number</td>
                                     <td style="width: 40%;"><input id="abfNo" type="text" required="required" /></td>
                                     <td style="width: 10%;">ABF Date</td>
-                                    <td><input id="abfDate" type="text" size="10" value="<%=cDate%>" required="required" /> </td>
+                                    <td><input id="abfDatePicker" name="abfDatePicker" type="text" size="10" value="<%=sdfPicker.format(cDate)%>" required="required"> </td>
                                 </tr>
                                 <tr>
                                     <td>Batch No</td>
@@ -43,10 +43,8 @@
                                         <input id="batchNo" type="text" required="required" /> <img width="16" height="16" alt="Search" src="resources/images/search.png" title="Need 8-digit batch number">
                                         Supplier : <span id="info"></span>
                                     </td>
-                                    <td>WS Number</td>
+                                    <td>To Cold Storage</td>
                                     <td>
-                                        <input id="wsNo" size="8" type="text" required="required" /> (WSABF)
-                                        To Cold Storage
                                         <select id="coldStorage">
                                             <c:forEach items="${model.cs}" var="x">
                                                 <option value="${x.id}"><c:out value="${x.code}" /></option>
@@ -88,18 +86,26 @@
                             <caption>Air Blast Freezing &therefore; Detail</caption>
                             <thead>
                                 <tr>
-                                    <td colspan="4">
-                                        <input id="getFish" type="button" value="Get Fish" />
+                                    <td colspan="5">
+                                        <select id="dFish">
+                                            <option value="">-- Pick Fish --</option>
+                                            <c:forEach items="${model.f}" var="x">
+                                                <option value="${x.id}" data-size="${x.fishWeightType.code}" data-type="${x.fishType.code}">${x.fishType.code} ${x.fishWeightType.code}</option>
+                                            </c:forEach>
+                                        </select>
+                                        <input class="right" id="dQuantity" type="text" size="6" value="0">
+                                        <input id="addFish" type="button" value="Add Fish" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>No</th>
                                     <th>Fish Type</th>
-                                    <th>WS Total Weight</th>
+                                    <th>Fish Size</th>
                                     <th>Air Blast Freezing Weight</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody class="tbl-nohover" id="bfDetail"></tbody>
+                            <tbody class="tbl-nohover" id="abfDetail"></tbody>
                         </table>
                     </form>
                 </div>
@@ -113,14 +119,19 @@
 
         <script>
             // binding event to element
-            $('#abfDate').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy"});
+            $('#abfDatePicker').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd/mm/yy",
+                altField: "#abfDate",
+                altFormat: "yy-mm-dd"
+            });
             $('#batchNo').autocomplete({
                 source: '?action=getBatchInfo',
-                minLength: 3,
+                minLength: 2,
                 select: function(event, ui) {
                     $('#batchNo').val(ui.item.batchNo);
                     $('#info').html(ui.item.supplier);
-                    $('#wsNo').focus();
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
@@ -133,54 +144,84 @@
             $('#batchNo').bind('click', function() {
                 $(this).val('');
                 $('#info').html('');
-                $('#bfDetail').html('');
-                $('#getFish').val('Get Fish');
-                $('#getFish').attr('disabled', false);
-                $('#wsNo').val('');
+                $('#abfDetail').html('');
+                $('#addFish').val('Get Fish');
+                $('#addFish').attr('disabled', false);
             });
-            $('#getFish').bind('click', function() {
-                $(this).val('Fetching data from server....');
-                $(this).attr('disabled', true);
-                $(this).css('cursor', 'progress');
-                $.ajax({
-                    url: '?',
-                    data: {
-                        action: 'getFish',
-                        batchNo: $('#batchNo').val(),
-                        wsNo: $('#wsNo').val()
-                    },
-                    dataType: 'json',
-                    success: function(json) {
-                        for (var i = 0; i < json.length; i++) {
-                            $('#bfDetail').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].fish + '</td><td>' + json[i].weight + '</td><td><input type="text" size="6" value="0.00" required="required" pattern="^\\d+(\\.\\d{2})?$" title="###0.00" /></td></tr>');
-                            $('#bfDetail tr:last-child').data('fishid', json[i].fishid);
-                        }
-                        if(json.length > 0) {
-                            $('#wsId').val(json[0].wsid);
-                        } else {
-                            $('#batchNo').trigger('click');
-                        }
-                    },
-                    complete: function() {
-                        $('#getFish').data('type', $('#type').val());
-                        $('#getFish').val('Completed fetch data from server');
-                        $('#getFish').css('cursor', '');
-                    }
-                });
+            $('#addFish').bind('click', function() {
+                if ($("#dFish").val() !== "" && parseFloat($("#dQuantity").val()) > 0) {
+                    $('#abfDetail').append('<tr data-fish="' + $("#dFish").val() + '">' +
+                            '<td>' + ($('#abfDetail tr').length + 1) + '</td>' +
+                            '<td>' + $('#dFish option:selected').data('type') + '</td>' +
+                            '<td>' + $('#dFish option:selected').data('size') + '</td>' +
+                            '<td>' + $('#dQuantity').val() + '</td>' +
+                            '<td><a href="#deleteRow" title="Delete this row" onclick="if(confirm(\'Continue to delete data?\'))this.parentNode.parentNode.remove()"><img width="16" height="16" src="resources/images/delete.gif"></a></td>' +
+                            '</tr>');
+                }
+
+                $('#dFish').val("");
+                $('#dQuantity').val(0);
             });
+//            $('#addFish').bind('click', function() {
+//                $(this).val('Fetching data from server....');
+//                $(this).attr('disabled', true);
+//                $(this).css('cursor', 'progress');
+//                $.ajax({
+//                    url: '?',
+//                    data: {
+//                        action: 'addFish',
+//                        batchNo: $('#batchNo').val(),
+//                        wsNo: $('#wsNo').val()
+//                    },
+//                    dataType: 'json',
+//                    success: function(json) {
+//                        for (var i = 0; i < json.length; i++) {
+//                            $('#abfDetail').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].fish + '</td><td>' + json[i].weight + '</td><td><input type="text" size="6" value="0.00" required="required" pattern="^\\d+(\\.\\d{2})?$" title="###0.00" /></td></tr>');
+//                            $('#abfDetail tr:last-child').data('fishid', json[i].fishid);
+//                        }
+//                        if (json.length > 0) {
+//                            $('#wsId').val(json[0].wsid);
+//                        } else {
+//                            $('#batchNo').trigger('click');
+//                        }
+//                    },
+//                    complete: function() {
+//                        $('#addFish').data('type', $('#type').val());
+//                        $('#addFish').val('Completed fetch data from server');
+//                        $('#addFish').css('cursor', '');
+//                    }
+//                });
+//            });
 
             // submit form
-            $('#bfForm').bind('submit', function() {
-                if ($('#bfDetail').html().length > 0) {
-                    $('#poster').append('<input type="hidden" name="header" value="' +
-                            $('#abfNo').val() + ':' + $('#abfDate').val() + ':' + $('#wsId').val() + ':' + $('#coldStorage').val() + ':' + $('#batchNo').val() + ':' +
-                            $('#regu').val() + ':' + $('#timeShift').val() + ':' + $('#timeStart').val() + ':' + $('#timeFinish').val() + '" />');
-                    $('#bfDetail tr').each(function() {
-                        $('#poster').append('<input type="hidden" name="detail" value="' + $(this).data('fishid') + ':' + $(this).find('input').val() + '" />');
-                    });
-                    
-                    $('#poster').submit();
+            $('#abfForm').bind('submit', function() {
+//                if ($('#abfDetail').html().length > 0) {
+//                    $('#poster').append('<input type="hidden" name="header" value="' +
+//                            $('#abfNo').val() + '^' + $('#abfDate').val() + '^' + $('#wsId').val() + '^' + $('#coldStorage').val() + '^' + $('#batchNo').val() + '^' +
+//                            $('#regu').val() + '^' + $('#timeShift').val() + '^' + $('#timeStart').val() + '^' + $('#timeFinish').val() + '" />');
+//                    $('#abfDetail tr').each(function() {
+//                        $('#poster').append('<input type="hidden" name="detail" value="' + $(this).data('fishid') + '^' + $(this).find('input').val() + '" />');
+//                    });
+//
+//                    $('#poster').submit();
+//                }
+
+                var data = '';
+
+                var header = $("#abfNo").val() + "^" + $("#abfDate").val() + "^" + $("#coldStorage").val() + "^" + $("#batchNo").val() + "^" +
+                        $("#regu").val() + "^" + $("#timeShift").val() + "^" + $("#timeStart").val() + "^" + $("#timeFinish").val() + "^";
+
+                $('#abfDetail tr').each(function() {
+                    data = data + header + $(this).data("fish") + "^" + $(this).find("td:eq(3)").html() + "^@";
+                });
+
+                if (data !== '') {
+                    if (confirm("Continue to save this document?")) {
+                        window.location.replace("?action=save&data=" + encodeURIComponent(data));
+//                        console.log(encodeURIComponent(data));
+                    }
                 }
+
                 return false;
             });
         </script>

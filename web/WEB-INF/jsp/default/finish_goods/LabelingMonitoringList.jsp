@@ -69,7 +69,7 @@
         <!--<div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>-->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FGLm_Print Labeling Monitoring (xls)');
+            util.initListTable($('#list'), 'R_FGLmr_Print Labeling Monitoring Report (xls)');
             
 //            var cs = 0;
 //            var loc = '';

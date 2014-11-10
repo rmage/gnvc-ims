@@ -38,7 +38,6 @@
                                 <td style="width: 50px">Action</td>
                                 <td column="bf_no">Number</td>
                                 <td column="bf_date">Date</td>
-                                <td>WS Number</td>
                                 <td>Supplier</td>
                                 <td>Batch Number</td>
                                 <td>Regu</td>

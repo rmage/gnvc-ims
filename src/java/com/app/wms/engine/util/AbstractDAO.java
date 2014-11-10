@@ -37,7 +37,7 @@ private Connection connection;
 		try{
                     //  XXX : FYA | Database Connection Setting
                     Class.forName("net.sourceforge.jtds.jdbc.Driver");
-                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://192.168.11.253:1433/inventory","sa","qts1n@r");
+                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433/inventory","sa","qts1n@r");
                     return connect;
 		}
 		catch(SQLException se){

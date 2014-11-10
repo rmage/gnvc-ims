@@ -377,29 +377,32 @@ public class NewReportController extends MultiActionController {
     }
 
     /* GNVS | New Fish Created Fish Inventory */
-    public ModelAndView getFishStockCard(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/fish/FishStockCard");
+    public ModelAndView getDailyFishInCS(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/DailyFishInCS");
     }
-
-    public ModelAndView getSummaryReportPerSupplier(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/fish/FishSummaryPerSupplier");
-    }
-
-    public ModelAndView getSummaryReportPerCS(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/fish/FishSummaryPerCS");
-    }
-
-    public ModelAndView getFishStockCardActual(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/fish/FishStockCardActual");
-    }
-
-    public ModelAndView getSummaryReportPerSupplierActual(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/fish/FishSummaryPerSupplierActual");
-    }
-
-    public ModelAndView getSummaryReportPerCSActual(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/fish/FishSummaryPerCSActual");
-    }
+//    public ModelAndView getFishStockCard(HttpServletRequest request, HttpServletResponse response) {
+//        return new ModelAndView("default/fish/FishStockCard");
+//    }
+//
+//    public ModelAndView getSummaryReportPerSupplier(HttpServletRequest request, HttpServletResponse response) {
+//        return new ModelAndView("default/fish/FishSummaryPerSupplier");
+//    }
+//
+//    public ModelAndView getSummaryReportPerCS(HttpServletRequest request, HttpServletResponse response) {
+//        return new ModelAndView("default/fish/FishSummaryPerCS");
+//    }
+//
+//    public ModelAndView getFishStockCardActual(HttpServletRequest request, HttpServletResponse response) {
+//        return new ModelAndView("default/fish/FishStockCardActual");
+//    }
+//
+//    public ModelAndView getSummaryReportPerSupplierActual(HttpServletRequest request, HttpServletResponse response) {
+//        return new ModelAndView("default/fish/FishSummaryPerSupplierActual");
+//    }
+//
+//    public ModelAndView getSummaryReportPerCSActual(HttpServletRequest request, HttpServletResponse response) {
+//        return new ModelAndView("default/fish/FishSummaryPerCSActual");
+//    }
     
     //  Purchasing Module | Form and Report List
     public ModelAndView getPrsNotYetPO(HttpServletRequest request, HttpServletResponse response) 

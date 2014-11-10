@@ -18,4 +18,6 @@ public interface AirBlastFreezingDao {
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
+    public void insert(String data, String createdBy);
+    
 }
