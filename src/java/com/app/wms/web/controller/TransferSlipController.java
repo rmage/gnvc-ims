@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -256,7 +257,7 @@ public class TransferSlipController extends MultiActionController {
             sb.append("\"3\": \"").append(x.get("ts_date")).append("\", ");
             sb.append("\"4\": \"").append(x.get("ts_type")).append("\", ");
             sb.append("\"5\": \"").append(x.get("sws_code")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("ts_info")).append("\", ");
+            sb.append("\"6\": \"").append(StringEscapeUtils.escapeHtml(x.get("ts_info").toString())).append("\", ");
             sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
 
             b = Boolean.TRUE;

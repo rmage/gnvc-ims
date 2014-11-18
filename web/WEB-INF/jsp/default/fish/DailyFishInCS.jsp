@@ -6,6 +6,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>IMS &therefore; Daily Inventory of Frozen Fish in Cold Storage</title>
         <%@include file="../../metaheader.jsp" %>
+        <style>
+            .ui-datepicker { display: none; }
+        </style>
     </head>
     <body>
         <%            String cDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
@@ -59,13 +62,13 @@
 
         <script>
             $('#datePicker').datepicker({
-                changeMonth: true, 
-                changeYear: true, 
-                dateFormat: "dd/mm/yy", 
-                altField: "#date", 
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "dd/mm/yy",
+                altField: "#date",
                 altFormat: "yy-mm-dd"
             });
-            
+
             $("#btnGenerate").bind("focus", function() {
                 $('#params').val($("#date").val() + ":" + $("#storage").val());
             });

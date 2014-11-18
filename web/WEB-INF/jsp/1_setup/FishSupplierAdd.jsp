@@ -30,8 +30,7 @@
                                     <td>Supplier Code</td>
                                     <td>
                                         <label>
-                                           <input type="text" name="code" id="code" size="30"                                                    
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                           <input type="text" name="code" id="code" size="30" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -39,8 +38,7 @@
                                     <td>Telp.</td>
                                     <td>
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="telp" id="code" size="30"                                                    
-                                                   value="" pattern="^\S+[0-9]" required="true" />
+                                            <input type="text" name="telp" id="code" size="30" required="true" />
                                             <label>*</label>
                                             </select>                                                            
                                         </label>
@@ -51,8 +49,7 @@
                                     <td>Supplier Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="name" id="name" size="30"                                                    
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                            <input type="text" name="name" id="name" size="30" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -60,7 +57,7 @@
                                     <td>Fax</td>
                                     <td>
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="fax" size="25" id="fax" value="" pattern="^\S+[0-9]" />                                                          
+                                            <input type="text" name="fax" size="25" id="fax" />                                                          
                                         </label>
                                     </td>
                                	 </tr>
@@ -69,8 +66,7 @@
                                     <td>Address</td>
                                     <td>
                                         <label>
-                                            <textarea type="text" name="address" id="address" rows="5" cols="40"                                                   
-                                                      value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"/></textarea>
+                                            <textarea type="text" name="address" id="address" rows="5" cols="40" required="true"/></textarea>
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -78,7 +74,7 @@
                                     <td>Email</td>
                                     <td>
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="email" size="25" id="email" value="" pattern="(\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3})" />                                                          
+                                            <input type="text" name="email" size="25" id="email" />                                                          
                                         </label>
                                     </td>  
                                	 </tr>
@@ -87,8 +83,7 @@
                                     <td>Contact Person</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="cp" id="cp" size="30"                                                    
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                            <input type="text" name="cp" id="cp" size="30" required="true" />
                                             <label>*</label>
                                         </label>
                                     </td>

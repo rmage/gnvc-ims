@@ -77,7 +77,7 @@
                 select: function(event, ui) {
                     $('#batchNo').val(ui.item.batchNo);
 
-                    if (ui.item.batchNo.slice(-1) === 'F') {
+                    if (ui.item.batchNo.indexOf('F') > -1 ) {
                         $('#fishType').val('FishWssFresh');
                         $('#fishTypeHTML').val('FRESH');
                     } else {

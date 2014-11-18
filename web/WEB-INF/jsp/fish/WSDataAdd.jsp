@@ -122,7 +122,7 @@
                             $('#vesselId').val(localRowData.vesselId);
                             $('#dialog-ajaxSearch').dialog('close');
 
-                            if (localRowData.batchNo.slice(-1) === 'F') {
+                            if (localRowData.batchNo.indexOf('F') > -1) {
                                 $('#wsTypeId').find('option:contains(WSNR), option:contains(WSNC)').attr('disabled', true);
                                 $('#wsTypeId').find('option:contains(WSHR), option:contains(WSBF), option:contains(WSABF), option:contains(WSL)').attr('disabled', false);
                             } else {
@@ -457,8 +457,9 @@
 
             });
 
+            var wsTypes = ['WSNC', 'WSBF', 'WSABF'];
             $('#wsTypeId').bind('change', function() {
-                if ($(this).find('option:selected').html().trim() === 'WSNC') {
+                if ($.inArray($(this).find('option:selected').html().trim(), wsTypes) > -1) {
                     $('#storageId').attr('onchange', '');
                 } else {
                     $('#storageId').attr('onchange', 'this.selectedIndex = 0;');

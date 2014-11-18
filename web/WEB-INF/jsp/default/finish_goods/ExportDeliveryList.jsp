@@ -69,7 +69,7 @@
         <!--<div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>-->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FGLm_Print Export Delivery (xls)');
+            util.initListTable($('#list'), ''/*'R_FGEds_Print Export Delivery (xls)'*/);
             
 //            var cs = 0;
 //            var loc = '';

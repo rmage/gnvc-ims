@@ -123,6 +123,7 @@
 
                     $('#totalData').val(rowCount);
                     $('#dialog-spoilage').dialog('close');
+                    $(this).prev().find('input, select, textarea').val('');
                 });
 
                 $('#area').bind('change', function() {

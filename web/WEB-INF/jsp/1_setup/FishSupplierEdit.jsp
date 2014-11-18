@@ -31,8 +31,7 @@
                                     <td>Supplier Code</td>
                                     <td>
                                         <label>
-                                           <input type="text" name="code" id="code" size="30"                                                    
-                                                   value="<%=dto.getCode()%>" readonly pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" /> 
+                                           <input type="text" name="code" id="code" size="30" value="<%=dto.getCode()%>" readonly required /> 
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -40,8 +39,7 @@
                                     <td>Telp.</td>
                                     <td>
                                         <label>                                                                                                                                                                             
-                                            <input type="text" name="telp" id="telp" size="30"                                                    
-                                                   value="<%=dto.getTelephone()%>" pattern="^\S+[0-9]" required="true" />
+                                            <input type="text" name="telp" id="telp" size="30" value="<%=dto.getTelephone()%>" required />
                                             <label>*</label>
                                             </select>                                                            
                                         </label>
@@ -52,8 +50,7 @@
                                     <td>Supplier Name</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="name" id="name" size="30"                                                    
-                                                   value="<%=dto.getName()%>" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                            <input type="text" name="name" id="name" size="30" value="<%=dto.getName()%>" required />
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -70,8 +67,7 @@
                                     <td>Address</td>
                                     <td>
                                         <label>
-                                            <textarea type="text" name="address" id="address" rows="5" cols="40"                                                   
-                                                   value="" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" ><%=dto.getAddress()%></textarea>
+                                            <textarea type="text" name="address" id="address" rows="5" cols="40" required ><%=dto.getAddress()%></textarea>
                                             <label>*</label>
                                         </label>
                                     </td>
@@ -88,8 +84,7 @@
                                     <td>Contact Person</td>
                                     <td>
                                         <label>
-                                            <input type="text" name="cp" id="cp" size="30"                                                    
-                                                   value="<%=dto.getContactPerson()%>" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true" />
+                                            <input type="text" name="cp" id="cp" size="30" value="<%=dto.getContactPerson()%>" required />
                                             <label>*</label>
                                         </label>
                                     </td>

@@ -94,7 +94,7 @@ public class FishStorageDaoImpl extends AbstractDAO
 
 	@Override
 	public List<FishStorage> findAllActive() throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y'";
+		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y' ORDER BY description";
 		List<FishStorage> resultList = jdbcTemplate.query(query, this);
 		
 		return resultList;

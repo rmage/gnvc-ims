@@ -64,10 +64,10 @@
             // change current printout destination
             $('#main tr td:nth-child(2) a[href^="GenerateReport.htm"]').live('mouseenter', function() {
                 if ($(this).attr('href').indexOf('FishWsSF') === -1 && $(this).attr('href').indexOf('FishWsSZ') === -1) {
-                    var type = $(this).parent().parent().find('td:eq(5)').html().slice(-1);
-                    if (type === 'F') {
+                    var type = $(this).parent().parent().find('td:eq(5)').html().slice(-4);
+                    if (type.indexOf('F') > -1) {
                         $(this).attr('href', $(this).attr('href').replace('FishWsS', 'FishWsSF'));
-                    } else if (type === 'Z') {
+                    } else if (type.indexOf('Z') > -1) {
                         $(this).attr('href', $(this).attr('href').replace('FishWsS', 'FishWsSZ'));
                     }
                 }
