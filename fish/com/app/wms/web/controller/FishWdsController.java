@@ -2,6 +2,7 @@ package com.app.wms.web.controller;
 
 import com.app.wms.engine.db.dao.FishBalanceDao;
 import com.app.wms.engine.db.dao.FishBalanceHistoryDao;
+import com.app.wms.engine.db.dao.FishStorageDao;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import com.app.wms.engine.db.dao.FishWdsDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
 import com.app.wms.engine.db.dto.FishBalance;
 import com.app.wms.engine.db.dto.FishBalanceHistory;
+import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.FishWds;
 import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
@@ -89,6 +91,10 @@ public class FishWdsController extends MultiActionController {
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HashMap<String, Object> modelMap = new HashMap<String, Object>();
 
+        FishStorageDao fishStorageDao = DaoFactory.createFishStorageDao();
+        List<FishStorage> fishStorages = fishStorageDao.findAllActive();
+        modelMap.put("fses", fishStorages);
+        
         modelMap.put("mode", "create");
         return new ModelAndView("fish/WDSDataAdd", "model", modelMap);
     }

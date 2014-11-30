@@ -25,25 +25,20 @@ public class ReportFactory {
         FLaporanPemasukanBarangPerDokumenPabean, FLaporanPengeluaranBarangPerDokumenPabean, FLaporanPengeluaranBahanBakuDanBahanPenolong, //added by edw
         FLaporanPengeluaranMutasiBarangJadi, FLaporanPengeluaranMutasiBarangDanScrap, FLaporanPengeluaranMutasiMesin, // added by edw
         RPDailyProduction, FMDR,
-        PCanvassingForm, 
+        PCanvassingForm,
         IMStockCardperItem,
         IMStockCardperCategory, IMStockCardTransactionReport,
         FGPTS, FGOFAL, FGBOR, FGFM, FGFO, FGSC,
         FGTS, FGEDS, FGBadStockReport,
         FGTunaVayaReport, Accounting,
         RRPeriode, TSPeriode, CanvassingHistory //,
-//        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
-//        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
+        //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
+        //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         //  Fish Module | Form and Report List
-        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ
-        , FishDailyInCS
-        //  Purchase Module | Form and Report List
-        , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister
-        //  Non-Fish Module | Form and Report List
-        , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod
-        //  Finished Goods Module | Form and Report List
-        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGPts, FGOfal, FGLmr
-        //  Rendering Module | Form and Report List
+        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ, FishDailyInCS, FishSummaryInCS //  Purchase Module | Form and Report List
+        , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister //  Non-Fish Module | Form and Report List
+        , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod //  Finished Goods Module | Form and Report List
+        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGPts, FGOfal, FGLmr //  Rendering Module | Form and Report List
         , RendDailyReport, RendSummaryReport, RendSales;
     }
 
@@ -94,6 +89,8 @@ public class ReportFactory {
 //        reportMap.put(Report.FishStockCardActual, reportTemplateMap.get("FishStockCardActual"));
         reportTemplateMap.put("FishDailyInCS", new ReportModel("fish/dfics", false));
         reportMap.put(Report.FishDailyInCS, reportTemplateMap.get("FishDailyInCS"));
+        reportTemplateMap.put("FishSummaryInCS", new ReportModel("fish/sfics", false));
+        reportMap.put(Report.FishSummaryInCS, reportTemplateMap.get("FishSummaryInCS"));
         reportTemplateMap.put("FishWDS", new ReportModel("fish/wds", false));
         reportMap.put(Report.FishWDS, reportTemplateMap.get("FishWDS"));
         reportTemplateMap.put("FishRECC", new ReportModel("fish/fr", false));
@@ -104,7 +101,7 @@ public class ReportFactory {
         reportMap.put(Report.FishWsSF, reportTemplateMap.get("FishWsSF"));
         reportTemplateMap.put("FishWsSZ", new ReportModel("fish/wssfrozenl", false));
         reportMap.put(Report.FishWsSZ, reportTemplateMap.get("FishWsSZ"));
-        
+
         //  Purchasing Module | Form and Report List
         reportTemplateMap.put("PRCPrs", new ReportModel("purchase/prs", false));
         reportMap.put(Report.PRCPrs, reportTemplateMap.get("PRCPrs"));
@@ -126,8 +123,7 @@ public class ReportFactory {
         reportMap.put(Report.PRCPoRegisteredPerSupplier, reportTemplateMap.get("PRCPoRegisteredPerSupplier"));
         reportTemplateMap.put("PRCPrsRegister", new ReportModel("purchase/prsrpp", false));
         reportMap.put(Report.PRCPrsRegister, reportTemplateMap.get("PRCPrsRegister"));
-        
-        
+
         //  Non-Fish Module | Form and Report List
         reportTemplateMap.put("NFRr", new ReportModel("non_fish/rr", false));
         reportMap.put(Report.NFRr, reportTemplateMap.get("NFRr"));
@@ -151,7 +147,7 @@ public class ReportFactory {
         reportMap.put(Report.NFTsRegisterPerPeriod, reportTemplateMap.get("NFTsRegisterPerPeriod"));
         reportTemplateMap.put("NFDrRegisterPerPeriod", new ReportModel("non_fish/drrpp", false));
         reportMap.put(Report.NFDrRegisterPerPeriod, reportTemplateMap.get("NFDrRegisterPerPeriod"));
-        
+
         // Finished Goods Module | Form and Report List
         reportTemplateMap.put("FGBor", new ReportModel("finished_goods/bor", false));
         reportMap.put(Report.FGBor, reportTemplateMap.get("FGBor"));
@@ -169,7 +165,7 @@ public class ReportFactory {
         reportMap.put(Report.FGPtsCheckList, reportTemplateMap.get("FGPtsCheckList"));
         reportTemplateMap.put("FGActualInventory", new ReportModel("finished_goods/fgair", false));
         reportMap.put(Report.FGActualInventory, reportTemplateMap.get("FGActualInventory"));
-        
+
         // Rendering Module | Form and Report List
         reportTemplateMap.put("RendDailyReport", new ReportModel("rendering/daily", false));
         reportMap.put(Report.RendDailyReport, reportTemplateMap.get("RendDailyReport"));
@@ -177,19 +173,9 @@ public class ReportFactory {
         reportMap.put(Report.RendSummaryReport, reportTemplateMap.get("RendSummaryReport"));
         reportTemplateMap.put("RendSales", new ReportModel("rendering/rs", false));
         reportMap.put(Report.RendSales, reportTemplateMap.get("RendSales"));
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));
-        
+
         reportTemplateMap.put("deliverReceipt", new ReportModel("deliverReceipt", false));
         reportTemplateMap.put("canvassingForm", new ReportModel("canvassingForm", false));
         reportTemplateMap.put("FGEDS", new ReportModel("gnvEDS", false));
@@ -203,7 +189,7 @@ public class ReportFactory {
         reportTemplateMap.put("LaporanPemasukanBarangPerDokumenPabean", new ReportModel("LaporanPemasukanBarangPerDokumenPabean")); // add by edw
         reportTemplateMap.put("LaporanPengeluaranBarangPerDokumenPabean", new ReportModel("LaporanPengeluaranBarangPerDokumenPabean")); // add by edw
         reportTemplateMap.put("LaporanPengeluaranBahanBakuDanBahanPenolong", new ReportModel("LaporanPengeluaranBahanBakuDanBahanPenolong")); // add by edw
-        
+
         reportTemplateMap.put("pts", new ReportModel("pts", true));
         reportTemplateMap.put("receivingReport", new ReportModel("receivingReport", false));
         reportTemplateMap.put("stockCardReport", new ReportModel("stockCardReport", false));
@@ -231,7 +217,7 @@ public class ReportFactory {
         reportTemplateMap.put("FGFO", new ReportModel("gnvFishOil", false));
 
         reportMap.put(Report.FGSC, reportTemplateMap.get("FGSC"));
-        
+
         reportMap.put(Report.FWeightSlip, reportTemplateMap.get("weightslip"));
         reportMap.put(Report.FWSHR, reportTemplateMap.get("wshr"));
         reportMap.put(Report.FWSBR, reportTemplateMap.get("wsbr"));
@@ -257,10 +243,10 @@ public class ReportFactory {
         reportMap.put(Report.FLaporanPengeluaranMutasiBarangJadi, reportTemplateMap.get("LaporanPengeluaranMutasiBarangJadi")); // added by edw
         reportMap.put(Report.FLaporanPengeluaranMutasiBarangDanScrap, reportTemplateMap.get("LaporanPengeluaranMutasiBarangDanScrap")); // added by edw
         reportMap.put(Report.FLaporanPengeluaranMutasiMesin, reportTemplateMap.get("LaporanPengeluaranMutasiMesin")); // added by edw
-        
+
         reportMap.put(Report.FMDR, reportTemplateMap.get("deliverReceipt"));
         reportMap.put(Report.PCanvassingForm, reportTemplateMap.get("canvassingForm"));
-        
+
         reportMap.put(Report.IMStockCardperItem, reportTemplateMap.get("IMStockCardperItem"));
         reportMap.put(Report.IMStockCardperCategory, reportTemplateMap.get("IMStockCardperCategory"));
         reportMap.put(Report.IMStockCardTransactionReport, reportTemplateMap.get("IMStockCardTransactionReport"));

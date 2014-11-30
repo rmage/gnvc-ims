@@ -49,6 +49,7 @@ public class GenerateReportController extends MultiActionController {
 //        ListMap.put(Report.FishSumPerCSActual, "EXEC RPT_FR_SUMMARY_PER_COLDSTORAGE_ACTUAL ?");
 //        ListMap.put(Report.FishStockCardActual, "EXEC RPT_FR_STOCK_CARD_ACTUAL ?");
         ListMap.put(Report.FishDailyInCS, "EXEC RPT_F_DAILY_IN_CS ?, ?");
+        ListMap.put(Report.FishSummaryInCS, "EXEC RPT_F_SUMMARY_IN_CS ?, ?");
         ListMap.put(Report.FishWDS, "EXEC PRT_F_WITHDRAWAL ?");
         ListMap.put(Report.FishRECC, "EXEC PRT_F_RECLASSIFICATION ?");
         ListMap.put(Report.FishFMov, "EXEC PRT_F_FISH_MOVING ?");

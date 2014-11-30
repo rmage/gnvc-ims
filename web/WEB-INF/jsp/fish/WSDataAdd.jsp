@@ -71,33 +71,33 @@
                     wsTotalWeight();
                 });
 
-                $('#wsNo').on("blur", function() {
-                    var wsNo = $('#wsNo').val();
-                    $.ajax({
-                        url: "FishJson.htm?action=checkWsNo&query=" + wsNo,
-                        dataType: 'json',
-                        success: function(data) {
-                            if (data.result) {
-                                $("#dialog-not-unique").dialog({
-                                    open: function() {
-                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                                    },
-                                    title: 'Warning',
-                                    resizable: false,
-                                    height: 120,
-                                    modal: true,
-                                    buttons: {
-                                        "Ok": function() {
-                                            $(this).dialog("close");
-                                            $('#wsNo').focus();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
-                });
+//                $('#wsNo').on("blur", function() {
+//                    var wsNo = $('#wsNo').val();
+//                    $.ajax({
+//                        url: "FishJson.htm?action=checkWsNo&query=" + wsNo,
+//                        dataType: 'json',
+//                        success: function(data) {
+//                            if (data.result) {
+//                                $("#dialog-not-unique").dialog({
+//                                    open: function() {
+//                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+//                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+//                                    },
+//                                    title: 'Warning',
+//                                    resizable: false,
+//                                    height: 120,
+//                                    modal: true,
+//                                    buttons: {
+//                                        "Ok": function() {
+//                                            $(this).dialog("close");
+//                                            $('#wsNo').focus();
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    });
+//                });
 
                 $('#ajaxSearchBtn').click(function() {
                     var query = $('#query').val();
@@ -284,7 +284,7 @@
                                 </tr>
                                 <tr class="detail_genap">
                                     <td></td>
-                                    <td width="20%">Regu</td>
+                                    <td width="20%">Group</td>
                                     <td class="style1">
                                         <label>
                                             <input type="text" name="regu" id="regu" size="30"                                                    
@@ -442,6 +442,10 @@
                         }
                     });
                     return false;
+                } else {
+                    if ($('#storageId').attr('onchange') === '' && $('#storageId').val() === '0') {
+                        return false;
+                    }
                 }
 
                 $("#dialog-confirm").dialog({width: 300, height: 150, position: "center", modal: true,
@@ -459,11 +463,14 @@
 
             var wsTypes = ['WSNC', 'WSBF', 'WSABF'];
             $('#wsTypeId').bind('change', function() {
-                if ($.inArray($(this).find('option:selected').html().trim(), wsTypes) > -1) {
-                    $('#storageId').attr('onchange', '');
-                } else {
-                    $('#storageId').attr('onchange', 'this.selectedIndex = 0;');
-                    $('#storageId option:eq(0)').prop('selected', true);
+                for (var i = 0; i < wsTypes.length; i++) {
+                    if ($(this).find('option:selected').html().indexOf(wsTypes[i]) > -1) {
+                        $('#storageId').attr('onchange', '');
+                        break;
+                    } else {
+                        $('#storageId').attr('onchange', 'this.selectedIndex = 0;');
+                        $('#storageId option:eq(0)').prop('selected', true);
+                    }
                 }
             });
 

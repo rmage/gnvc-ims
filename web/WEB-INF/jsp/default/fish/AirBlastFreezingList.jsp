@@ -40,7 +40,7 @@
                                 <td column="bf_date">Date</td>
                                 <td>Supplier</td>
                                 <td>Batch Number</td>
-                                <td>Regu</td>
+                                <td>Group</td>
                                 <td>Time Shift</td>
                                 <td>Time Start</td>
                                 <td>Time Finish</td>

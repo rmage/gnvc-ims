@@ -32,42 +32,42 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class StoreWithdrawalSlipController extends MultiActionController {
-    
+
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("non_fish/SWSList");
     }
-    
-    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
-        throws DepartmentDaoException {
-        
+
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response)
+            throws DepartmentDaoException {
+
         /* DATA | get initial value */
         HashMap m = new HashMap();
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-        
+
         /* DAO | Define needed dao here */
         DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
-        
+
         /* TRANSACTION | Something complex here */
         Department d = departmentDao.findWhereDepartmentCodeEquals(lu.getDepartmentCode()).get(0);
         m.put("department", d.getDepartmentCode() + ":" + d.getDepartmentName());
-        
+
         return new ModelAndView("non_fish/SWSAdd", "model", m);
-        
+
     }
-    
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
-        throws ParseException, UserDaoException {
-        
+
+    public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
+            throws ParseException, UserDaoException {
+
         /* DATA | get initial value */
         String[] master = request.getParameter("master").split(":", -1);
         String[] details = request.getParameterValues("detail");
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-        
+
         /* DAO | Define needed dao here */
         SwsDao swsDao = DaoFactory.createSwsDao();
         SwsDtlDao swsDtlDao = DaoFactory.createSwsDtlDao();
         UserDao uDao = DaoFactory.createUserDao();
-        
+
         /* TRANSACTION | Something complex here */
         // insert master sws
         Sws s = new Sws();
@@ -78,11 +78,11 @@ public class StoreWithdrawalSlipController extends MultiActionController {
         s.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
         s.setCreatedDate(new Date());
         swsDao.insert(s);
-        
+
         //insert detail sws
-        for(String x : details) {
+        for (String x : details) {
             String[] detail = x.split(":");
-            
+
             SwsDtl sd = new SwsDtl();
             sd.setSwsCode(s.getSwsCode());
             sd.setProductCode(detail[0]);
@@ -93,30 +93,31 @@ public class StoreWithdrawalSlipController extends MultiActionController {
             sd.setCreatedDate(new Date());
             swsDtlDao.insert(sd);
         }
-        
+
         return new ModelAndView("redirect:Sws.htm");
-        
+
     }
-    
-    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response) 
-        throws IOException, ProductDaoException {
-        
+
+    public void ajaxDocument(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ProductDaoException {
+
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         String swsCode = request.getParameter("key");
-        
+
         /* DAO | Define needed dao here */
         SwsDtlDao swsDtlDao = DaoFactory.createSwsDtlDao();
         ProductDao productDao = DaoFactory.createProductDao();
-        
+
         /* TRANSACTION | Something complex here */
         pw.print("[");
         List<SwsDtl> sds = swsDtlDao.findBySws(swsCode);
-        for(SwsDtl x : sds) {
-            if(b)
+        for (SwsDtl x : sds) {
+            if (b) {
                 pw.print(",");
-            
+            }
+
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
             pw.print("{\"itemCode\": \"" + p.getProductCode() + "\", ");
             pw.print("\"itemName\": \"" + p.getProductName() + "\",");
@@ -124,50 +125,53 @@ public class StoreWithdrawalSlipController extends MultiActionController {
             pw.print("\"soh\": \"" + x.getSoh() + "\",");
             pw.print("\"qty\": \"" + x.getQty() + "\",");
             pw.print("\"uom\": \"" + x.getUom() + "\"}");
-            
+
             b = Boolean.TRUE;
-        } pw.print("]");
-        
+        }
+        pw.print("]");
+
     }
-    
-    public void getProduct(HttpServletRequest request, HttpServletResponse response) 
-        throws IOException, StockInventoryDaoException {
-        
+
+    public void getProduct(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, StockInventoryDaoException {
+
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         String term = request.getParameter("term");
-        
+
         /* DAO | Define needed dao here */
         ProductDao productDao = DaoFactory.createProductDao();
         StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
-        
+
         /* TRANSACTION | Something complex here */
         pw.print("[");
         List<Product> ps;
-        if(request.getParameter("mode").equals("name")) {
+        if (request.getParameter("mode").equals("name")) {
             ps = productDao.findWhereProductNameEquals(term, 20);
         } else {
             ps = productDao.findWhereProductCodeEquals(term, 20);
         }
-        for(Product x : ps) {
-            if(b)
+        for (Product x : ps) {
+            if (b) {
                 pw.print(",");
-            
+            }
+
             StockInventory si = stockInventoryDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
-            
+
             pw.print("{\"itemCode\": \"" + x.getProductCode() + "\", ");
             pw.print("\"itemName\": \"" + x.getProductName() + "\",");
             pw.print("\"type\": \"" + x.getProductCategory() + "\",");
             pw.print("\"soh\": \"" + si.getBalance() + "\",");
             pw.print("\"uom\": \"" + x.getUom() + "\"}");
-            
+
             b = Boolean.TRUE;
-            
-        } pw.print("]");
-        
+
+        }
+        pw.print("]");
+
     }
-    
+
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         /* DATA | get initial value */
@@ -175,10 +179,10 @@ public class StoreWithdrawalSlipController extends MultiActionController {
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-        
+
         /* DAO | Define needed dao here */
         SwsDao swsDao = DaoFactory.createSwsDao();
-        
+
         /* TRANSACTION | Something complex here */
         sb.append("{\"maxpage\": ").append(swsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
         List<Map<String, Object>> ms = swsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"), lu.getDepartmentCode());
@@ -193,7 +197,7 @@ public class StoreWithdrawalSlipController extends MultiActionController {
             sb.append("\"5\": \"").append(x.get("department_name")).append("\", ");
             sb.append("\"6\": \"").append(x.get("sws_info")).append("\", ");
             sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
-            
+
             b = Boolean.TRUE;
         }
         sb.append("]}");
@@ -201,5 +205,19 @@ public class StoreWithdrawalSlipController extends MultiActionController {
         pw.flush();
         pw.close();
     }
-    
+
+    public void generateNumber(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            SwsDao swsDao = DaoFactory.createSwsDao();
+            String swsCode = swsDao.generateNumber(lu.getUserId(), request.getParameter("department"));
+            
+            response.getWriter().print("{\"number\": \"" + swsCode + "\"}");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -111,7 +111,7 @@ public class FishReceivingReportController extends MultiActionController {
             throws IOException, ParseException {
         /* DATA | get initial value */
         StringBuilder sb = new StringBuilder();
-        String[][] row = new String[1][1];
+        String[][] row = new String[1][2];
         String batchNo = request.getParameter("batchNo");
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
@@ -133,6 +133,7 @@ public class FishReceivingReportController extends MultiActionController {
                     sb.append(",");
                 }
                 row[0][0] = x.get("ws_no").toString();
+                row[0][1] = x.get("ws_type").toString();
                 sb.append("{\"wsNo\":\"").append(x.get("ws_no").toString()).append("\",");
                 sb.append("\"dateShift\":\"").append(sdf.format(sdfDB.parse(x.get("date_shift").toString()))).append("\",");
                 sb.append("\"regu\":\"").append(x.get("regu").toString()).append("\",");
@@ -141,7 +142,7 @@ public class FishReceivingReportController extends MultiActionController {
                 // check if end of list (only 1 loop)
                 if (ms.size() == (i + 1)) {
                     sb.append("</ul>\"}");
-                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0])) {
+                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
                     row[0][0] = null;
                     sb.append("</ul>\"}");
                 }
@@ -150,7 +151,7 @@ public class FishReceivingReportController extends MultiActionController {
                 // check if end of list
                 if (ms.size() == (i + 1)) {
                     sb.append("</ul>\"}");
-                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0])) {
+                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
                     row[0][0] = null;
                     sb.append("</ul>\"}");
                 }

@@ -380,6 +380,9 @@ public class NewReportController extends MultiActionController {
     public ModelAndView getDailyFishInCS(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/fish/DailyFishInCS");
     }
+    public ModelAndView getSummaryFishInCS(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("default/fish/SummaryFishInCS");
+    }
 //    public ModelAndView getFishStockCard(HttpServletRequest request, HttpServletResponse response) {
 //        return new ModelAndView("default/fish/FishStockCard");
 //    }

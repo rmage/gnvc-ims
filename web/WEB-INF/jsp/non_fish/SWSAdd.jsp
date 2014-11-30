@@ -38,11 +38,12 @@
                                 <tr>
                                     <td>SWS Number</td>
                                     <td>
-                                        <input id="swsCode" name="swsCode" pattern="[0-9]{1,}" type="text" required>
+                                        <input id="swsCode" name="swsCode" pattern="[0-9]{1,}" type="text" required readonly>
                                         <select id="vZero" name="vZero">
                                             <option value="0">Normal</option>
                                             <option value="1">Confirmatory</option>
                                         </select>
+                                        <input type="button" id="generateNumber" value="Generate Number">
                                     </td>
                                     <td>SWS Date</td>
                                     <td><input id="swsDate" name="swsDate" size="10" type="text" required="true" /></td>
@@ -67,14 +68,14 @@
                                                 out.print("<select id=\"departmentCode\">");
                                                 out.print("<option value=\"7042\">7042 - Inventory Management</option>");
                                                 out.print("<option value=\"7040\">7040 - Fixed Labeling</option>");
-                                                out.print("<option value=\"7037\">7039 - Variable Labeling</option>");
+                                                out.print("<option value=\"7039\">7039 - Variable Labeling</option>");
                                                 out.print("</select>");
                                             } else {
                                                 String[] x = ((HashMap) request.getAttribute("model")).get("department").toString().split(":");
                                                 out.print("<input id=\"departmentCode\" size=\"4\" type=\"text\" value=\"" + x[0] + "\" readonly required> " + x[1]);
                                             }
 //                                            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-                                        %>
+%>
                                     </td>
                                     <td>Info</td>
                                     <td>
@@ -179,7 +180,7 @@
             };
 
             $('#swsForm').bind('submit', function() {
-                if ($('#main tr').length !== 0) {
+                if ($('#main tr').length !== 0 && $('#swsCode').val() !== '') {
                     if ($('#vZero').val() === '1' && $i.val().indexOf('CONFIRMATORY; ') < 0) {
                         $i.val('CONFIRMATORY; ' + $i.val());
                     }
@@ -199,6 +200,33 @@
                 }
 
                 return false;
+            });
+
+            /* FYA | November 26, 2014 | stores withdrawal number request */
+            $('#generateNumber').bind('click', function() {
+                if ($('#main tr').length > 0) {
+                    $(this).val('Working....');
+                    $(this).attr('disabled', 'disabled');
+                    $.ajax({
+                        url: '?', method: 'post',
+                        data: {action: 'generateNumber', department: $('#departmentCode').val()},
+                        dataType: 'json',
+                        success: function(json) {
+                            if (json.number !== '') {
+                                $('#swsCode').val(json.number);
+                                $('#generateNumber').val('Success');
+                            } else {
+                                $('#generateNumber').val('Failed');
+                            }
+                        },
+                        error: function() {
+                            $('#generateNumber').val('Failed, Try to Reload Page');
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    alert('No item selected, try select item first!');
+                }
             });
 
             function numberWithCommas(x) {

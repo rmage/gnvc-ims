@@ -46,15 +46,15 @@ public class FishMovingDaoImpl extends AbstractDAO implements FishMovingDao {
     }
 
     public List<Map<String, Object>> getBatchInCs(int storageId) {
-        return jdbcTemplate.queryForList("EXEC COMMON_GET_BATCH_IN_CS ?", storageId);
+        return jdbcTemplate.queryForList("EXEC F_GET_BATCH_IN_CS ?", storageId);
     }
 
     public List<Map<String, Object>> getFishStorage() {
-        return jdbcTemplate.queryForList("EXEC COMMON_GET_COLD_STORAGE");
+        return jdbcTemplate.queryForList("EXEC F_GET_COLD_STORAGE");
     }
 
     public List<Map<String, Object>> getFishInCsBatch(int storageId, int vesselId) {
-        return jdbcTemplate.queryForList("EXEC COMMON_GET_FISH_IN_CS_BATCH ?, ?", storageId, vesselId);
+        return jdbcTemplate.queryForList("EXEC F_GET_FISH_IN_CS_BATCH ?, ?", storageId, vesselId);
     }
     
     public void insertD(FishMovingDetail fmd) {

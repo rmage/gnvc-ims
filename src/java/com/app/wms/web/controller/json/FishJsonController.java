@@ -389,4 +389,38 @@ public class FishJsonController extends MultiActionController {
 
         return jsonPage.toString();
     }
+
+    /* ADDED | by FYA on November 28, 2014 */
+    public ModelAndView getBalanceForWithdrawal(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        Integer vesselId = Integer.valueOf(request.getParameter("vesselId"));
+        Integer storageId = Integer.valueOf(request.getParameter("storageId"));
+        FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
+        List<FishBalance> fishBalanceList = fishBalanceDao.getWithdrawableFish(vesselId, storageId);
+
+        JSONArray jsonArray = new JSONArray();
+        for (FishBalance fishBalance : fishBalanceList) {
+            JSONObject dataObject = new JSONObject();
+            dataObject.put("fishId", fishBalance.getFishId());
+            dataObject.put("storageId", fishBalance.getStorageId());
+            dataObject.put("storageName",
+                    fishBalance.getStorageId() == 0 ? "FRESH" : fishBalance.getStorage().getCode());
+            dataObject.put("fishCode", fishBalance.getFish().getCode());
+            dataObject.put("balance", decf.format(fishBalance.getBalance()));
+            dataObject.put("fishDesc", fishBalance.getFish().getFishType().getDescription()
+                    + " " + fishBalance.getFish().getFishWeightType().getDescription());
+
+            jsonArray.put(dataObject);
+        }
+
+        int totalPage = countPage(fishBalanceList);
+        int totalRecords = fishBalanceList.size();
+
+        String data = compileJson(jsonArray, totalPage, totalRecords);
+        HashMap<String, Object> modelMap = new HashMap<String, Object>();
+        modelMap.put("data", data);
+
+        return new ModelAndView("fish/FishJsonView", "model", modelMap);
+    }
 }

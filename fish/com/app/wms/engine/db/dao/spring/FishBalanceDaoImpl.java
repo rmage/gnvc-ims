@@ -172,23 +172,22 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
     public String getTableName() {
         return "fish_balance";
     }
-    
-    /* GNVS | Actual Balance */
 
+    /* GNVS | Actual Balance */
     public int insertActual(FishBalance dto) {
         String query = "INSERT INTO fish_balance_actual"
                 + " (vessel_id, storage_id, fish_id, balance,"
                 + " created_date, created_by, is_active, is_delete)"
                 + " VALUES(?,?,?,?,?,?,?,?); SELECT @@IDENTITY;";
 
-        int primaryKey = jdbcTemplate.queryForInt(query, 
-            new Object[]{dto.getVesselId(), dto.getStorageId(), dto.getFishId(),
-                dto.getBalance(), dto.getCreatedDate(), dto.getCreatedBy(),
-                dto.getIsActive(), dto.getIsDelete()}
+        int primaryKey = jdbcTemplate.queryForInt(query,
+                new Object[]{dto.getVesselId(), dto.getStorageId(), dto.getFishId(),
+                    dto.getBalance(), dto.getCreatedDate(), dto.getCreatedBy(),
+                    dto.getIsActive(), dto.getIsDelete()}
         );
         return primaryKey;
     }
-    
+
     @Override
     public void updateActual(int id, FishBalance dto) throws DaoException {
         String query = "UPDATE fish_balance_actual"
@@ -212,7 +211,7 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
             dto.getBalance(), dto.getUpdatedDate(), dto.getUpdatedBy(),
             dto.getIsActive(), dto.getIsDelete(), id});
     }
-    
+
     @Override
     public FishBalance findByPrimaryKeyActual(int id) throws DaoException {
         String query = "SELECT * FROM fish_balance_actual WHERE id=?";
@@ -220,7 +219,7 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
 
         return resultList.size() == 0 ? null : resultList.get(0);
     }
-    
+
     @Override
     public FishBalance findUniqueFishBalanceActual(int vesselId, int storageId, int fishId) {
         String query = "SELECT * FROM fish_balance_actual WHERE vessel_id=? AND storage_id=? AND fish_id=?";
@@ -230,13 +229,33 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
 
         return resultList.size() == 0 ? null : resultList.get(0);
     }
-    
+
     public List<FishBalance> getWithdrawableFish(int vesselId) {
-        String query = "SELECT * FROM fish_balance WHERE vessel_id = ? AND balance IS NOT NULL";
+        String query = "SELECT fb.* FROM fish_balance fb "
+                + "	LEFT JOIN fish_storage fs ON fs.id = storage_id "
+                + "	LEFT JOIN fish f ON f.id = fb.fish_id "
+                + "	LEFT JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	LEFT JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+//                + "WHERE fb.vessel_id = ? AND fb.balance IS NOT NULL AND fb.balance > 0 "
+                + "WHERE fb.vessel_id = ? AND fb.balance IS NOT NULL "
+                + "ORDER BY fs.description, ft.description, fwt.code";
 //        String query = "SELECT * FROM fish_balance_actual WHERE vessel_id = ? AND balance IS NOT NULL";
         List<FishBalance> resultList = jdbcTemplate.query(query, this, vesselId);
 
         return resultList;
     }
     
+    public List<FishBalance> getWithdrawableFish(int vesselId, int storageId) {
+        String query = "SELECT fb.* FROM fish_balance fb "
+                + "	LEFT JOIN fish_storage fs ON fs.id = storage_id "
+                + "	LEFT JOIN fish f ON f.id = fb.fish_id "
+                + "	LEFT JOIN fish_type ft ON ft.id = f.fish_type_id "
+                + "	LEFT JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id "
+                + "WHERE fb.vessel_id = ? AND fb.balance IS NOT NULL AND fb.storage_id = ? "
+                + "ORDER BY fs.description, ft.description, fwt.code";
+        List<FishBalance> resultList = jdbcTemplate.query(query, this, vesselId, storageId);
+
+        return resultList;
+    }
+
 }

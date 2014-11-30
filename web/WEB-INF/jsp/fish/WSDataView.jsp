@@ -97,7 +97,7 @@
                                	 </tr>
                                	 <tr class="detail_genap">
                                     <td></td>
-                                    <td width="20%">Regu</td>
+                                    <td width="20%">Group</td>
                                     <td class="style1">
                                         <label>
                                             <input type="text" name="regu" id="regu" size="30" readonly="readonly"                                                    

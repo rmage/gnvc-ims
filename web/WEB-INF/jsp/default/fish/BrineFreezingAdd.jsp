@@ -56,7 +56,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Regu</td>
+                                    <td>Group</td>
                                     <td>
                                         <input id="regu" type="text" size="3" required="required" /> 
                                     </td>

@@ -124,7 +124,7 @@
             $('#frDate').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy"});
             $('#fromBatchNo').autocomplete({
                 source: '?action=getBatchInfo',
-                minLength: 3,
+                minLength: 2,
                 select: function(event, ui) {
                     $('#fromBatchNo').data('vesselId', ui.item.id);
                     $('#fromBatchNo').val(ui.item.batchNo);
@@ -140,7 +140,7 @@
             };
             $('#toBatchNo').autocomplete({
                 source: '?action=getBatchInfo',
-                minLength: 3,
+                minLength: 2,
                 select: function(event, ui) {
                     $('#toBatchNo').data('vesselId', ui.item.id);
                     $('#toBatchNo').val(ui.item.batchNo);

@@ -23,4 +23,6 @@ public interface FishBalanceDao extends GeneralDao<FishBalance> {
     
     public List<FishBalance> getWithdrawableFish(int vesselId);
     
+    public List<FishBalance> getWithdrawableFish(int vesselId, int storageId);
+    
 }

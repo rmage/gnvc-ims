@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Daily Inventory of Frozen Fish in Cold Storage</title>
+        <title>IMS &therefore; Summary Inventory of Frozen Fish in Cold Storage per Supplier</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             .ui-datepicker { display: none; }
@@ -21,12 +21,12 @@
                 <div class="box">
                     <form action="GenerateReport.htm" id="search" method="post">
                         <input type="hidden" name="action" value="index" />
-                        <input type="hidden" name="item" value="FishDailyInCS" />
+                        <input type="hidden" name="item" value="FishSummaryInCS" />
                         <input type="hidden" name="type" value="xls" />
                         <input type="hidden" id="params" name="params" value="" />
                         <input type="hidden" id="date" name="date" value="<%=cDateH%>">
                         <table class="collapse tblForm row-select">
-                            <caption>Stock Card &therefore; Fish per Cold Storage</caption>
+                            <caption>Stock Card &therefore; Fish per Batch</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">As Of</td>

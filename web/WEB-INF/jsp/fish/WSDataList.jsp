@@ -63,7 +63,7 @@
             $('#main tr td:nth-child(2)').live('mouseenter', function() {
                 var $o = $(this).find('a');
                 if($o.attr('href').indexOf('FishWS') < 0) {
-                    $o.attr('href', $o.attr('href').replace('Fish', 'Fish' + $(this).parent().find('td:eq(4)').html()));
+                    $o.attr('href', $o.attr('href').replace('Fish', 'Fish' + $(this).parent().find('td:eq(4)').html().replace(/\d/g, '')));
                 }
             });
         </script>

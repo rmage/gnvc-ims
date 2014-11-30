@@ -35,9 +35,9 @@
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td style="width: 10%;">WSS Number</td>
-                                    <td style="width: 40%;"><input id="wssCode" name="wssCode" type="text" required="required" /></td>
+                                    <td style="width: 40%;"><input id="wssCode" name="wssCode" type="text" size="13" required /></td>
                                     <td style="width: 10%;">Batch Number</td>
-                                    <td><input id="batchNo" name="batchNo" type="text" size="10" required="required" /> </td>
+                                    <td><input id="batchNo" name="batchNo" type="text" size="13" required="required" /> </td>
                                 </tr>
                                 <tr>
                                     <td>Date From</td>

@@ -108,7 +108,7 @@
                     $('#info').html(ui.item.boat + ' / ' + ui.item.supplier);
                     $('#dateShiftF').focus();
 
-                    if (ui.item.batchNo.slice(-1) === 'F') {
+                    if (ui.item.batchNo.indexOf('NF') > -1) {
                         $('#type').val('FRESH');
                     } else {
                         $('#type').val('FROZEN');

@@ -62,23 +62,24 @@
                 $('#addForm').validationEngine('attach');
 
                 $('#addItem').click(function() {
-                    if ($('#batchNo').val() != '') {
+                    if ($('#batchNo').val() !== '') {
+                        if ($('#fishId option').length === 0) {
+                            $.ajax({
+                                url: 'FishSpoilageData.htm?term=' + $('#batchNo').val(),
+                                method: 'post',
+                                data: {action: 'getFishType', term: $('#batchNo').val()},
+                                dataType: 'json',
+                                success: function(data) {
 
-                        $.ajax({
-                            url: 'FishSpoilageData.htm?term=' + $('#batchNo').val(),
-                            method: 'post',
-                            data: {action: 'getFishType', term: $('#batchNo').val()},
-                            dataType: 'json',
-                            success: function(data) {
+                                    var options = '';
+                                    for (var i = 0; i < data.length; i++) {
+                                        options += '<option value="' + data[i].id + '">' + data[i].code + ' ' + data[i].description + '</option>';
+                                    }
 
-                                var options = '';
-                                for (var i = 0; i < data.length; i++) {
-                                    options += '<option value="' + data[i].id + '">' + data[i].code + ' ' + data[i].description + '</option>';
+                                    $('#fishId').html(options);
                                 }
-
-                                $('#fishId').html(options);
-                            }
-                        });
+                            });
+                        }
 
                         $("#dialog-spoilage").dialog({
                             width: 545,

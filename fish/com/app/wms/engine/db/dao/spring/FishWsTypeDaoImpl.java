@@ -95,7 +95,7 @@ public class FishWsTypeDaoImpl extends AbstractDAO
 
 	@Override
 	public List<FishWSType> findAllActive() throws DaoException {
-		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y'";
+		String query = "SELECT * FROM " + getTableName() + " WHERE is_active='Y' ORDER BY code";
 		List<FishWSType> resultList = jdbcTemplate.query(query, this);
 		
 		return resultList;

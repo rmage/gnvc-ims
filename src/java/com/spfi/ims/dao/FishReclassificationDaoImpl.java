@@ -51,10 +51,10 @@ public class FishReclassificationDaoImpl extends AbstractDAO implements FishRecl
         }
     }
     
-    public List<Map<String, Object>> getBatchInfo(String batchNo) { return jdbcTemplate.queryForList("EXEC COMMON_GET_BATCH_INFO ?", batchNo); }
+    public List<Map<String, Object>> getBatchInfo(String batchNo) { return jdbcTemplate.queryForList("EXEC F_GET_BATCH_INFO ?", batchNo); }
     
-    public List<Map<String, Object>> getFish() { return jdbcTemplate.queryForList("EXEC COMMON_GET_FISH"); }
+    public List<Map<String, Object>> getFish() { return jdbcTemplate.queryForList("EXEC F_GET_FISH"); }
     
-    public List<Map<String, Object>> getFishStorage() { return jdbcTemplate.queryForList("EXEC COMMON_GET_COLD_STORAGE"); }
+    public List<Map<String, Object>> getFishStorage() { return jdbcTemplate.queryForList("EXEC F_GET_COLD_STORAGE"); }
     
 }

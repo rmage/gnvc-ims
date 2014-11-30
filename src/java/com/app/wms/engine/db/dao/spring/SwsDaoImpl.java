@@ -45,9 +45,10 @@ public class SwsDaoImpl extends AbstractDAO
     }
     
     public void insert(Sws s) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?,?, ?, ?, ?, ?)", 
-            s.getSwsCode(), s.getSwsDate(), s.getSwsInfo(), s.getDepartmentCode(), null, null, s.getCreatedBy(),
-            s.getCreatedDate(), null, null);
+        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?,?, ?, ?, ?, ?);"
+                + "UPDATE sq_nf_sws SET is_used = 'Y' WHERE document_number = ?;", 
+            s.getSwsCode(), s.getSwsDate(), s.getSwsInfo(), s.getDepartmentCode(), null, null, s.getCreatedBy(), s.getCreatedDate(), null, null,
+            s.getSwsCode());
     }
     
     public List<Sws> findByLogin(String departmentCode) {
@@ -61,6 +62,16 @@ public class SwsDaoImpl extends AbstractDAO
         } catch(Exception e) {
             e.printStackTrace();
             return 1;
+        }
+    }
+    
+    public String generateNumber(String userId, String departmentCode) {
+        try {
+            Map<String, Object> map = jdbcTemplate.queryForMap("EXEC SQ_NF_STORES_WITHDRAWAL ?, ?", userId, departmentCode);
+            return map == null ? "" : map.get("sws_code").toString();
+        } catch(Exception e) {
+            e.printStackTrace();
+            return "";
         }
     }
     

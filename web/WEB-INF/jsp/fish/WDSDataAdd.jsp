@@ -81,7 +81,7 @@
                     });
 
                     var vesselId = $('#vesselId').val();
-                    var ajaxUrl = 'FishJson.htm?action=findFishStockByVesselId&vesselId=' + vesselId;
+                    var ajaxUrl = 'FishJson.htm?action=getBalanceForWithdrawal&vesselId=' + vesselId + '&storageId=' + $('#storageId').val();
                     $("#list2").jqGrid('setGridParam', {url: ajaxUrl, page: 1}).trigger("reloadGrid");
                     $("#list2").jqGrid({
                         url: ajaxUrl,
@@ -297,6 +297,11 @@
                             </tbody>
                         </table>
 
+                        <select id="storageId" name="storageId">
+                            <c:forEach items="${model.fses}" var="x">
+                                <option value="${x.id}">${x.code} - ${x.description}</option>
+                            </c:forEach>
+                        </select>
                         <a href="javascript:void(0)" id="addRequest">Add Request</a><br /><br />
 
                         <table class="collapse tblForm row-select" id="main">
@@ -486,6 +491,13 @@
                 }
 
                 return false;
+            });
+            
+            // keyboard shortcut on add item
+            $(document).bind('keydown', function(e) {
+                if (e.keyCode === 107 && e.altKey) {
+                    $('#addRequest').trigger('click');
+                }
             });
         </script>
     </body>
