@@ -72,8 +72,8 @@
 
                 $('#addRequest').click(function() {
                     $("#dialog-stock").dialog({
-                        width: 500,
-                        height: 350,
+                        width: 550,
+                        height: 500,
                         position: "center",
                         modal: true,
                         zindex: 9999,
@@ -95,7 +95,9 @@
                             {name: 'storageId', index: 'storageId', width: 0, hidden: true},
                             {name: 'fishDesc', index: 'fishDesc', width: 0, hidden: true}],
                         sortname: 'fishCode',
-                        rowNum: 10, rowList: [10, 20, 30],
+                        rowNum: 100,
+                        height: 400,
+                        width: 500,
                         jsonReader: {repeatitems: false},
                         onSelectRow: function(ids) {
                             var localRowData = $(this).getRowData(ids);
@@ -120,7 +122,7 @@
                             $('#totalData').val(rowCount);
                             $('#dialog-stock').dialog('close');
                         },
-                        pager: '#pager2', sortname: 'fishCode', viewrecords: true, sortorder: "desc"}
+                        pager: '#pager2', viewrecords: true, sortorder: "desc"}
                     ).trigger("reloadGrid");
 
                     jQuery("#list2").jqGrid('navGrid', '#pager2', {edit: false, add: false, del: false});

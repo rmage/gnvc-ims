@@ -817,6 +817,31 @@ public class DaoFactory {
     }
 
     /* GNVS | New Concept of Finish Goods */
+    public static FGBuyerDao createFGBuyerDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGBuyerDao) bf.getBean("FGBuyerDao");
+    }
+    
+    public static FGTopDao createFGTopDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGTopDao) bf.getBean("FGTopDao");
+    }
+    
+    public static FGDestinationDao createFGDestinationDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGDestinationDao) bf.getBean("FGDestinationDao");
+    }
+    
+    public static FGBrandDao createFGBrandDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGBrandDao) bf.getBean("FGBrandDao");
+    }
+    
+    public static FGFreightDao createFGFreightDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGFreightDao) bf.getBean("FGFreightDao");
+    }
+    
     public static FGLocationDao createFGLocationDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGLocationDao) bf.getBean("FGLocationDao");
@@ -835,6 +860,11 @@ public class DaoFactory {
     public static FGBookedOrderDao createFGBookedOrderDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGBookedOrderDao) bf.getBean("FGBookedOrderDao");
+    }
+    
+    public static FGBookedOrderAddendumDao createFGBookedOrderAddendumDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGBookedOrderAddendumDao) bf.getBean("FGBookedOrderAddendumDao");
     }
 
     public static FGPalletTransferDao createFGPalletTransferDao() {

@@ -3,13 +3,12 @@ package com.spfi.ims.dao;
 import com.app.wms.engine.db.dao.spring.AbstractDAO;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-public class FGBookedOrderDaoImpl extends AbstractDAO implements FGBookedOrderDao {
+public class FGBookedOrderAddendumDaoImpl extends AbstractDAO implements FGBookedOrderAddendumDao {
     
     protected SimpleJdbcTemplate jdbcTemplate;
     protected DataSource dataSource;
@@ -21,7 +20,7 @@ public class FGBookedOrderDaoImpl extends AbstractDAO implements FGBookedOrderDa
     
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC FG_BOOKED_ORDER_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC FG_BOOKED_ORDER_ADDENDUM_MAX_PAGE ?, ?", show, where);
         } catch(Exception e) {
             e.printStackTrace();
             return 1;
@@ -30,7 +29,7 @@ public class FGBookedOrderDaoImpl extends AbstractDAO implements FGBookedOrderDa
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC FG_BOOKED_ORDER_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC FG_BOOKED_ORDER_ADDENDUM_LIST ?, ?, ?, ?", page, show, where, order);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -55,17 +54,8 @@ public class FGBookedOrderDaoImpl extends AbstractDAO implements FGBookedOrderDa
         }
     }
     
-    public List<Map<String, Object>> findByCode(String borCode) {
-        try {
-            return jdbcTemplate.queryForList("EXEC FG_BOOKED_ORDER_FIND_BY_CODE_FOR_ADDENDUM ?", borCode);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return new ArrayList<Map<String, Object>>();
-        }
-    }
-    
     public void insert(String data, String createdBy) {
-        jdbcTemplate.update("EXEC FG_BOOKED_ORDER_INSERT ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC FG_BOOKED_ORDER_ADDENDUM_INSERT ?, ?", data, createdBy);
     }
     
 }

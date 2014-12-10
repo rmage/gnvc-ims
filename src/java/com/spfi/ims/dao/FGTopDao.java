@@ -4,18 +4,20 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-public interface FGBookedOrderDao {
+public interface FGTopDao {
     
     public int ajaxMaxPage(BigDecimal show, String where);
     
+    public Map<String, Object> findById(int id);
+    
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
-    public List<Map<String, Object>> getItem(int packId);
-    
-    public List<Map<String, Object>> getPackStyle(String packStyle);
-    
-    public List<Map<String, Object>> findByCode(String borCode);
+    public List<Map<String, Object>> findAllActive();
     
     public void insert(String data, String createdBy);
+    
+    public void edit(int key, String data, String updatedBy);
+    
+    public void delete(int key, String updatedBy);
     
 }

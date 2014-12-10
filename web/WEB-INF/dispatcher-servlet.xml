@@ -307,7 +307,21 @@
     </bean>
     
     <!-- GNVS | New Concept of Finish Goods -->
-    
+    <bean name="/FGBuyer.htm" class="com.spfi.ims.controller.FGBuyerController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGTop.htm" class="com.spfi.ims.controller.FGTopController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGDestination.htm" class="com.spfi.ims.controller.FGDestinationController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGBrand.htm" class="com.spfi.ims.controller.FGBrandController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGFreight.htm" class="com.spfi.ims.controller.FGFreightController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     <bean name="/FGLocation.htm" class="com.spfi.ims.controller.FGLocationController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
@@ -318,6 +332,9 @@
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/FGBookedOrder.htm" class="com.spfi.ims.controller.FGBookedOrderController">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/FGBookedOrderAddendum.htm" class="com.spfi.ims.controller.FGBookedOrderAddendumController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/FGPalletTransfer.htm" class="com.spfi.ims.controller.FGPalletTransferController">

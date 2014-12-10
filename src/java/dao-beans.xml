@@ -373,6 +373,21 @@
     </bean>
     
     <!-- GNVS | New Concept of Finish Goods -->
+    <bean id="FGBuyerDao" class="com.spfi.ims.dao.FGBuyerDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGTopDao" class="com.spfi.ims.dao.FGTopDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGDestinationDao" class="com.spfi.ims.dao.FGDestinationDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGBrandDao" class="com.spfi.ims.dao.FGBrandDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGFreightDao" class="com.spfi.ims.dao.FGFreightDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
     <bean id="FGLocationDao" class="com.spfi.ims.dao.FGLocationDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
@@ -383,6 +398,9 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGBookedOrderDao" class="com.spfi.ims.dao.FGBookedOrderDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <bean id="FGBookedOrderAddendumDao" class="com.spfi.ims.dao.FGBookedOrderAddendumDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
     <bean id="FGPalletTransferDao" class="com.spfi.ims.dao.FGPalletTransferDaoImpl" scope="prototype">

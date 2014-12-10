@@ -34,6 +34,7 @@ import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.FishWs;
 import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.util.Map;
 
 public class FishJsonController extends MultiActionController {
 
@@ -397,20 +398,28 @@ public class FishJsonController extends MultiActionController {
         Integer vesselId = Integer.valueOf(request.getParameter("vesselId"));
         Integer storageId = Integer.valueOf(request.getParameter("storageId"));
         FishBalanceDao fishBalanceDao = DaoFactory.createFishBalanceDao();
-        List<FishBalance> fishBalanceList = fishBalanceDao.getWithdrawableFish(vesselId, storageId);
+//        List<FishBalance> fishBalanceList = fishBalanceDao.getWithdrawableFish(vesselId, storageId);
+        List<Map<String, Object>> fishBalanceList = fishBalanceDao.getFishBalance(vesselId, storageId);
 
         JSONArray jsonArray = new JSONArray();
-        for (FishBalance fishBalance : fishBalanceList) {
+//        for (FishBalance fishBalance : fishBalanceList) {
+        for(Map<String, Object> x : fishBalanceList) {
             JSONObject dataObject = new JSONObject();
-            dataObject.put("fishId", fishBalance.getFishId());
-            dataObject.put("storageId", fishBalance.getStorageId());
-            dataObject.put("storageName",
-                    fishBalance.getStorageId() == 0 ? "FRESH" : fishBalance.getStorage().getCode());
-            dataObject.put("fishCode", fishBalance.getFish().getCode());
-            dataObject.put("balance", decf.format(fishBalance.getBalance()));
-            dataObject.put("fishDesc", fishBalance.getFish().getFishType().getDescription()
-                    + " " + fishBalance.getFish().getFishWeightType().getDescription());
-
+//            dataObject.put("fishId", fishBalance.getFishId());
+//            dataObject.put("storageId", fishBalance.getStorageId());
+//            dataObject.put("storageName",
+//                    fishBalance.getStorageId() == 0 ? "FRESH" : fishBalance.getStorage().getCode());
+//            dataObject.put("fishCode", fishBalance.getFish().getCode());
+//            dataObject.put("balance", decf.format(fishBalance.getBalance()));
+//            dataObject.put("fishDesc", fishBalance.getFish().getFishType().getDescription()
+//                    + " " + fishBalance.getFish().getFishWeightType().getDescription());
+            dataObject.put("fishId", x.get("fish_id"));
+            dataObject.put("storageId", x.get("storage_id"));
+            dataObject.put("storageName", x.get("storage_name"));
+            dataObject.put("fishCode", x.get("fish_code"));
+            dataObject.put("balance", decf.format(x.get("balance")));
+            dataObject.put("fishDesc", x.get("fish_description"));
+            
             jsonArray.put(dataObject);
         }
 

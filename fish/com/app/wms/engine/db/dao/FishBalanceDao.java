@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.app.wms.engine.db.dto.FishBalance;
 import com.app.wms.engine.db.exceptions.DaoException;
+import java.util.Map;
 
 public interface FishBalanceDao extends GeneralDao<FishBalance> {
 
@@ -23,6 +24,6 @@ public interface FishBalanceDao extends GeneralDao<FishBalance> {
     
     public List<FishBalance> getWithdrawableFish(int vesselId);
     
-    public List<FishBalance> getWithdrawableFish(int vesselId, int storageId);
+    public List<Map<String, Object>> getFishBalance(int vesselId, int storageId);
     
 }

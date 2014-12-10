@@ -91,7 +91,7 @@
                                         </th>
                                         <th>
                                             Total Weight to Move:
-                                            <input type="text" size="5" id="fishWeight" required="required" value="0" /> kg(s)
+                                            <input type="text" size="10" id="fishWeight" required="required" value="0" /> kg(s)
                                             <input type="button" value="Add Detail" id="add" />
                                         </th>
                                     </tr>
@@ -275,6 +275,7 @@
                 }
                 return false;
             });
+
             // row number assignment
             function showRowNumber() {
                 $('#fmDetail td.row').each(function(i) {

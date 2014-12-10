@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Booked Order &therefore; Create</title>
+        <title>IMS &therefore; Booked Order Addendum &therefore; Create</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -31,15 +31,24 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="#" id="fBor" name="fBor" method="post">
-                        <input type="hidden" id="borDate" name="borDate" value="<%=sdf.format(cDate)%>" />
+                        <input type="hidden" id="addendumDate" name="addendumDate" value="<%=sdf.format(cDate)%>" />
                         <table class="collapse tblForm row-select">
-                            <caption>Booked Order &therefore; Header</caption>
+                            <caption>Booked Order Addendum &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 175px;">Bor Number</td>
-                                    <td><input tabindex="1" type="text" id="borCode" name="borCode" required="required" onblur="validateIt(this)" data-type="string" /></td>
+                                    <td style="width: 175px;">Addendum Number</td>
+                                    <td><input tabindex="1" type="text" id="addendumNumber" name="addendumNumber" required onblur="validateIt(this)" data-type="string"></td>
+                                    <td>Addendum Date</td>
+                                    <td><input tabindex="2" type="text" id="addendumDatePicker" name="addendumDatePicker" size="10" required value="<%=sdfPicker.format(cDate)%>"></td>
+                                </tr>
+                                <tr>
+                                    <td>Bor Number</td>
+                                    <td>
+                                        <input tabindex="1" type="text" id="borCode" name="borCode" required onblur="validateIt(this)" data-type="string">
+                                        <input id="setBor" name="setBor" type="button" value="Set Bor Number">
+                                    </td>
                                     <td>Bor Date</td>
-                                    <td><input tabindex="2" type="text" id="borDatePicker" name="borDatePicker" size="10" required="required" value="<%=sdfPicker.format(cDate)%>" /></td>
+                                    <td><input tabindex="2" type="text" id="borDate" name="borDate" size="10" readonly></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -53,7 +62,7 @@
                         </table>
                     </form>
                     <table class="collapse tblForm">
-                        <caption>Booked Order &therefore; Detail</caption>
+                        <caption>Booked Order Addendum &therefore; Detail</caption>
                         <tbody>
                             <tr>
                                 <th colspan="4"><h2>#1 Specification</h2></th>
@@ -406,7 +415,7 @@
                             <td>Destination Port</td>
                             <td>
                                 <input id="iPort" title="Use option?" type="checkbox">
-                                <input tabindex="61" id="k10" size="50" type="text" />
+                                <input tabindex="61" id="k10" size="50" type="text">
                             </td>
                             <td>Oil Water Ratio</td>
                             <td><input tabindex="72" id="k21" type="text" /></td>
@@ -435,12 +444,69 @@
         <!-- javascript block HERE -->
         <script>
             //  BIND | Date Picker to bor date
-            $('#borDatePicker').datepicker({
+            $('#addendumDatePicker').datepicker({
                 dateFormat: "dd/mm/yy",
                 altFormat: "yy-mm-dd",
-                altField: "#borDate",
+                altField: "#addendumDate",
                 changeYear: true,
                 changeMonth: true
+            });
+
+            // BIND | setBor to lock which bor number
+            var dtlId = ['i', 'j', 'k'];
+            $('#setBor').bind('click', function() {
+                $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif">');
+                $.ajax({
+                    url: '?', type: 'post',
+                    data: {action: 'getBor', code: $('#borCode').val()},
+                    dataType: 'json',
+                    success: function(json) {
+                        if (json.length > 0) {
+                            $('#borCode').attr('readonly', true).val(json[0][1]);
+                            $('#borDate').val(json[0][2]);
+
+                            // LOOP | booked order detail information
+                            for (var i = 0; i < json.length; i++) {
+                                var spec = json[i][4].split('`');
+                                for (var j = 0; j < 25; j++) {
+                                    var $o = $('#' + dtlId[i] + j);
+                                    var n = $o.attr('id').slice(1);
+                                    
+                                    if (n === '8' || n === '24') {
+                                        $o.data('pend', spec[j]);
+                                        
+                                        if (n === '24') {
+                                            getItem(spec[25], $("#" + $o.attr("id").substring(0, 1) + "24"));
+                                        }
+                                    } else {
+                                        $o.val(spec[j]);
+                                    }
+
+                                    if ($o.is('select')) {
+                                        $o.trigger('change');
+                                    }
+                                }
+                                
+                                $('#' + dtlId[i] + '0').data('id', spec[25]);
+                            }
+
+                            setTimeout(function() {
+                                $('select').filter(function() {
+                                    return $(this).data('pend') && $(this).data('pend') !== '';
+                                }).each(function() {
+                                    $(this).val($(this).data('pend'));
+                                });
+                                
+                                alert('Set BOR Number completed!');
+                            }, 2000);
+                        } else {
+                            alert('BOR #' + $('#borCode').val() + ' not found?');
+                        }
+                    },
+                    complete: function() {
+                        $('img#load').remove();
+                    }
+                });
             });
 
             //  BIND | KEYDOWN and AUTOCOMPLETE in packstyle field
@@ -458,25 +524,8 @@
                     select: function(event, ui) {
                         $o.data("id", ui.item[1]);
                         $o.val(ui.item[2]);
-
-                        // ITEM | Get item list from selected pack_style
-                        $.ajax({
-                            url: "?", type: "post",
-                            data: {action: "getItem", key: $o.data("id")},
-                            dataType: "json",
-                            success: function(json) {
-                                $i.html("");
-                                for (var i = 0; i < json.length; i++) {
-                                    $i.append('<option value="' + json[i][1] + '" ' +
-                                            'data-cs="' + json[i][4] + '"' +
-                                            'data-nw="' + json[i][5] + '"' +
-                                            'data-dpw="' + json[i][6] + '"' +
-                                            'data-om="' + json[i][7] + '"' +
-                                            '>' + json[i][2] + ' | ' + json[i][3] + '</option>');
-                                }
-                                $i.trigger('change');
-                            }
-                        });
+                        
+                        getItem($o.data("id"), $i);
                         return false;
                     }
                 }).data('autocomplete')._renderItem = function(ul, item) {
@@ -486,6 +535,27 @@
                             .appendTo(ul);
                 };
             });
+
+            function getItem(id, $i) {
+                // ITEM | Get item list from selected pack_style
+                $.ajax({
+                    url: "?", type: "post",
+                    data: {action: "getItem", key: id},
+                    dataType: "json",
+                    success: function(json) {
+                        $i.html("");
+                        for (var i = 0; i < json.length; i++) {
+                            $i.append('<option value="' + json[i][1] + '" ' +
+                                    'data-cs="' + json[i][4] + '"' +
+                                    'data-nw="' + json[i][5] + '"' +
+                                    'data-dpw="' + json[i][6] + '"' +
+                                    'data-om="' + json[i][7] + '"' +
+                                    '>' + json[i][2] + ' | ' + json[i][3] + '</option>');
+                        }
+                        $i.trigger('change');
+                    }
+                });
+            }
 
             // BIND | Option change to auto display current item information
             $('#i24,#j24,#k24').bind('change', function() {
@@ -532,7 +602,7 @@
                 $(this).next().remove();
                 if ($(this).is(':checked')) {
                     var $t = $(this);
-                    
+
                     $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif">');
                     $.ajax({
                         url: '?', type: 'post',
@@ -567,6 +637,9 @@
                         for (var i = 1; i < 25; i++) {
                             data = data + $("#" + prefix + i).val() + "^";
                         }
+
+                        // DATA | bor_addendum
+                        data = data + $('#addendumNumber').val() + '^' + $('#addendumDate').val() + '^';
                         data = data + "~*";
                     }
                 });
@@ -577,7 +650,8 @@
 
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data + "@");
+                        console.log(data);
+//                        window.location.replace("?action=save&data=" + data + "`");
                     }
                 }
 

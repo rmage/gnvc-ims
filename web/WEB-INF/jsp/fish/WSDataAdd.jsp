@@ -461,7 +461,8 @@
 
             });
 
-            var wsTypes = ['WSNC', 'WSBF', 'WSABF'];
+//            var wsTypes = ['WSNC', 'WSBF', 'WSABF'];
+            var wsTypes = ['WSNC'];
             $('#wsTypeId').bind('change', function() {
                 for (var i = 0; i < wsTypes.length; i++) {
                     if ($(this).find('option:selected').html().indexOf(wsTypes[i]) > -1) {

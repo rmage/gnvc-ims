@@ -2,6 +2,7 @@ package com.spfi.ims.controller;
 
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.dao.FGBookedOrderAddendumDao;
 import com.spfi.ims.dao.FGBookedOrderDao;
 import com.spfi.ims.dao.FGBrandDao;
 import com.spfi.ims.dao.FGBuyerDao;
@@ -11,7 +12,6 @@ import com.spfi.ims.dao.FGTopDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +20,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-public class FGBookedOrderController extends MultiActionController {
-
+public class FGBookedOrderAddendumController extends MultiActionController {
+    
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
         /* DATA | get initial value */
         /* DAO | Define needed dao here */
         /* TRANSACTION | Something complex here */
-        return new ModelAndView("default/finish_goods/BookedOrderList");
+        return new ModelAndView("default/finish_goods/BookedOrderAddendumList");
     }
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) {
@@ -43,7 +43,7 @@ public class FGBookedOrderController extends MultiActionController {
         map.put("freights", fgfDao.findAllActive());
         map.put("tops", fgtDao.findAllActive());
         
-        return new ModelAndView("default/finish_goods/BookedOrderAdd", "ims", map);
+        return new ModelAndView("default/finish_goods/BookedOrderAddendumAdd", "ims", map);
     }
 
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
@@ -55,15 +55,15 @@ public class FGBookedOrderController extends MultiActionController {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             
             /* DAO | Define needed dao here */
-            FGBookedOrderDao fgboDao = DaoFactory.createFGBookedOrderDao();
+            FGBookedOrderAddendumDao fgboDao = DaoFactory.createFGBookedOrderAddendumDao();
             
             /* TRANSACTION | Something complex here */
             fgboDao.insert(data, lu.getUserId());
 
-            return new ModelAndView("redirect:FGBookedOrder.htm");
+            return new ModelAndView("redirect:FGBookedOrderAddendum.htm");
         } catch (Exception e) {
             e.printStackTrace();
-            return new ModelAndView("redirect:FGBookedOrder.htm?action=create");
+            return new ModelAndView("redirect:FGBookedOrderAddendum.htm?action=create");
         }
     }
 
@@ -73,10 +73,9 @@ public class FGBookedOrderController extends MultiActionController {
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         
         /* DAO | Define needed dao here */
-        FGBookedOrderDao fgboDao = DaoFactory.createFGBookedOrderDao();
+        FGBookedOrderAddendumDao fgboDao = DaoFactory.createFGBookedOrderAddendumDao();
         
         /* TRANSACTION | Something complex here */
         sb.append("{\"maxpage\": ").append(fgboDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
@@ -87,12 +86,44 @@ public class FGBookedOrderController extends MultiActionController {
             }
             sb.append("{\"1\": \"").append(x.get("bor_code")).append("\", ");
             sb.append("\"2\": \"").append(x.get("bor_code")).append("\", ");
-            sb.append("\"3\": \"").append(sdf.format(x.get("bor_date"))).append("\", ");
-            sb.append("\"4\": \"").append(x.get("created_by")).append("\"}");
+            sb.append("\"3\": \"").append(x.get("bor_date")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("borad_number")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("borad_date")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("created_by")).append("\"}");
             
             b = Boolean.TRUE;
         }
         sb.append("]}");
+        pw.print(sb.toString());
+        pw.flush();
+        pw.close();
+    }
+    
+    public void getBor(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        /* DATA | get initial value */
+        Boolean b = Boolean.FALSE;
+        PrintWriter pw = response.getWriter();
+        StringBuilder sb = new StringBuilder();
+        
+        /* DAO | Define needed dao here */
+        FGBookedOrderDao fgboDao = DaoFactory.createFGBookedOrderDao();
+        
+        /* TRANSACTION | Something complex here */
+        sb.append("[");
+        List<Map<String, Object>> ms = fgboDao.findByCode(request.getParameter("code"));
+        for (Map<String, Object> x : ms) {
+            if (b) {
+                sb.append(",");
+            }
+            sb.append("{\"1\": \"").append(x.get("bor_code")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("bor_date")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("bor_id")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("bor_specification")).append("\"}");
+            
+            b = Boolean.TRUE;
+        }
+        sb.append("]");
         pw.print(sb.toString());
         pw.flush();
         pw.close();
@@ -163,7 +194,7 @@ public class FGBookedOrderController extends MultiActionController {
         StringBuilder sb = new StringBuilder();
         
         /* DAO | Define needed dao here */
-        FGBookedOrderDao fgboDao = DaoFactory.createFGBookedOrderDao();
+        FGBookedOrderAddendumDao fgboDao = DaoFactory.createFGBookedOrderAddendumDao();
         
         /* TRANSACTION | Something complex here */
         sb.append("[");
@@ -193,7 +224,7 @@ public class FGBookedOrderController extends MultiActionController {
         StringBuilder sb = new StringBuilder();
         
         /* DAO | Define needed dao here */
-        FGBookedOrderDao fgboDao = DaoFactory.createFGBookedOrderDao();
+        FGBookedOrderAddendumDao fgboDao = DaoFactory.createFGBookedOrderAddendumDao();
         
         /* TRANSACTION | Something complex here */
         sb.append("[");
@@ -217,5 +248,5 @@ public class FGBookedOrderController extends MultiActionController {
         pw.flush();
         pw.close();
     }
-
+    
 }

@@ -21,6 +21,7 @@ import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import java.util.Map;
 
 public class FishBalanceDaoImpl extends AbstractDAO implements
         ParameterizedRowMapper<FishBalance>, FishBalanceDao {
@@ -256,6 +257,17 @@ public class FishBalanceDaoImpl extends AbstractDAO implements
         List<FishBalance> resultList = jdbcTemplate.query(query, this, vesselId, storageId);
 
         return resultList;
+    }
+    
+    public List<Map<String, Object>> getFishBalance(int vesselId, int storageId) {
+        return jdbcTemplate.queryForList("SELECT " +
+            "	f.id as fish_id, ? as storage_id, (SELECT code FROM fish_storage WHERE id = ?) as storage_name, " +
+            "	f.code as fish_code, ISNULL(fb.balance, 0) as balance, ft.description + ' ' + fwt.description as fish_description " +
+            "FROM fish f " +
+            "	INNER JOIN fish_type ft ON ft.id = f.fish_type_id " +
+            "	INNER JOIN fish_weight_type fwt ON fwt.id = f.fish_weight_type_id " +
+            "	LEFT JOIN fish_balance fb ON fb.fish_id = f.id AND fb.vessel_id = ? AND fb.storage_id = ? " +
+            "ORDER BY ft.description, fwt.code", storageId, storageId, vesselId, storageId);
     }
 
 }

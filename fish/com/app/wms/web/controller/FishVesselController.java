@@ -137,6 +137,8 @@ public class FishVesselController extends MultiActionController {
                         fishBalance.setStorageId(fishStorage.getId());
                         fishBalance.setFishId(fish.getId());
                         fishBalance.setBalance(Double.parseDouble("0"));
+                        fishBalance.setIsActive("Y");
+                        fishBalance.setIsDelete("N");
                         fishBalanceDao.insert(fishBalance);
                     }
                 }
