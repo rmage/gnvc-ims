@@ -218,7 +218,7 @@ public class PurchaseRequisitionController extends ReportManagerController {
 
         PrsDao dao = DaoFactory.createPrsDao();
 //		List<Prs> s = dao.findAll();
-        Integer size = dao.prsCount() + 1;
+        Integer size = dao.prsLastNumber() + 1;
         String year = new SimpleDateFormat("yy").format(new Date());
         String tail = ("0000000" + size).substring(("0000000" + size).length() - 7);
 

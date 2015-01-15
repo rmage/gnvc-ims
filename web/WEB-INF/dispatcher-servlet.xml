@@ -307,6 +307,9 @@
     </bean>
     
     <!-- GNVS | New Concept of Finish Goods -->
+    <bean name="/FGBookedOrder15.htm" class="com.spfi.ims.controller.FGBookedOrder15Controller">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     <bean name="/FGBuyer.htm" class="com.spfi.ims.controller.FGBuyerController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>

@@ -13,6 +13,8 @@ public interface FGItemDao {
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
     
+    public List<Map<String, Object>> findByItemCode(String itemCode);
+    
     public List<Map<String, Object>> getPackStyle();
     
     public void insert(String data, String createdBy);

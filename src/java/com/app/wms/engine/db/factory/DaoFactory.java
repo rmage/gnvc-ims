@@ -861,6 +861,11 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (FGBookedOrderDao) bf.getBean("FGBookedOrderDao");
     }
+
+    public static FGBookedOrder15Dao createFGBookedOrder15Dao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (FGBookedOrder15Dao) bf.getBean("FGBookedOrder15Dao");
+    }
     
     public static FGBookedOrderAddendumDao createFGBookedOrderAddendumDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
@@ -982,6 +987,12 @@ public class DaoFactory {
     public static CategoryItemCurrencyTypeDao createCategoryItemCurrencyTypeDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (CategoryItemCurrencyTypeDao) bf.getBean("CategoryItemCurrencyTypeDao");
+    }
+    
+    /* FYA | DB Logging */
+    public static DBLoggingDao createDBLoggingDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (DBLoggingDao) bf.getBean("DBLoggingDao");
     }
 
 }

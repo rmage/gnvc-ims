@@ -400,6 +400,9 @@
     <bean id="FGBookedOrderDao" class="com.spfi.ims.dao.FGBookedOrderDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    <bean id="FGBookedOrder15Dao" class="com.spfi.ims.dao.FGBookedOrder15DaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
     <bean id="FGBookedOrderAddendumDao" class="com.spfi.ims.dao.FGBookedOrderAddendumDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
@@ -489,5 +492,9 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
     
+    <!-- FYA | DB Logging -->
+    <bean id="DBLogginDao" class="com.spfi.ims.dao.DBLoggingDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
         
 </beans>

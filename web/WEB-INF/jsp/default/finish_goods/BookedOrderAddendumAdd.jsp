@@ -650,8 +650,8 @@
 
                 if (data !== "") {
                     if (confirm("Continue to save this document?")) {
-                        console.log(data);
-//                        window.location.replace("?action=save&data=" + data + "`");
+//                        console.log(data);
+                        window.location.replace("?action=save&data=" + data + "`");
                     }
                 }
 

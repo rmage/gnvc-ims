@@ -117,4 +117,7 @@ public interface PrsDao
         
         public List<Map<String, Object>> ajaxReadDetail(String prsNo);
         
+        // January 08, 2015 | FYA | get last number not by count
+        public int prsLastNumber();
+        
 }

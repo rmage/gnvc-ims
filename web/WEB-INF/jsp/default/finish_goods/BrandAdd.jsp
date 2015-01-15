@@ -36,7 +36,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Brand Same<span style="float: right">*</span></td>
+                                    <td>Brand Name<span style="float: right">*</span></td>
                                     <td><input type="text" id="brandName" maxlength="100" name="brandName" size="50" required></td>
                                 </tr>
                             </tbody>
