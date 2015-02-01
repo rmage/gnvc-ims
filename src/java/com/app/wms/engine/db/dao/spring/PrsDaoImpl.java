@@ -448,5 +448,25 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
         String lastPrs = jdbcTemplate.queryForObject("SELECT TOP(1) prsnumber FROM prs ORDER BY id DESC", String.class);
         return Integer.parseInt(lastPrs.substring(4, lastPrs.length()));
     }
+    
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String updatedBy) {
+        jdbcTemplate.update("EXEC PRC_PRS_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, updatedBy);
+    }
+    
+    public void ajaxNSave(String prsNumber, String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_PRS_CREATE ?, ?, ?, ?, ?", prsNumber, data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public Map<String, Object> getPrs(int key) {
+        return jdbcTemplate.queryForMap("SELECT id, prsnumber, CONVERT(VARCHAR(10), prsdate, 103) as prsdate, CONVERT(VARCHAR(10), requestdate, 103) as requestdate, remarks, department_name FROM prs WHERE id = ? AND is_active = 'Y'", key);
+    }
+    
+    public List<Map<String, Object>> getPrsDetail(int key) {
+        return jdbcTemplate.queryForList("SELECT pd.id, pd.productcode, pd.productname, pd.qty, pd.uom_name, ISNULL(pd.prs_soh, 0) as prs_soh FROM prs_detail pd INNER JOIN prs p ON p.prsnumber = pd.prsnumber WHERE p.id = ? AND p.is_active = 'Y' AND pd.is_active = 'Y'", key);
+    }
+    
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC PRC_PRS_DELETE ?, ?", key, updatedBy);
+    }
 
 }

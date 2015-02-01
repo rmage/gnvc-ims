@@ -38,7 +38,7 @@ public class ReportFactory {
         , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ, FishDailyInCS, FishSummaryInCS //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister //  Non-Fish Module | Form and Report List
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod //  Finished Goods Module | Form and Report List
-        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGPts, FGOfal, FGLmr //  Rendering Module | Form and Report List
+        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGBor15, FGPts, FGOfal, FGLmr //  Rendering Module | Form and Report List
         , RendDailyReport, RendSummaryReport, RendSales;
     }
 
@@ -151,6 +151,8 @@ public class ReportFactory {
         // Finished Goods Module | Form and Report List
         reportTemplateMap.put("FGBor", new ReportModel("finished_goods/bor", false));
         reportMap.put(Report.FGBor, reportTemplateMap.get("FGBor"));
+        reportTemplateMap.put("FGBor15", new ReportModel("finished_goods/bor15", false));
+        reportMap.put(Report.FGBor15, reportTemplateMap.get("FGBor15"));
         reportTemplateMap.put("FGPts", new ReportModel("finished_goods/pts", false));
         reportMap.put(Report.FGPts, reportTemplateMap.get("FGPts"));
         reportTemplateMap.put("FGOfal", new ReportModel("finished_goods/ofal", false));

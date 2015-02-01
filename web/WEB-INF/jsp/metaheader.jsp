@@ -254,3 +254,7 @@
         }
     };
 </script>
+
+<!-- 2015 | New Utilities -->
+<link rel="stylesheet" href="resources/css/gnvs.utilities.css">
+<script src="resources/js/gnvs.utilities.js"></script>

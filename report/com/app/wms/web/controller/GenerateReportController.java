@@ -86,6 +86,7 @@ public class GenerateReportController extends MultiActionController {
 
         //  Finished Goods Module | Form and Report List
         ListMap.put(Report.FGBor, "EXEC PRT_FG_BOOKED_ORDER_REPORT ?");
+        ListMap.put(Report.FGBor15, "EXEC PRT_FG_BOR15_REPORT ?");
         ListMap.put(Report.FGPts, "EXEC PRT_FG_PALLET_TRANSFER_SLIP ?");
         ListMap.put(Report.FGOfal, "EXEC PRT_FG_ORDERFILL_AUTHORITY_TO_LABEL ?");
         ListMap.put(Report.FGLmr, "EXEC PRT_FG_LABELING_MONITORING_REPORT ?");

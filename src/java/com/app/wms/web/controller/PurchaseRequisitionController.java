@@ -26,15 +26,16 @@ import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsDetail;
 import com.app.wms.engine.db.dto.StockInventory;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.PrsDaoException;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 
 public class PurchaseRequisitionController extends ReportManagerController {
-
-    private Integer size = 0;
 
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
@@ -184,7 +185,7 @@ public class PurchaseRequisitionController extends ReportManagerController {
             List<PrsDetail> prsDetails = new ArrayList<PrsDetail>();
 
             for (int i = 0; i < productcode1s.length; i++) {
-                
+
                 System.err.println("QTYs: " + qtys[i] + " / in Process");
                 PrsDetail prsDetail = new PrsDetail();
                 prsDetail.setPrsnumber(p.getPrsnumber());
@@ -377,7 +378,7 @@ public class PurchaseRequisitionController extends ReportManagerController {
         /* TRANSACTION | Something complex here */
         pw.print("[");
         List<Product> ps;
-        if(request.getParameter("mode").equals("name")) {
+        if (request.getParameter("mode").equals("name")) {
             ps = productDao.findWhereProductNameEquals(term, 20);
         } else {
             ps = productDao.findWhereProductCodeEquals(term, 20);
@@ -436,10 +437,10 @@ public class PurchaseRequisitionController extends ReportManagerController {
         pw.print("]}");
 
     }
-    
+
     public void ajaxReadDetail(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        
+
         /* DATA | get initial value */
         Boolean b = Boolean.FALSE;
         StringBuilder sb = new StringBuilder();
@@ -466,7 +467,86 @@ public class PurchaseRequisitionController extends ReportManagerController {
         }
         sb.append("]");
         response.getWriter().print(sb.toString());
-        
+
+    }
+
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createPrsDao().ajaxNSave(generatePrsNumber(request), data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) throws DepartmentDaoException {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        DepartmentDao daoDep = DaoFactory.createDepartmentDao();
+        List<Department> ds = daoDep.findAll();
+        List<Department> dropListDepartment = new ArrayList<Department>();
+        for (Department d : ds) {
+            if (lu.getDepartmentCode().equals(d.getDepartmentCode())) {
+                dropListDepartment.add(d);
+            }
+        }
+
+        map.put("dropListDepartment", dropListDepartment);
+
+        // PRS | current data
+        PrsDao pDao = DaoFactory.createPrsDao();
+        map.put("h", pDao.getPrs(Integer.parseInt(request.getParameter("key"))));
+        map.put("d", pDao.getPrsDetail(Integer.parseInt(request.getParameter("key"))));
+
+        return new ModelAndView("2_receive/PRSEdit", "model", map);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            System.out.println(data);
+            DaoFactory.createPrsDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createPrsDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:PurchaseRequisition.htm");
     }
 
 }
