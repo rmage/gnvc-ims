@@ -28,7 +28,7 @@ var gnvs = {
             for (var i = 0; i < level; i++) {
                 object = object.parent();
             }
-            
+
             return object;
         },
         reNumbering: function(tbody, col) {
@@ -37,13 +37,21 @@ var gnvs = {
             });
         },
         toDBDate: function(idnDate) {
-            idnDate = idnDate.split("/");
-            var date = new Date(idnDate[2], idnDate[1] - 1, idnDate[0]);
-            var curr_date = date.getDate();
-            var curr_month = date.getMonth() + 1; //Months are zero based
-            var curr_year = date.getFullYear();
-            
-            return curr_year + "-" + curr_month + "-" + curr_date;
+            if (idnDate !== '') {
+                idnDate = idnDate.split("/");
+                var date = new Date(idnDate[2], idnDate[1] - 1, idnDate[0]);
+                var curr_date = date.getDate();
+                var curr_month = date.getMonth() + 1; //Months are zero based
+                var curr_year = date.getFullYear();
+
+                return curr_year + "-" + curr_month + "-" + curr_date;
+            } else {
+                return '';
+            }
+        },
+        toViewDate: function(dbDate) {
+            dbDate = dbDate.split('-');
+            return dbDate[2] + '/' + dbDate[1] + '/' + dbDate[0];
         }
     }
 };

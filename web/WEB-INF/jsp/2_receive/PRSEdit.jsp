@@ -390,6 +390,10 @@
                             // console.log(data);
 
                             // 2015 Update | by FYA
+                            if (data === '') {
+                                data = header + 'X:s:-1:s::se:';
+                            }
+                            
                             gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
                                 if (json.message === '') {
                                     $('#btnCancel').trigger('click');

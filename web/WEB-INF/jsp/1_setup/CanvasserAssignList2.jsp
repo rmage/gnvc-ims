@@ -24,7 +24,7 @@
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">PRS Number</td>
-                                    <td><input type="text" name="prsnumber" /></td>
+                                    <td><input type="text" name="ca.prsnumber" /></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -96,7 +96,7 @@
                     }
                 }
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'),'');
+            util.initListTable($('#list'),'u:d');
             </script>
         </div>
     </body>

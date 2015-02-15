@@ -48,7 +48,7 @@ public class PurchaseDtlDaoImpl extends AbstractDAO
     }
     
     public List<PurchaseDtl> findByPo(int poCode) {
-        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE po_code = ?", this, poCode);
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE po_code = ? AND is_active = 'Y'", this, poCode);
     }
     
 }

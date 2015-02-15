@@ -79,5 +79,8 @@ public interface PrsDetailDao
         
         /* FYA : 07 January 2014 */
         public PrsDetail findByPrsProduct(String prsNumber, String productCode);
+        
+        // 2015 Update | by FYA
+        public List<PrsDetail> findUnassignedSupplier(String userId);
 
 }

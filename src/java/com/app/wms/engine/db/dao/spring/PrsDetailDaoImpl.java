@@ -294,4 +294,13 @@ public class PrsDetailDaoImpl extends AbstractDAO implements ParameterizedRowMap
         return pds.isEmpty() ? null : pds.get(0);
     }
 
+    // 2015 Update | by FYA
+    public List<PrsDetail> findUnassignedSupplier(String userId) {
+        return jdbcTemplate.query("SELECT prsd.id, prsd.prsnumber, prsd.productcode, prsd.productname, prsd.qty, prsd.uom_name FROM prs_detail prsd " +
+            "	INNER JOIN ( " +
+            "		SELECT acd.prsnumber, acd.productcode FROM assign_canv_dtl acd LEFT JOIN assign_canv_prc acp ON acp.prsnumber = acd.prsnumber AND acp.productcode = acd.productcode AND acp.is_active = 'Y' WHERE acp.id IS NULL AND acd.user_id = ? AND acd.is_active = 'Y' " +
+            "	) x ON x.prsnumber = prsd.prsnumber AND x.productcode = prsd.productcode " +
+            "ORDER BY prsd.prsnumber", this, userId);
+    }
+
 }

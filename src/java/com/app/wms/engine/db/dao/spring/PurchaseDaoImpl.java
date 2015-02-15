@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -81,21 +82,50 @@ public class PurchaseDaoImpl extends AbstractDAO
         return jdbcTemplate.query("SELECT po.* FROM " + getTableName() + " ORDER BY (CASE WHEN is_approved IS NULL THEN 0 ELSE 1 END), created_date DESC", this);
     }
 
-    public List<AssignCanvassing> findBySupplier(String supplierCode) {
-        return jdbcTemplate.query("SELECT * FROM assign_canv_prc acp "
-                + "LEFT JOIN po_detail pd ON pd.prsnumber = acp.prsnumber AND pd.product_code = acp.productcode "
-                + "WHERE acp.is_selected = 'Y' AND acp.supplier_code = ? AND pd.po_code IS NULL ", new AssignCanvassingDaoImpl(), supplierCode);
+    public List<AssignCanvassing> findBySupplier(String supplierCode, String userId) {
+        return jdbcTemplate.query("DECLARE @name VARCHAR(50) "
+                + "SELECT @name = name FROM \"user\" where user_id = ? "
+                + "SELECT * "
+                + "FROM assign_canv_prc acp "
+                + "WHERE supplier_code = ? AND is_selected = 'Y' AND is_active = 'Y' AND created_by = @name AND NOT EXISTS ( "
+                + "	SELECT 1 FROM po INNER JOIN po_detail pod ON pod.po_code = po.po_code AND pod.is_active = 'Y' "
+                + "	WHERE po.is_active = 'Y' AND po.supplier_code = acp.supplier_code AND pod.prsnumber = acp.prsnumber AND pod.product_code = acp.productcode AND po.created_by = @name "
+                + ")", new AssignCanvassingDaoImpl(), userId, supplierCode);
     }
 
     public int ajaxMaxPage(String where, BigDecimal show) {
-        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(po_code)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "" : where), show);
+        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(po_code)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? " WHERE is_active = 'Y' " : where + " AND is_active = 'Y' "), show);
     }
 
     public List<Purchase> ajaxSearch(String where, String order, int page, int show) {
         return jdbcTemplate.query("DECLARE @page INT, @show INT SELECT @page=?, @show=? "
                 + "SELECT * FROM (SELECT * , ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY created_date DESC" : order) + ") row "
-                + "FROM " + getTableName() + " " + (where.isEmpty() ? "" : where) + ") "
+                + "FROM " + getTableName() + " " + (where.isEmpty() ? " WHERE is_active = 'Y' " : where + " AND is_active = 'Y' ") + ") "
                 + "list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", this, page, show);
+    }
+
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_PO_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_PO_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC PRC_PO_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getPurchaseOrder(String poCode) {
+        return jdbcTemplate.queryForList("SELECT po.po_code, po.po_date, s.supplier_code, s.supplier_name, po.discount, po.pph, po.ppn, po.currency, po.remarks, "
+                + "	pod.id, prsd.prsnumber, prsd.productcode, prsd.productname, pod.department_code, prsd.qty, prsd.uom_name, acp.unit_price, pod.sub_total "
+                + "FROM po "
+                + "	INNER JOIN po_detail pod ON pod.po_code = po.po_code AND pod.is_active = 'Y' "
+                + "	INNER JOIN prs_detail prsd ON prsd.prsnumber = pod.prsnumber AND prsd.productcode = pod.product_code AND prsd.is_active = 'Y' "
+                + "	INNER JOIN assign_canv_prc acp ON acp.prsnumber = pod.prsnumber AND acp.productcode = pod.product_code AND acp.supplier_code = po.supplier_code AND acp.is_active = 'Y' "
+                + "	INNER JOIN supplier s ON s.supplier_code = po.supplier_code "
+                + "WHERE po.is_active = 'Y' AND po.po_code = ?", poCode);
     }
 
 }

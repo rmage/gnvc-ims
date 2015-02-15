@@ -24,32 +24,17 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.PrsDetailDaoException;
 import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 
 public class CanvassingAssignmentController extends MultiActionController {
 
-    /**
-     * Method 'findByPrimaryKey'
-     *
-     * @param request
-     * @param response
-     * @throws Exception
-     * @return ModelAndView
-     */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            HashMap m = null;
-            final String mode = request.getParameter("mode");
-            if (mode != null && mode.equals("edit")) {
-                m = this.getModelByPrimaryKey(request);
-                m.put("mode", "edit");
-                return new ModelAndView("1_setup/CanvasserAssignEdit", "model", m);
-            } else {
-                m = this.searchAndPaging(request, response);
-                return new ModelAndView("1_setup/CanvasserAssignList2", "model", m);
-            }
+            return new ModelAndView("1_setup/CanvasserAssignList2");
         } catch (Exception e) {
             e.printStackTrace();
             return new ModelAndView("Error", "th", e);
@@ -425,7 +410,7 @@ public class CanvassingAssignmentController extends MultiActionController {
             if (b) {
                 pw.print(",");
             }
-            pw.print("{\"1\": \"" + "\", ");
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
             pw.print("\"2\": \"" + x.getPrsnumber() + "\", ");
             pw.print("\"3\": \"" + x.getCanvassername() + "\"}");
 
@@ -433,4 +418,78 @@ public class CanvassingAssignmentController extends MultiActionController {
         }
         pw.print("]}");
     }
+
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createAssignCanvasserDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createAssignCanvasserDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:CanvassingAssignment.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            UserDao daoUser = DaoFactory.createUserDao();
+            model.put("cs", daoUser.findRoleCanvasser());
+            
+            int key = Integer.parseInt(request.getParameter("key"));
+            AssignCanvasserDao acDao = DaoFactory.createAssignCanvasserDao();
+            model.put("acs", acDao.getAssignedCanvasser(key));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/purchase/CanvasserAssignmentUpdate", "model", model);
+    }
+    
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createAssignCanvasserDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
 }

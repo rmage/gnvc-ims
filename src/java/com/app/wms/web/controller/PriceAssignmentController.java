@@ -12,15 +12,18 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.SupplierDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,32 +31,8 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 public class PriceAssignmentController extends MultiActionController {
 
-    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response)
-            throws ProductDaoException, SupplierDaoException {
-
-        HashMap m = new HashMap();
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
-        /* get prs and item */
-        ProductDao productDao = DaoFactory.createProductDao();
-        SupplierDao supplierDao = DaoFactory.createSupplierDao();
-        AssignCanvassingDao assignCanvassingDao = DaoFactory.createAssignCanvassingDao();
-        List<Product> ps = new ArrayList<Product>();
-        List<Supplier> ss = new ArrayList<Supplier>();
-        List<AssignCanvassing> acs = assignCanvassingDao.findByUserIdPA(lu.getUserId());
-        for (AssignCanvassing x : acs) {
-            Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
-            ps.add(p);
-
-            Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
-            ss.add(s);
-        }
-        m.put("ac", acs);
-        m.put("p", ps);
-        m.put("s", ss);
-
-        return new ModelAndView("non_fish/PAList", "model", m);
-
+    public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("non_fish/PAList");
     }
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response)
@@ -103,38 +82,43 @@ public class PriceAssignmentController extends MultiActionController {
 
     }
 
-    public void getSupplier(HttpServletRequest request, HttpServletResponse response)
+    public ModelAndView getSupplier(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ProductDaoException, SupplierDaoException {
 
         String supplierCode = request.getParameter("key");
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
 
         /* get assigned supplier */
         ProductDao productDao = DaoFactory.createProductDao();
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
         PrsDetailDao prsDetailDao = DaoFactory.createPrsDetailDao();
         AssignCanvassingDao assignCanvassingDao = DaoFactory.createAssignCanvassingDao();
-        List<AssignCanvassing> acs = assignCanvassingDao.findForPriceAssign(supplierCode);
-        String out = "[";
+        List<AssignCanvassing> acs = assignCanvassingDao.findForPriceAssign(supplierCode, lu.getUserId());
+
+        Map<String, Object> json = new HashMap<String, Object>();
+        List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
         for (AssignCanvassing x : acs) {
-            if (!out.equals("[")) {
-                out += ",";
-            }
 
             Product p = productDao.findWhereProductCodeEquals(x.getProductCode()).get(0);
             Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
             PrsDetail pd = prsDetailDao.findByPrsProduct(x.getPrsNumber(), x.getProductCode());
-
-            out += "{\"prsNo\": \"" + x.getPrsNumber() + "\", "
-                    + "\"assignDate\": \"" + new SimpleDateFormat("dd/MM/yyyy").format(x.getCreateDate()) + "\", "
-                    + "\"itemCode\": \"" + x.getProductCode() + "\", "
-                    + "\"itemName\": \"" + p.getProductName() + "\", "
-                    + "\"quantity\": \"" + pd.getQty() + "\", "
-                    + "\"supplierCode\": \"" + x.getSupplierCode() + "\", "
-                    + "\"supplierName\": \"" + s.getSupplierName() + "\"}";
+            
+            
+            Map<String, Object> row = new HashMap<String, Object>();
+            row.put("0", x.getId());
+            row.put("1", x.getPrsNumber());
+            row.put("2", new SimpleDateFormat("dd/MM/yyyy").format(x.getCreateDate()));
+            row.put("3", x.getProductCode());
+            row.put("4", p.getProductName());
+            row.put("5", pd.getQty());
+            row.put("6", x.getSupplierCode());
+            row.put("7", s.getSupplierName());
+            
+            rows.add(row);
         }
-        out += "]";
-        response.getWriter().print(out);
+        json.put("rows", rows);
 
+        return new ModelAndView("jsonView", json);
     }
 
     public void ajaxDocument(HttpServletRequest request, HttpServletResponse response)
@@ -191,7 +175,7 @@ public class PriceAssignmentController extends MultiActionController {
             Supplier s = supplierDao.findWhereSupplierCodeEquals(x.getSupplierCode()).get(0);
             if(b)
                 pw.print(",");
-            pw.print("{\"1\": \"" + "\", ");
+            pw.print("{\"1\": \"" + x.getId() + "\", ");
             pw.print("\"2\": \"" + x.getPrsNumber() + "\", ");
             pw.print("\"3\": \"" + x.getSupplierCode() + "\", ");
             pw.print("\"4\": \"" + s.getSupplierName() + "\", ");
@@ -202,4 +186,74 @@ public class PriceAssignmentController extends MultiActionController {
         }
         pw.print("]}");
     }
+    
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createAssignCanvassingDao().ajaxNUpdatePA(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createAssignCanvassingDao().deletePA(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:PriceAssignment.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            int key = Integer.parseInt(request.getParameter("key"));
+            model.put("ap", DaoFactory.createAssignCanvassingDao().getAssignedPrice(key));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/purchase/PriceAssignmentUpdate", "model", model);
+    }
+    
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createAssignCanvassingDao().ajaxNUpdatePA(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+    
 }

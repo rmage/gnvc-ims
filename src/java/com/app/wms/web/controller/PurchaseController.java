@@ -11,7 +11,6 @@ import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.AssignCanvassing;
 import com.app.wms.engine.db.dto.Currency;
-import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.Prs;
 import com.app.wms.engine.db.dto.PrsDetail;
@@ -28,15 +27,17 @@ import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.exceptions.UserRoleDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.FyaUtility;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -105,7 +106,7 @@ public class PurchaseController extends MultiActionController {
             p.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
             p.setCreatedDate(new Date());
             purchaseDao.insert(p);
-            
+
             //  DEBUG | Remarks dissapear suddenly?
             System.out.println("[PO" + p.getPoCode() + "] Remarks: " + p.getRemarks());
 
@@ -213,8 +214,10 @@ public class PurchaseController extends MultiActionController {
     public void getItems(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ProductDaoException, PrsDaoException {
 
+        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
         PurchaseDao purchaseDao = DaoFactory.createPurchaseDao();
-        List<AssignCanvassing> acs = purchaseDao.findBySupplier(request.getParameter("key"));
+        List<AssignCanvassing> acs = purchaseDao.findBySupplier(request.getParameter("key"), lu.getUserId());
 
         Boolean b = Boolean.FALSE;
         PrintWriter pw = response.getWriter();
@@ -249,7 +252,7 @@ public class PurchaseController extends MultiActionController {
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException, SupplierDaoException, ApprovalRangeDaoException, UserRoleDaoException, UserDaoException {
         String isApproved = "Y";
         Boolean b = Boolean.FALSE;
-//        List<BigDecimal> bds = new ArrayList<BigDecimal>();
+
         PrintWriter pw = response.getWriter();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
@@ -274,9 +277,7 @@ public class PurchaseController extends MultiActionController {
                 isApproved = FyaUtility.checkPOApprovalAuth(lu.getUserId(), amount);
                 x.setApprovedBy(FyaUtility.checkPOApprovalWait(amount, "name"));
             }
-            System.out.println("x.getIsCertified(): " + x.getIsCertified());
-            System.out.println("lu.getRoleCode(): " + lu.getRoleCode());
-            System.out.println("x.getIsApproved(): " + x.getIsApproved());
+
             pw.print("{\"1\": \"" + x.getPoCode() + "\", ");
             pw.print("\"2\": \"" + x.getPoCode() + "\", ");
             pw.print("\"3\": \"" + x.getPoDate() + "\", ");
@@ -291,4 +292,83 @@ public class PurchaseController extends MultiActionController {
         }
         pw.print("]}");
     }
+
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createPurchaseDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createPurchaseDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:Purchase.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            String key = request.getParameter("key");
+            model.put("po", DaoFactory.createPurchaseDao().getPurchaseOrder(key));
+
+            CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
+            SupplierDao supplierDao = DaoFactory.createSupplierDao();
+
+            List<Supplier> ss = supplierDao.findWhereIsActiveEquals("Y");
+            model.put("supplier", ss);
+
+            List<Currency> cs = currencyDao.findAll();
+            model.put("c", cs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/purchase/PurchaseOrderUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createPurchaseDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
 }

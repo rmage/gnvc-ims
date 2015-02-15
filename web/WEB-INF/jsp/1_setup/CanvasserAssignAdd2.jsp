@@ -25,17 +25,6 @@
                             <caption>Assignment</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
-                                    <%--<td style="width: 200px;">PRS No</td>
-                                    <td>
-                                        <select id="prsNo" name="prsNo" required="true">
-                                            <option value="">-- Pilih PRS --</option>
-                                            <c:forEach var="droplist" items="${requestScope.model.dropListPrs}">
-                                                <option value="${droplist.prsnumber}">
-                                                    ${droplist.departmentName} :: <fmt:formatDate pattern="yyyy-MM-dd" value="${droplist.prsdate}" /> :: ${droplist.prsnumber}
-                                                </option> 
-                                            </c:forEach>
-                                        </select>
-                                    </td>--%>
                                     <td>
                                         <table style="width: 1230px;">
                                             <thead>
@@ -74,7 +63,7 @@
                                 <tr>
                                     <td>
                                         <input type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('CanvassingAssignment.htm');" />
+                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('CanvassingAssignment.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -139,17 +128,43 @@
                     }
                 });
             });
-            
+
             // filter unassign prs list
             var $trObj = $('#prslist tr');
             function filterList(i, keyword) {
-                if(keyword === '') {
+                if (keyword === '') {
                     $trObj.filter(':hidden').show();
                 } else {
                     $trObj.filter(':visible').hide();
                     $trObj.find('td:nth-child(' + i + '):contains("' + keyword + '")').parent().show();
                 }
             }
+
+            // 2015 Update | by FYA
+            $('form').bind('submit', function() {
+                var data = '';
+                $('#canvasser tr').each(function() {
+                    if ($(this).find('select[name=userId]').val() === '') {
+                        data = '';
+                        return false;
+                    }
+                    
+                    data = data + $(this).find('td:eq(0)').html() + ':s:' + $(this).find('td:eq(1)').html() + ':s:' + $(this).find('select[name=userId]').val() + ':s::se:';
+                });
+                
+                if (data !== '') {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
+                }
+
+                return false;
+            });
         </script>
     </body>
 </html>

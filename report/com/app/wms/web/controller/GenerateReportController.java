@@ -595,7 +595,7 @@ public class GenerateReportController extends MultiActionController {
                 + "	INNER JOIN assign_canv_prc acp ON acp.productcode = pod.product_code AND acp.prsnumber = pod.prsnumber "
                 + "	LEFT JOIN product p ON p.product_code = pod.product_code "
                 + "	LEFT JOIN supplier s ON s.supplier_code = acp.supplier_code "
-                + "WHERE po.po_code = ?  "
+                + "WHERE po.po_code = ? AND pod.is_active = 'Y' "
                 + "ORDER BY prsnumber, product_code, (CASE WHEN is_selected = 'Y' THEN 0 ELSE 1 END), supplier_name"
         );
 
@@ -965,18 +965,13 @@ public class GenerateReportController extends MultiActionController {
         );
 
         ListMap.put(Report.PCanvassingForm,
-                //                "SELECT * " +
-                //                "FROM canvassing cv " +
-                //                "LEFT JOIN canvassing_detail cvd ON cv.prsnumber = cvd.prsnumber " +
-                //                "LEFT JOIN supplier su ON su.supplier_code = cvd.supplier_code "+
-                //                "WHERE su.supplier_code = ?"
                 "SELECT s.supplier_code, s.supplier_name, s.contact_person, null as id, u.name, "
                 + "(CONVERT( VARCHAR(2), DAY(GETDATE()) ) + ' ' + DATENAME(MONTH, GETDATE()) + ' ' + CONVERT( VARCHAR(4), YEAR(GETDATE()))) as date, "
                 + "acp.prsnumber, pd.productname, pd.qty, pd.uom_name FROM assign_canv_prc acp "
                 + "LEFT JOIN supplier s ON s.supplier_code = acp.supplier_code "
                 + "LEFT JOIN prs_detail pd ON pd.prsnumber = acp.prsnumber AND pd.productcode = acp.productcode "
                 + "LEFT JOIN \"user\" u ON u.user_id = acp.created_by "
-                + "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? "
+                + "WHERE acp.unit_price IS NULL AND acp.supplier_code = ? AND acp.is_active = 'Y' "
         );
 
         ListMap.put(Report.FGPTS,

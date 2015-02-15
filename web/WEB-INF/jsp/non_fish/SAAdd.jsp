@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Supplier Assignment</title>
+        <title>Create Supplier Assignment - IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -32,7 +32,7 @@
                         <thead>
                             <tr>
                                 <td colspan="6" style="text-align: right;">
-                                    <input style="background-color: #FFFFFF;" type="button" value="Back" onclick="window.location.replace('SupplierAssignment.htm');" />
+                                    <input id="btnCancel" style="background-color: #FFFFFF;" type="button" value="Back" onclick="window.location.replace('SupplierAssignment.htm');" />
                                 </td>
                             </tr>
                             <tr>
@@ -164,33 +164,56 @@
                 if (b)
                     return;
 
-                element.type = 'hidden';
+//                element.type = 'hidden';
+//
+//                while (element.className !== 'form')
+//                    element = element.parentNode;
+//
+//                var form = document.getElementById('poster');
+//                var inputs = element.getElementsByTagName('input');
+//
+//                while (inputs.length > 0) {
+//                    form.appendChild(inputs[0]);
+//                }
+//
+//                var selects = element.getElementsByTagName('select');
+//
+//                while (selects.length > 0)
+//                    form.appendChild(selects[0]);
+//
+//                var textareas = element.getElementsByTagName('textarea');
+//
+//                while (textareas.length > 0)
+//                    form.appendChild(textareas[0]);
+//
+//                if (form.checkValidity()) {
+//                    form.submit();
+//                } else {
+//                    window.location.replace(window.location.href);
+//                }
 
-                while (element.className !== 'form')
-                    element = element.parentNode;
+                // 2015 Update | by FYA
+                var header = '',
+                        data = '';
+                $(element).parent().parent().find('input[type="hidden"]').each(function(i) {
+                    if (i < 2) {
+                        header = header + $(this).val() + ':s:';
+                    } else {
+                        data = data + header + $(this).val() + ':s::se:';
+                    }
+                });
 
-                var form = document.getElementById('poster');
-                var inputs = element.getElementsByTagName('input');
-
-                while (inputs.length > 0) {
-                    form.appendChild(inputs[0]);
+                if (data !== '') {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
-                var selects = element.getElementsByTagName('select');
-
-                while (selects.length > 0)
-                    form.appendChild(selects[0]);
-
-                var textareas = element.getElementsByTagName('textarea');
-
-                while (textareas.length > 0)
-                    form.appendChild(textareas[0]);
-
-                if (form.checkValidity()) {
-                    form.submit();
-                } else {
-                    window.location.replace(window.location.href);
-                }
             }
 
             //  FILTER | By PRS Number
@@ -213,7 +236,7 @@
                         return false;
                     }
                 });
-                
+
                 return b;
             }
         </script>

@@ -7,6 +7,7 @@ import com.app.wms.engine.db.exceptions.AssignCanvasserDaoException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.SqlUpdate;
 
@@ -95,4 +96,14 @@ public interface AssignCanvasserDao {
     //Modified 25 April 2014
     public int ajaxMaxPage(String where, BigDecimal show);
     public List<AssignCanvasser> ajaxSearch(String where, String order, int page, int show);
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getAssignedCanvasser(int id);
+    
 }

@@ -3,10 +3,7 @@ package com.app.wms.engine.db.dao.spring;
 import com.app.wms.engine.db.dao.AssignCanvasserDao;
 import com.app.wms.engine.db.dto.AssignCanvasser;
 import com.app.wms.engine.db.dto.AssignCanvasserPk;
-import com.app.wms.engine.db.dto.Supplier;
-import com.app.wms.engine.db.dto.map.SupplierListMap;
 import com.app.wms.engine.db.exceptions.AssignCanvasserDaoException;
-import com.app.wms.engine.db.exceptions.SupplierDaoException;
 import java.math.BigDecimal;
 
 import java.util.Date;
@@ -304,8 +301,24 @@ public class AssignCanvasserDaoImpl extends AbstractDAO implements Parameterized
     }
 
     public List<AssignCanvasser> ajaxSearch(String where, String order, int page, int show) {
-        return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize=?; with PagedResult as (select ROW_NUMBER() over (order by ca.id desc) as id, ca.prsnumber, ca.canvassername, ca.created_by, ca.created_date, ca.updated_by, ca.updated_date from " + getTableName() + " ca left join \"user\" u on u.user_id = canvassername "+ (where.isEmpty()? "where ca.prsnumber like '%%%'" : where + " AND ca.prsnumber like '%%%'")+") select * from PagedResult where id between case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", this, page, show);
+        return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize=?; with PagedResult as (select ca.id, ca.prsnumber, ca.canvassername, ca.created_by, ca.created_date, ca.updated_by, ca.updated_date, ROW_NUMBER() over (order by ca.id desc) as idx from " + getTableName() + " ca left join \"user\" u on u.user_id = canvassername "+ (where.isEmpty()? "where ca.is_active = 'Y'" : where + " AND ca.is_active = 'Y'")+") select * from PagedResult where idx between case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", this, page, show);
     }
 
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_CA_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_CA_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC PRC_CA_DELETE ?, ?", key, updatedBy);
+    }
+    
+    public List<Map<String, Object>> getAssignedCanvasser(int id) {
+        return jdbcTemplate.queryForList("SELECT acd.id, acd.prsnumber, p.product_code, p.product_name, prsd.qty, acd.user_id FROM assign_canv_dtl acd INNER JOIN prs_detail prsd ON prsd.prsnumber = acd.prsnumber AND prsd.productcode = acd.productcode INNER JOIN assign_canv ac ON ac.prsnumber = acd.prsnumber LEFT JOIN product p ON p.product_code = acd.productcode WHERE ac.id = ? AND ac.is_active = 'Y'", id);
+    }
     
 }

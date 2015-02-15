@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - Price Assignment</title>
+        <title>Price Assignment - IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -114,7 +114,7 @@
                 return parts.join(".");
             }
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'),'');
+            util.initListTable($('#list'),'u:d');
         </script>
     </body>
 </html>

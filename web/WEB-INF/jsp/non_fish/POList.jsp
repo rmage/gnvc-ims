@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - Purchase Order</title>
+        <title>Purchase Order - IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -46,7 +46,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 80px">Action</td>
                                 <td column="po_code">PO Number</td>
                                 <td column="po_date">Po Date</td>
                                 <td>Supplier Code</td>
@@ -118,7 +118,7 @@
                 return parts.join(".");
             }
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_PRCPo_Print Purchase (xls)_3-1*R_CanvassingHistory_Canvassing History (xls)');
+            util.initListTable($('#list'), 'u:d:R_PRCPo_Print Purchase (xls)_3-1*R_CanvassingHistory_Canvassing History (xls)');
         </script>
     </body>
 </html>

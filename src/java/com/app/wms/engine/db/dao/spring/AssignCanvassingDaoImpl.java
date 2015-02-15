@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -85,8 +86,8 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE prsnumber = ? AND productcode = ? AND supplier_code = ?", this, prsNumber, itemCode, supplierCode);
     }
 
-    public List<AssignCanvassing> findForPriceAssign(String supplierCode) {
-        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE unit_price IS NULL AND supplier_code = ?", this, supplierCode);
+    public List<AssignCanvassing> findForPriceAssign(String supplierCode, String userId) {
+        return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE unit_price IS NULL AND supplier_code = ? AND is_active = 'Y' AND created_by = (SELECT name FROM \"user\" WHERE user_id = ?)", this, supplierCode, userId);
     }
 
     public List<Supplier> findForCanvasingForm(String userId) {
@@ -96,18 +97,62 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
 
     //Modified 24 April 2014
     public int ajaxMaxPageSA(String where, BigDecimal show, String userId) {
-        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE created_by = ?" : where + " AND created_by = ?"), show, userId);
+        return jdbcTemplate.queryForInt("DECLARE @USERID varchar(50) = ? SELECT @USERID = name FROM \"user\" u where u.user_id = @USERID SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE created_by = @USERID AND is_active = 'Y'" : where + " AND created_by = @USERID AND is_active = 'Y'"), show, userId);
     }
 
     public List<AssignCanvassing> ajaxSearchSA(String where, String order, int page, int show, String userId) {
         return jdbcTemplate.query("EXEC PRC_SUPPLIER_ASSIGNMENT_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
     }
-    
+
     public int ajaxMaxPagePA(String where, BigDecimal show, String userId) {
-        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE unit_price IS NOT NULL AND created_by = ?" : where + " AND unit_price IS NOT NULL AND created_by = ?"), show, userId);
+        return jdbcTemplate.queryForInt("DECLARE @USERID varchar(50) = ? SELECT @USERID = name FROM \"user\" u where u.user_id = @USERID SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE unit_price IS NOT NULL AND created_by = @USERID AND is_active = 'Y'" : where + " AND unit_price IS NOT NULL AND created_by = @USERID AND is_active = 'Y'"), show, userId);
     }
 
     public List<AssignCanvassing> ajaxSearchPA(String where, String order, int page, int show, String userId) {
         return jdbcTemplate.query("EXEC PRC_PRICE_ASSIGNMENT_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
     }
+
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_SA_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public void ajaxNUpdatePA(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_PA_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC PRC_SA_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC PRC_SA_DELETE ?, ?", key, updatedBy);
+    }
+
+    public void deletePA(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC PRC_PA_DELETE ?, ?", key, updatedBy);
+    }
+
+    public Map<String, Object> getAssignedPrice(int id) {
+        return jdbcTemplate.queryForMap("SELECT "
+                + "	acp.id, acp.prsnumber, p.product_code, p.product_name, s.supplier_code, s.supplier_name, "
+                + "	acp.unit_price, acp.[top], acp.top_desc, acp.tod, acp.wp, acp.is_selected "
+                + "FROM assign_canv_prc acp "
+                + "	INNER JOIN product p ON p.product_code = acp.productcode "
+                + "	INNER JOIN supplier s ON s.supplier_code = acp.supplier_code "
+                + "WHERE acp.id = ?", id);
+    }
+
+    public List<Map<String, Object>> getAssignedSupplier(int id) {
+        return jdbcTemplate.queryForList("DECLARE "
+                + "	@prsNumber		varchar(50), "
+                + "	@productCode	varchar(50) "
+                + "SELECT @prsNumber = prsnumber, @productCode = productcode FROM assign_canv_prc WHERE id = ? "
+                + "SELECT acp.id, acp.prsnumber, p.product_code, p.product_name, prsd.qty, s.supplier_code, s.supplier_name FROM assign_canv_prc acp  "
+                + "	LEFT JOIN supplier s ON s.supplier_code = acp.supplier_code  "
+                + "	LEFT JOIN product p ON p.product_code = acp.productcode "
+                + "   INNER JOIN prs_detail prsd ON prsd.prsnumber = acp.prsnumber AND prsd.productcode = acp.productcode "
+                + "WHERE acp.prsnumber = @prsNumber AND acp.productcode = @productCode", id);
+    }
+
 }
