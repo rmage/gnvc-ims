@@ -57,7 +57,6 @@
                             return false;
                         }
 
-                        idNumber = idNumber + 1;
                         $('#main tbody').append('<tr data-id="' + ('C' + idNumber) + '" data-status="C">' +
                                 '<td></td>' +
                                 '<td><a href="javascript:void(0)" class="update"><img src="resources/images/edit.gif" title="Update"></a><a href="javascript:void(0)" class="delete"><img src="resources/images/delete.gif" title="Delete"></a></td>' +
@@ -66,6 +65,7 @@
                                 '<td>' + $("#jumlah").val() + '</td>' +
                                 '<td>' + $("#uomName").val() + '</td>' +
                                 '</tr>');
+                        idNumber = idNumber - 1;
                         gnvs.util.reNumbering($('#main tbody'), 1);
                     } else {
                         var $tr = $('#main tbody > tr[data-id=' + $(this).data('id') + ']');

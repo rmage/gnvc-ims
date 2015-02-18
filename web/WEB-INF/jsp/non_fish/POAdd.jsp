@@ -120,7 +120,7 @@
 
                 if (data !== '' && confirm('Save Purchase Order #' + $('#poCode').val() + ' ?')) {
                     console.log(data);
-                    gnvs.ajaxCall({action: 'ajaxNSave', data: data}, function(json) {
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
                         if (json.message === '') {
                             $('#btnCancel').trigger('click');
                         } else {

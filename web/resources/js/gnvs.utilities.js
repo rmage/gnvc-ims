@@ -50,7 +50,7 @@ var gnvs = {
             }
         },
         toViewDate: function(dbDate) {
-            dbDate = dbDate.split('-');
+            dbDate = dbDate.substr(0, 10).split('-');
             return dbDate[2] + '/' + dbDate[1] + '/' + dbDate[0];
         }
     }

@@ -101,7 +101,7 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
     }
 
     public List<AssignCanvassing> ajaxSearchSA(String where, String order, int page, int show, String userId) {
-        return jdbcTemplate.query("EXEC PRC_SUPPLIER_ASSIGNMENT_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
+        return jdbcTemplate.query("EXEC PRC_SA_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
     }
 
     public int ajaxMaxPagePA(String where, BigDecimal show, String userId) {
@@ -109,7 +109,7 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
     }
 
     public List<AssignCanvassing> ajaxSearchPA(String where, String order, int page, int show, String userId) {
-        return jdbcTemplate.query("EXEC PRC_PRICE_ASSIGNMENT_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
+        return jdbcTemplate.query("EXEC PRC_PA_LIST ?, ?, ?, ?, ?", this, page, show, where, order, userId);
     }
 
     // 2015 Update | by FYA
