@@ -97,7 +97,7 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
 
     //Modified 24 April 2014
     public int ajaxMaxPageSA(String where, BigDecimal show, String userId) {
-        return jdbcTemplate.queryForInt("DECLARE @USERID varchar(50) = ? SELECT @USERID = name FROM \"user\" u where u.user_id = @USERID SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE created_by = @USERID AND is_active = 'Y'" : where + " AND created_by = @USERID AND is_active = 'Y'"), show, userId);
+        return jdbcTemplate.queryForInt("DECLARE @USERID varchar(50) = ? SELECT @USERID = name FROM \"user\" u where u.user_id = @USERID SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE created_by = @USERID AND is_active = 'Y'" : where + " AND created_by = @USERID AND is_active = 'Y'"), userId, show);
     }
 
     public List<AssignCanvassing> ajaxSearchSA(String where, String order, int page, int show, String userId) {
@@ -105,7 +105,7 @@ public class AssignCanvassingDaoImpl extends AbstractDAO
     }
 
     public int ajaxMaxPagePA(String where, BigDecimal show, String userId) {
-        return jdbcTemplate.queryForInt("DECLARE @USERID varchar(50) = ? SELECT @USERID = name FROM \"user\" u where u.user_id = @USERID SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE unit_price IS NOT NULL AND created_by = @USERID AND is_active = 'Y'" : where + " AND unit_price IS NOT NULL AND created_by = @USERID AND is_active = 'Y'"), show, userId);
+        return jdbcTemplate.queryForInt("DECLARE @USERID varchar(50) = ? SELECT @USERID = name FROM \"user\" u where u.user_id = @USERID SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE unit_price IS NOT NULL AND created_by = @USERID AND is_active = 'Y'" : where + " AND unit_price IS NOT NULL AND created_by = @USERID AND is_active = 'Y'"), userId, show);
     }
 
     public List<AssignCanvassing> ajaxSearchPA(String where, String order, int page, int show, String userId) {

@@ -379,7 +379,7 @@ public class PrsDaoImpl extends AbstractDAO implements ParameterizedRowMapper<Pr
     public List<Prs> findAllNotInCanvas() {
         try {
             return jdbcTemplate.query("SELECT id, prsnumber, prsdate, requestdate, deliverydate, poreferensi, remarks, createdby, department_name, is_approved FROM " + getTableName()
-                    + " WHERE prsnumber NOT IN(SELECT prsnumber FROM assign_canv where is_active = 'Y') AND requestdate <= DATEADD(yy, -1, GETDATE()) AND is_active = 'Y' ORDER BY department_name, prsdate, id", this);
+                    + " WHERE prsnumber NOT IN(SELECT prsnumber FROM assign_canv where is_active = 'Y') AND requestdate >= DATEADD(yy, -1, GETDATE()) AND is_active = 'Y' ORDER BY department_name, prsdate, id", this);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return null;

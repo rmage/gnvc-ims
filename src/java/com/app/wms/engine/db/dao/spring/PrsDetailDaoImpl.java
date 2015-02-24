@@ -300,6 +300,7 @@ public class PrsDetailDaoImpl extends AbstractDAO implements ParameterizedRowMap
             "	INNER JOIN ( " +
             "		SELECT acd.prsnumber, acd.productcode FROM assign_canv_dtl acd LEFT JOIN assign_canv_prc acp ON acp.prsnumber = acd.prsnumber AND acp.productcode = acd.productcode AND acp.is_active = 'Y' WHERE acp.id IS NULL AND acd.user_id = ? AND acd.is_active = 'Y' " +
             "	) x ON x.prsnumber = prsd.prsnumber AND x.productcode = prsd.productcode " +
+            "   INNER JOIN prs ON prs.prsnumber = prsd.prsnumber AND prs.requestdate >= DATEADD(yy, -1, GETDATE()) " +
             "ORDER BY prsd.prsnumber", this, userId);
     }
 
