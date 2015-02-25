@@ -258,20 +258,30 @@
 
             // ITEM | autocomplete based on item code
             $('#borItem').autocomplete({
-                source: "?action=getItem",
+                source: function(request, response) {
+                    $.ajax({
+                        url: '?action=getItem', type: 'post',
+                        data: {term: request.term},
+                        dataType: 'json',
+                        success: function(json) {
+                            response(json.rows);
+                        }
+                    });
+                },
                 minLength: 3,
                 delay: 600,
                 select: function(event, ui) {
                     $('#borFlakes').focus();
-                    setItemInformation(ui.item[1], ui.item[2], ui.item[3], ui.item[4], ui.item[5]);
+                    var ps = ui.item.PackStyle.split(' - ');
+                    var ndw = ps[4].split('/');
+                    setItemInformation(ui.item.ProductCode, ps[1], '-', ndw[0], ndw[1]);
 
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
                 return $('<li>')
                         .data("item", item)
-                        .append('<a><b>Item Code</b>: ' + item[1] + ' | <b>Pack Style</b>: ' + item[2] + ' [' + item[3] + ']<br>' +
-                                '<b>Net Weight</b>: ' + item[4] + ' | <b>Drain Weight</b>: ' + item[5] + '</a></li>')
+                        .append('<a><b>Item Code</b>: ' + item.ProductCode + ' | <b>Pack Style</b>: ' + item.PackStyle + '</a></li>')
                         .appendTo(ul);
             };
 
@@ -399,96 +409,15 @@
                 }
             }
 
-//            //  BIND | KEYDOWN and AUTOCOMPLETE in packstyle field
-//            $("#i0,#j0,#k0").each(function() {
-//                var $o = $(this);
-//                var $i = $("#" + $o.attr("id").substring(0, 1) + "24");
-//                $o.bind("keyup", function() {
-//                    $o.data("id", "");
-//                    $i.html("");
-//                });
-//                $o.autocomplete({
-//                    source: "?action=getPackStyle",
-//                    minLength: 3,
-//                    delay: 1000,
-//                    select: function(event, ui) {
-//                        $o.data("id", ui.item[1]);
-//                        $o.val(ui.item[2]);
-//
-//                        // ITEM | Get item list from selected pack_style
-//                        $.ajax({
-//                            url: "?", type: "post",
-//                            data: {action: "getItem", key: $o.data("id")},
-//                            dataType: "json",
-//                            success: function(json) {
-//                                $i.html("");
-//                                for (var i = 0; i < json.length; i++) {
-//                                    $i.append('<option value="' + json[i][1] + '" ' +
-//                                            'data-cs="' + json[i][4] + '"' +
-//                                            'data-nw="' + json[i][5] + '"' +
-//                                            'data-dpw="' + json[i][6] + '"' +
-//                                            'data-om="' + json[i][7] + '"' +
-//                                            '>' + json[i][2] + ' | ' + json[i][3] + '</option>');
-//                                }
-//                                $i.trigger('change');
-//                            }
-//                        });
-//                        return false;
-//                    }
-//                }).data('autocomplete')._renderItem = function(ul, item) {
-//                    return $('<li>')
-//                            .data("item", item)
-//                            .append('<a><b>' + item[2] + '(' + item[3] + ') </b><br />Quantity Per CS: ' + item[4] + '</a></li>')
-//                            .appendTo(ul);
-//                };
-//            });
-//
-//            // BIND | Option change to auto display current item information
-//            $('#i24,#j24,#k24').bind('change', function() {
-//                var a = $(this).attr('id').charAt(0);
-//                var $o = $(this).find('option:selected');
-//
-//                $('#' + a + '1').val($o.data('cs'));
-//                $('#' + a + '2').val($o.data('nw'));
-//                $('#' + a + '12').val($o.data('dpw'));
-//                $('#' + a + '17').val($o.data('om'));
-//            });
-//
-//            // BIND | Option change to fill brand option
-//            $('#i7,#j7,#k7').bind('change', function() {
-//                var a = $(this).attr('id').charAt(0);
-//                var $i = $('#' + a + '8');
-//
-//                $i.html('<option value="">-- select brand --</option>');
-//                if ($(this).val() !== '') {
-//                    $i.after(' <img id="load" src="resources/ui-anim_basic_16x16.gif">');
-//
-//                    $.ajax({
-//                        url: '?', type: 'post',
-//                        data: {action: 'getBrand', buyer: $(this).find('option:selected').data('id')},
-//                        dataType: 'json',
-//                        success: function(json) {
-//                            for (var i = 0; i < json.length; i++) {
-//                                $i.append('<option>' + json[i][2] + '</option>');
-//                            }
-//                        },
-//                        complete: function() {
-//                            $('img#load').remove();
-//                        }
-//                    });
-//                }
-//            });
-//
             // BIND | Checkbox change
             $('input#iPort').bind('change', function() {
-//                var a = $(this).attr('id').charAt(0);
                 var $dstI = $('<input id="borDestination" maxlength="100" name="borDestination" size="45" tabindex="28" type="text">');
                 var $dstS = $('<select id="borDestination" name="borDestination" tabindex="28"></select>');
-//
+
                 $(this).next().remove();
                 if ($(this).is(':checked')) {
                     var $t = $(this);
-//                    
+                    
                     $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif">');
                     $.ajax({
                         url: '?', type: 'post',
@@ -509,69 +438,17 @@
                     $(this).after($dstI).after(' ');
                 }
             });
-//
-//            //  BIND | Form on save function
-//            $("#fBor").bind("submit", function() {
-//                var data = "";
-//                $("#i0,#j0,#k0").each(function() {
-//                    if ($(this).data("id") !== "" && $(this).data("id") !== undefined) {
-//                        data = data + $("#borCode").val() + "^" + $("#borDate").val() + "^";
-//
-//                        var prefix = $(this).attr("id").substring(0, 1);
-//                        data = data + $(this).data("id") + "^";
-//                        for (var i = 1; i < 25; i++) {
-//                            data = data + $("#" + prefix + i).val() + "^";
-//                        }
-//                        data = data + "~*";
-//                    }
-//                });
-//
-//                data = data
-//                        .replace(/#/g, ":numberSign:")
-//                        .replace(/%/g, ":percentageSign:");
-//
-//                if (data !== "") {
-//                    if (confirm("Continue to save this document?")) {
-//                        window.location.replace("?action=save&data=" + data + "@");
-//                    }
-//                }
-//
-//                return false;
-//            });
-//
-//            //  FUNCTION | Validation on value
-//            var format = {
-//                string: "^((?!\").)*$",
-//                test: function(f, v) {
-//                    return (new RegExp(f).test(v));
-//                }
-//            };
-//
-//            function validateIt(e) {
-//                if (!$(e).data("type")) {
-//                    alert("Tell IT Department about this issue!");
-//                    return;
-//                }
-//
-//                var $e = $(e);
-//                if (!format.test(format[$e.data("type")], $e.val())) {
-//                    $e.val("");
-//                }
-//            }
-//
-//            function isNumber(n) {
-//                return !isNaN(parseFloat(n)) && isFinite(n);
-//            }
 
             $('img.delete').live('click', function() {
                 if (confirm('Delete this row?')) {
                     $(this).parent().parent().remove();
                 }
             });
-            
+
             $('img.edit').live('click', function() {
                 if (confirm('Update this row?')) {
                     var $td = $(this).parent();
+                    var itemCode = $td.parent().find('td:eq(4)').html();
                     jqSort('#borDetail input:not([type="submit"]):not(:checkbox),#borDetail select', 'tabindex').each(function(i) {
                         $td = $td.next();
                         if (i === 2) {
@@ -583,9 +460,12 @@
 
                     $('#addDetail').val('Update Detail');
                     $('#borReference').attr('readonly', true);
+                    
+                    var $iTr = $('#borDetailItem td:nth-child(1):contains("' + itemCode + '")').parent();
+                    setItemInformation($iTr.find('td:eq(0)').html(), $iTr.find('td:eq(2)').html(), $iTr.find('td:eq(4)').html(), $iTr.find('td:eq(5)').html(), $iTr.find('td:eq(6)').html());
                 }
             });
-            
+
             // FUNCTION | static function
             function jqSort(selector, attrName) {
                 return $($(selector).toArray().sort(function(a, b) {

@@ -72,8 +72,8 @@ public class GenerateReportController extends MultiActionController {
 
         //  Non-Fish Module | Form and Report List
         ListMap.put(Report.NFRr, "EXEC PRT_NF_RECEIVING ?");
-        ListMap.put(Report.NFSws, "EXEC PRT_NF_STORES_WITHDRAWAL ?");
-        ListMap.put(Report.NFSwsP, "EXEC PRT_NF_STORES_WITHDRAWAL ?");
+        ListMap.put(Report.NFSws, "EXEC PRT_NF_SWS ?");
+        ListMap.put(Report.NFSwsP, "EXEC PRT_NF_SWS ?");
         ListMap.put(Report.NFTs, "EXEC PRT_NF_TRANSFER ?");
         ListMap.put(Report.NFDr, "EXEC PRT_NF_DELIVERY ?");
         ListMap.put(Report.NFSIPerCat, "EXEC RPT_NF_STOCK_INVENTORY_PER_CATEGORY ?, ?, ?, ?, ?");
@@ -94,6 +94,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FGStockInventory, "EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?");
         ListMap.put(Report.FGPtsCheckList, "EXEC RPT_FG_PTS_CHECKLIST");
         ListMap.put(Report.FGActualInventory, "EXEC RPT_FG_INVENTORY_PER_COUNT ?, ?");
+        ListMap.put(Report.FGBor15Report, "EXEC RPT_FG_BOR15_REPORT ?, ?");
         //  ***END*** | Finished Goods Module | Form and Report List    
 
         //  Rendering Module | Form and Report List

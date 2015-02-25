@@ -45,6 +45,15 @@ public class FGBookedOrder15DaoImpl extends AbstractDAO implements FGBookedOrder
             return new ArrayList<Map<String, Object>>();
         }
     }
+    
+    public List<Map<String, Object>> getBorItem(String borNumber) {
+        try {
+            return jdbcTemplate.queryForList("EXEC FG_BOR15_GET_ITEM ?", borNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {

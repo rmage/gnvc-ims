@@ -60,6 +60,15 @@ public class FGItemDaoImpl extends AbstractDAO implements FGItemDao {
             return new ArrayList<Map<String, Object>>();
         }
     }
+    
+    public List<Map<String, Object>> findByItemCodeOnTest(String itemCode) {
+        try {
+            return jdbcTemplate.queryForList("EXEC FG_ITEM_FIND_BY_CODE_ON_TEST_LIST ?", "%" + itemCode + "%");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
 
     public List<Map<String, Object>> getPackStyle() {
         try {

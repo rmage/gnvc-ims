@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +66,7 @@ public class FGBookedOrder15Controller extends MultiActionController {
         map.put("tops", fgtDao.findAllActive());
         map.put("dataHeader", fgboDao.findByNumber(request.getParameter("key")));
         map.put("dataDetail", fgboDao.findDtlByNumber(request.getParameter("key")));
+        map.put("items", fgboDao.getBorItem(request.getParameter("key")));
         
         return new ModelAndView("default/finish_goods/BookedOrder15Edit", "ims", map);
     }
@@ -226,39 +228,17 @@ public class FGBookedOrder15Controller extends MultiActionController {
         pw.close();
     }
 
-    public void getItem(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView getItem(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        
         try {
-            /* DATA | get initial value */
-            Boolean b = Boolean.FALSE;
-            PrintWriter pw = response.getWriter();
-            StringBuilder sb = new StringBuilder();
-
-            /* DAO | Define needed dao here */
-            FGItemDao fgiDao = DaoFactory.createFGItemDao();
-
-            /* TRANSACTION | Something complex here */
-            sb.append("[");
-            List<Map<String, Object>> ms = fgiDao.findByItemCode(request.getParameter("term"));
-            for (Map<String, Object> x : ms) {
-                if (b) {
-                    sb.append(",");
-                }
-                sb.append("{\"1\": \"").append(x.get("item_code")).append("\", ");
-                sb.append("\"2\": \"").append(x.get("pack_style")).append("\", ");
-                sb.append("\"3\": \"").append(x.get("pack_size")).append("\", ");
-                sb.append("\"4\": \"").append(x.get("item_nw")).append("\", ");
-                sb.append("\"5\": \"").append(x.get("item_dwpw")).append("\"}");
-
-                b = Boolean.TRUE;
-            }
-            sb.append("]");
-            pw.print(sb.toString());
-            pw.flush();
-            pw.close();
+            json.put("rows", DaoFactory.createFGItemDao().findByItemCodeOnTest(request.getParameter("term")));
         } catch (Exception e) {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             DaoFactory.createDBLoggingDao().logError(new Date(), "FINISH GOODS", "BOOKED ORDER > getItem", StringHelper.stackTraceToString(e), lu.getUserId(), 0);
         }
+        
+        return new ModelAndView("jsonView", json);
     }
 
 }

@@ -370,6 +370,9 @@
     <bean name="/FGPalletRejection.htm" class="com.spfi.ims.controller.FGPalletRejectionController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/ReportBor.htm" class="com.spfi.ims.controller.ReportFGBor15Controller">
+    	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     
     <!-- GNVS | Rendering Fish Module -->
     <bean name="/RenderingFish.htm" class="com.spfi.ims.controller.RenderingFishController">

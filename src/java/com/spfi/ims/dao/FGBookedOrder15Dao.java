@@ -14,6 +14,8 @@ public interface FGBookedOrder15Dao {
     
     public List<Map<String, Object>> findDtlByNumber(String borNumber);
     
+    public List<Map<String, Object>> getBorItem(String borNumber);
+    
     public void delete(String key, String createdBy);
     
     public void edit(String data, String createdBy);

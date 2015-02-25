@@ -15,6 +15,8 @@ public interface FGItemDao {
     
     public List<Map<String, Object>> findByItemCode(String itemCode);
     
+    public List<Map<String, Object>> findByItemCodeOnTest(String itemCode);
+    
     public List<Map<String, Object>> getPackStyle();
     
     public void insert(String data, String createdBy);

@@ -230,7 +230,22 @@
                                 <th>Can Type</th>
                             </tr>
                         </thead>
-                        <tbody id="borDetailItem"></tbody>
+                        <tbody id="borDetailItem">
+                            <c:forEach items="${ims.items}" var="x">
+                                <c:set var="ndw" value="${fn:split(x.col5, '/')}" />
+                                <tr>
+                                    <td>${x.item_id}</td>
+                                    <td></td>
+                                    <td>${x.col2}</td>
+                                    <td></td>
+                                    <td>-</td>
+                                    <td>${ndw[0]}</td>
+                                    <td>${ndw[1]}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -277,20 +292,30 @@
 
             // ITEM | autocomplete based on item code
             $('#borItem').autocomplete({
-                source: "?action=getItem",
+                source: function(request, response) {
+                    $.ajax({
+                        url: '?action=getItem', type: 'post',
+                        data: {term: request.term},
+                        dataType: 'json',
+                        success: function(json) {
+                            response(json.rows);
+                        }
+                    });
+                },
                 minLength: 3,
                 delay: 600,
                 select: function(event, ui) {
                     $('#borFlakes').focus();
-                    setItemInformation(ui.item[1], ui.item[2], ui.item[3], ui.item[4], ui.item[5]);
+                    var ps = ui.item.PackStyle.split(' - ');
+                    var ndw = ps[4].split('/');
+                    setItemInformation(ui.item.ProductCode, ps[1], '-', ndw[0], ndw[1]);
 
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
                 return $('<li>')
                         .data("item", item)
-                        .append('<a><b>Item Code</b>: ' + item[1] + ' | <b>Pack Style</b>: ' + item[2] + ' [' + item[3] + ']<br>' +
-                                '<b>Net Weight</b>: ' + item[4] + ' | <b>Drain Weight</b>: ' + item[5] + '</a></li>')
+                        .append('<a><b>Item Code</b>: ' + item.ProductCode + ' | <b>Pack Style</b>: ' + item.PackStyle + '</a></li>')
                         .appendTo(ul);
             };
 
@@ -342,7 +367,7 @@
                             '<td>' + $('#borShippingDate').val() + '</td>' +
                             '<td>' + $('#borDestination').val() + '</td>')
                             .attr('data-status', 'u');
-                    
+
                     setItemSpecification($('#borItem').val(), '', $('#itemPs').html(), '', $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', '');
                     $('#addDetail').val('Add Detail');
                     $('#borReference').attr('readonly', false);
@@ -460,6 +485,7 @@
             $('img.edit').live('click', function() {
                 if (confirm('Update this row?')) {
                     var $td = $(this).parent();
+                    var itemCode = $td.parent().find('td:eq(4)').html();
                     jqSort('#borDetail input:not([type="submit"]):not(:checkbox),#borDetail select', 'tabindex').each(function(i) {
                         $td = $td.next();
                         if (i === 2) {
@@ -471,6 +497,9 @@
 
                     $('#addDetail').val('Update Detail');
                     $('#borReference').attr('readonly', true);
+
+                    var $iTr = $('#borDetailItem td:nth-child(1):contains("' + itemCode + '")').parent();
+                    setItemInformation($iTr.find('td:eq(0)').html(), $iTr.find('td:eq(2)').html(), $iTr.find('td:eq(4)').html(), $iTr.find('td:eq(5)').html(), $iTr.find('td:eq(6)').html());
                 }
             });
 
