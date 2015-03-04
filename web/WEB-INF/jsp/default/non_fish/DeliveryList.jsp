@@ -4,8 +4,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Delivery</title>
-        <%@include file="../metaheader.jsp" %>
+        <title>Delivery &therefore; IMS</title>
+        <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
             #fyaQPanelBody tr:nth-child(2n+1) {
@@ -16,8 +16,8 @@
     <body>
         <div class="container">
             <!-- include file header HERE -->
-            <%@include file="../header.jsp" %>
-            <jsp:include page="../dynmenu.jsp" />
+            <%@include file="../../header.jsp" %>
+            <jsp:include page="../../dynmenu.jsp" />
             
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
@@ -46,7 +46,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td>DR Number</td>
                                 <td>DR Date</td>
                                 <td>From</td>
@@ -71,7 +71,7 @@
         <script>
             
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_NFDr_Delivery Receipt (xls)');
+            util.initListTable($('#list'), 'u:d:R_NFDr_Delivery Receipt (xls)');
             
             $('.d').live('click', function(){
                 fyaQPanel($(this).html());

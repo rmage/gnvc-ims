@@ -272,7 +272,7 @@
                 delay: 600,
                 select: function(event, ui) {
                     $('#borFlakes').focus();
-                    var ps = ui.item.PackStyle.split(' - ');
+                    var ps = ui.item.PackStyle.split(' ; ');
                     var ndw = ps[4].split('/');
                     setItemInformation(ui.item.ProductCode, ps[1], '-', ndw[0], ndw[1]);
 

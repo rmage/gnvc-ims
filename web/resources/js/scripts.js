@@ -36,7 +36,7 @@ var variable = {
             } else {
                 r = ' WHERE ';
             }
-            if (v.split('/').length > 1) {
+            if (v.split('/').length > 2) {
                 v = v.split('/');
                 r = r + 'YEAR(' + $(this).attr('name') + ') = ' + v[2] + ' AND MONTH(' + $(this).attr('name') + ') = ' + v[1] + ' AND DAY(' + $(this).attr('name') + ') = ' + v[0];
             } else {

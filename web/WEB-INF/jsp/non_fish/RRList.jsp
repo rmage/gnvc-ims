@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Receiving</title>
+        <title>Receiving &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -45,7 +45,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="rr_code">RR Number</td>
                                 <td column="rr_date">RR Date</td>
                                 <td>PO Code</td>
@@ -69,7 +69,7 @@
         <div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_NFRr_Receiving Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_NFRr_Receiving Report (xls)');
             
             /* jQuery | Binding event */
             $('.d').live('click', function(){
@@ -105,12 +105,6 @@
                     }); 
                 }
             }
-            
-//            function numberWithCommas(x) {
-//                var parts = x.toString().split(".");
-//                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-//                return parts.join(".");
-//            }
         </script>
     </body>
 </html>

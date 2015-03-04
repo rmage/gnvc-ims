@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Transfer</title>
+        <title>Transfer &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -58,7 +58,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td>TS Number</td>
                                 <td>TS Date</td>
                                 <td>TS Type</td>
@@ -82,7 +82,7 @@
         <!-- javascript block HERE -->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_NFTs_Transfer Slip (xls)');
+            util.initListTable($('#list'), 'u:d:R_NFTs_Transfer Slip (xls)');
         </script>
     </body>
 </html>

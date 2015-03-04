@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Stores Withdrawal</title>
+        <title>Stores Withdrawal &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -46,7 +46,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="sws_code">SWS Number</td>
                                 <td column="sws_date">SWS Date</td>
                                 <td column="department_code">Department Code</td>
@@ -76,9 +76,9 @@
             var cDepartment = "<%=((LoginUser) request.getSession().getAttribute("user")).getDepartmentCode()%>";
             var aDepartment = ["0000"];
             if ($.inArray(cDepartment, aDepartment) === -1) {
-                util.initListTable($('#list'), 'R_NFSws_Stores Withdrawal Slip (xls)');
+                util.initListTable($('#list'), 'u:d:R_NFSws_Stores Withdrawal Slip (xls)');
             } else {
-                util.initListTable($('#list'), 'R_NFSwsP_Stores Withdrawal Slip (xls)');
+                util.initListTable($('#list'), 'u:d:R_NFSwsP_Stores Withdrawal Slip (xls)');
             }
 
             /* jQuery | Binding event */

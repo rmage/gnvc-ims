@@ -71,11 +71,11 @@ public class GenerateReportController extends MultiActionController {
         //  ***END*** | Purcashing Module | Form and Report List
 
         //  Non-Fish Module | Form and Report List
-        ListMap.put(Report.NFRr, "EXEC PRT_NF_RECEIVING ?");
+        ListMap.put(Report.NFRr, "EXEC PRT_NF_RR ?");
         ListMap.put(Report.NFSws, "EXEC PRT_NF_SWS ?");
         ListMap.put(Report.NFSwsP, "EXEC PRT_NF_SWS ?");
-        ListMap.put(Report.NFTs, "EXEC PRT_NF_TRANSFER ?");
-        ListMap.put(Report.NFDr, "EXEC PRT_NF_DELIVERY ?");
+        ListMap.put(Report.NFTs, "EXEC PRT_NF_TS ?");
+        ListMap.put(Report.NFDr, "EXEC PRT_NF_DR ?");
         ListMap.put(Report.NFSIPerCat, "EXEC RPT_NF_STOCK_INVENTORY_PER_CATEGORY ?, ?, ?, ?, ?");
         ListMap.put(Report.NFTPerCat, "EXEC RPT_NF_TRANSACTION_PER_CATEGORY ?, ?, ?");
         ListMap.put(Report.NFRrRegisterPerPeriod, "EXEC RPT_NF_RECEIVING_PER_PERIOD ?, ?");

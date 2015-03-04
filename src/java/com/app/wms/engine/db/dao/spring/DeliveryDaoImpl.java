@@ -301,7 +301,7 @@ public class DeliveryDaoImpl extends AbstractDAO implements ParameterizedRowMapp
     
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC NF_DELIVERY_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC NF_DR_MAX_PAGE ?, ?", show, where);
         } catch(Exception e) {
             e.printStackTrace();
             return 1;
@@ -310,11 +310,28 @@ public class DeliveryDaoImpl extends AbstractDAO implements ParameterizedRowMapp
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC NF_DELIVERY_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC NF_DR_LIST ?, ?, ?, ?", page, show, where, order);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_DR_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_DR_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC NF_DR_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getDelivery(String drCode) {
+        return jdbcTemplate.queryForList("EXEC NF_DR_GET_CONTENT_FOR_UPDATE ?", drCode);
     }
 
 }

@@ -28,5 +28,18 @@ public interface TsDao {
     public List<Map<String, Object>> findSwsDtlForTs(String swsCode);
     
     public List<String> findProductCodeWithRR(String productCategory, Date asOf);
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNUpdateO(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNSaveO(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(String key, String updatedBy);
+    
+    public List<Map<String, Object>> getTransfer(String tsCode);
 
 }

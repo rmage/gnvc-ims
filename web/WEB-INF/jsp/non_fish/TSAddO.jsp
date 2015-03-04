@@ -4,11 +4,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Transfer Slip &therefore; Others &therefore; Create</title>
+        <title>Create &therefore; Transfer Slip &therefore; Others &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
             .ui-datepicker { display: none; }
+            .ui-autocomplete {
+                max-height: 250px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+            }
         </style>
     </head>
     <body>
@@ -29,22 +35,22 @@
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
-                                    <td><input name="tsCode" pattern="[0-9]{1,}" type="text" required /></td>
+                                    <td><input id="tsCode" name="tsCode" pattern="[0-9]{1,}" type="text" required></td>
                                     <td>TS Date</td>
-                                    <td><input id="tsDate" name="tsDate" size="10" type="text" required /></td>
+                                    <td><input id="tsDate" name="tsDate" size="10" type="text" required></td>
                                 </tr>
                                 <tr>
                                     <td>To</td>
-                                    <td><input id="tsTo" name="tsTo" size="40" type="text" required /></td>
+                                    <td><input id="tsTo" name="tsTo" size="40" type="text" required></td>
                                     <td>Remarks</td>
-                                    <td><input type="text" id="tsInfo" name="tsInfo" size="50" /></td>
+                                    <td><input type="text" id="tsInfo" name="tsInfo" size="50"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="5">
                                         <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=<%= request.getParameter("module") %>');" />
+                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=<%= request.getParameter("module") %>');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -63,9 +69,9 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>No</td>
-                                    <td>Item Name</td>
+                                    <td>Action</td>
                                     <td>Item Code</td>
+                                    <td>Item Name</td>
                                     <td>Type</td>
                                     <td>Stock on Hand</td>
                                     <td>Quantity Out</td>
@@ -111,7 +117,7 @@
                 select: function( event, ui ) {
                     $('#main').append('<tr><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' + 
                         '<input name="item" type="hidden" value="' + ui.item.itemCode + '" />' + ui.item.itemCode + '</td><td>' + ui.item.itemName + '</td><td>' + ui.item.type + '</td><td>' + numberWithCommas(ui.item.soh) + 
-                        '</td><td><input name="qty" pattern="[0-9]{1,}" size="3" type="text" style="font-size: smaller;" required /></td><td>' + ui.item.uom + '</td></tr>');
+                        '</td><td><input name="qty" pattern="[0-9]{1,}" size="10" type="text" style="font-size: smaller;" required /></td><td>' + ui.item.uom + '</td></tr>');
                     $('#main tr:last input[type="text"]').focus();
                     $('#itemCode').val(null);
                 }
@@ -125,24 +131,27 @@
             
             // VALIDATE | Minimum 1 (one) quantity
             $("#tsForm").bind("submit", function() {
-                var b = true;
-                $("input[name='qty']").each(function() {
-                    if ($(this).val() > 0) {
-                        b = false;
-                    } else if ($(this).val() <= 0 && $(this).val() !== "" ) {
-                        b = true;
-                        return false;
+                var data = '';
+                var header = $('#tsCode').val() + ':s:' + gnvs.util.toDBDate($('#tsDate').val()) + ':s:' + $('#tsInfo').val() + ':s:' + $('#tsTo').val() + ':s:' + 'NF:s:OTHERS:s:';
+
+                $('#main tr').each(function() {
+                    if (!isNaN(parseFloat($(this).find('input:eq(2)').val())) && parseFloat($(this).find('input:eq(2)').val()) > 0) {
+                        data = data + header + $(this).find('input:eq(1)').val() + ':s:' + $(this).find('input:eq(2)').val() + ':s::se:';
                     }
                 });
 
-                if (b) {
-                    return false;
-                } else {
-                    if (!confirm("Continue to save this document?")) {
-                        return false;
-                    }
+                if (data !== '' && confirm('Save Transfer #' + $('#tsCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSaveO', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
-                    
+
+                return false;   
             });
             
             function numberWithCommas(x) {

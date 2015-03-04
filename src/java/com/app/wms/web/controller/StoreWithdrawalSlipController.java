@@ -1,28 +1,28 @@
 package com.app.wms.web.controller;
 
+import com.app.wms.engine.db.dao.CurrencyDao;
 import com.app.wms.engine.db.dao.DepartmentDao;
 import com.app.wms.engine.db.dao.ProductDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
+import com.app.wms.engine.db.dao.SupplierDao;
 import com.app.wms.engine.db.dao.SwsDao;
 import com.app.wms.engine.db.dao.SwsDtlDao;
-import com.app.wms.engine.db.dao.UserDao;
+import com.app.wms.engine.db.dto.Currency;
 import com.app.wms.engine.db.dto.Department;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.StockInventory;
-import com.app.wms.engine.db.dto.Sws;
+import com.app.wms.engine.db.dto.Supplier;
 import com.app.wms.engine.db.dto.SwsDtl;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
-import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,49 +52,6 @@ public class StoreWithdrawalSlipController extends MultiActionController {
         m.put("department", d.getDepartmentCode() + ":" + d.getDepartmentName());
 
         return new ModelAndView("non_fish/SWSAdd", "model", m);
-
-    }
-
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
-            throws ParseException, UserDaoException {
-
-        /* DATA | get initial value */
-        String[] master = request.getParameter("master").split(":", -1);
-        String[] details = request.getParameterValues("detail");
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
-        /* DAO | Define needed dao here */
-        SwsDao swsDao = DaoFactory.createSwsDao();
-        SwsDtlDao swsDtlDao = DaoFactory.createSwsDtlDao();
-        UserDao uDao = DaoFactory.createUserDao();
-
-        /* TRANSACTION | Something complex here */
-        // insert master sws
-        Sws s = new Sws();
-        s.setSwsCode(master[0]);
-        s.setSwsDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
-        s.setSwsInfo(master[2]);
-        s.setDepartmentCode(master[3]);
-        s.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
-        s.setCreatedDate(new Date());
-        swsDao.insert(s);
-
-        //insert detail sws
-        for (String x : details) {
-            String[] detail = x.split(":");
-
-            SwsDtl sd = new SwsDtl();
-            sd.setSwsCode(s.getSwsCode());
-            sd.setProductCode(detail[0]);
-            sd.setSoh(new BigDecimal(detail[1]));
-            sd.setQty(new BigDecimal(detail[2]));
-            sd.setUom(detail[3]);
-            sd.setCreatedBy(s.getCreatedBy());
-            sd.setCreatedDate(new Date());
-            swsDtlDao.insert(sd);
-        }
-
-        return new ModelAndView("redirect:Sws.htm");
 
     }
 
@@ -213,11 +170,84 @@ public class StoreWithdrawalSlipController extends MultiActionController {
 
             SwsDao swsDao = DaoFactory.createSwsDao();
             String swsCode = swsDao.generateNumber(lu.getUserId(), request.getParameter("department"));
-            
+
             response.getWriter().print("{\"number\": \"" + swsCode + "\"}");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createSwsDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createSwsDao().delete(request.getParameter("key"), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:Sws.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            String key = request.getParameter("key");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
+            model.put("sws", DaoFactory.createSwsDao().getStoresWithdrawal(key));
+            model.put("department", DaoFactory.createDepartmentDao().findWhereDepartmentCodeEquals(lu.getDepartmentCode()).get(0));
+            
+            return new ModelAndView("default/non_fish/StoresWithdrawalUpdate", "model", model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:Sws.htm");
+        }
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createSwsDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
 
 }

@@ -136,7 +136,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
 
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC NF_RECEIVING_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC NF_RR_MAX_PAGE ?, ?", show, where);
         } catch (Exception e) {
             e.printStackTrace();
             return 1;
@@ -145,7 +145,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC NF_RECEIVING_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC NF_RR_LIST ?, ?, ?, ?", page, show, where, order);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -154,7 +154,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
 
     public List<Map<String, Object>> getPo(String poCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC PRC_PURCHASE_ORDER_FIND_BY_POCODE ?", poCode);
+            return jdbcTemplate.queryForList("EXEC PRC_PO_FIND_BY_POCODE ?", poCode);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -163,7 +163,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
 
     public List<Map<String, Object>> getPoDetail(String poCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC PRC_PURCHASE_ORDER_DTL_FIND_BY_POCODE_FOR_RR ?", poCode);
+            return jdbcTemplate.queryForList("EXEC PRC_PO_DTL_FIND_BY_POCODE_FOR_RR ?", poCode);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -171,7 +171,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     }
 
     public void insert(String data, String createdBy) {
-        jdbcTemplate.update("EXEC NF_RECEIVING_INSERT ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC NF_RR_INSERT ?, ?", data, createdBy);
     }
 
     public List<ReceiveReport> findByProductCode(String productCode, String asOf) {
@@ -237,6 +237,23 @@ public class ReceiveReportDaoImpl extends AbstractDAO
             }
         }, productCategory, asOf, asOf);
         return resultList;
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_RR_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_RR_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC NF_RR_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getReceiving(String rrCode) {
+        return jdbcTemplate.queryForList("EXEC NF_RR_GET_CONTENT_FOR_UPDATE ?", rrCode);
     }
 
 }

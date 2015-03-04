@@ -2,29 +2,22 @@ package com.app.wms.web.controller;
 
 import com.app.wms.engine.db.dao.DepartmentDao;
 import com.app.wms.engine.db.dao.ProductDao;
-import com.app.wms.engine.db.dao.StockBalanceDao;
 import com.app.wms.engine.db.dao.StockInventoryDao;
 import com.app.wms.engine.db.dao.TsDao;
-import com.app.wms.engine.db.dao.TsDtlDao;
-import com.app.wms.engine.db.dao.UserDao;
 import com.app.wms.engine.db.dto.Department;
 import com.app.wms.engine.db.dto.Product;
 import com.app.wms.engine.db.dto.StockInventory;
-import com.app.wms.engine.db.dto.Ts;
-import com.app.wms.engine.db.dto.TsDtl;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
-import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,15 +39,11 @@ public class TransferSlipController extends MultiActionController {
         HashMap m = new HashMap();
 
         /* DAO | Define needed dao here */
-//        TsDao tsDao = DaoFactory.createTsDao();
-
         /* TRANSACTION | Something complex here */
         String module = request.getParameter("module");
         String type = request.getParameter("type");
         if (module.equals("NF")) {
             if (type.equals("NORMAL")) {
-//                List<Sws> ss = tsDao.findWhereNotInTs();
-//                m.put("s", ss);
                 return new ModelAndView("non_fish/TSAdd", "model", m);
             } else if (type.equals("OTHERS")) {
                 return new ModelAndView("non_fish/TSAddO", "model", m);
@@ -71,70 +60,70 @@ public class TransferSlipController extends MultiActionController {
 
     }
 
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
-            throws ParseException, StockInventoryDaoException, UserDaoException {
-        
-        try {
-            /* DATA | get initial value */
-            Ts t = new Ts();
-            String[] qtys = request.getParameterValues("qty");
-            String[] items = request.getParameterValues("item");
-            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
-            /* DAO | Define needed dao here */
-            TsDao tsDao = DaoFactory.createTsDao();
-            TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
-            StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
-            StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
-            UserDao uDao = DaoFactory.createUserDao();
-
-            /* TRANSACTION | Something complex here */
-            // insert transfer slip
-            t.setTsCode(request.getParameter("tsCode"));
-            t.setTsDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(request.getParameter("tsDate") + " "
-                    + new SimpleDateFormat("HH:mm:ss").format(new Date())));
-            t.setTsInfo(request.getParameter("tsInfo"));
-            t.setTsTo(request.getParameter("tsTo"));
-            t.setTsModule(request.getParameter("module"));
-            t.setTsType(request.getParameter("type"));
-            t.setTsType(request.getParameter("type"));
-            t.setSwsCode(t.getTsType().equals("NORMAL") ? request.getParameter("swsCode") : "0");
-            t.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
-            t.setCreatedDate(new Date());
-            tsDao.insert(t);
-
-            int i = 0;
-            TsDtl td = new TsDtl();
-            td.setTsCode(t.getTsCode());
-            td.setCreatedBy(t.getCreatedBy());
-            td.setCreatedDate(t.getCreatedDate());
-            for (String x : items) {
-                td.setProductCode(x);
-                if (!qtys[i].equals("")) {
-                    td.setQty(new BigDecimal(qtys[i]));
-                    tsDtlDao.insert(td);
-
-                    // stock balance history for stock card
-                    StockInventory si = stockInventoryDao.findWhereProductCodeEquals(td.getProductCode()).get(0);
-                    if (t.getTsType().equals("NORMAL")) {
-                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), td.getQty(), 20);
-                    } else if (t.getTsType().equals("OTHERS")) {
-                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), td.getQty(), 21);
-                    }
-
-                    // substract stock inventory balance
-                    tsDao.updateStockInventory(td.getProductCode(), td.getQty());
-                }
-                i++;
-            }
-
-            return new ModelAndView("redirect:TransferSlip.htm?module=" + t.getTsModule());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ModelAndView("redirect:TransferSlip.htm?action=create&module=" + request.getParameter("module") + "&type=" + request.getParameter("type"));
-        }
-
-    }
+//    public ModelAndView save(HttpServletRequest request, HttpServletResponse response)
+//            throws ParseException, StockInventoryDaoException, UserDaoException {
+//        
+//        try {
+//            /* DATA | get initial value */
+//            Ts t = new Ts();
+//            String[] qtys = request.getParameterValues("qty");
+//            String[] items = request.getParameterValues("item");
+//            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+//
+//            /* DAO | Define needed dao here */
+//            TsDao tsDao = DaoFactory.createTsDao();
+//            TsDtlDao tsDtlDao = DaoFactory.createTsDtlDao();
+//            StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
+//            StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
+//            UserDao uDao = DaoFactory.createUserDao();
+//
+//            /* TRANSACTION | Something complex here */
+//            // insert transfer slip
+//            t.setTsCode(request.getParameter("tsCode"));
+//            t.setTsDate(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(request.getParameter("tsDate") + " "
+//                    + new SimpleDateFormat("HH:mm:ss").format(new Date())));
+//            t.setTsInfo(request.getParameter("tsInfo"));
+//            t.setTsTo(request.getParameter("tsTo"));
+//            t.setTsModule(request.getParameter("module"));
+//            t.setTsType(request.getParameter("type"));
+//            t.setTsType(request.getParameter("type"));
+//            t.setSwsCode(t.getTsType().equals("NORMAL") ? request.getParameter("swsCode") : "0");
+//            t.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
+//            t.setCreatedDate(new Date());
+//            tsDao.insert(t);
+//
+//            int i = 0;
+//            TsDtl td = new TsDtl();
+//            td.setTsCode(t.getTsCode());
+//            td.setCreatedBy(t.getCreatedBy());
+//            td.setCreatedDate(t.getCreatedDate());
+//            for (String x : items) {
+//                td.setProductCode(x);
+//                if (!qtys[i].equals("")) {
+//                    td.setQty(new BigDecimal(qtys[i]));
+//                    tsDtlDao.insert(td);
+//
+//                    // stock balance history for stock card
+//                    StockInventory si = stockInventoryDao.findWhereProductCodeEquals(td.getProductCode()).get(0);
+//                    if (t.getTsType().equals("NORMAL")) {
+//                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), td.getQty(), 20);
+//                    } else if (t.getTsType().equals("OTHERS")) {
+//                        stockBalanceDao.insertOrUpdate(td.getProductCode(), new Date(), si.getBalance(), td.getQty(), 21);
+//                    }
+//
+//                    // substract stock inventory balance
+//                    tsDao.updateStockInventory(td.getProductCode(), td.getQty());
+//                }
+//                i++;
+//            }
+//
+//            return new ModelAndView("redirect:TransferSlip.htm?module=" + t.getTsModule());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ModelAndView("redirect:TransferSlip.htm?action=create&module=" + request.getParameter("module") + "&type=" + request.getParameter("type"));
+//        }
+//
+//    }
 
     public void getSwsDetail(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ProductDaoException {
@@ -144,12 +133,9 @@ public class TransferSlipController extends MultiActionController {
         PrintWriter pw = response.getWriter();
 
         /* DAO | Define needed dao here */
-        ProductDao productDao = DaoFactory.createProductDao();
-        TsDao tsDao = DaoFactory.createTsDao();
-
         /* TRANSACTION | Something complex here */
         pw.print("[");
-        List<Map<String, Object>> xs = tsDao.findSwsDtlForTs(request.getParameter("key"));
+        List<Map<String, Object>> xs = DaoFactory.createTsDao().findSwsDtlForTs(request.getParameter("key"));
         for (Map<String, Object> x : xs) {
             if (b) {
                 pw.print(",");
@@ -266,6 +252,130 @@ public class TransferSlipController extends MultiActionController {
         pw.print(sb.toString());
         pw.flush();
         pw.close();
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createTsDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+    
+    public ModelAndView ajaxNSaveO(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createTsDao().ajaxNSaveO(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createTsDao().delete(request.getParameter("key"), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:TransferSlip.htm?module=NF");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            String key = request.getParameter("key");
+            
+            List<Map<String, Object>> ts = DaoFactory.createTsDao().getTransfer(key);
+            model.put("ts", ts);
+            
+            if (ts.isEmpty()) {
+                return new ModelAndView("redirect:TransferSlip.htm?module=NF");
+            } else {
+                if (ts.get(0).get("ts_type").equals("NORMAL")) {
+                    return new ModelAndView("default/non_fish/TransferUpdate", "model", model);
+                } else {
+                    return new ModelAndView("default/non_fish/TransferUpdateO", "model", model);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:TransferSlip.htm?module=NF");
+        }
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createTsDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+    
+    public ModelAndView ajaxNUpdateO(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createTsDao().ajaxNUpdateO(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
 
 }

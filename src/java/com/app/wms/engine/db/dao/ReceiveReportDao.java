@@ -35,5 +35,14 @@ public interface ReceiveReportDao {
     public List<ReceiveReport> findByProductCode(String productCode, String asOf);
     
     public List<ReceiveReport> findByProductCodeAndBeforeThan(String productCode, String asOf);
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getReceiving(String rrCode);
 
 }

@@ -44,12 +44,12 @@ public class SwsDaoImpl extends AbstractDAO
         return s;
     }
     
-    public void insert(Sws s) {
-        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?,?, ?, ?, ?, ?);"
-                + "UPDATE sq_nf_sws SET is_used = 'Y' WHERE document_number = ?;", 
-            s.getSwsCode(), s.getSwsDate(), s.getSwsInfo(), s.getDepartmentCode(), null, null, s.getCreatedBy(), s.getCreatedDate(), null, null,
-            s.getSwsCode());
-    }
+//    public void insert(Sws s) {
+//        jdbcTemplate.update("INSERT INTO " + getTableName() + " VALUES(?, ?, ?, ?, ?,?, ?, ?, ?, ?);"
+//                + "UPDATE sq_nf_sws SET is_used = 'Y' WHERE document_number = ?;", 
+//            s.getSwsCode(), s.getSwsDate(), s.getSwsInfo(), s.getDepartmentCode(), null, null, s.getCreatedBy(), s.getCreatedDate(), null, null,
+//            s.getSwsCode());
+//    }
     
     public List<Sws> findByLogin(String departmentCode) {
         return jdbcTemplate.query("SELECT * FROM " + getTableName() + " WHERE department_code = ? ORDER BY CREATED_DATE DESC", 
@@ -58,7 +58,7 @@ public class SwsDaoImpl extends AbstractDAO
     
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC NF_STORES_WITHDRAWAL_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC NF_SWS_MAX_PAGE ?, ?", show, where);
         } catch(Exception e) {
             e.printStackTrace();
             return 1;
@@ -67,7 +67,7 @@ public class SwsDaoImpl extends AbstractDAO
     
     public String generateNumber(String userId, String departmentCode) {
         try {
-            Map<String, Object> map = jdbcTemplate.queryForMap("EXEC SQ_NF_STORES_WITHDRAWAL ?, ?", userId, departmentCode);
+            Map<String, Object> map = jdbcTemplate.queryForMap("EXEC NF_SQ_SWS ?, ?", userId, departmentCode);
             return map == null ? "" : map.get("sws_code").toString();
         } catch(Exception e) {
             e.printStackTrace();
@@ -77,11 +77,28 @@ public class SwsDaoImpl extends AbstractDAO
     
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order, String departmentCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC NF_STORES_WITHDRAWAL_LIST ?, ?, ?, ?, ?", page, show, where, order, departmentCode);
+            return jdbcTemplate.queryForList("EXEC NF_SWS_LIST ?, ?, ?, ?, ?", page, show, where, order, departmentCode);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_SWS_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_SWS_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC NF_SWS_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getStoresWithdrawal(String swsCode) {
+        return jdbcTemplate.queryForList("EXEC NF_SWS_GET_CONTENT_FOR_UPDATE ?", swsCode);
     }
     
 }

@@ -21,9 +21,11 @@ import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
 import com.app.wms.engine.db.exceptions.SupplierDaoException;
 import com.app.wms.engine.db.exceptions.UserDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +40,7 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 public class DeliveryController extends MultiActionController {
 
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("finish_goods/DRList");
+        return new ModelAndView("default/non_fish/DeliveryList");
     }
     
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) 
@@ -48,68 +50,10 @@ public class DeliveryController extends MultiActionController {
         HashMap m = new HashMap();
 
         /* DAO | Define needed dao here */
-        
         /* TRANSACTION | Something complex here */
         m.put("type", request.getParameter("type"));
         
-        return new ModelAndView("finish_goods/DRAdd", "model", m);
-        
-    }
-    
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) 
-        throws ParseException, NumberFormatException, StockInventoryDaoException, UserDaoException {
-        
-        /* DATA | get initial value */
-        String type = request.getParameter("type");
-        String[] master = request.getParameter("master").split(":", -1);
-        String[] details = request.getParameterValues("detail");
-        LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-
-        /* DAO | Define needed dao here */
-        DrDao drDao = DaoFactory.createDrDao();
-        DrDtlDao drDtlDao = DaoFactory.createDrDtlDao();
-        StockBalanceDao stockBalanceDao = DaoFactory.createStockBalanceDao();
-        StockInventoryDao stockInventoryDao = DaoFactory.createStockInventoryDao();
-        UserDao uDao = DaoFactory.createUserDao();
-
-        /* TRANSACTION | Something complex here */
-        // insert master delivery receipt
-        Dr d = new Dr();
-        d.setDrCode(Integer.parseInt(master[0]));
-        d.setDrDate(new SimpleDateFormat("dd/MM/yyyy").parse(master[1]));
-        d.setDrFrom(master[2]);
-        d.setDrFromLoc(master[3]);
-        d.setDrToLoc(master[4]);
-        d.setDrRemarks(master[5]);
-        d.setDrType(type);
-        d.setSupplierCode(master[6]);
-        d.setOrCode(master[7]);
-        d.setDmCode(master[8]);
-        d.setCreatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
-        d.setCreatedDate(new Date());
-        drDao.insert(d);
-        
-        // insert detail delivery receipt
-        for(String x : details) {
-            String[] detail = x.split(":");
-            DrDtl dd = new DrDtl();
-            dd.setDrCode(d.getDrCode());
-            dd.setDrQty(new BigDecimal(detail[0]));
-            dd.setDrUom(detail[1]);
-            dd.setProductCode(detail[2]);
-            dd.setCreatedBy(d.getCreatedBy());
-            dd.setCreatedDate(d.getCreatedDate());
-            drDtlDao.insert(dd);
-            
-            // stock balance history for stock card
-            StockInventory si = stockInventoryDao.findWhereProductCodeEquals(dd.getProductCode()).get(0);
-            stockBalanceDao.insertOrUpdate(dd.getProductCode(), new Date(), si.getBalance(), dd.getDrQty(), 23);
-            
-            // update stock inventory
-            drDao.updateStockInventory(dd.getProductCode(), dd.getDrQty());
-        }
-        
-        return new ModelAndView("redirect:Delivery.htm?type=" + type);
+        return new ModelAndView("default/non_fish/DeliveryAdd", "model", m);
         
     }
     
@@ -261,6 +205,78 @@ public class DeliveryController extends MultiActionController {
         pw.print(sb.toString());
         pw.flush();
         pw.close();
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createDeliveryDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createDeliveryDao().delete(request.getParameter("key"), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:Delivery.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            String key = request.getParameter("key");
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            
+            model.put("dr", DaoFactory.createDeliveryDao().getDelivery(key));
+            
+            return new ModelAndView("default/non_fish/DeliveryUpdate", "model", model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:Delivery.htm");
+        }
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createDeliveryDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
 
 }

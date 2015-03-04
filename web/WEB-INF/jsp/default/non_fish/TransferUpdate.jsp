@@ -1,52 +1,55 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
-<%    Date cDate = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Transfer &therefore; Create</title>
-        <%@include file="../metaheader.jsp" %>
+        <title>Update &therefore; Transfer &therefore; IMS</title>
+        <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
             .ui-datepicker { display: none; }
+            .ui-autocomplete {
+                max-height: 250px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <!-- include file header HERE -->
-            <%@include file="../header.jsp" %>
-            <jsp:include page="../dynmenu.jsp" />
+            <%@include file="../../header.jsp" %>
+            <jsp:include page="../../dynmenu.jsp" />
 
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="TransferSlip.htm" id="tsForm" method="post">
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="type"value="NORMAL" />
-                        <input type="hidden" name="module" value="NF" />
+                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" name="type"value="NORMAL">
+                        <input type="hidden" name="module" value="NF">
                         <table class="collapse tblForm row-select">
                             <caption>Transfer &therefore; Header</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
-                                    <td><input name="tsCode" pattern="[0-9]{1,}" type="text" required="true" /></td>
+                                    <td><input id="tsCode" name="tsCode" pattern="[0-9]{1,}" type="text" value="${model.ts[0].ts_code}" readonly></td>
                                     <td>TS Date</td>
-                                    <td><input id="tsDate" name="tsDate" size="10" type="text" value="<%=sdf.format(cDate)%>" required="true" /></td>
+                                    <td><input id="tsDate" name="tsDate" size="10" type="text" required></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50" /></td>
+                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50" value="${model.ts[0].ts_info}"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="5">
-                                        <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=NF');" />
+                                        <input id="save" type="submit" value="Update">
+                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=NF');">
                                     </td>
                                 </tr>
                             </tfoot>
@@ -57,16 +60,8 @@
                                 <tr>
                                     <td style="width: 100px;">Select SWS</td>
                                     <td colspan="7">
-                                        <input type="text" id="swsCode" name="swsCode" size="10" />
-                                        <input type="button" id="select" name="select" value="Select" />
-                                        <%--<select id="swsCode" name="swsCode" required="true">
-                                            <option value="">-- Please select SWS Number --</option>
-                                            <c:forEach items="${model.s}" var="x">
-                                                <option value="${x.swsCode}">
-                                                    ${x.swsCode} :: <fmt:formatDate pattern="dd/MM/yyyy" value="${x.swsDate}" /> :: ${x.departmentCode}
-                                                </option>
-                                            </c:forEach>
-                                        </select>--%>
+                                        <input type="text" id="swsCode" name="swsCode" size="10" value="${model.ts[0].sws_code}" readonly>
+                                        <input type="button" id="select" name="select" value="Select">
                                     </td>
                                 </tr>
                                 <tr>
@@ -80,7 +75,20 @@
                                     <td>Uom</td>
                                 </tr>
                             </thead>
-                            <tbody class="tbl-nohover" id="main"></tbody>
+                            <tbody class="tbl-nohover" id="main">
+                                <c:forEach items="${model.ts}" var="x" varStatus="xs">
+                                    <tr data-id="${x.id == null ? -1 : x.id}">
+                                        <td>${xs.index + 1}</td>
+                                        <td>${x.product_name}</td>
+                                        <td>${x.product_code}</td>
+                                        <td>${x.product_category}</td>
+                                        <td>${x.qty_req}</td>
+                                        <td>${x.soh}</td>
+                                        <td><input class="detailQty" name="qty" data-max="${x.soh}" type="text" value="${x.qty_out}"></td>
+                                        <td>${x.uom_name}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
                         </table>
                     </form>
                 </div>
@@ -94,6 +102,8 @@
 
         <!-- javascript block HERE -->
         <script>
+            // INIT | value
+            $('#tsDate').val(gnvs.util.toViewDate('${model.ts[0].ts_date}'));
 
             /* BIND | element event */
             $('#tsDate').datepicker({
@@ -101,13 +111,6 @@
                 changeMonth: true,
                 changeYear: true
             });
-            
-            /* BIND | Validation maximum quantity */
-//            $(".detailQty").live("blur", function() {
-//                if ($(this).val() > $(this).data("max")) {
-//                    $(this).val($(this).data("max"));
-//                }
-//            });
 
             $('#select').bind('click', function() {
                 if ($('#swsCode').val() === '') {
@@ -126,7 +129,7 @@
                         $('#main').html(null);
                         for (var i = 0; i < json.length; i++) {
                             $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i][2] + '</td><td><input name="item" type="hidden" value="' + json[i][1] + '" />' + json[i][1] +
-                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") + 
+                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") +
                                     '" type="text" /></td><td>' + json[i][5] + '</td></tr>');
                         }
                     },
@@ -139,24 +142,48 @@
 
             // VALIDATE | Minimum 1 (one) quantity
             $("#tsForm").bind("submit", function() {
-                var b = true;
-                $(".detailQty").each(function() {
-                    if ($(this).val() > 0) {
-                        b = false;
-                    } else if ($(this).val() <= 0 && $(this).val() !== "" ) {
-                        b = true;
-                        return false;
-                    }
+                var data = '';
+                var header = $('#tsCode').val() + ':s:' + gnvs.util.toDBDate($('#tsDate').val()) + ':s:' + $('#tsInfo').val() + ':s:NF:s:NORMAL:s:' + $('#swsCode').val() + ':s:';
+
+                $('#main tr[data-status]').each(function() {
+                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(2)').html() + ':s:' + $(this).find('input:eq(0)').val() + ':s::se:';
                 });
 
-                if (b) {
-                    return false;
+                if (confirm('Update Transfer #' + $('#tsCode').val() + ' ?')) {
+                    if (data === '') {
+                        data = data + header + 'X:s:-1:s::se:';
+                    }
+                    
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
+                }
+
+                return false;
+            });
+
+            // Update function
+            $('.detailQty').live('keyup', function() {
+                var $p = $(this).parent().parent();
+
+                if ($p.data('id') === -1) {
+                    if ($(this).val() === '' || isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) < 1) {
+                        $p.removeAttr('data-status');
+                    } else {
+                        $p.attr('data-status', 'C');
+                    }
                 } else {
-                    if (!confirm("Continue to save this document?")) {
-                        return false;
+                    if ($(this).val() === '' || isNaN(parseFloat($(this).val())) || parseFloat($(this).val()) < 1) {
+                        $p.attr('data-status', 'D');
+                    } else {
+                        $p.attr('data-status', 'U');
                     }
                 }
-                    
             });
 
         </script>

@@ -8,11 +8,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Transfer &therefore; Create</title>
+        <title>Create &therefore; Transfer &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
             .ui-datepicker { display: none; }
+            .ui-autocomplete {
+                max-height: 250px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+            }
         </style>
     </head>
     <body>
@@ -25,28 +31,28 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="TransferSlip.htm" id="tsForm" method="post">
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" name="type"value="NORMAL" />
-                        <input type="hidden" name="module" value="NF" />
+                        <input type="hidden" name="action" value="save">
+                        <input type="hidden" name="type"value="NORMAL">
+                        <input type="hidden" name="module" value="NF">
                         <table class="collapse tblForm row-select">
                             <caption>Transfer &therefore; Header</caption>
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>TS Number</td>
-                                    <td><input name="tsCode" pattern="[0-9]{1,}" type="text" required="true" /></td>
+                                    <td><input id="tsCode" name="tsCode" pattern="[0-9]{1,}" type="text" required></td>
                                     <td>TS Date</td>
-                                    <td><input id="tsDate" name="tsDate" size="10" type="text" value="<%=sdf.format(cDate)%>" required="true" /></td>
+                                    <td><input id="tsDate" name="tsDate" size="10" type="text" value="<%=sdf.format(cDate)%>" required></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50" /></td>
+                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="5">
-                                        <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=NF');" />
+                                        <input id="save" type="submit" value="Save">
+                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('TransferSlip.htm?module=NF');">
                                     </td>
                                 </tr>
                             </tfoot>
@@ -57,16 +63,8 @@
                                 <tr>
                                     <td style="width: 100px;">Select SWS</td>
                                     <td colspan="7">
-                                        <input type="text" id="swsCode" name="swsCode" size="10" />
-                                        <input type="button" id="select" name="select" value="Select" />
-                                        <%--<select id="swsCode" name="swsCode" required="true">
-                                            <option value="">-- Please select SWS Number --</option>
-                                            <c:forEach items="${model.s}" var="x">
-                                                <option value="${x.swsCode}">
-                                                    ${x.swsCode} :: <fmt:formatDate pattern="dd/MM/yyyy" value="${x.swsDate}" /> :: ${x.departmentCode}
-                                                </option>
-                                            </c:forEach>
-                                        </select>--%>
+                                        <input type="text" id="swsCode" name="swsCode" size="10">
+                                        <input type="button" id="select" name="select" value="Select">
                                     </td>
                                 </tr>
                                 <tr>
@@ -101,13 +99,6 @@
                 changeMonth: true,
                 changeYear: true
             });
-            
-            /* BIND | Validation maximum quantity */
-//            $(".detailQty").live("blur", function() {
-//                if ($(this).val() > $(this).data("max")) {
-//                    $(this).val($(this).data("max"));
-//                }
-//            });
 
             $('#select').bind('click', function() {
                 if ($('#swsCode').val() === '') {
@@ -126,7 +117,7 @@
                         $('#main').html(null);
                         for (var i = 0; i < json.length; i++) {
                             $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i][2] + '</td><td><input name="item" type="hidden" value="' + json[i][1] + '" />' + json[i][1] +
-                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") + 
+                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") +
                                     '" type="text" /></td><td>' + json[i][5] + '</td></tr>');
                         }
                     },
@@ -139,24 +130,27 @@
 
             // VALIDATE | Minimum 1 (one) quantity
             $("#tsForm").bind("submit", function() {
-                var b = true;
-                $(".detailQty").each(function() {
-                    if ($(this).val() > 0) {
-                        b = false;
-                    } else if ($(this).val() <= 0 && $(this).val() !== "" ) {
-                        b = true;
-                        return false;
+                var data = '';
+                var header = $('#tsCode').val() + ':s:' + gnvs.util.toDBDate($('#tsDate').val()) + ':s:' + $('#tsInfo').val() + ':s:NF:s:NORMAL:s:' + $('#swsCode').val() + ':s:';
+
+                $('#main tr').each(function() {
+                    if (!isNaN(parseFloat($(this).find('input:eq(1)').val())) && parseFloat($(this).find('input:eq(1)').val()) > 0) {
+                        data = data + header + $(this).find('input:eq(0)').val() + ':s:' + $(this).find('input:eq(1)').val() + ':s::se:';
                     }
                 });
 
-                if (b) {
-                    return false;
-                } else {
-                    if (!confirm("Continue to save this document?")) {
-                        return false;
-                    }
+                if (data !== '' && confirm('Save Transfer #' + $('#tsCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
-                    
+
+                return false;
             });
 
         </script>

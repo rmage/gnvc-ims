@@ -76,7 +76,7 @@ public class TsDaoImpl extends AbstractDAO
 
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC NF_TRANSFER_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC NF_TS_MAX_PAGE ?, ?", show, where);
         } catch (Exception e) {
             e.printStackTrace();
             return 1;
@@ -85,7 +85,7 @@ public class TsDaoImpl extends AbstractDAO
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC NF_TRANSFER_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC NF_TS_LIST ?, ?, ?, ?", page, show, where, order);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -94,7 +94,7 @@ public class TsDaoImpl extends AbstractDAO
 
     public List<Map<String, Object>> findSwsDtlForTs(String swsCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC NF_STORES_WITHDRAWAL_DTL_FIND_BY_SWSCODE_FOR_TS ?", swsCode);
+            return jdbcTemplate.queryForList("EXEC NF_SWS_BY_CODE_FOR_TS ?", swsCode);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -139,6 +139,31 @@ public class TsDaoImpl extends AbstractDAO
             }
         }, productCategory, asOf, asOf);
         return resultList;
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_TS_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public void ajaxNUpdateO(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_TSO_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_TS_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSaveO(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC NF_TSO_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC NF_TS_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getTransfer(String tsCode) {
+        return jdbcTemplate.queryForList("EXEC NF_TS_GET_CONTENT_FOR_UPDATE ?", tsCode);
     }
 
 }

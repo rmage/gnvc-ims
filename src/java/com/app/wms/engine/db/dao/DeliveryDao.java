@@ -101,5 +101,14 @@ public interface DeliveryDao {
     public int ajaxMaxPage(BigDecimal show, String where);
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(String key, String updatedBy);
+    
+    public List<Map<String, Object>> getDelivery(String drCode);
 
 }

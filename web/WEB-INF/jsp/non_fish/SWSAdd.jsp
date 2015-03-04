@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Stores Withdrawal &therefore; Create</title>
+        <title>Create &therefore; Stores Withdrawal &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -87,7 +87,7 @@
                                 <tr>
                                     <td colspan="5">
                                         <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('Sws.htm');" />
+                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('Sws.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -180,23 +180,22 @@
             };
 
             $('#swsForm').bind('submit', function() {
-                if ($('#main tr').length !== 0 && $('#swsCode').val() !== '') {
-                    if ($('#vZero').val() === '1' && $i.val().indexOf('CONFIRMATORY; ') < 0) {
-                        $i.val('CONFIRMATORY; ' + $i.val());
-                    }
-                    if (confirm("Continue to save this document?")) {
-                        $('#poster').append('<input name="master" type="hidden" value="' + $('#swsCode').val() + ':' + $('#swsDate').val() + ':' +
-                                $('#swsInfo').val() + ':' + $('#departmentCode').val() + '" />');
+                var data = '';
+                var header = $('#swsCode').val() + ':s:' + gnvs.util.toDBDate($('#swsDate').val()) + ':s:' + $('#swsInfo').val() + ':s:' + $('#departmentCode').val() + ':s:';
 
-                        var i = 0;
-                        $('#main tr').each(function() {
-                            $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(1)').html() + ':' +
-                                    parseFloat($(this).find('td:eq(4)').html()) + ':' + $(this).find('input[type="text"]').val() + ':' +
-                                    $(this).find('td:eq(6)').html() + ':' + i + '" />');
-                            i++;
-                        });
-                        $('#poster').submit();
-                    }
+                $('#main tr').each(function() {
+                    data = data + header + $(this).find('td:eq(1)').html() + ':s:' + $(this).find('td:eq(4)').html().replace(/,/g, '') + ':s:' + $(this).find('input[type="text"]').val() + ':s:' + $(this).find('td:eq(6)').html() + ':s::se:';
+                });
+
+                if ($('#swsCode').val() !== '' && data !== '' && confirm('Save Stores Withdrawal #' + $('#swsCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;

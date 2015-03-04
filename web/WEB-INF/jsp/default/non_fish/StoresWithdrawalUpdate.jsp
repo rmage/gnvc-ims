@@ -6,8 +6,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Stores Withdrawal &therefore; Create</title>
-        <%@include file="../metaheader.jsp" %>
+        <title>Update &therefore; Stores Withdrawal &therefore; IMS</title>
+        <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
             .ui-datepicker { display: none; }
@@ -22,15 +22,12 @@
     <body>
         <div class="container">
             <!-- include file header HERE -->
-            <%@include file="../header.jsp" %>
-            <jsp:include page="../dynmenu.jsp" />
+            <%@include file="../../header.jsp" %>
+            <jsp:include page="../../dynmenu.jsp" />
 
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="Sws.htm" id="poster" method="post" style="display: none;">
-                        <input name="action" type="hidden" value="save" />
-                    </form>
                     <form action="#" id="swsForm" method="get">
                         <table class="collapse tblForm row-select">
                             <caption>Stores Withdrawal &therefore; Header</caption>
@@ -38,18 +35,16 @@
                                 <tr>
                                     <td>SWS Number</td>
                                     <td>
-                                        <input id="swsCode" name="swsCode" pattern="[0-9]{1,}" type="text" required readonly>
+                                        <input id="swsCode" name="swsCode" pattern="[0-9]{1,}" type="text" value="${model.sws[0].sws_code}" required readonly>
                                         <select id="vZero" name="vZero">
                                             <option value="0">Normal</option>
                                             <option value="1">Confirmatory</option>
                                         </select>
-                                        <input type="button" id="generateNumber" value="Generate Number">
                                     </td>
                                     <td>SWS Date</td>
-                                    <td><input id="swsDate" name="swsDate" size="10" type="text" required="true" /></td>
+                                    <td><input id="swsDate" name="swsDate" size="10" type="text" required></td>
                                 </tr>
                                 <tr>
-                                    <%--<c:set var="x" value="${fn:split(model.department, ':')}" />--%>
                                     <td>Department</td>
                                     <td style="width: 500px;">
                                         <%                                            if (lu.getDepartmentCode().equals("7032")) {
@@ -74,20 +69,17 @@
                                                 String[] x = ((HashMap) request.getAttribute("model")).get("department").toString().split(":");
                                                 out.print("<input id=\"departmentCode\" size=\"4\" type=\"text\" value=\"" + x[0] + "\" readonly required> " + x[1]);
                                             }
-//                                            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-%>
+                                        %>
                                     </td>
                                     <td>Info</td>
-                                    <td>
-                                        <input type="text" id="swsInfo" name="swsInfo" size="50" />
-                                    </td>
+                                    <td><input type="text" id="swsInfo" name="swsInfo" size="50" value="${model.sws[0].sws_info}"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="5">
-                                        <input id="save" type="submit" value="Save" />
-                                        <input type="reset" value="Cancel" onclick="window.location.replace('Sws.htm');" />
+                                        <input id="save" type="submit" value="Update" />
+                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('Sws.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -115,7 +107,19 @@
                                     <td>Uom</td>
                                 </tr>
                             </thead>
-                            <tbody class="tbl-nohover" id="main"></tbody>
+                            <tbody class="tbl-nohover" id="main">
+                                <c:forEach items="${model.sws}" var="x">
+                                    <tr data-id="${x.id}">
+                                        <td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td>
+                                        <td>${x.product_code}</td>
+                                        <td>${x.product_name}</td>
+                                        <td>${x.product_category}</td>
+                                        <td>${x.soh}</td>
+                                        <td><input size="3" type="text" style="font-size: smaller;" required="true" value="${x.qty}"></td>
+                                        <td>${x.uom}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
                         </table>
                     </form>
                 </div>
@@ -129,10 +133,26 @@
 
         <!-- javascript block HERE -->
         <script>
+            // INIT | value
+            $('#swsDate').val(gnvs.util.toViewDate('${model.sws[0].sws_date}'));
+            $('#departmentCode').val('${model.sws[0].department_code}');
+            if ('${model.sws[0].sws_info}'.indexOf('CONFIRMATORY') > -1) {
+                $('#vZero').val(1);
+            }
+
             /* BIND | element event */
-            $('#swsDate').datepicker({dateFormat: "dd/mm/yy"}).datepicker("setDate", new Date());
+            $('#swsDate').datepicker({dateFormat: "dd/mm/yy"});
             $('.delete').live('click', function() {
-                $(this).parent().parent().remove();
+                var $tr = $(this).parent().parent();
+
+                if ($tr.attr('data-status') === undefined) {
+                    $tr.attr('data-status', 'D').hide();
+                } else if ($tr.attr('data-status') === 'C') {
+                    $tr.remove();
+                }
+            });
+            $('#main tr input[type="text"]').bind('focus', function() {
+                $(this).parent().parent().attr('data-status', 'U');
             });
 
             var $i = $('#swsInfo');
@@ -156,17 +176,19 @@
             $("#mode").bind("change", function() {
                 $('#item').autocomplete("option", "source", "?action=getProduct&mode=" + $(this).val());
             });
-
+            
+            var idCounter = 0;
             $('#item').autocomplete({
                 source: '?action=getProduct&mode=code',
                 minLength: 2,
                 select: function(event, ui) {
                     if (parseFloat(ui.item.soh) > 0 || $('#vZero').val() === '1') {
-                        $('#main').append('<tr><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' +
+                        $('#main').append('<tr data-id="' + idCounter + '" data-status="C"><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' +
                                 ui.item.itemCode + '</td><td>' + ui.item.itemName + '</td><td>' + ui.item.type + '</td><td>' + numberWithCommas(ui.item.soh) +
-                                '</td><td><input size="3" type="text" style="font-size: smaller;" required="true" /></td><td>' + ui.item.uom + '</td></tr>');
+                                '</td><td><input size="3" type="text" style="font-size: smaller;" required="true"></td><td>' + ui.item.uom + '</td></tr>');
                         $('#main tr:last input[type="text"]').focus();
                         $('#item').val(null);
+                        idCounter = idCounter - 1;
                     } else {
                         return false;
                     }
@@ -180,53 +202,29 @@
             };
 
             $('#swsForm').bind('submit', function() {
-                if ($('#main tr').length !== 0 && $('#swsCode').val() !== '') {
-                    if ($('#vZero').val() === '1' && $i.val().indexOf('CONFIRMATORY; ') < 0) {
-                        $i.val('CONFIRMATORY; ' + $i.val());
-                    }
-                    if (confirm("Continue to save this document?")) {
-                        $('#poster').append('<input name="master" type="hidden" value="' + $('#swsCode').val() + ':' + $('#swsDate').val() + ':' +
-                                $('#swsInfo').val() + ':' + $('#departmentCode').val() + '" />');
+                var data = '';
+                var header = $('#swsCode').val() + ':s:' + gnvs.util.toDBDate($('#swsDate').val()) + ':s:' + $('#swsInfo').val() + ':s:' + $('#departmentCode').val() + ':s:';
 
-                        var i = 0;
-                        $('#main tr').each(function() {
-                            $('#poster').append('<input name="detail" type="hidden" value="' + $(this).find('td:eq(1)').html() + ':' +
-                                    parseFloat($(this).find('td:eq(4)').html()) + ':' + $(this).find('input[type="text"]').val() + ':' +
-                                    $(this).find('td:eq(6)').html() + ':' + i + '" />');
-                            i++;
-                        });
-                        $('#poster').submit();
+                $('#main tr[data-status]').each(function() {
+                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(1)').html() + ':s:' + parseFloat($(this).find('td:eq(4)').html()) + ':s:' + $(this).find('input[type="text"]').val() + ':s:' + $(this).find('td:eq(6)').html() + ':s::se:';
+                });
+
+                if (confirm('Update Stores Withdrawal #' + $('#swsCode').val() + ' ?')) {
+                    if (data === '') {
+                        data = header + 'X:s:-1:s::se:';
                     }
+
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
-            });
-
-            /* FYA | November 26, 2014 | stores withdrawal number request */
-            $('#generateNumber').bind('click', function() {
-                if ($('#main tr').length > 0) {
-                    $(this).val('Working....');
-                    $(this).attr('disabled', 'disabled');
-                    $.ajax({
-                        url: '?', method: 'post',
-                        data: {action: 'generateNumber', department: $('#departmentCode').val()},
-                        dataType: 'json',
-                        success: function(json) {
-                            if (json.number !== '') {
-                                $('#swsCode').val(json.number);
-                                $('#generateNumber').val('Success');
-                            } else {
-                                $('#generateNumber').val('Failed');
-                            }
-                        },
-                        error: function() {
-                            $('#generateNumber').val('Failed, Try to Reload Page');
-                            window.location.reload();
-                        }
-                    });
-                } else {
-                    alert('No item selected, try select item first!');
-                }
             });
 
             function numberWithCommas(x) {
