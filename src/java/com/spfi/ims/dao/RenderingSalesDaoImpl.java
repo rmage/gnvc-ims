@@ -51,4 +51,17 @@ public class RenderingSalesDaoImpl extends AbstractDAO implements RenderingSales
         jdbcTemplate.update("EXEC REND_SALES_INSERT ?, ?", data, createdBy);
     }
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC REND_SALES_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC REND_SALES_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getSales(String key) {
+        return jdbcTemplate.queryForList("EXEC REND_SALES_GET_CONTENT_FOR_UPDATE ?", key);
+    }
+    
 }

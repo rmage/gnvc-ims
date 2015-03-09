@@ -52,6 +52,10 @@ var gnvs = {
         toViewDate: function(dbDate) {
             dbDate = dbDate.substr(0, 10).split('-');
             return dbDate[2] + '/' + dbDate[1] + '/' + dbDate[0];
+        },
+        parseFloat: function(v) {
+            v = v.replace(/,/g, '');
+            return parseFloat(v);
         }
     }
 };

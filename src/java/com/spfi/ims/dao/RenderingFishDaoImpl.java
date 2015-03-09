@@ -51,4 +51,17 @@ public class RenderingFishDaoImpl extends AbstractDAO implements RenderingFishDa
         jdbcTemplate.update("EXEC REND_FISH_INSERT ?, ?", data, createdBy);
     }
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC REND_FISH_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC REND_FISH_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getRenderingFish(String rendCode, int data) {
+        return jdbcTemplate.queryForList("EXEC REND_FISH_GET_CONTENT_FOR_UPDATE ?, ?", rendCode, data);
+    }
+    
 }

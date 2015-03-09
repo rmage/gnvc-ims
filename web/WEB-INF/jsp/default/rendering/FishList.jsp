@@ -43,7 +43,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="rf.fmfo_code">Number</td>
                                 <td column="rf.fmfo_date">Date</td>
                                 <td>Second Pass (Sack)</td>
@@ -67,7 +67,7 @@
         <!-- javascript block HERE -->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_RendDailyReport_Daily Rendering Fish Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_RendDailyReport_Daily Rendering Fish Report (xls)');
         </script>
     </body>
 </html>

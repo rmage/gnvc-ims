@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Create &therefore; Rendering Fish &therefore; IMS</title>
+        <title>Update &therefore; Rendering Fish &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             /*:-moz-ui-invalid:not(output) { box-shadow: none; }*/
@@ -38,97 +38,97 @@
                 <div class="box">
                     <form id="fRend" action="#" method="post">
                         <input type="hidden" id="date" name="date">
+                        <input type="hidden" id="rendCode" name="rendCode" value="${model.rH[0].fmfo_code}">
                         <table class="collapse tblForm row-select">
                             <caption>Rendering Fish &therefore; Detail</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">Date</td>
                                     <td>
-                                        <input type="text" id="datePicker" name="datePicker" size="10" required>
-                                        <input type="button" id="prepareData" value="Prepare">
+                                        <input type="text" id="datePicker" name="datePicker" size="10" readonly>
                                     </td>
                                     <td style="width: 200px;">Second Pass</td>
                                     <td>
-                                        Sack: <span class="bold" id="spSack">0</span>
-                                        Kg: <span class="bold">0</span>
+                                        Sack: <span class="bold" id="spSack">${model.rH[0].fmfo_spsack}</span>
+                                        Kg: <span class="bold">${model.rH[0].fmfo_spkg}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><textarea id="remarks" style="height: 80px; width: 1000px;"></textarea></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('RenderingFish.htm');" />
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                        <table class="collapse tblForm row-select">
-                            <caption>Rendering Fish &therefore; Process</caption>
-                            <thead>
-                                <tr>
-                                    <td rowspan="3">Shift</td>
-                                    <td rowspan="3">Raw Fish</td>
-                                    <td rowspan="3">%</td>
-                                    <td colspan="7">Tricanter, kgs</td>
-                                    <td colspan="8">Direct Rendering, kgs</td>
-                                    <td rowspan="2">Total Scraps</td>
-                                    <td rowspan="2">%</td>
-                                    <td colspan="2" rowspan="2">Total Fishmeal</td>
-                                    <td rowspan="2">%</td>
-                                </tr>
-                                <tr>
-                                    <td rowspan="2">Weight of Scrap</td>
-                                    <td rowspan="2">%</td>
-                                    <td colspan="3">Fishmeal</td>
-                                    <td>Fish Oil</td>
-                                    <td rowspan="2">%</td>
-                                    <td rowspan="2">Weight of Scrap</td>
-                                    <td colspan="2">First Pass</td>
-                                    <td colspan="2">High Protein</td>
-                                    <td colspan="2">Second Pass</td>
-                                    <td rowspan="2">%</td>
-                                </tr>
-                                <tr>
-                                    <td>Sack</td>
-                                    <td>Kg</td>
-                                    <td>%</td>
-                                    <td>Kg</td>
-                                    <td>Sack</td>
-                                    <td>Kg</td>
-                                    <td>Sack</td>
-                                    <td>Kg</td>
-                                    <td>Sack</td>
-                                    <td>Kg</td>
-                                    <td>Kg</td>
-                                    <td></td>
-                                    <td>Sack</td>
-                                    <td>Kg</td>
-                                    <td></td>
-                                </tr>
-                            </thead>
-                            <tbody id="process">
-                                <tr>
+                                    <td colspan="3"><textarea  id="remarks" style="height: 80px; width: 1000px;" data-id="${model.rR[0].id_remark}"><c:forEach items="${model.rR}" var="x" varStatus="st">${x.fmfo_remark}<c:if test="${not st.last}">&#13;&#10;</c:if></c:forEach></textarea></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4">
+                                                <input type="submit" value="Update" name="btnSave" />
+                                                <input id ="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('RenderingFish.htm');" />
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table class="collapse tblForm row-select">
+                                    <caption>Rendering Fish &therefore; Process</caption>
+                                    <thead>
+                                        <tr>
+                                            <td rowspan="3">Shift</td>
+                                            <td rowspan="3">Raw Fish</td>
+                                            <td rowspan="3">%</td>
+                                            <td colspan="7">Tricanter, kgs</td>
+                                            <td colspan="8">Direct Rendering, kgs</td>
+                                            <td rowspan="2">Total Scraps</td>
+                                            <td rowspan="2">%</td>
+                                            <td colspan="2" rowspan="2">Total Fishmeal</td>
+                                            <td rowspan="2">%</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">Weight of Scrap</td>
+                                            <td rowspan="2">%</td>
+                                            <td colspan="3">Fishmeal</td>
+                                            <td>Fish Oil</td>
+                                            <td rowspan="2">%</td>
+                                            <td rowspan="2">Weight of Scrap</td>
+                                            <td colspan="2">First Pass</td>
+                                            <td colspan="2">High Protein</td>
+                                            <td colspan="2">Second Pass</td>
+                                            <td rowspan="2">%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sack</td>
+                                            <td>Kg</td>
+                                            <td>%</td>
+                                            <td>Kg</td>
+                                            <td>Sack</td>
+                                            <td>Kg</td>
+                                            <td>Sack</td>
+                                            <td>Kg</td>
+                                            <td>Sack</td>
+                                            <td>Kg</td>
+                                            <td>Kg</td>
+                                            <td></td>
+                                            <td>Sack</td>
+                                            <td>Kg</td>
+                                            <td></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="process">
+                                        <tr data-id="${model.rD[0].id_dtl}">
                                     <td class="data bold">DS</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_raw}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_tcscrap}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_tcfm_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_tcfo_kg}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_drscrap}" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_drfp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_drhp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[0].fmfo_drsp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -137,23 +137,23 @@
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rD[1].id_dtl}">
                                     <td class="bold">2nd</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_raw}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_tcscrap}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_tcfm_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_tcfo_kg}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_drscrap}" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_drfp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_drhp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[1].fmfo_drsp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -162,23 +162,23 @@
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rD[2].id_dtl}">
                                     <td class="bold">NS</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_raw}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_tcscrap}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_tcfm_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_tcfo_kg}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_drscrap}" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_drfp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_drhp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[2].fmfo_drsp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -187,23 +187,23 @@
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rD[3].id_dtl}">
                                     <td class="bold">Buy</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_raw}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_tcscrap}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_tcfm_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_tcfo_kg}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_drscrap}" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_drfp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_drhp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
+                                    <td class="data"><input type="number" value="${model.rD[3].fmfo_drsp_sack}" min="0" step="0.01" required></td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -212,7 +212,7 @@
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rD[4].id_dtl}">
                                     <td class="bold">Total</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -250,26 +250,26 @@
                                 </tr>
                             </thead>
                             <tbody id="man">
-                                <tr>
+                                <tr data-id="${model.rM[0].id_man}">
                                     <td class="bold">DS</td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="0.1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="text" size="5"></td>
-                                    <td><input class="data" type="text" size="5"></td>
+                                    <td><input class="data" type="number" size="5" value="${model.rM[0].fmfo_manpower}" min="0" step="1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="number" size="5" value="${model.rM[0].fmfo_qty}" min="0" step="0.1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="text" size="5" value="${model.rM[0].fmfo_operator1}"></td>
+                                    <td><input class="data" type="text" size="5" value="${model.rM[0].fmfo_operator2}"></td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rM[1].id_man}">
                                     <td class="bold">2nd</td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="0.1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="text" size="5"></td>
-                                    <td><input class="data" type="text" size="5"></td>
+                                    <td><input class="data" type="number" size="5" value="${model.rM[1].fmfo_manpower}" min="0" step="1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="number" size="5" value="${model.rM[1].fmfo_qty}" min="0" step="0.1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="text" size="5" value="${model.rM[1].fmfo_operator1}"></td>
+                                    <td><input class="data" type="text" size="5" value="${model.rM[1].fmfo_operator2}"></td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rM[2].id_man}">
                                     <td class="bold">NS</td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="number" size="5" value="0" min="0" step="0.1" style="width: 30px;" required></td>
-                                    <td><input class="data" type="text" size="5"></td>
-                                    <td><input class="data" type="text" size="5"></td>
+                                    <td><input class="data" type="number" size="5" value="${model.rM[2].fmfo_manpower}" min="0" step="1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="number" size="5" value="${model.rM[2].fmfo_qty}" min="0" step="0.1" style="width: 30px;" required></td>
+                                    <td><input class="data" type="text" size="5" value="${model.rM[2].fmfo_operator1}"></td>
+                                    <td><input class="data" type="text" size="5" value="${model.rM[2].fmfo_operator2}"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -295,28 +295,28 @@
                                 </tr>
                             </thead>
                             <tbody id="breakdown">
-                                <tr>
+                                <tr data-id="${model.rB[0].id_breakdown}">
                                     <td class="bold data">DS</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data">100.00</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data">100.00</td>
+                                    <td class="data"><input type="number" value="${model.rB[0].fmfo_ltokg}" min="0" step="0.01" required></td>
+                                    <td class="data">${model.rB[0].fmfo_mtokg}</td>
+                                    <td class="data"><input type="number" value="${model.rB[0].fmfo_fresh}" min="0" step="0.01" required></td>
+                                    <td class="data">${model.rB[0].fmfo_frozen}</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rB[1].id_breakdown}">
                                     <td class="bold data">2nd</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data">100.00</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data">100.00</td>
+                                    <td class="data"><input type="number" value="${model.rB[1].fmfo_ltokg}" min="0" step="0.01" required></td>
+                                    <td class="data">${model.rB[1].fmfo_mtokg}</td>
+                                    <td class="data"><input type="number" value="${model.rB[1].fmfo_fresh}" min="0" step="0.01" required></td>
+                                    <td class="data">${model.rB[1].fmfo_frozen}</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rB[2].id_breakdown}">
                                     <td class="bold data">NS</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data">100.00</td>
-                                    <td class="data"><input type="number" value="0" min="0" step="0.01" required></td>
-                                    <td class="data">100.00</td>
+                                    <td class="data"><input type="number" value="${model.rB[2].fmfo_ltokg}" min="0" step="0.01" required></td>
+                                    <td class="data">${model.rB[2].fmfo_mtokg}</td>
+                                    <td class="data"><input type="number" value="${model.rB[2].fmfo_fresh}" min="0" step="0.01" required></td>
+                                    <td class="data">${model.rB[2].fmfo_frozen}</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rB[3].id_breakdown}">
                                     <td class="bold data">Total</td>
                                     <td class="data">0</td>
                                     <td class="data">100.00</td>
@@ -350,17 +350,17 @@
                                 </tr>
                             </thead>
                             <tbody id="stock">
-                                <tr>
+                                <tr data-id="${model.rS[0].id_stock}">
                                     <td class="bold data">Beginning</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
+                                    <td class="data">${model.rS[0].fmfo_fmst_sack}</td>
+                                    <td class="data">${model.rS[0].fmfo_fmst_kg}</td>
+                                    <td class="data">${model.rS[0].fmfo_fmhp_sack}</td>
+                                    <td class="data">${model.rS[0].fmfo_fmhp_kg}</td>
                                     <td class="data">-</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
+                                    <td class="data">${model.rS[0].fmfo_fo_drum}</td>
+                                    <td class="data">${model.rS[0].fmfo_fo_kg}</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rS[1].id_stock}">
                                     <td class="bold data">Today</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -370,7 +370,7 @@
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rS[2].id_stock}">
                                     <td class="bold data">Available</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -380,17 +380,17 @@
                                     <td class="data">0</td>
                                     <td class="data">0</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rS[3].id_stock}">
                                     <td class="bold data">Sales</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
+                                    <td class="data">${model.rS[3].fmfo_fmst_sack}</td>
+                                    <td class="data">${model.rS[3].fmfo_fmst_kg}</td>
+                                    <td class="data">${model.rS[3].fmfo_fmhp_sack}</td>
+                                    <td class="data">${model.rS[3].fmfo_fmhp_kg}</td>
                                     <td class="data">-</td>
-                                    <td class="data">0</td>
-                                    <td class="data">0</td>
+                                    <td class="data">${model.rS[3].fmfo_fo_drum}</td>
+                                    <td class="data">${model.rS[3].fmfo_fo_kg}</td>
                                 </tr>
-                                <tr>
+                                <tr data-id="${model.rS[4].id_stock}">
                                     <td class="bold data">Ending</td>
                                     <td class="data">0</td>
                                     <td class="data">0</td>
@@ -414,15 +414,9 @@
 
         <!-- javascript block HERE -->
         <script>
-
-            // BIND | Date Picker to ofal date
-            $("#datePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#date",
-                changeYear: true,
-                changeMonth: true
-            });
+            // INIT | update
+            $('#datePicker').val(gnvs.util.toViewDate('${model.rH[0].fmfo_date}'));
+            $('#date').val(gnvs.util.toDBDate($('#datePicker').val()));
 
             // FUNCTION | to support calculation
             var $pLastTr = $('#process tr:last-child()');
@@ -777,71 +771,119 @@
             });
 
             $('#fRend').bind('submit', function() {
-                var data = '';
-                if ($('#prepareData').attr('disabled') === 'disabled') {
-                    // PREPARE | data for master fish meal and fish oil
-                    data = $('#date').val() + '^' + $('#spSack').html() + '^' + $('#spSack').next().html() + '^@*';
+                var dataH = '', dataR = '', dataD = '', dataM = '', dataB = '', dataS = '';
 
-                    // PREPARE | data for master remark
-                    var remarks = $('#remarks').val().split(/\n/);
+                if (confirm('Continue to update ?')) {
+                    // DATA | header
+                    dataH = '0:s:' + $('#rendCode').val() + ':s:' + $('#spSack').html() + ':s:' + $('#spSack').next().html() + ':s::se:';
+//                    console.log(data);
+//                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+//                        if (json.message === '') {
+////                            $('#btnCancel').trigger('click');
+//                        } else {
+//                            alert(json.message);
+//                        }
+//                    });
+
+                    // DATA | remarks
+                    var remarks = $('#remarks').val().split('\n');
                     for (var i = 0; i < remarks.length; i++) {
-                        data = data + remarks[i] + '^@';
+                        dataR = dataR + '1:s:' + $('#rendCode').val() + ':s:' + remarks[i] + ':s::se:';
                     }
-                    data = data + '*';
+//                    console.log(data);
+//                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+//                        if (json.message === '') {
+////                            $('#btnCancel').trigger('click');
+//                        } else {
+//                            alert(json.message);
+//                        }
+//                    });
 
-                    // PREPARE | data for man
-                    $('#man tr').each(function() {
-                        data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^' + $(this).find('td:eq(2) > input').val() + '^'
-                                + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(4) > input').val() + '^@';
+                    // DATA | detail
+                    $('#process tr').each(function(i) {
+                        if (i !== 4) {
+                            var $i = $(this).find('input');
+                            dataD = dataD + '2:s:' + $(this).data('id') + ':s:' + $i.eq(0).val() + ':s:' + $i.eq(1).val() + ':s:' + $i.eq(2).val() + ':s:' + $i.eq(3).val() + ':s:' + $i.eq(4).val() + ':s:' + $i.eq(5).val() + ':s:' + $i.eq(6).val() + ':s:' + $i.eq(7).val() + ':s::se:';
+                        } else {
+                            var $i = $(this).find('td:eq(1),td:eq(3),td:eq(5),td:eq(8),td:eq(10),td:eq(11),td:eq(13),td:eq(15)');
+                            dataD = dataD + '2:s:' + $(this).data('id') + ':s:' + $i.eq(0).html() + ':s:' + $i.eq(1).html() + ':s:' + $i.eq(2).html() + ':s:' + $i.eq(3).html() + ':s:' + $i.eq(4).html() + ':s:' + $i.eq(5).html() + ':s:' + $i.eq(6).html() + ':s:' + $i.eq(7).html() + ':s::se:';
+                        }
                     });
-                    data = data + '*';
+//                    console.log(data);
+//                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+//                        if (json.message === '') {
+////                            $('#btnCancel').trigger('click');
+//                        } else {
+//                            alert(json.message);
+//                        }
+//                    });
 
-                    // PREPARE | data for breakdown
+                    // DATA | man
+                    $('#man tr').each(function() {
+                        var $i = $(this).find('input');
+                        dataM = dataM + '3:s:' + $(this).data('id') + ':s:' + $i.eq(0).val() + ':s:' + $i.eq(1).val() + ':s:' + $i.eq(2).val() + ':s:' + $i.eq(3).val() + ':s::se:';
+                    });
+//                    console.log(data);
+//                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+//                        if (json.message === '') {
+////                            $('#btnCancel').trigger('click');
+//                        } else {
+//                            alert(json.message);
+//                        }
+//                    });
+
+                    // DATA | breakdown
                     $('#breakdown tr').each(function(i) {
                         if (i !== 3) {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^' + $(this).find('td:eq(2)').html() + '^'
-                                    + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(4)').html() + '^@';
+                            var $i = $(this).find('input');
+                            dataB = dataB + '4:s:' + $(this).data('id') + ':s:' + $i.eq(0).val() + ':s:' + $i.eq(0).parent().next().html() + ':s:' + $i.eq(1).val() + ':s:' + $i.eq(1).parent().next().html() + ':s::se:';
                         } else {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^' + $(this).find('td:eq(2)').html() + '^'
-                                    + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(4)').html() + '^@';
+                            var $td = $(this).find('td');
+                            dataB = dataB + '4:s:' + $(this).data('id') + ':s:' + $td.eq(1).html() + ':s:' + $td.eq(2).html() + ':s:' + $td.eq(3).html() + ':s:' + $td.eq(4).html() + ':s::se:';
                         }
                     });
-                    data = data + '*';
+//                    console.log(data);
+//                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+//                        if (json.message === '') {
+////                            $('#btnCancel').trigger('click');
+//                        } else {
+//                            alert(json.message);
+//                        }
+//                    });
 
-                    // PREPARE | data for stock
-                    $('#stock tr').each(function(i) {
-                        data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^'
-                                + $(this).find('td:eq(2)').html() + '^' + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(4)').html() + '^'
-                                + $(this).find('td:eq(5)').html() + '^' + $(this).find('td:eq(6)').html() + '^' + $(this).find('td:eq(7)').html() + '^@';
+                    // DATA | stock
+                    $('#stock tr').each(function() {
+                        var $td = $(this).find('td');
+                        dataS = dataS + '5:s:' + $(this).data('id') + ':s:' + $td.eq(1).html() + ':s:' + $td.eq(2).html() + ':s:' + $td.eq(3).html() + ':s:' + $td.eq(4).html() + ':s:' + $td.eq(6).html() + ':s:' + $td.eq(7).html() + ':s::se:';
                     });
-                    data = data + '*';
+//                    console.log(data);
+//                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+//                        if (json.message === '') {
+////                            $('#btnCancel').trigger('click');
+//                        } else {
+//                            alert(json.message);
+//                        }
+//                    });
 
-                    // PREPARE | data for process
-                    $('#process tr').each(function(i) {
-                        if (i <= 3) {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1) > input').val() + '^'
-                                    + $(this).find('td:eq(3) > input').val() + '^' + $(this).find('td:eq(5) > input').val() + '^' + $(this).find('td:eq(8) > input').val() + '^'
-                                    + $(this).find('td:eq(10) > input').val() + '^' + $(this).find('td:eq(11) > input').val() + '^' + $(this).find('td:eq(13) > input').val() + '^'
-                                    + $(this).find('td:eq(15) > input').val() + '^@';
+                    // AJAX | multiple call
+                    $.when(sendUpdate(dataH), sendUpdate(dataR), sendUpdate(dataD), sendUpdate(dataM), sendUpdate(dataB), sendUpdate(dataS)).done(function(vH, vR, vD, vM, vB, vS) {
+                        if (vH[0].message === '' && vR[0].message === '' && vD[0].message === '' && vM[0].message === '' && vB[0].message === '' && vS[0].message === '') {
+                            $('#btnCancel').trigger('click');
                         } else {
-                            data = data + $(this).find('td:eq(0)').html() + '^' + $(this).find('td:eq(1)').html() + '^'
-                                    + $(this).find('td:eq(3)').html() + '^' + $(this).find('td:eq(5)').html() + '^' + $(this).find('td:eq(8)').html() + '^'
-                                    + $(this).find('td:eq(10)').html() + '^' + $(this).find('td:eq(11)').html() + '^' + $(this).find('td:eq(13)').html() + '^'
-                                    + $(this).find('td:eq(15)').html() + '^@';
+                            alert('Update info:\n* Header data : ' + vH[0].message + '\n* Remarks data : ' + vR[0].message + '\n* Detail data : ' + vD[0].message + '\n* Man data: ' + vM[0].message + '\n* Breakdown data: ' + vB[0].message + '\n* Stock data: ' + vS[0].message);
                         }
                     });
-                    data = data + '*#';
-                }
-
-                console.log(encodeURIComponent(data));
-                if (data !== "") {
-                    if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + encodeURIComponent(data));
-                    }
                 }
 
                 return false;
             });
+
+            // AJAX | function
+            function sendUpdate(data) {
+                return $.ajax({
+                    url: document.location.pathname, data: {action: 'ajaxNUpdate', data: encodeURIComponent(data)},
+                    type: 'post', dataType: 'json'});
+            }
         </script>
     </body>
 </html>
