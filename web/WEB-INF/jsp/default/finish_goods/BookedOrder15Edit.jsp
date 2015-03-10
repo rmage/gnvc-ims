@@ -235,14 +235,14 @@
                                 <c:set var="ndw" value="${fn:split(x.col5, '/')}" />
                                 <tr>
                                     <td>${x.item_id}</td>
-                                    <td></td>
+                                    <td>${x.col3}</td>
                                     <td>${x.col2}</td>
-                                    <td></td>
-                                    <td>-</td>
+                                    <td>${x.CatchMethod}</td>
+                                    <td>${x.CanSize}</td>
                                     <td>${ndw[0]}</td>
                                     <td>${ndw[1]}</td>
                                     <td></td>
-                                    <td></td>
+                                    <td>${x.CanType}</td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -305,10 +305,11 @@
                 minLength: 3,
                 delay: 600,
                 select: function(event, ui) {
+                    $('#borItem').data('cm', ui.item.CatchMethod).data('ct', ui.item.CanType);
                     $('#borFlakes').focus();
                     var ps = ui.item.PackStyle.split(' ; ');
                     var ndw = ps[4].split('/');
-                    setItemInformation(ui.item.ProductCode, ps[1], '-', ndw[0], ndw[1]);
+                    setItemInformation(ui.item.ProductCode, ps[1], ui.item.CanSize, ndw[0], ndw[1]);
 
                     return false;
                 }
@@ -345,7 +346,7 @@
                                 '<td>' + $('#borDestination').val() + '</td>' +
                                 '</tr>');
 
-                        setItemSpecification($('#borItem').val(), '', $('#itemPs').html(), '', $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', '');
+                        setItemSpecification($('#borItem').val(), $('#borItem').data('om'), $('#itemPs').html(), $('#borItem').data('cm'), $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', $('#borItem').data('ct'));
 
                         iSpec = iSpec + 1;
                     } else {
@@ -368,7 +369,7 @@
                             '<td>' + $('#borDestination').val() + '</td>')
                             .attr('data-status', 'u');
 
-                    setItemSpecification($('#borItem').val(), '', $('#itemPs').html(), '', $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', '');
+                    setItemSpecification($('#borItem').val(), $('#borItem').data('om'), $('#itemPs').html(), $('#borItem').data('cm'), $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', $('#borItem').data('ct'));
                     $('#addDetail').val('Add Detail');
                     $('#borReference').attr('readonly', false);
                 }
@@ -383,37 +384,37 @@
                     var data = "";
 
                     // GET | header data
-                    var header = $('#borNumber').val() + '^' + $('#borDate').val() + '^' + $('#borContract').val() + '^' + $('#borBuyer').val() + '^' +
-                            $('#borMaxCode').val() + '^' + $('#borFreight').val() + '^' + $('#borPayment').val() + '^' + $('#borGsp').val() + '^' +
-                            $('#borCarton').val() + '^' + $('#borShrink').val() + '^' + $('#borExtraCarton').val() + '^' + $('#borExtraLabel').val() + '^' +
-                            $('#borInfo1').val() + '^' + $('#borInfo2').val() + '^' + $('#borInfo3').val() + '^';
+                    var header = $('#borNumber').val() + ':s:' + $('#borDate').val() + ':s:' + $('#borContract').val() + ':s:' + $('#borBuyer').val() + ':s:' +
+                            $('#borMaxCode').val() + ':s:' + $('#borFreight').val() + ':s:' + $('#borPayment').val() + ':s:' + $('#borGsp').val() + ':s:' +
+                            $('#borCarton').val() + ':s:' + $('#borShrink').val() + ':s:' + $('#borExtraCarton').val() + ':s:' + $('#borExtraLabel').val() + ':s:' +
+                            $('#borInfo1').val() + ':s:' + $('#borInfo2').val() + ':s:' + $('#borInfo3').val() + ':s:';
 
                     $('#borDetailSpecification tr[data-status]').each(function() {
                         // GET | detail data
-                        var detail = $(this).data('status') + '^';
+                        var detail = $(this).data('status') + ':s:';
                         $(this).find('td').each(function(i) {
                             if (i > 0) {
                                 switch (i) {
                                     case 3:
-                                        detail = detail + $(this).data('brand') + '^';
+                                        detail = detail + $(this).data('brand') + ':s:';
                                         break;
                                     default:
-                                        detail = detail + $(this).html() + '^';
+                                        detail = detail + $(this).html() + ':s:';
                                 }
                             }
                         });
 
-                        data = data + header + detail + '~';
+                        data = data + header + detail + ':se:';
                     });
 
-                    data = data
-                            .replace(/#/g, ":numberSign:")
-                            .replace(/%/g, ":percentageSign:");
+//                    data = data
+//                            .replace(/#/g, ":numberSign:")
+//                            .replace(/%/g, ":percentageSign:");
 
                     if (data !== "") {
                         if (confirm("Continue to save this document?")) {
                             console.log(data);
-                            window.location.replace("?action=edit&key=" + $('#borNumber').val() + "&data=" + data);
+                            window.location.replace("?action=edit&key=" + $('#borNumber').val() + "&data=" + encodeURIComponent(data));
                         }
                     }
                 } else {

@@ -274,7 +274,8 @@
                     $('#borFlakes').focus();
                     var ps = ui.item.PackStyle.split(' ; ');
                     var ndw = ps[4].split('/');
-                    setItemInformation(ui.item.ProductCode, ps[1], '-', ndw[0], ndw[1]);
+                    setItemInformation(ui.item.ProductCode, ps[1], ui.item.CanSize, ndw[0], ndw[1]);
+                    $('#borItem').data('cm', ui.item.CatchMethod).data('ct', ui.item.CanType).data('om', ps[2]);
 
                     return false;
                 }
@@ -311,7 +312,7 @@
                                 '<td>' + $('#borDestination').val() + '</td>' +
                                 '</tr>');
 
-                        setItemSpecification($('#borItem').val(), '', $('#itemPs').html(), '', $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', '');
+                        setItemSpecification($('#borItem').val(), $('#borItem').data('om'), $('#itemPs').html(), $('#borItem').data('cm'), $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', $('#borItem').data('ct'));
                         iSpec = iSpec + 1;
                     } else {
                         alert('Duplicate reference number? Please check!');
@@ -332,7 +333,7 @@
                             '<td>' + $('#borShippingDate').val() + '</td>' +
                             '<td>' + $('#borDestination').val() + '</td>');
 
-                    setItemSpecification($('#borItem').val(), '', $('#itemPs').html(), '', $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', '');
+                    setItemSpecification($('#borItem').val(), $('#borItem').data('om'), $('#itemPs').html(), $('#borItem').data('cm'), $('#itemCs').html(), $('#itemNw').html(), $('#itemDw').html(), '', $('#borItem').data('ct'));
                     $('#addDetail').val('Add Detail');
                     $('#borReference').attr('readonly', false);
                 }
@@ -347,10 +348,10 @@
                     var data = "";
 
                     // GET | header data
-                    var header = $('#borNumber').val() + '^' + $('#borDate').val() + '^' + $('#borContract').val() + '^' + $('#borBuyer').val() + '^' +
-                            $('#borMaxCode').val() + '^' + $('#borFreight').val() + '^' + $('#borPayment').val() + '^' + $('#borGsp').val() + '^' +
-                            $('#borCarton').val() + '^' + $('#borShrink').val() + '^' + $('#borExtraCarton').val() + '^' + $('#borExtraLabel').val() + '^' +
-                            $('#borInfo1').val() + '^' + $('#borInfo2').val() + '^' + $('#borInfo3').val() + '^';
+                    var header = $('#borNumber').val() + ':s:' + $('#borDate').val() + ':s:' + $('#borContract').val() + ':s:' + $('#borBuyer').val() + ':s:' +
+                            $('#borMaxCode').val() + ':s:' + $('#borFreight').val() + ':s:' + $('#borPayment').val() + ':s:' + $('#borGsp').val() + ':s:' +
+                            $('#borCarton').val() + ':s:' + $('#borShrink').val() + ':s:' + $('#borExtraCarton').val() + ':s:' + $('#borExtraLabel').val() + ':s:' +
+                            $('#borInfo1').val() + ':s:' + $('#borInfo2').val() + ':s:' + $('#borInfo3').val() + ':s:';
 
                     $('#borDetailSpecification tr').each(function() {
                         // GET | detail data
@@ -359,24 +360,24 @@
                             if (i > 0) {
                                 switch (i) {
                                     case 3:
-                                        detail = detail + $(this).data('brand') + '^';
+                                        detail = detail + $(this).data('brand') + ':s:';
                                         break;
                                     default:
-                                        detail = detail + $(this).html() + '^';
+                                        detail = detail + $(this).html() + ':s:';
                                 }
                             }
                         });
 
-                        data = data + header + detail + '~';
+                        data = data + header + detail + ':se:';
                     });
 
-                    data = data
-                            .replace(/#/g, ":numberSign:")
-                            .replace(/%/g, ":percentageSign:");
+//                    data = data
+//                            .replace(/#/g, ":numberSign:")
+//                            .replace(/%/g, ":percentageSign:");
 
                     if (data !== "") {
                         if (confirm("Continue to save this document?")) {
-                            window.location.replace("?action=save&data=" + data);
+                            window.location.replace("?action=save&data=" + encodeURIComponent(data));
                         }
                     }
                 } else {
@@ -417,7 +418,7 @@
                 $(this).next().remove();
                 if ($(this).is(':checked')) {
                     var $t = $(this);
-                    
+
                     $(this).after(' <img id="load" src="resources/ui-anim_basic_16x16.gif">');
                     $.ajax({
                         url: '?', type: 'post',
@@ -460,7 +461,7 @@
 
                     $('#addDetail').val('Update Detail');
                     $('#borReference').attr('readonly', true);
-                    
+
                     var $iTr = $('#borDetailItem td:nth-child(1):contains("' + itemCode + '")').parent();
                     setItemInformation($iTr.find('td:eq(0)').html(), $iTr.find('td:eq(2)').html(), $iTr.find('td:eq(4)').html(), $iTr.find('td:eq(5)').html(), $iTr.find('td:eq(6)').html());
                 }

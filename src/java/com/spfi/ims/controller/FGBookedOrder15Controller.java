@@ -13,6 +13,7 @@ import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,9 +112,11 @@ public class FGBookedOrder15Controller extends MultiActionController {
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
         try {
             /* DATA | get initial value */
-            String data = request.getParameter("data")
-                    .replaceAll(":numberSign:", "#")
-                    .replaceAll(":percentageSign:", "%");
+            String data = request.getParameter("data").replaceAll(":s:", "^")
+                    .replaceAll(":se:", "~");
+//                    request.getParameter("data")
+//                    .replaceAll(":numberSign:", "#")
+//                    .replaceAll(":percentageSign:", "%");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             
             /* DAO | Define needed dao here */
@@ -132,9 +135,11 @@ public class FGBookedOrder15Controller extends MultiActionController {
     public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) {
         try {
             /* DATA | get initial value */
-            String data = request.getParameter("data")
-                    .replaceAll(":numberSign:", "#")
-                    .replaceAll(":percentageSign:", "%");
+            String data = request.getParameter("data").replaceAll(":s:", "^")
+                    .replaceAll(":se:", "~");
+//                    request.getParameter("data")
+//                    .replaceAll(":numberSign:", "#")
+//                    .replaceAll(":percentageSign:", "%");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
             
             /* DAO | Define needed dao here */

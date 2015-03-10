@@ -536,7 +536,7 @@
                     tk = tk + ($(this).val() * 40);
                     $(this).parent().next().html(($(this).val() * 40).toFixed(0));
                     wos = parseFloat($(this).parent().prev().children().val());
-                    x = ((parseFloat($(this).val()) + parseFloat($(this).parent().next().next().children().val())) * 40) * 100 / wos;
+                    x = ((parseFloat($(this).val())/* + parseFloat($(this).parent().next().next().children().val())*/) * 40) * 100 / wos;
                     $(this).parent().parent().find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 });
                 $pLastTr.find('td:eq(11)').html(t.toFixed(2));
@@ -549,21 +549,21 @@
             // BIND | to direct rendering sack from high protein
             $('#process tr td:nth-child(14) > input').bind('keyup change', function() {
                 console.log("[EVENTS| BIND | to direct rendering sack from high protein");
-                var t = 0, tk = 0, wos = 0, x = 0,
+                var t = 0, tk = 0,/* wos = 0, x = 0,*/
                         $i = $('#process tr td:nth-child(14) > input');
 
                 $i.each(function() {
                     t = t + parseFloat($(this).val());
                     tk = tk + ($(this).val() * 40);
                     $(this).parent().next().html(($(this).val() * 40).toFixed(0));
-                    wos = parseFloat($(this).parent().parent().find('td:eq(10) input').val());
-                    x = ((parseFloat($(this).val()) + parseFloat($(this).parent().prev().prev().children().val())) * 40) * 100 / wos;
-                    $(this).parent().parent().find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+//                    wos = parseFloat($(this).parent().parent().find('td:eq(10) input').val());
+//                    x = ((parseFloat($(this).val()) + parseFloat($(this).parent().prev().prev().children().val())) * 40) * 100 / wos;
+//                    $(this).parent().parent().find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 });
                 $pLastTr.find('td:eq(13)').html(t.toFixed(2));
                 $pLastTr.find('td:eq(14)').html(tk.toFixed(0));
-                x = (tk + parseFloat($pLastTr.find('td:eq(12)').html())) * 100 / $pLastTr.find('td:eq(10)').html();
-                $pLastTr.find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
+//                x = (tk + parseFloat($pLastTr.find('td:eq(12)').html())) * 100 / $pLastTr.find('td:eq(10)').html();
+//                $pLastTr.find('td:eq(17)').html(isNaN(x) ? '0.00' : x.toFixed(2));
                 updateTotalFM();
             });
 

@@ -19,12 +19,19 @@ public class TestClass {
 //        map.keySet().;
 //        String prsNumber = "70460004315";
 //        System.out.println(prsNumber.substring(4, prsNumber.length()));
-        String data = URLDecoder.decode("29%2F01%2F2015%3As%3A29%2F01%2F2015%3As%3ARemarks%3As%3A7050%3As%3A30123%3As%3ACARTON%20PRINTING%2004%20ATLANTIK%20SCO%20603%20%3As%3A0.00%3As%3APCS%3As%3A23.00%3As%3A%3Ase%3A29%2F01%2F2015%3As%3A29%2F01%2F2015%3As%3ARemarks%3As%3A7050%3As%3A30124%3As%3ACARTON%20PRINTING%2004%20PEDRO%20SCB%20603%3As%3A0.00%3As%3APCS%3As%3A50.00%3As%3A%3Ase%3A29%2F01%2F2015%3As%3A29%2F01%2F2015%3As%3ARemarks%3As%3A7050%3As%3A61870%3As%3AFIRE%20WOOD%20(%20KAYU%20BAKAR%20)%3As%3A0.00%3As%3ABUNDLES%3As%3A100.00%3As%3A%3Ase%3A", "utf-8");
-        System.out.println(data);
-        String[] separator = StringHelper.getDataSeparator(data, 2);
-        System.out.println(separator[1]);
-        data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
-        System.out.println(data);
+//        String data = URLDecoder.decode("", "utf-8");
+        try {
+            String data = URLDecoder.decode("003%2F2015%3As%3A2015-03-10%3As%3A%3As%3A2%3As%3A2%20Codes%3As%3A4%3As%3A10%3As%3AA%20%26%20B%3As%3A%3As%3ANo%3As%3A10%3As%3A10%3As%3ALoading%20of%20each%20can%20will%20be%20lid%20W%2Fcartons%20she%20sepataror%3As%3ATo%20be%20product%20othner%20tins%20in%20case%20of%20leakage%3As%3A%3As%3A003%2F2015%3As%3ACT-2209%3As%3A2%3As%3A%3As%3A%3As%3A1600%3As%3A30.00%3As%3A2%25%3As%3A%3As%3A%3As%3ANon%20%20%20GMO%3As%3AMARCH%2FAPRIL%202015%3As%3AALEXANDRIA%3As%3A%3Ase%3A", "utf-8")
+                    .replaceAll(":s:", "^")
+                    .replaceAll(":se:", "~");
+            System.out.println(data);
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+            System.out.println(separator[1]);
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            System.out.println(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
