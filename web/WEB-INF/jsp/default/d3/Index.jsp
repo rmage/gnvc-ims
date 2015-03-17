@@ -243,7 +243,7 @@
                                         div.transition()
                                                 .duration(200)
                                                 .style("opacity", .9);
-                                        div.html(formatTime(d.x) + "<br />" + d.y.toLocaleString())
+                                        div.html(formatTime(d.x) + "<br />" + d.y.toLocaleString('en-US'))
                                                 .style("left", (d3.event.pageX) + "px")
                                                 .style("top", (d3.event.pageY - 28) + "px");
                                     })

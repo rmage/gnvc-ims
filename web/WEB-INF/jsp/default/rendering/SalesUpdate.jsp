@@ -145,20 +145,20 @@
                                 if (json['col' + (i + 1)] > 0) {
                                     $('#salesType option:eq(' + (i + 1) + ')').data('max', json['col' + (i + 1)]).removeAttr('disabled');
                                 }
-                                $('#stock' + i).html(parseFloat(json['col' + (i + 1)]).toLocaleString());
+                                $('#stock' + i).html(parseFloat(json['col' + (i + 1)]).toLocaleString('en-US'));
                             }
 
                             switch (${model.rend[0].dr_type}) {
                                 case 0:
-                                    $('#stock0').html((parseFloat($('#qty').next().html()) + parseFloat($('#stock0').html())).toLocaleString());
+                                    $('#stock0').html((gnvs.util.parseFloat($('#qty').next().html()) + gnvs.util.parseFloat($('#stock0').html())).toLocaleString('en-US'));
                                     $('#salesType option:eq(1)').data('max', gnvs.util.parseFloat($('#stock0').html()));
                                     break;
                                 case 1:
-                                    $('#stock1').html((parseFloat($('#qty').next().html()) + parseFloat($('#stock1').html())).toLocaleString());
+                                    $('#stock1').html((gnvs.util.parseFloat($('#qty').next().html()) + gnvs.util.parseFloat($('#stock1').html())).toLocaleString('en-US'));
                                     $('#salesType option:eq(2)').data('max', gnvs.util.parseFloat($('#stock1').html()));
-                                            break;
+                                    break;
                                 case 5:
-                                    $('#stock2').html((parseFloat($('#qty').next().html()) + parseFloat($('#stock2').html())).toLocaleString());
+                                    $('#stock2').html((gnvs.util.parseFloat($('#qty').next().html()) + gnvs.util.parseFloat($('#stock2').html())).toLocaleString('en-US'));
                                     $('#salesType option:eq(3)').data('max', gnvs.util.parseFloat($('#stock2').html()));
                                     break;
                             }
@@ -183,7 +183,7 @@
                     t = v * 180;
                 }
                 if (t <= $(this).find('option:selected').data('max')) {
-                    $(this).next().next().html(t.toLocaleString());
+                    $(this).next().next().html(t.toLocaleString('en-US'));
                 } else {
                     $(this).next().next().html(0);
                 }
@@ -199,7 +199,7 @@
                     t = v * 180;
                 }
                 if (t <= $(this).prev().find('option:selected').data('max')) {
-                    $(this).next().html(t.toLocaleString());
+                    $(this).next().html(t.toLocaleString('en-US'));
                 } else {
                     $(this).next().html(0);
                 }
@@ -207,13 +207,13 @@
             // BIND | to form submission
             $('#fRend').bind('submit', function() {
                 var data = '';
-                
+
                 // CHECK | if quantity
                 if ($('#qty').next().html() !== '0') {
                     data = $('#code').val() + ':s:' + $('#date').val() + ':s:' + $('#from').val() + ':s:' + $('#to').val() + ':s:' + $('#locationFrom').val() + ':s:' + $('#locationTo').val() + ':s:' +
                             $('#salesType').val() + ':s:' + $('#salesType option:selected').html() + ':s:' + $('#qty').val() + ':s:' + $('#qty').next().html().replace(/,/g, '') + ':s:' + $('#salesType option:selected').data('uom') + ':s:' + $('#tegu').val() + ':s:' + $('#seal').val() + ':s:' + $('#platNo').val() + ':s:' + $('#vessel').val() + ':s:' + $('#remarks').val() + ':s::se:';
                 }
-                
+
                 if (data !== '' && confirm('Update DR Sales #' + $('#code').val() + ' ?')) {
                     console.log(data);
                     gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {

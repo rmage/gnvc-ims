@@ -160,7 +160,7 @@
                                         $('#salesType option:eq(' + (i + 1) + ')').data('max', json['col' + (i + 1)])
                                                 .removeAttr('disabled');
                                     }
-                                    $('#stock' + i).html(parseFloat(json['col' + (i + 1)]).toLocaleString());
+                                    $('#stock' + i).html(parseFloat(json['col' + (i + 1)]).toLocaleString('en-US'));
                                 }
                             }
                         },
@@ -182,7 +182,7 @@
                     t = v * 180;
                 }
                 if (t <= $(this).find('option:selected').data('max')) {
-                    $(this).next().next().html(t.toLocaleString());
+                    $(this).next().next().html(t.toLocaleString('en-US'));
                 } else {
                     $(this).next().next().html(0);
                 }
@@ -199,7 +199,7 @@
                     t = v * 180;
                 }
                 if (t <= $(this).prev().find('option:selected').data('max')) {
-                    $(this).next().html(t.toLocaleString());
+                    $(this).next().html(t.toLocaleString('en-US'));
                 } else {
                     $(this).next().html(0);
                 }
