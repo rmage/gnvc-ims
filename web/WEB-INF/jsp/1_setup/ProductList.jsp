@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS &therefore; Product</title>
+        <title>Product &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
@@ -23,10 +23,11 @@
                                     <td><input type="text" name="product_code" /></td>
                                     <td>Product Name</td>
                                     <td><input type="text" name="product_name" /></td>
+                                    <td style="width: 110px;"><input title="Get Master Product Excel Report" type="button" value="Generate Report" onclick="location.href = '/appWeb/GenerateReport.htm?action=index&item=MProduct&type=xls';"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="4">
+                                <td colspan="5">
                                     <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
                                     <input type="button" name="button" id="btnAdd" value="Add" onclick="window.location.replace('Product.htm?action=create')" />
                                 </td>

@@ -39,7 +39,8 @@ public class ReportFactory {
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister //  Non-Fish Module | Form and Report List
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod //  Finished Goods Module | Form and Report List
         , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGBor15, FGPts, FGOfal, FGLmr, FGBor15Report //  Rendering Module | Form and Report List
-        , RendDailyReport, RendSummaryReport, RendSales;
+        , RendDailyReport, RendSummaryReport, RendSales
+        , MSupplier, MProduct;
     }
 
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -177,6 +178,12 @@ public class ReportFactory {
         reportMap.put(Report.RendSummaryReport, reportTemplateMap.get("RendSummaryReport"));
         reportTemplateMap.put("RendSales", new ReportModel("rendering/rs", false));
         reportMap.put(Report.RendSales, reportTemplateMap.get("RendSales"));
+        
+        // Master Module | Report List
+        reportTemplateMap.put("MSupplier", new ReportModel("master/supplier", false));
+        reportMap.put(Report.MSupplier, reportTemplateMap.get("MSupplier"));
+        reportTemplateMap.put("MProduct", new ReportModel("master/product", false));
+        reportMap.put(Report.MProduct, reportTemplateMap.get("MProduct"));
 
         reportTemplateMap.put("FGSC", new ReportModel("gnvStockCardFG", false));
 

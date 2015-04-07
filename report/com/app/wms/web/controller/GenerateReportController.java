@@ -29,32 +29,32 @@ public class GenerateReportController extends MultiActionController {
 
     static {
         //  Fish Module | Form and Report List
-        ListMap.put(Report.FishWSHR, "EXEC PRT_F_WEIGHT_SLIP ?, ?");
-        ListMap.put(Report.FishWSNC, "EXEC PRT_F_WEIGHT_SLIP ?, ?");
-        ListMap.put(Report.FishWSBF, "EXEC PRT_F_WEIGHT_SLIP ?, ?");
-        ListMap.put(Report.FishWSNR, "EXEC PRT_F_WEIGHT_SLIP ?, ?");
-        ListMap.put(Report.FishWSL, "EXEC PRT_F_WEIGHT_SLIP ?, ?");
-        ListMap.put(Report.FishWSABF, "EXEC PRT_F_WEIGHT_SLIP ?, ?");
-        ListMap.put(Report.FishSR, "EXEC PRT_F_SPOILAGE_REPORT ?, ?, ?");
-        ListMap.put(Report.FishWssFresh, "EXEC RPT_WEIGHT_SLIP_SUMMARY ?, ?, ?, ?");
-        ListMap.put(Report.FishWssFrozen, "EXEC RPT_WEIGHT_SLIP_SUMMARY ?, ?, ?, ?");
-        ListMap.put(Report.FishRR, "EXEC RPT_RECEIVING_REPORT_F ?");
+        ListMap.put(Report.FishWSHR, "EXEC PRT_F_WS ?, ?");
+        ListMap.put(Report.FishWSNC, "EXEC PRT_F_WS ?, ?");
+        ListMap.put(Report.FishWSBF, "EXEC PRT_F_WS ?, ?");
+        ListMap.put(Report.FishWSNR, "EXEC PRT_F_WS ?, ?");
+        ListMap.put(Report.FishWSL, "EXEC PRT_F_WS ?, ?");
+        ListMap.put(Report.FishWSABF, "EXEC PRT_F_WS ?, ?");
+        ListMap.put(Report.FishSR, "EXEC PRT_F_SR ?, ?, ?");
+        ListMap.put(Report.FishWssFresh, "EXEC RPT_F_WSS ?, ?, ?, ?");
+        ListMap.put(Report.FishWssFrozen, "EXEC RPT_F_WSS ?, ?, ?, ?");
+        ListMap.put(Report.FishRR, "EXEC PRT_F_RR ?");
 //        ListMap.put(Report.FishSumPerSupp, "EXEC RPT_FR_SUMMARY_PER_SUPPLIER ?");
 //        ListMap.put(Report.FishSumPerCS, "EXEC RPT_FR_SUMMARY_PER_COLDSTORAGE ?");
 //        ListMap.put(Report.FishStockCard, "EXEC RPT_FR_STOCK_CARD ?");
         ListMap.put(Report.FishTS, "EXEC PRT_F_TRANSFER_SLIP ?");
-        ListMap.put(Report.FishBF, "EXEC PRT_F_BRINE_FREEZING ?");
-        ListMap.put(Report.FishABF, "EXEC PRT_F_AIR_BLAST_FREEZING ?");
+        ListMap.put(Report.FishBF, "EXEC PRT_F_BF ?");
+        ListMap.put(Report.FishABF, "EXEC PRT_F_ABF ?");
 //        ListMap.put(Report.FishSumPerSuppActual, "EXEC RPT_FR_SUMMARY_PER_SUPPLIER_ACTUAL ?");
 //        ListMap.put(Report.FishSumPerCSActual, "EXEC RPT_FR_SUMMARY_PER_COLDSTORAGE_ACTUAL ?");
 //        ListMap.put(Report.FishStockCardActual, "EXEC RPT_FR_STOCK_CARD_ACTUAL ?");
         ListMap.put(Report.FishDailyInCS, "EXEC RPT_F_DAILY_IN_CS ?, ?");
         ListMap.put(Report.FishSummaryInCS, "EXEC RPT_F_SUMMARY_IN_CS ?, ?");
-        ListMap.put(Report.FishWDS, "EXEC PRT_F_WITHDRAWAL ?");
+        ListMap.put(Report.FishWDS, "EXEC PRT_F_WDS ?");
         ListMap.put(Report.FishRECC, "EXEC PRT_F_RECLASSIFICATION ?");
         ListMap.put(Report.FishFMov, "EXEC PRT_F_FISH_MOVING ?");
-        ListMap.put(Report.FishWsSF, "EXEC PRT_WEIGHT_SLIP_SUMMARY ?");
-        ListMap.put(Report.FishWsSZ, "EXEC PRT_WEIGHT_SLIP_SUMMARY ?");
+        ListMap.put(Report.FishWsSF, "EXEC PRT_F_WSS ?");
+        ListMap.put(Report.FishWsSZ, "EXEC PRT_F_WSS ?");
         //  ***END*** | Fish Module | Form and Report List
 
         //  Purcashing Module | Form and Report List
@@ -101,7 +101,12 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.RendDailyReport, "EXEC RPT_REND_DAILY ?");
         ListMap.put(Report.RendSummaryReport, "EXEC RPT_REND_SUMMARY ?, ?");
         ListMap.put(Report.RendSales, "EXEC PRT_REND_SALES ?");
-        //  ***END*** | Finished Goods Module | Form and Report List    
+        //  ***END*** | Finished Goods Module | Form and Report List
+        
+        //  Master Module | Report List
+        ListMap.put(Report.MSupplier, "EXEC RPT_M_SUPPLIER");
+        ListMap.put(Report.MProduct, "EXEC RPT_M_PRODUCT");
+        //  ***END*** | Finished Goods Module | Form and Report List
 
         ListMap.put(Report.FWS,
                 "SELECT f.code AS kode, wdsd.description AS nama_barang, "

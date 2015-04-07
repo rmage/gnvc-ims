@@ -23,37 +23,14 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
-public class SupplierController  extends MultiActionController {
+public class SupplierController extends MultiActionController {
 
-    /**
-     * Method 'findByPrimaryKey'
-     * 
-     * @param request
-     * @param response
-     * @throws Exception
-     * @return ModelAndView
-     */
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//        try {   
-//            HashMap m = null;
-//            final String mode = request.getParameter("mode");
-//            if (mode != null && mode.equals("edit")) {
-//                m = this.getModelByPrimaryKey(request);
-//                m.put("mode", "edit");
-//                return new ModelAndView("1_setup/SupplierEdit", "model", m);
-//            } else {
-//                m = this.searchAndPaging(request, response);
-//                return new ModelAndView("1_setup/SupplierList", "model", m);
-//            }
-//        } catch (Throwable e) {
-//            e.printStackTrace();
-//            return new ModelAndView( "Error", "th", e );
-//        }	
         return new ModelAndView("1_setup/SupplierList");
     }
-	
-	private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try{
+
+    private HashMap searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
 
             HashMap m = new HashMap();
 
@@ -77,10 +54,10 @@ public class SupplierController  extends MultiActionController {
             Supplier d = new Supplier();
             d.setSupplierCode(request.getParameter("supplierCode"));
             d.setSupplierName(request.getParameter("supplierName"));
-           
+
             SupplierDao dao = DaoFactory.createSupplierDao();
-            List<Supplier> listSearchPage = dao.findSupplierPaging(d,page);
-            int total = 2000; 
+            List<Supplier> listSearchPage = dao.findSupplierPaging(d, page);
+            int total = 2000;
             m.put("supplier", listSearchPage);
             m.put("totalRows", total);
             m.put("page", page);
@@ -88,12 +65,12 @@ public class SupplierController  extends MultiActionController {
 
             return m;
 
-		}catch (Exception e){
-			throw e;
-		}
-		
-	}
-	
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
+
     private HashMap getModelByPrimaryKey(HttpServletRequest request) throws Exception {
         try {
             SupplierDao dao = DaoFactory.createSupplierDao();
@@ -104,13 +81,13 @@ public class SupplierController  extends MultiActionController {
                 Integer id = Integer.parseInt(request.getParameter("id"));
                 dto = dao.findByPrimaryKey(id);
             }
-            if (dto.getSupplierCode() == null) {	 
+            if (dto.getSupplierCode() == null) {
                 dto.setSupplierCode("");
                 dto.setSupplierName("");
                 dto.setIsActive("Y");
                 dto.setIsDelete("N");
             }
-         
+
             if (dto.getSupplierCode() != null || dto.getSupplierName() != null) {
                 dto.setSupplierCode(dto.getSupplierCode());
                 dto.setSupplierName(dto.getSupplierName());
@@ -120,50 +97,48 @@ public class SupplierController  extends MultiActionController {
             //edit
             HashMap m = new HashMap();
             m.put("dto", dto);
-         
+
             return m;
-         
+
         } catch (Exception e) {
             throw e;
         }
     }
-	
-	/**
-	 * Method 'findAll'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
-	public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception
-	{
-		try {
-			
-			SupplierDao dao = DaoFactory.createSupplierDao();
-			List<Supplier> dto = dao.findAll();
-			
-			return new ModelAndView( "1_setup/SupplierList", "model", dto);
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-			return new ModelAndView( "Error", "th", e );
-		}
-		
-	}
-	
-	public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    /**
+     * Method 'findAll'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
+    public ModelAndView findAll(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+
+            SupplierDao dao = DaoFactory.createSupplierDao();
+            List<Supplier> dto = dao.findAll();
+
+            return new ModelAndView("1_setup/SupplierList", "model", dto);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            return new ModelAndView("Error", "th", e);
+        }
+
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         String createdBy = "";
         if (lu == null) {
-			HashMap m = new HashMap();
+            HashMap m = new HashMap();
             String msg = "You haven't login or your session has been expired! Please do login again";
             m.put("msg", msg);
             return new ModelAndView("login", "model", m);
-        }else{
-        	createdBy = (String)lu.getUserId();
+        } else {
+            createdBy = (String) lu.getUserId();
         }
-       
+
         SupplierDao dao = DaoFactory.createSupplierDao();
         Integer id = Integer.parseInt(request.getParameter("key"));
         Supplier dto = dao.findByPrimaryKey(id);
@@ -178,34 +153,32 @@ public class SupplierController  extends MultiActionController {
         HashMap m = this.searchAndPaging(request, response);
         return new ModelAndView("1_setup/SupplierList", "model", m);
     }
-	
-	/**
-	 * Method 'create'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
+
+    /**
+     * Method 'create'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map map = new HashMap();
         map = this.getModelByPrimaryKey(request);
-        map.put("mode", "create");		
+        map.put("mode", "create");
 
 //        SupplierDao dao = DaoFactory.createSupplierDao();
-
-        return new ModelAndView( "1_setup/SupplierAdd", "model", map);
+        return new ModelAndView("1_setup/SupplierAdd", "model", map);
     }
 
-	
-	/**
-	 * Method 'save'
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws Exception
-	 * @return ModelAndView
-	 */
+    /**
+     * Method 'save'
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     * @return ModelAndView
+     */
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         boolean isCreate = true;
@@ -231,8 +204,9 @@ public class SupplierController  extends MultiActionController {
             String supplierCode = request.getParameter("supplierCode");
             int lengthSupplierCode = supplierCode.length();
             int i = 3;
-            if(lengthSupplierCode < i)
+            if (lengthSupplierCode < i) {
                 strError += "Must entry more than equals 3 character for supplier code" + AppConstant.EOL;
+            }
 
             String supplierName = request.getParameter("supplierName");
             String supplierAddress = request.getParameter("supplierAddress");
@@ -249,8 +223,8 @@ public class SupplierController  extends MultiActionController {
                 String msg = "You haven't login or your session has been expired! Please do login again";
                 m.put("msg", msg);
                 return new ModelAndView("login", "model", m);
-            } else{
-                userId = (String)lu.getUserId();
+            } else {
+                userId = (String) lu.getUserId();
             }
             String telephone = request.getParameter("telephone");
             String fax = request.getParameter("fax");
@@ -301,10 +275,10 @@ public class SupplierController  extends MultiActionController {
                 return new ModelAndView("1_setup/SupplierEdit", "model", m);
             }
         }
-      
+
     }
-    
-    public void getUnique(HttpServletRequest request, HttpServletResponse response) 
+
+    public void getUnique(HttpServletRequest request, HttpServletResponse response)
             throws IOException, SupplierDaoException {
 
         PrintWriter pw = response.getWriter();
@@ -317,7 +291,7 @@ public class SupplierController  extends MultiActionController {
             pw.print("{\"status\": true}");
         }
     }
-    
+
     //Modified 9 April 2014
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Boolean b = Boolean.FALSE;
@@ -328,28 +302,29 @@ public class SupplierController  extends MultiActionController {
         pw.print("{\"maxpage\": " + supDao.ajaxMaxPage(request.getParameter("where"), new BigDecimal(request.getParameter("show"))) + ",\"data\": [");
         List<Supplier> ps = supDao.ajaxSearch(request.getParameter("where"), request.getParameter("order"), Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10));
         for (Supplier x : ps) {
-            if (b) 
+            if (b) {
                 pw.print(",");
+            }
             pw.print("{\"1\": \"" + x.getId() + "\", ");
             pw.print("\"2\": \"" + x.getSupplierCode() + "\", ");
             pw.print("\"3\": \"" + x.getSupplierName() + "\", ");
-            pw.print("\"4\": \"" + x.getIsActive()+ "\"}");
+            pw.print("\"4\": \"" + x.getIsActive() + "\"}");
 
             b = Boolean.TRUE;
         }
         pw.print("]}");
     }
-    
+
     public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
         Integer id = Integer.parseInt(request.getParameter("key"));
         SupplierDao supplierDao = DaoFactory.createSupplierDao();
         Supplier dto = supplierDao.findId(id);
-        
+
         Map map = new HashMap();
         map.put("mode", dto);
-        return new ModelAndView("1_setup/SupplierEdit","model",map);
+        return new ModelAndView("1_setup/SupplierEdit", "model", map);
     }
-    
+
     public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws ParseException {
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
         Supplier s = new Supplier();

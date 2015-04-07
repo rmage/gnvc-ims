@@ -1,14 +1,10 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
         <title>IMS - Supplier List</title>
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
-        <%
-        %>
         <div class="container">
             <%@include file="../header.jsp" %>
             <jsp:include page="../dynmenu.jsp" />
@@ -20,35 +16,20 @@
                             <caption>Search Supplier</caption>
                             <tbody>
                                 <tr>
-                                    <td width="20%">
-                                        Supplier Code
-                                    </td>
-                                    <td>
-                                        <input type="text" name="supplier_code" value=""/>
-                                    </td>
-                                    <td>
-                                        Supplier Name
-                                    </td>
-                                    <td>
-                                        <input type="text" name="supplier_name" value="" />
-                                    </td>
-                                    <td colspan="2">
-                                    </td>
-                                </tr>
-                                <tr>
-
+                                    <td width="20%">Supplier Code</td>
+                                    <td><input type="text" name="supplier_code" value=""/></td>
+                                    <td>Supplier Name</td>
+                                    <td><input type="text" name="supplier_name" value="" /></td>
+                                    <td style="width: 110px;"><input title="Get Master Supplier Excel Report" type="button" value="Generate Report" onclick="location.href = '/appWeb/GenerateReport.htm?action=index&item=MSupplier&type=xls';"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="4">
-                                    <span>
-                                        <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
-                                    </span>
-                                    <label>
-                                        <input type="button" name="button" id="btnAdd" value="Add" />
-                                    </label>
-                                </td>
-                                <td></td>
+                                <tr>
+                                    <td colspan="5">
+                                        <span><input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" /></span>
+                                        <label><input type="button" name="button" id="btnAdd" value="Add" /></label>
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </form>
