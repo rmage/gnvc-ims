@@ -56,7 +56,20 @@ public class BrineFreezingDaoImpl extends AbstractDAO implements BrineFreezingDa
     }
     
     public void insert(String data, String createdBy) {
-        jdbcTemplate.update("EXEC F_BF_INSERT2 ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC F_BF_CREATE ?, ?", data, createdBy);
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_BF_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_BF_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getBrineFreezing(int key) {
+        return jdbcTemplate.queryForList("EXEC F_BF_GET_CONTENT_FOR_UPDATE ?", key);
     }
     
 }

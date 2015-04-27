@@ -6,8 +6,10 @@ import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.FishMovingDao;
 import com.spfi.ims.dto.FishMoving;
 import com.spfi.ims.dto.FishMovingDetail;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -40,48 +42,6 @@ public class FishMovingController extends MultiActionController {
         model.put("css", ms);
 
         return new ModelAndView("default/fish/MovingAdd", "model", model);
-    }
-    
-    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            /* DATA | get initial value */
-            String[] header = request.getParameter("header").split(":", -1);
-            String[] details = request.getParameterValues("detail");
-            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            
-            /* DAO | Define needed dao here */
-            FishMovingDao fmDao = DaoFactory.createFishMovingDao();
-            
-            /* TRANSACTION | Something complex here */
-            // insert header
-            FishMoving fm = new FishMoving();
-            fm.setCode(header[0]);
-            fm.setDate(sdf.parse(header[1]));
-            fm.setFromStorageId(Integer.parseInt(header[2]));
-            fm.setToStorageId(Integer.parseInt(header[3]));
-            fm.setRemarks(header[4]);
-            fm.setCreatedBy(lu.getUserId());
-            fm.setId(fmDao.insert(fm));
-            
-            // insert detail
-            FishMovingDetail fmd = new FishMovingDetail();
-            fmd.setFmId(fm.getId());
-            fmd.setCreatedBy(fm.getCreatedBy());
-            fmd.setUom("kg");
-            for(String detail : details) {
-                String[] x = detail.split(":", -1);
-                fmd.setVesselId(Integer.parseInt(x[0]));
-                fmd.setFishId(Integer.parseInt(x[1]));
-                fmd.setTotalWeight(new BigDecimal(x[2]));
-                fmDao.insertD(fmd);
-            }
-            
-            return new ModelAndView("redirect:FishMoving.htm");
-        } catch(Exception e) {
-            e.printStackTrace();
-            return new ModelAndView("redirect:FishMoving.htm?action=create");
-        }
     }
 
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
@@ -173,6 +133,75 @@ public class FishMovingController extends MultiActionController {
         }
         sb.append("]");
         response.getWriter().print(sb.toString());
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFishMovingDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createFishMovingDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:FishMoving.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            model.put("movs", DaoFactory.createFishMovingDao().getMoving(Integer.parseInt(request.getParameter("key"))));
+            model.put("css", DaoFactory.createFishMovingDao().getFishStorage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/fish/MovingUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFishMovingDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
 
 }

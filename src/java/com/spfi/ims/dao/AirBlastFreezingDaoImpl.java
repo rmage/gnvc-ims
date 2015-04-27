@@ -56,7 +56,20 @@ public class AirBlastFreezingDaoImpl extends AbstractDAO implements AirBlastFree
     }
     
     public void insert(String data, String createdBy) {
-        jdbcTemplate.update("EXEC F_ABF_INSERT2 ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC F_ABF_CREATE ?, ?", data, createdBy);
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_ABF_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_ABF_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getAirBlastFreezing(int key) {
+        return jdbcTemplate.queryForList("EXEC F_ABF_GET_CONTENT_FOR_UPDATE ?", key);
     }
     
 }

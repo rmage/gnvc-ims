@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Brine Freezing</title>
+        <title>Brine Freezing &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>
@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="bf_no">Number</td>
                                 <td column="bf_date">Date</td>
                                 <td>Supplier</td>
@@ -60,7 +60,7 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishBF_Brine Freezing Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_FishBF_Brine Freezing Report (xls)');
         </script>
         
     </body>

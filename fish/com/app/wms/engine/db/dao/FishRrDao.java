@@ -30,4 +30,11 @@ public interface FishRrDao extends GeneralDao<FishRr> {
     
     public List<Map<String, Object>> getWeightSlip(String batchNo, String dateFrom, String dateTo, String type);
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getReceiving(int key);
+    
 }

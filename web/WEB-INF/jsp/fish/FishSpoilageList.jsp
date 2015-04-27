@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Fish Spoilage</title>
+        <title>Fish Spoilage &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td>Batch Number</td>
                                 <td>Date Shift</td>
                                 <td>Time Shift</td>
@@ -59,7 +59,7 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishSR_Spoilage Report (xls)_1-2-3');
+            util.initListTable($('#list'), 'u:d:R_FishSR_Spoilage Report (xls)_1-2-3');
         </script>
         
     </body>

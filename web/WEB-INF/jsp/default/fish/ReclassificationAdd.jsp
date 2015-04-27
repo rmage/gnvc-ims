@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="windows-1252">
-        <title>IMS &therefore; Fish Reclassification &therefore; Create</title>
+        <title>Create &therefore; Fish Reclassification &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             .ui-autocomplete {
@@ -23,9 +23,6 @@
             <jsp:include page="../../dynmenu.jsp" />
             <div id="content" class="span-24 last">
                 <div class="box">
-                    <form id="poster" method="post" action="FishReclassification.htm">
-                        <input type="hidden" name="action" value="save" />
-                    </form>
                     <form id="frForm" method="post">
                         <table class="collapse tblForm row-select">
                             <caption>Fish Reclassification &therefore; Header</caption>
@@ -41,7 +38,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" id="save" value="Save" />
-                                        <input type="button" value="Cancel" onclick="window.location.replace('FishReclassification.htm')" />
+                                        <input id="btnCancel" type="button" value="Cancel" onclick="window.location.replace('FishReclassification.htm')" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -179,7 +176,7 @@
                             '<td>' + money_desimal_to_value($('#fromQty').val()) + '</td>' +
                             '<td data-vesselid="' + $('#toBatchNo').data('vesselId') + '">' + $('#toBatchNo').val() + '</td>' +
                             '<td data-fishid="' + $('#toFish').val() + '">' + $('#toFish option:selected').html() + '</td>' +
-                            '<td data-storageId="' + $('#toCS').val() + '">' + $('#toCS option:selected').html() + '</td>' +
+                            '<td data-storageid="' + $('#toCS').val() + '">' + $('#toCS option:selected').html() + '</td>' +
                             '<td>' + $('#toQty').val() + '</td>' +
                             '<td>' + $('#remarks').val() + '</td>' +
                             '<td data-frtype="' + $('#frType').val() + '">' + $('#frType option:selected').html() + '</td>' +
@@ -203,18 +200,24 @@
 
             // submit form
             $('#frForm').bind('submit', function() {
-                if ($('#frDetail').html().length > 0) {
-                    $('#poster').append('<input type="hidden" name="header" value="' + $('#frNo').val() + ':' + $('#frDate').val() + '" />');
-                    $('#frDetail tr').each(function() {
-                        $('#poster').append('<input type="hidden" name="detail" value="' +
-                                $(this).find('td:eq(1)').data('vesselid') + ':' + $(this).find('td:eq(2)').data('fishid') + ':' + $(this).find('td:eq(3)').data('storageid') + ':' + $(this).find('td:eq(4)').html() + ':' +
-                                $(this).find('td:eq(5)').data('vesselid') + ':' + $(this).find('td:eq(6)').data('fishid') + ':' + $(this).find('td:eq(7)').data('storageid') + ':' + $(this).find('td:eq(8)').html() + ':' +
-                                $(this).find('td:eq(9)').html() + ':' + $(this).find('td:eq(10)').data('frtype') +
-                                '" />');
-                    });
+                var data = '', header;
+                header = $('#frNo').val() + ':s:' + gnvs.util.toDBDate($('#frDate').val()) +':s:';
 
-                    $('#poster').submit();
+                $('#frDetail tr').each(function(){
+                  data = data + header + $(this).find('td:eq(1)').data('vesselid') + ':s:' + $(this).find('td:eq(2)').data('fishid') + ':s:' + $(this).find('td:eq(3)').data('storageid') + ':s:' + $(this).find('td:eq(4)').html() + ':s:' + $(this).find('td:eq(5)').data('vesselid') + ':s:' + $(this).find('td:eq(6)').data('fishid') + ':s:' + $(this).find('td:eq(7)').data('storageid') + ':s:' + $(this).find('td:eq(8)').html() + ':s:' + $(this).find('td:eq(9)').html() + ':s:' + $(this).find('td:eq(10)').data('frtype') + ':s::se:';
+                });
+                
+                if (data !== '' && confirm('Save Fish Reclassification #' + $('#frNo').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
+
                 return false;
             });
             // row number assignment

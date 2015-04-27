@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="windows-1252">
-        <title>IMS &therefore; Receiving Report &therefore; Create</title>
+        <title>Create &therefore; Receiving Report &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             .ui-autocomplete {

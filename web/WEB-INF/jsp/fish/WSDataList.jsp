@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td>WS No</td>
                                 <td>WS Date</td>
                                 <td>WS Type</td>
@@ -58,10 +58,10 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_Fish_Weight Slip Report (xls)_1-3');
+            util.initListTable($('#list'), 'u:d:R_Fish_Weight Slip Report (xls)_1-3');
             
             $('#main tr td:nth-child(2)').live('mouseenter', function() {
-                var $o = $(this).find('a');
+                var $o = $(this).find('a:eq(2)');
                 if($o.attr('href').indexOf('FishWS') < 0) {
                     $o.attr('href', $o.attr('href').replace('Fish', 'Fish' + $(this).parent().find('td:eq(4)').html().replace(/\d/g, '')));
                 }

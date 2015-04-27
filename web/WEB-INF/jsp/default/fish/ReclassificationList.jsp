@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Fish Reclassification</title>
+        <title>Fish Reclassification &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>
@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="fr_code">Number</td>
                                 <td column="fr_date">Date</td>
                                 <td>Creator</td>
@@ -55,7 +55,7 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishRECC_Fish Reclassification Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_FishRECC_Fish Reclassification Report (xls)');
         </script>
         
     </body>

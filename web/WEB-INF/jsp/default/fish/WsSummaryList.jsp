@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="code">Number</td>
                                 <td column="date_from">Date From</td>
                                 <td column="date_to">Date To</td>
@@ -59,7 +59,7 @@
 
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishWsS_Weight Slip Summary Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_FishWsS_Weight Slip Summary Report (xls)');
 
             // change current printout destination
             $('#main tr td:nth-child(2) a[href^="GenerateReport.htm"]').live('mouseenter', function() {

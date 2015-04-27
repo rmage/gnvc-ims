@@ -9,11 +9,10 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.AirBlastFreezingDao;
-import com.spfi.ims.dto.AirBlastFreezing;
-import com.spfi.ims.dto.AirBlastFreezingDetail;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,51 +68,6 @@ public class FishAirBlastFreezingController extends MultiActionController {
             return new ModelAndView("redirect:AirBlastFreezing.htm?action=create");
         }
     }
-    
-//    public ModelAndView save(HttpServletRequest request, HttpServletResponse
-//            response) {
-//        try {
-//            /* DATA | get initial value */
-//            String[] header = request.getParameter("header").split(":", -1);
-//            String[] details = request.getParameterValues("detail");
-//            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//            
-//            /* DAO | Define needed dao here */
-//            AirBlastFreezingDao abfDao = DaoFactory.createAirBlastFreezingDao();
-//            
-//            /* TRANSACTION | Something complex here */
-//            AirBlastFreezing abf = new AirBlastFreezing();
-//            abf.setAbfNo(header[0]);
-//            abf.setAbfDate(sdf.parse(header[1]));
-//            abf.setWsId(Integer.parseInt(header[2]));
-//            abf.setStorageId(Integer.parseInt(header[3]));
-//            abf.setBatchNo(header[4]);
-//            abf.setRegu(header[5]);
-//            abf.setTimeShift(header[6]);
-//            abf.setTimeStart(header[7]);
-//            abf.setTimeFinish(header[8]);
-//            abf.setCreatedBy(lu.getUserId());
-//            abf.setId(abfDao.insertH(abf));
-//            
-//            AirBlastFreezingDetail abfd = new AirBlastFreezingDetail();
-//            abfd.setAbfId(abf.getId());
-//            abfd.setCreatedby(lu.getUserId());
-//            for(String x : details) {
-//                String[] detail = x.split(":", -1);
-//                abfd.setFishId(Integer.parseInt(detail[0]));
-//                abfd.setTotalWeight(new BigDecimal(detail[1]));
-//                if(abfd.getTotalWeight().compareTo(BigDecimal.ZERO) > 0) {
-//                    abfDao.insertD(abfd, abf.getAbfNo(), abf.getBatchNo(), abf.getStorageId());
-//                }
-//            }
-//            
-//            return new ModelAndView("redirect:AirBlastFreezing.htm");
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//            return new ModelAndView("redirect:AirBlastFreezing.htm?action=create");
-//        }
-//    }
     
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -199,6 +153,55 @@ public class FishAirBlastFreezingController extends MultiActionController {
         }
         sb.append("]");
         response.getWriter().print(sb.toString());
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createAirBlastFreezingDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:AirBlastFreezing.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            model.put("abf", DaoFactory.createAirBlastFreezingDao().getAirBlastFreezing(Integer.parseInt(request.getParameter("key"))));
+
+            model.put("fs", DaoFactory.createFishDao().findAllActive());
+            model.put("cs", DaoFactory.createFishStorageDao().findAllActive());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/fish/AirBlastFreezingUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createAirBlastFreezingDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
     
 }

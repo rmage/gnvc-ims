@@ -1,75 +1,16 @@
-<%@page import="java.util.Date"%>
-<%@page import="java.util.List"%>
-<%@page import="com.app.wms.engine.db.dto.FishWs"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="com.app.wms.engine.db.dto.FishType"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%    Date cDate = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
-%>
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Create &there4; Withdrawal &there4; IMS</title>
-        <%@include file="../metaheader.jsp" %>
-        <script language="JavaScript">
+        <title>Update &there4; Withdrawal &there4; IMS</title>
+        <%@include file="../../metaheader.jsp" %>
+        <script>
+            var i = -1, status;
             $(document).ready(function() {
-
                 $('.numeric').on('input', function() {
                     this.value = this.value.replace(/[^0-9.]/g, '');
                 });
 
-                $('#wdsDatePicker').datepicker({
-                    dateFormat: "dd/mm/yy",
-                    altFormat: "yy-mm-dd",
-                    altField: "#wdsDate",
-                    changeYear: true,
-                    changeMonth: true
-                });
-
-                $('#batchNo').click(function() {
-                    $("#dialog-ajaxSearch").dialog({
-                        width: 500,
-                        height: 350,
-                        position: "center",
-                        modal: true,
-                        zindex: 9999,
-                        title: 'Select Batch Number'});
-                });
-
-                $('#batchNumSearchBtn').click(function() {
-                    query = $('#query').val();
-                    var ajaxUrl = 'FishJson.htm?action=findBatchNumber&query=' + query;
-                    $("#list").jqGrid('setGridParam', {url: ajaxUrl, page: 1}).trigger("reloadGrid");
-                    $("#list").jqGrid({
-                        url: ajaxUrl,
-                        datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-                        colNames: ['Vessel Id', 'Batch Number', 'Vessel Name', 'Supplier Name'],
-                        colModel: [
-                            {name: 'vesselId', index: 'vesselId', width: 150},
-                            {name: 'batchNo', index: 'batchNo', width: 150},
-                            {name: 'vesselName', index: 'vesselName', width: 200},
-                            {name: 'supplierName', index: 'supplierName', width: 200}],
-                        sortname: 'batchNo',
-                        rowNum: 10, rowList: [10, 20, 30],
-                        jsonReader: {repeatitems: false},
-                        onSelectRow: function(ids) {
-                            var localRowData = $(this).getRowData(ids);
-                            $('#vesselId').val(localRowData.vesselId);
-                            $('#dVesselId').val(localRowData.vesselId);
-                            $('#batchNo').val(localRowData.batchNo);
-                            $('#batchNo2').val(localRowData.batchNo);
-                            $('#supplierName').val(localRowData.supplierName);
-                            $('#dialog-ajaxSearch').dialog('close');
-                        },
-                        pager: '#pager', sortname: 'batchNo', viewrecords: true, sortorder: "desc"}
-                    ).trigger("reloadGrid");
-
-                    jQuery("#list").jqGrid('navGrid', '#pager', {edit: false, add: false, del: false});
-                });
-
+                $('#wdsDate').datepicker({dateFormat: "dd/mm/yy", changeYear: true, changeMonth: true});
                 $('#addRequest').click(function() {
                     $("#dialog-stock").dialog({
                         width: 550,
@@ -103,7 +44,7 @@
                             var localRowData = $(this).getRowData(ids);
                             var rowCount = $('#main tr').length;
 
-                            $("<tr class='ganjil'>" +
+                            $("<tr class='ganjil' data-id='" + i + "' data-status='C'>" +
                                     "<td class='style1'>" + rowCount + "</td>" +
                                     "<td id='fishType" + rowCount + "' class='style1'>" + localRowData.fishCode + "</td>" +
                                     "<input id='fishId" + rowCount + "' type='hidden' name='fishId" + rowCount + "' value='" + localRowData.fishId + "' />" + "</td>" +
@@ -117,13 +58,13 @@
                                     "<td id='storageHTML" + rowCount + "' class='center'>" + localRowData.storageName + "</td>" +
                                     "<input id='storageId" + rowCount + "' type='hidden' name='storageId" + rowCount + "' value='" + localRowData.storageId + "' /></td>" +
                                     "<td id='" + rowCount + "' class='center' onClick='addRequestQuantity(this)'>Add Quantity</td>" +
+                                    "<td onclick='removeItem(this)' class='center' id='" + rowCount + "'>Remove Item</td>" +
                                     "</tr>").appendTo("#main tbody");
 
-                            $('#totalData').val(rowCount);
                             $('#dialog-stock').dialog('close');
-                        }/*,
-                         pager: '#pager2', viewrecords: true, sortorder: "desc"*/}
-                    ).trigger("reloadGrid");
+                            i = i - 1;
+                        }
+                    }).trigger("reloadGrid");
 
                     jQuery("#list2").jqGrid('navGrid', '#pager2', {edit: false, add: false, del: false});
                 });
@@ -138,57 +79,14 @@
                     balance = Math.round(balance * 100) / 100;
                     requestedQty = Math.round(requestedQty * 100) / 100;
 
-//                    if (requestedQty <= balance) {
-                    $('#qtyHTML' + id).html(addCommas(requestedQty));
+                    if (status === 'U') {
+                        $('#qtyHTML' + id).html(addCommas(requestedQty)).parent().attr('data-status', 'U');
+                        status = '';
+                    } else {
+                        $('#qtyHTML' + id).html(addCommas(requestedQty));
+                    }
                     $('#qty' + id).val(requestedQty);
                     $('#dialog-request').dialog('close');
-//                    }
-//                    else {
-//                        $("#dialog-insufficient").dialog({
-//                            open: function() {
-//                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-//                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-//                            },
-//                            title: 'Warning',
-//                            resizable: false,
-//                            height: 120,
-//                            modal: true,
-//                            buttons: {
-//                                "Ok": function() {
-//                                    $(this).dialog("close");
-//                                    $('#dRequestedQty').focus();
-//                                }
-//                            }
-//                        });
-//                    }
-                });
-
-                $('#wdsNo').focus().on("blur", function() {
-                    var wdsNo = $('#wdsNo').val();
-                    $.ajax({
-                        url: "FishJson.htm?action=checkWdsNo&query=" + wdsNo,
-                        dataType: 'json',
-                        success: function(data) {
-                            if (data.result) {
-                                $("#dialog-not-unique").dialog({
-                                    open: function() {
-                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                                    },
-                                    title: 'Insufficient Amount',
-                                    resizable: false,
-                                    height: 150,
-                                    modal: true,
-                                    buttons: {
-                                        "Ok": function() {
-                                            $(this).dialog("close");
-                                            $('#wdsNo').focus();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
                 });
             });
 
@@ -199,6 +97,10 @@
                 $('#dRequestedQty').val(balance);
                 $('#dId').val(id);
 
+                if ($(selectedRow).parent().data('id') > 0) {
+                    status = 'U';
+                }
+
                 $("#dialog-request").dialog({
                     width: 350,
                     height: 200,
@@ -207,6 +109,19 @@
                     zindex: 9999,
                     title: 'Request Qty'
                 });
+            }
+
+            function removeItem(obj) {
+                if (confirm('Continue to remove this item?')) {
+                    var $p = $(obj).parent();
+                    if ($p.data('id') > 0) {
+                        $p.attr('data-status', 'D').hide();
+                    } else {
+                        $p.remove();
+                    }
+
+                    gnvs.util.reNumbering($('#main tbody'), 1);
+                }
             }
 
             function addCommas(nStr) {
@@ -223,22 +138,16 @@
         </script>
     </head>
     <body>
-        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-            String mode = (String) m.get("mode");
-        %>
-
         <div class="container">
-            <%@include file="../header.jsp" %>
-            <jsp:include page="../dynmenu.jsp" />
+            <%@include file="../../header.jsp" %>
+            <jsp:include page="../../dynmenu.jsp" />
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="FishWds.htm" method="post" name="form" id="addForm">
-                        <input type="hidden" name="mode" value="<%=mode%>">
-                        <input type="hidden" id="totalData" name="totalData" value="">
                         <input type="hidden" name="action" value="save">
-                        <input type="hidden" id="vesselId" name="vesselId" value="0">
-                        <input type="hidden" id="wdsDate" name="wdsDate" value="<%=sdf.format(cDate)%>">
+                        <input type="hidden" id="wdsId" name="wdsId" value="${model.wds[0].wds_id}">
+                        <input type="hidden" id="vesselId" name="vesselId" value="${model.wds[0].vessel_id}">
                         <table class="collapse tblForm row-select">
                             <caption>Withdrawal &there4; Header</caption>
                             <tbody class="tbl-nohover">                          
@@ -247,7 +156,7 @@
                                     <td class="style1">WDS No.</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="wdsNo" name="wdsNo" value="" size="30" class="validate[required] text-input numeric"/>
+                                            <input type="text" id="wdsNo" name="wdsNo" value="${model.wds[0].wds_no}" size="30" readonly>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -255,7 +164,7 @@
                                     <td class="style1">Date</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="wdsDatePicker" name="wdsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="30" class="text-input"/>
+                                            <input type="text" id="wdsDate" name="wdsDate" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -264,8 +173,7 @@
                                     <td class="style1">Batch Number</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="batchNo" name="batchNo" readonly="readonly" value="" size="30" 
-                                                   class="validate[required] text-input"/>
+                                            <input type="text" id="batchNo" name="batchNo" value="${model.wds[0].batch_no}" size="30" class="validate[required] text-input" readonly>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                         <img width="16" height="16" src="resources/images/search.png" alt="Search Product" />
@@ -274,7 +182,7 @@
                                     <td class="style1">Requested By</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="requestedBy" name="requestedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="requestedBy" name="requestedBy" value="${model.wds[0].requested_by}" size="30" class="text-input">
                                         </label>
                                     </td>
                                 </tr>
@@ -283,8 +191,7 @@
                                     <td class="style1">Supplier Name</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="supplierName" name="supplierName" value="" 
-                                                   readonly="readonly" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="supplierName" name="supplierName" value="${model.wds[0].name}" readonly size="30" class="validate[required] text-input">
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
@@ -292,7 +199,7 @@
                                     <td class="style1">Approved By</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" id="approvedBy" name="approvedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="approvedBy" name="approvedBy" value="${model.wds[0].approved_by}" size="30" class="text-input"/>
                                         </label>
                                     </td>
                                 </tr>
@@ -317,10 +224,25 @@
                                     <td class="center">Request Qty.</td>
                                     <td class="center">UOM</td>
                                     <td class="center">Storage</td>
-                                    <td class="center">Action</td>
+                                    <td class="center" colspan="2">Action</td>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                <c:forEach items="${model.wds}" var="x" varStatus="vs">
+                                    <tr data-id="${x.id}">
+                                        <td>${vs.index + 1}</td>
+                                        <td id="fishType${vs.index + 1}">${x.fish_code}</td>
+                                <input type="hidden" value="${x.fish_id}" name="fishId${vs.index + 1}" id="fishId${vs.index + 1}">
+                                <td>${x.fish_description}</td><input type="hidden" value="${x.fish_description}" name="description${vs.index + 1}" id="description${vs.index + 1}">
+                                <td id="balance${vs.index + 1}" class="right">${x.fish_balance}</td>
+                                <td id="qtyHTML${vs.index + 1}" class="right">${x.fish_qty}</td><input type="hidden" value="${x.fish_qty}" name="qty${vs.index + 1}" id="qty${vs.index + 1}">
+                                <td class="center" id="uomCodeHTML${vs.index + 1}">${x.fish_uom}</td><input type="hidden" value="${x.fish_uom}" name="uomCode${vs.index + 1}" id="uomCode${vs.index + 1}">
+                                <td class="center" id="storageHTML${vs.index + 1}">${x.storage_code}</td><input type="hidden" value="${x.storage_id}" name="storageId${vs.index + 1}" id="storageId${vs.index + 1}">
+                                <td onclick="addRequestQuantity(this)" class="center" id="${vs.index + 1}">Change Quantity</td>
+                                <td onclick="removeItem(this)" class="center" id="${vs.index + 1}">Remove Item</td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
                         </table>
 
                         <table class="collapse tblForm row-select ui-widget-content">
@@ -332,7 +254,7 @@
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-                                                   name="btnSave" id="btnSave" value="Save" class="simpan" />
+                                                   name="btnSave" id="btnSave" value="Update" class="simpan" />
                                         </label>
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" onclick="location.href = 'FishWds.htm'">
@@ -351,9 +273,8 @@
                 </div>
             </div>
         </div>
-        <script type="text/javascript">
+<!--        <script type="text/javascript">
             $("#btnSave").click(function() {
-
                 //if invalid do nothing
                 if (!$("#addForm").validationEngine('validate')) {
                     $("#dialog-incomplete").dialog({
@@ -384,9 +305,8 @@
                         }
                     },
                     zindex: 1, title: 'Confirm'});
-
             });
-        </script>
+        </script>-->
 
         <div id="dialog-ajaxSearch" title="Batch Number Search" style="display:none;z-index:1;">
             <label>Batch Number</label>
@@ -423,44 +343,33 @@
                    name="btnBatchNumSearch" value="Set" class="search" />
         </div>
 
-        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
-            Save data?
-        </div>
-
-        <div id="dialog-spoilage-success" title="confirm" style="display:none;z-index:1;">
-            Spoilage report has been saved
-        </div>
-
-        <div id="dialog-spoilage-failed" title="confirm" style="display:none;z-index:1;">
-            Failed to save data
-        </div>
-
-        <div id="dialog-spoilage-confirm" title="confirm" style="display:none;z-index:1;">
-            Save this spoilage report?
-        </div>
-
-        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
-            Please to fill mandatory data
-        </div>         
-
-        <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
-            "WDS No." is not unique
-        </div>
+        <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">Save data?</div>
+        <div id="dialog-spoilage-success" title="confirm" style="display:none;z-index:1;">Spoilage report has been saved</div>
+        <div id="dialog-spoilage-failed" title="confirm" style="display:none;z-index:1;">Failed to save data</div>
+        <div id="dialog-spoilage-confirm" title="confirm" style="display:none;z-index:1;">Save this spoilage report?</div>
+        <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">Please to fill mandatory data</div>     
 
         <script>
-            $('#addForm').bind('submit', function() {
-                var data = '';
+            $('#btnSave').bind('click', function() {
+                var data = '', header = '';
 
-                var header = $('#wdsNo').val() + '^' + $('#wdsDate').val() + '^' + $('#vesselId').val() + '^' + $('#requestedBy').val() + '^' + $('#approvedBy').val() + '^';
-
-                $('#main tbody tr').each(function() {
-                    data = data + header + $(this).find('input:eq(0)').val() + '^' + $(this).find('input:eq(1)').val() + '^' + $(this).find('input:eq(4)').val() + '^' +
-                            $(this).find('input:eq(2)').val() + '^' + $(this).find('input:eq(3)').val() + '^@';
+                header = $('#wdsId').val() + ':s:' + $('#wdsNo').val() + ':s:' + gnvs.util.toDBDate($('#wdsDate').val()) + ':s:' + $('#vesselId').val() + ':s:' + $('#requestedBy').val() + ':s:' + $('#approvedBy').val() + ':s:';
+                $('#main tr[data-status]').each(function() {
+                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('input:eq(0)').val() + ':s:' + $(this).find('input:eq(1)').val() + ':s:' + $(this).find('input:eq(4)').val() + ':s:' + $(this).find('input:eq(2)').val() + ':s:' + $(this).find('input:eq(3)').val() + ':s::se:';
                 });
 
-                if (data !== '') {
-                    window.location.replace("?action=save&data=" + encodeURIComponent(data));
-//                    console.log(encodeURIComponent(data));
+                if (confirm('Update Withdrawal Slip #' + $('#wdsNo').val() + ' ?')) {
+                    if (data === '') {
+                        data = data + header + 'X:s:-1:s::se:';
+                    }
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
@@ -472,6 +381,9 @@
                     $('#addRequest').trigger('click');
                 }
             });
+
+            // INIT | update
+            $('#wdsDate').val(gnvs.util.toViewDate('${model.wds[0].wds_date}'));
         </script>
     </body>
 </html>

@@ -1,7 +1,5 @@
 package com.app.wms.web.controller;
 
-import com.app.wms.engine.db.dao.FishBalanceDao;
-import com.app.wms.engine.db.dao.FishBalanceHistoryDao;
 import com.app.wms.engine.db.dao.FishStorageDao;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,16 +15,16 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.FishWdsDao;
 import com.app.wms.engine.db.dao.FishWdsDetailDao;
-import com.app.wms.engine.db.dto.FishBalance;
-import com.app.wms.engine.db.dto.FishBalanceHistory;
 import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.FishWds;
 import com.app.wms.engine.db.dto.FishWdsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 
 public class FishWdsController extends MultiActionController {
 
@@ -94,20 +92,20 @@ public class FishWdsController extends MultiActionController {
         FishStorageDao fishStorageDao = DaoFactory.createFishStorageDao();
         List<FishStorage> fishStorages = fishStorageDao.findAllActive();
         modelMap.put("fses", fishStorages);
-        
+
         modelMap.put("mode", "create");
         return new ModelAndView("fish/WDSDataAdd", "model", modelMap);
     }
-    
+
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
         try {
             /* DATA | get initial value */
             String data = request.getParameter("data");
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            
+
             /* DAO | Define needed dao here */
             FishWdsDao fwDao = DaoFactory.createFishWdsDao();
-            
+
             /* TRANSACTION | Something complex here */
             fwDao.insert2(data, lu.getUserId());
 
@@ -117,7 +115,7 @@ public class FishWdsController extends MultiActionController {
             return new ModelAndView("redirect:FishWds.htm?action=create");
         }
     }
-    
+
     public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
         int id = Integer.valueOf(request.getParameter("id"));
         FishWdsDao dao = DaoFactory.createFishWdsDao();
@@ -129,7 +127,7 @@ public class FishWdsController extends MultiActionController {
         HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
         return new ModelAndView("fish/WDSDataList", "model", modelMap);
     }
-    
+
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         /* DATA | get initial value */
@@ -187,5 +185,52 @@ public class FishWdsController extends MultiActionController {
 
         modelMap.put("tableMap", tableMap);
         return new ModelAndView("fish/WDSDataDetailList", "model", modelMap);
+    }
+
+    // 2015 Update | by FYA
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createFishWdsDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:FishWds.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            model.put("wds", DaoFactory.createFishWdsDao().getWithdrawal(Integer.parseInt(request.getParameter("key"))));
+            model.put("fses", DaoFactory.createFishStorageDao().findAllActive());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/fish/WithdrawalSlipUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFishWdsDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
 }

@@ -20,4 +20,11 @@ public interface BrineFreezingDao {
     
     public void insert(String data, String createdBy);
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getBrineFreezing(int key);
+    
 }

@@ -17,13 +17,11 @@ import org.springframework.jdbc.object.SqlUpdate;
 import com.app.wms.engine.db.dao.FishStorageDao;
 import com.app.wms.engine.db.dao.FishVesselDao;
 import com.app.wms.engine.db.dao.FishWsDao;
-import com.app.wms.engine.db.dao.FishWsDetailDao;
 import com.app.wms.engine.db.dao.FishWsTypeDao;
 import com.app.wms.engine.db.dto.FishStorage;
 import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.dto.FishWs;
 import com.app.wms.engine.db.dto.FishWSType;
-import com.app.wms.engine.db.dto.FishWsDetail;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import java.util.ArrayList;
@@ -257,7 +255,7 @@ public class FishWsDaoImpl extends AbstractDAO
     // UPDATE | FYA | October 22, 2014
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC F_WEIGHT_SLIP_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC F_WS_MAX_PAGE ?, ?", show, where);
         } catch (Exception e) {
             e.printStackTrace();
             return 1;
@@ -265,16 +263,29 @@ public class FishWsDaoImpl extends AbstractDAO
     }
 
     public void insert2(String data, String createdBy) {
-        jdbcTemplate.update("EXEC F_WEIGHT_SLIP_INSERT ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC F_WS_CREATE ?, ?", data, createdBy);
     }
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC F_WEIGHT_SLIP_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC F_WS_LIST ?, ?, ?, ?", page, show, where, order);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_WS_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_WS_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getWeightSlip(int key) {
+        return jdbcTemplate.queryForList("EXEC F_WS_GET_CONTENT_FOR_UPDATE ?", key);
     }
 
 }

@@ -22,4 +22,13 @@ public interface FishReclassificationDao {
     
     public List<Map<String, Object>> getFishStorage();
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getReclassification(int key);
+    
 }

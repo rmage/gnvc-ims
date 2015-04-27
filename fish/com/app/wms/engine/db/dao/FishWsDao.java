@@ -28,5 +28,12 @@ public interface FishWsDao extends GeneralDao<FishWs> {
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order);
 
     public void insert2(String data, String createdBy);
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getWeightSlip(int key);
 
 }

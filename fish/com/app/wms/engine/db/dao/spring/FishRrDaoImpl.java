@@ -220,12 +220,12 @@ public class FishRrDaoImpl extends AbstractDAO implements
 
     /* GNVS | 2014 Update */
     public void insert(String rrNo, Date rrDate, String batchNo, String dateFrom, String dateTo, String type, String wsNo, String createdBy) {
-        jdbcTemplate.update("EXEC RR_INSERT ?, ?, ?, ?, ?, ?, ?, ?", rrNo, rrDate, batchNo, dateFrom, dateTo, type, wsNo, createdBy);
+        jdbcTemplate.update("EXEC F_RR_CREATE ?, ?, ?, ?, ?, ?, ?, ?", rrNo, rrDate, batchNo, dateFrom, dateTo, type, wsNo, createdBy);
     }
 
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC RR_F_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC F_RR_MAX_PAGE ?, ?", show, where);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return 1;
@@ -234,7 +234,7 @@ public class FishRrDaoImpl extends AbstractDAO implements
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC RR_F_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC F_RR_LIST ?, ?, ?, ?", page, show, where, order);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -246,7 +246,20 @@ public class FishRrDaoImpl extends AbstractDAO implements
     }
 
     public List<Map<String, Object>> getWeightSlip(String batchNo, String dateFrom, String dateTo, String type) {
-        return jdbcTemplate.queryForList("EXEC RR_GET_WEIGHT_SLIP ?, ?, ?, ?", batchNo, dateFrom, dateTo, type);
+        return jdbcTemplate.queryForList("EXEC F_RR_GET_WS ?, ?, ?, ?", batchNo, dateFrom, dateTo, type);
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_RR_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_RR_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getReceiving(int key) {
+        return jdbcTemplate.queryForList("EXEC F_RR_GET_CONTENT_FOR_UPDATE ?", key);
     }
 
 }

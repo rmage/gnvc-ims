@@ -1,10 +1,8 @@
-<%@page import="java.util.Date"%>
-<%@page import="java.text.SimpleDateFormat"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="windows-1252">
-        <title>Create &therefore; Fish Weight Slip Summary &therefore; IMS</title>
+        <title>Update &therefore; Fish Weight Slip Summary &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             .ui-autocomplete {
@@ -16,18 +14,13 @@
         </style>
     </head>
     <body>
-        <%            String cDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-            String cDateH = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        %>
         <div class="container">
             <%@include file="../../header.jsp" %>
             <jsp:include page="../../dynmenu.jsp" />
             <div id="content" class="span-24 last">
                 <div class="box">
-                    <form id="fmForm" method="post" action="FishWsSummary.htm">
-                        <input type="hidden" name="action" value="save" />
-                        <input type="hidden" id="altDateFrom" name="altDateFrom" value="<%=cDateH%>" />
-                        <input type="hidden" id="altDateTo" name="altDateFrom" value="<%=cDateH%>" />
+                    <form id="wssForm" method="post" action="FishWsSummary.htm">
+                        <input id="wssId" type="hidden" value="${model.wss[0].id}">
                         <input id="fishType" type="hidden" value="" name="fishType">
                         <input id="fishTypeHTML" type="hidden" value="" name="fishTypeHTML">
                         <table class="collapse tblForm row-select">
@@ -35,23 +28,23 @@
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td style="width: 10%;">WSS Number</td>
-                                    <td style="width: 40%;"><input id="wssCode" name="wssCode" type="text" size="13" required /></td>
+                                    <td style="width: 40%;"><input id="wssCode" name="wssCode" type="text" size="13" value="${model.wss[0].code}" required></td>
                                     <td style="width: 10%;">Batch Number</td>
-                                    <td><input id="batchNo" name="batchNo" type="text" size="13" required="required" /> </td>
+                                    <td><input id="batchNo" name="batchNo" type="text" size="13" required value="${model.wss[0].batch_no}"></td>
                                 </tr>
                                 <tr>
                                     <td>Date From</td>
-                                    <td><input id="dateFrom" name="dateFrom" size="10" type="text" required="required" value="<%=cDate%>" /></td>
+                                    <td><input id="dateFrom" name="dateFrom" size="10" type="text" required></td>
                                     <td>Date To</td>
-                                    <td><input id="dateTo" name="dateTo" size="10" type="text" required="required" value="<%=cDate%>" /></td>
+                                    <td><input id="dateTo" name="dateTo" size="10" type="text" required></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
                                         <input type="button" id="preview" value="Preview" />
-                                        <input type="submit" id="save" value="Save" />
-                                        <input type="button" value="Cancel" onclick="window.location.replace('FishWsSummary.htm')" />
+                                        <input type="submit" id="save" value="Update" />
+                                        <input id="btnCancel" type="button" value="Cancel" onclick="window.location.replace('FishWsSummary.htm')" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -68,23 +61,15 @@
 
         <script>
             // binding event to element
-            $('#dateFrom').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#altDateFrom", altFormat: "yy-mm-dd"});
-            $('#dateTo').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#altDateTo", altFormat: "yy-mm-dd"});
+            $('#dateFrom').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy"}).val();
+            $('#dateTo').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy"}).val();
 
             $('#batchNo').autocomplete({
                 source: '?action=getBatchInfo',
                 minLength: 2,
                 select: function(event, ui) {
                     $('#batchNo').val(ui.item.batchNo);
-
-                    if (ui.item.batchNo.indexOf('F') > -1 ) {
-                        $('#fishType').val('FishWssFresh');
-                        $('#fishTypeHTML').val('FRESH');
-                    } else {
-                        $('#fishType').val('FishWssFrozen');
-                        $('#fishTypeHTML').val('FROZEN');
-                    }
-
+                    detectFishType(ui.item.batchNo);
                     return false;
                 }
             }).data('autocomplete')._renderItem = function(ul, item) {
@@ -97,7 +82,38 @@
 
             $('#preview').bind('click', function() {
                 window.location = 'GenerateReport.htm?action=index&item=' + $('#fishType').val() + '&type=xls' +
-                        '&params=' + $('#batchNo').val() + ':' + $('#altDateFrom').val() + ':' + $('#altDateTo').val() + ':' + $('#fishTypeHTML').val();
+                        '&params=' + $('#batchNo').val() + ':' + gnvs.util.toDBDate($('#dateFrom').val()) + ':' + gnvs.util.toDBDate($('#dateTo').val()) + ':' + $('#fishTypeHTML').val();
+            });
+
+            function detectFishType(t) {
+                if (t.indexOf('F') > -1) {
+                    $('#fishType').val('FishWssFresh');
+                    $('#fishTypeHTML').val('FRESH');
+                } else {
+                    $('#fishType').val('FishWssFrozen');
+                    $('#fishTypeHTML').val('FROZEN');
+                }
+            }
+
+            // INIT | update
+            $('#dateFrom').val(gnvs.util.toViewDate('${model.wss[0].date_from}'));
+            $('#dateTo').val(gnvs.util.toViewDate('${model.wss[0].date_to}'));
+            detectFishType($('#batchNo').val());
+            
+            $('#wssForm').bind('submit', function() {
+                if (confirm('Update Spoilage ?')) {
+                    var data = $('#wssId').val() + ':s:' + $('#wssCode').val() + ':s:' + $('#batchNo').val() + ':s:' + gnvs.util.toDBDate($('#dateFrom').val()) + ':s:' + gnvs.util.toDBDate($('#dateTo').val()) + ':s::se:';
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
+                }
+                
+                return false;
             });
         </script>
 

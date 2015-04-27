@@ -9,8 +9,10 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.BrineFreezingDao;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,50 +68,6 @@ public class FishBrineFreezingController extends MultiActionController {
             return new ModelAndView("redirect:BrineFreezing.htm?action=create");
         }
     }
-    
-//    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
-//        try {
-//            /* DATA | get initial value */
-//            String[] header = request.getParameter("header").split(":", -1);
-//            String[] details = request.getParameterValues("detail");
-//            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//            
-//            /* DAO | Define needed dao here */
-//            BrineFreezingDao bfDao = DaoFactory.createBrineFreezingDao();
-//            
-//            /* TRANSACTION | Something complex here */
-//            BrineFreezing bf = new BrineFreezing();
-//            bf.setBfNo(header[0]);
-//            bf.setBfDate(sdf.parse(header[1]));
-//            bf.setWsId(Integer.parseInt(header[2]));
-//            bf.setStorageId(Integer.parseInt(header[3]));
-//            bf.setBatchNo(header[4]);
-//            bf.setRegu(header[5]);
-//            bf.setTimeShift(header[6]);
-//            bf.setTimeStart(header[7]);
-//            bf.setTimeFinish(header[8]);
-//            bf.setCreatedBy(lu.getUserId());
-//            bf.setId(bfDao.insertH(bf));
-//            
-//            BrineFreezingDetail bfd = new BrineFreezingDetail();
-//            bfd.setBfId(bf.getId());
-//            bfd.setCreatedby(lu.getUserId());
-//            for(String x : details) {
-//                String[] detail = x.split(":", -1);
-//                bfd.setFishId(Integer.parseInt(detail[0]));
-//                bfd.setTotalWeight(new BigDecimal(detail[1]));
-//                if(bfd.getTotalWeight().compareTo(BigDecimal.ZERO) > 0) {
-//                    bfDao.insertD(bfd, bf.getBfNo(), bf.getBatchNo(), bf.getStorageId());
-//                }
-//            }
-//            
-//            return new ModelAndView("redirect:BrineFreezing.htm");
-//        } catch(Exception e) {
-//            e.printStackTrace();
-//            return new ModelAndView("redirect:BrineFreezing.htm?action=create");
-//        }
-//    }
     
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -195,6 +153,55 @@ public class FishBrineFreezingController extends MultiActionController {
         }
         sb.append("]");
         response.getWriter().print(sb.toString());
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createBrineFreezingDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:BrineFreezing.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            model.put("bf", DaoFactory.createBrineFreezingDao().getBrineFreezing(Integer.parseInt(request.getParameter("key"))));
+            
+            model.put("fs", DaoFactory.createFishDao().findAllActive());
+            model.put("cs", DaoFactory.createFishStorageDao().findAllActive());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/fish/BrineFreezingUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createBrineFreezingDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
     
 }

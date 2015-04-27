@@ -15,4 +15,11 @@ public interface FishWsSummaryDao {
     
     public void insert(FishWsSummary fws);
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void delete(int key, String updatedBy);
+    
+    public List<Map<String, Object>> getWSSummary(int key);
+    
 }

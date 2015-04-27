@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS &there4; Fish Spoilage &there4; Create</title>
+        <title>Create &there4; Fish Spoilage &there4; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function() {
@@ -197,8 +197,7 @@
                                                readonly="readonly" size="30" class="validate[required] text-input"/></td>
                                 </tr>
                             </tbody>
-                            <tfoot class="ui-widget-header">
-                            </tfoot>
+                            <tfoot class="ui-widget-header"></tfoot>
                         </table>
 
                         <a href="javascript:void(0)" id="addItem">Add Item</a><br /><br />
@@ -375,13 +374,6 @@
                 form.volumeMatrix.value = d;
             }
         </script>
-
-        <script type="text/javascript">
-            function formfocus() {
-                document.getElementById('autofocus').focus();
-            }
-            window.onload = formfocus;
-        </script>             
 
         <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
             Save data?

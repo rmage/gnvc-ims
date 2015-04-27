@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Receiving</title>
+        <title>Receiving &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>
@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="rr_no">Number</td>
                                 <td column="rr_date">Date</td>
                                 <td>WS Number</td>
@@ -57,7 +57,7 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishRR_Receiving Report (xls)');
+            util.initListTable($('#list'), 'd:R_FishRR_Receiving Report (xls)');
         </script>
         
     </body>

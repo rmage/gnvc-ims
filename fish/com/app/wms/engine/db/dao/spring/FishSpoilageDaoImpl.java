@@ -284,7 +284,7 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
     // UPDATED | FYA | October 23, 2014
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC F_SPOILAGE_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC F_SR_MAX_PAGE ?, ?", show, where);
         } catch (Exception e) {
             e.printStackTrace();
             return 1;
@@ -292,16 +292,29 @@ public class FishSpoilageDaoImpl extends AbstractDAO implements
     }
 
     public void insert2(String data, String createdBy) {
-        jdbcTemplate.update("EXEC F_SPOILAGE_INSERT ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC F_SR_CREATE ?, ?", data, createdBy);
     }
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC F_SPOILAGE_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC F_SR_LIST ?, ?, ?, ?", page, show, where, order);
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_SR_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_SR_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getSpoilage(String key) {
+        return jdbcTemplate.queryForList("EXEC F_SR_GET_CONTENT_FOR_UPDATE ?", key);
     }
 
 }

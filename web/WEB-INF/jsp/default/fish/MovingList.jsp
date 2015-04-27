@@ -35,7 +35,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="fr_code">Number</td>
                                 <td column="fr_date">Date</td>
                                 <td>From CS</td>
@@ -58,7 +58,7 @@
         
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_FishFMov_Fish Moving Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_FishFMov_Fish Moving Report (xls)');
         </script>
         
     </body>

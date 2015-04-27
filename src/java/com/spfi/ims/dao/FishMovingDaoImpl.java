@@ -22,14 +22,14 @@ public class FishMovingDaoImpl extends AbstractDAO implements FishMovingDao {
     }
     
     public int insert(FishMoving fm) {
-        return jdbcTemplate.queryForInt("EXEC F_FMOV_INSERT ?, ?, ?, ?, ?, ?", 
+        return jdbcTemplate.queryForInt("EXEC F_MOV_INSERT ?, ?, ?, ?, ?, ?", 
                 fm.getCode(), fm.getDate(), fm.getFromStorageId(), fm.getToStorageId(), fm.getRemarks(),
                 fm.getCreatedBy());
     }
 
     public int ajaxMaxPage(BigDecimal show, String where) {
         try {
-            return jdbcTemplate.queryForInt("EXEC F_FMOV_MAX_PAGE ?, ?", show, where);
+            return jdbcTemplate.queryForInt("EXEC F_MOV_MAX_PAGE ?, ?", show, where);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return 1;
@@ -38,7 +38,7 @@ public class FishMovingDaoImpl extends AbstractDAO implements FishMovingDao {
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
         try {
-            return jdbcTemplate.queryForList("EXEC F_FMOV_LIST ?, ?, ?, ?", page, show, where, order);
+            return jdbcTemplate.queryForList("EXEC F_MOV_LIST ?, ?, ?, ?", page, show, where, order);
         } catch (DataAccessException e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -58,9 +58,26 @@ public class FishMovingDaoImpl extends AbstractDAO implements FishMovingDao {
     }
     
     public void insertD(FishMovingDetail fmd) {
-        jdbcTemplate.update("EXEC F_FMOVD_INSERT ?, ?, ?, ?, ?, ?",
+        jdbcTemplate.update("EXEC F_MOVD_INSERT ?, ?, ?, ?, ?, ?",
                 fmd.getFmId(), fmd.getVesselId(), fmd.getFishId(), fmd.getTotalWeight(), fmd.getUom(),
                 fmd.getCreatedBy());
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_MOV_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_MOV_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_MOV_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getMoving(int key) {
+        return jdbcTemplate.queryForList("EXEC F_MOV_GET_CONTENT_FOR_UPDATE ?", key);
     }
 
 }

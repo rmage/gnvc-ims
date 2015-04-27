@@ -4,9 +4,12 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.FishWsSummaryDao;
 import com.spfi.ims.dto.FishWsSummary;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -111,6 +114,52 @@ public class FishWsSummaryController extends MultiActionController {
         }
         sb.append("]");
         response.getWriter().print(sb.toString());
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createFishWsSummaryDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:FishWsSummary.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            model.put("wss", DaoFactory.createFishWsSummaryDao().getWSSummary(Integer.parseInt(request.getParameter("key"))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/fish/WsSummaryUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFishWsSummaryDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
 
 }

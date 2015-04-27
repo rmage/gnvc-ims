@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta charset="windows-1252">
-        <title>IMS &therefore; Brine Freezing &therefore; Create</title>
+        <title>Create &therefore; Brine Freezing &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             .ui-autocomplete {

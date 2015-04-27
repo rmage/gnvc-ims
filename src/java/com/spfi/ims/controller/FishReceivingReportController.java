@@ -3,10 +3,13 @@ package com.spfi.ims.controller;
 import com.app.wms.engine.db.dao.FishRrDao;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -159,6 +162,18 @@ public class FishReceivingReportController extends MultiActionController {
         }
         sb.append("]");
         response.getWriter().print(sb.toString());
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createFishRrDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:FishReceivingReport.htm");
     }
 
 }
