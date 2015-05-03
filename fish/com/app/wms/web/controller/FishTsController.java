@@ -18,9 +18,11 @@ import com.app.wms.engine.db.dto.FishTs;
 import com.app.wms.engine.db.dto.FishTsDetail;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 
 public class FishTsController extends MultiActionController {
 
@@ -31,55 +33,6 @@ public class FishTsController extends MultiActionController {
         /* DAO | Define needed dao here */
         /* TRANSACTION | Something complex here */
         return new ModelAndView("fish/TSDataList");
-    }
-
-    private HashMap<String, Object> searchAndPaging(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HashMap<String, Object> modelMap = new HashMap<String, Object>();
-
-        try {
-            Integer page = 1;
-            Integer paging = 10;
-            Integer offset = 1;
-
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-                offset = (page - 1) * paging + 1;
-            }
-            if (request.getParameter("paging") != null) {
-                paging = Integer.parseInt(request.getParameter("paging"));
-            }
-
-            FishTsDao dao = DaoFactory.createFishTsDao();
-            List<FishTs> fishTsList = null;
-
-            if (request.getParameter("search") != null) {
-                String tsNo = request.getParameter("tsNo");
-                if (request.getParameter("tsDate") != null) {
-                    Date tsDate = df.parse(request.getParameter("tsDate"));
-                    fishTsList = dao.searchAndPaging(tsNo, tsDate, paging, offset);
-                    String querySearch = "&search=true&tsNo=" + tsNo + "&tsDate=" + df.format(tsDate);
-                    modelMap.put("querySearch", querySearch);
-                    modelMap.put("queryTsNo", tsNo);
-                    modelMap.put("queryTsDate", df.format(tsDate));
-                } else {
-                    fishTsList = dao.searchAndPagingWithoutDate(tsNo, paging, offset);
-                    String querySearch = "&search=true&tsNo=" + tsNo;
-                    modelMap.put("querySearch", querySearch);
-                    modelMap.put("queryTsNo", tsNo);
-                }
-            } else {
-                fishTsList = dao.findAllAndPaging(paging, offset);
-            }
-
-            modelMap.put("tsDataList", fishTsList);
-            modelMap.put("totalRows", 2000);
-            modelMap.put("page", page);
-            modelMap.put("paging", paging);
-        } catch (Exception e) {
-            throw e;
-        }
-
-        return modelMap;
     }
 
     public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -106,85 +59,6 @@ public class FishTsController extends MultiActionController {
             e.printStackTrace();
             return new ModelAndView("redirect:FishTs.htm?action=create");
         }
-    }
-
-//    public ModelAndView save(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//        LoginUser user = (LoginUser) request.getSession().getAttribute("user");
-//        String mode = request.getParameter("mode");
-//        HashMap<String, Object> modelMap = new HashMap<String, Object>();
-//
-//        if (user == null) {
-//            String msg = "You haven't login or your session has been expired! Please do login again";
-//            modelMap.put("msg", msg);
-//            return new ModelAndView("login", "model", modelMap);
-//        } else {
-//            Integer wdsId = Integer.valueOf(request.getParameter("wdsId"));
-//            Integer vesselId = Integer.valueOf(request.getParameter("vesselId"));
-//            String tsNo = request.getParameter("tsNo");
-//            Date tsDate = df.parse(request.getParameter("tsDate"));
-//            String issuedBy = request.getParameter("issuedBy");
-//            String notedBy = request.getParameter("notedBy");
-//            String approvedBy = request.getParameter("approvedBy");
-//            String receivedBy = request.getParameter("receivedBy");
-//
-//            FishTs dto = new FishTs();
-//            dto.setWdsId(wdsId);
-//            dto.setVesselId(vesselId);
-//            dto.setTsNo(tsNo);
-//            dto.setTsDate(tsDate);
-//            dto.setIssuedBy(issuedBy);
-//            dto.setNotedBy(notedBy);
-//            dto.setApprovedBy(approvedBy);
-//            dto.setReceivedBy(receivedBy);
-//            dto.setCreatedDate(new Date());
-//            dto.setCreatedBy(user.getUserId());
-//            dto.setIsActive("Y");
-//            dto.setIsDelete("N");
-//
-//            FishTsDao dao = DaoFactory.createFishTsDao();
-//            int tsId = dao.insert(dto);
-//            int totalData = Integer.valueOf(request.getParameter("totalData"));
-//
-//            for (int i = 1; i <= totalData; i++) {
-//                int fishId = Integer.valueOf(request.getParameter("fishId" + i));
-//                int storageId = Integer.valueOf(request.getParameter("storageId" + i));
-//                String description = request.getParameter("description" + i);
-//                Double qty = Double.valueOf(request.getParameter("qty" + i));
-//                String uomCode = request.getParameter("uomCode" + i);
-//
-//                FishTsDetail tsDetail = new FishTsDetail();
-//                tsDetail.setTsId(tsId);
-//                tsDetail.setFishId(fishId);
-//                tsDetail.setStorageId(storageId);
-//                tsDetail.setDescription(description);
-//                tsDetail.setQuantity(qty);
-//                tsDetail.setUomCode(uomCode);
-//                tsDetail.setCreatedDate(new Date());
-//                tsDetail.setCreatedBy(user.getUserId());
-//                tsDetail.setIsActive("Y");
-//                tsDetail.setIsDelete("N");
-//
-//                FishTsDetailDao tsDetailDao = DaoFactory.createFishTsDetailDao();
-//                if (qty.compareTo(Double.valueOf("0.00")) >= 0) {
-//                    tsDetailDao.insert(tsDetail);
-//                }
-//            }
-//
-//            modelMap = this.searchAndPaging(request, response);
-//            return new ModelAndView("fish/TSDataList", "model", modelMap);
-//        }
-//    }
-
-    public ModelAndView inactivate(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        int id = Integer.valueOf(request.getParameter("id"));
-        FishTsDao dao = DaoFactory.createFishTsDao();
-        dao.delete(id);
-
-        FishTsDetailDao detailDao = DaoFactory.createFishTsDetailDao();
-        detailDao.deleteAllByTsId(id);
-
-        HashMap<String, Object> modelMap = this.searchAndPaging(request, response);
-        return new ModelAndView("fish/TSDataList", "model", modelMap);
     }
     
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
@@ -247,4 +121,52 @@ public class FishTsController extends MultiActionController {
         modelMap.put("tableMap", tableMap);
         return new ModelAndView("fish/TSDataDetailList", "model", modelMap);
     }
+    
+    // 2015 Update | by FYA
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createFishTsDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:FishTs.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            model.put("tss", DaoFactory.createFishTsDao().getTransfer(Integer.parseInt(request.getParameter("key"))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("default/fish/TSDataUpdate", "model", model);
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFishReclassificationDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+    
 }

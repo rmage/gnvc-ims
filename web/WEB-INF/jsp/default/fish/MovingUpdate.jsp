@@ -230,13 +230,13 @@
                             data = data + header + 'X:s:-1:s::se:';
                         }
                         console.log(data);
-//                        gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
-//                            if (json.message === '') {
-//                                $('#btnCancel').trigger('click');
-//                            } else {
-//                                alert(json.message);
-//                            }
-//                        });
+                        gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+                            if (json.message === '') {
+                                $('#btnCancel').trigger('click');
+                            } else {
+                                alert(json.message);
+                            }
+                        });
                     }
                 }
                 return false;

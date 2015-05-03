@@ -233,7 +233,7 @@ public class FishTsDaoImpl extends AbstractDAO implements
     }
 
     public void insert2(String data, String createdBy) {
-        jdbcTemplate.update("EXEC F_TRANSFER_INSERT ?, ?", data, createdBy);
+        jdbcTemplate.update("EXEC F_TRANSFER_CREATE ?, ?", data, createdBy);
     }
 
     public List<Map<String, Object>> ajaxSearch(int page, int show, String where, String order) {
@@ -243,6 +243,19 @@ public class FishTsDaoImpl extends AbstractDAO implements
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC F_TRANSFER_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC F_TRANSFER_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getTransfer(int key) {
+        return jdbcTemplate.queryForList("EXEC F_TRANSFER_GET_CONTENT_FOR_UPDATE ?", key);
     }
 
 }

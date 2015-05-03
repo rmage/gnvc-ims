@@ -101,12 +101,12 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.RendDailyReport, "EXEC RPT_REND_DAILY ?");
         ListMap.put(Report.RendSummaryReport, "EXEC RPT_REND_SUMMARY ?, ?");
         ListMap.put(Report.RendSales, "EXEC PRT_REND_SALES ?");
-        //  ***END*** | Finished Goods Module | Form and Report List
+        //  ***END*** | Rendering Module | Form and Report List
         
         //  Master Module | Report List
         ListMap.put(Report.MSupplier, "EXEC RPT_M_SUPPLIER");
         ListMap.put(Report.MProduct, "EXEC RPT_M_PRODUCT");
-        //  ***END*** | Finished Goods Module | Form and Report List
+        //  ***END*** | Master Module | Form and Report List
 
         ListMap.put(Report.FWS,
                 "SELECT f.code AS kode, wdsd.description AS nama_barang, "
