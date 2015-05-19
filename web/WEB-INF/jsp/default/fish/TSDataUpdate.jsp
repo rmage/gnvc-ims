@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS &there4; Transfer Slip &there4; Create</title>
+        <title>Update &there4; Transfer Slip &there4; IMS</title>
         <%@include file="../../metaheader.jsp" %>
     </head>
     <body>
@@ -13,80 +13,77 @@
 
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="FishTs.htm" method="post" name="form" id="addForm">
-                        <input type="hidden" id="totalData" name="totalData" value="">
-                        <input type="hidden" name="action" value="save">
-                        <input type="hidden" id="vesselId" name="vesselId" value="0">
+                    <form action="FishTs.htm" method="post" name="updateForm" id="updateForm">
+                        <input type="hidden" id="tsId" name="tsId" value="${model.tss[0].ts_id}">
+                        <input type="hidden" id="wdsId" name="wdsId" value="${model.tss[0].wds_id}">
+                        <input type="hidden" id="vesselId" name="vesselId" value="${model.tss[0].vessel_id}">
                         <table class="collapse tblForm row-select">
                             <caption>Transfer Slip &there4; Header</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
                                     <td></td>
-                                    <td class="style1">TS No.</td>
-                                    <td class="style1">
+                                    <td>TS No.</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="tsNo" name="tsNo" value="" size="30" class="validate[required] text-input numeric" readonly>
+                                            <input type="text" id="tsNo" name="tsNo" value="${model.tss[0].ts_no}" size="30" readonly>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                     <td></td>
-                                    <td class="style1">Date</td>
-                                    <td class="style1">
+                                    <td>Date</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="tsDate" name="tsDate" value="" size="30" class="text-input" required>
+                                            <input type="text" id="tsDate" name="tsDate" value="" size="30" required>
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td class="style1">WDS No.</td>
-                                    <td class="style1">
+                                    <td>WDS No.</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="wdsNo" name="wdsNo" readonly value="" size="30" class="validate[required] text-input">
+                                            <input type="text" id="wdsNo" name="wdsNo" readonly value="${model.tss[0].wds_no}" size="30">
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
-                                        <img width="16" height="16" src="resources/images/search.png" alt="Search Product" />
                                     </td>
                                     <td></td>
-                                    <td class="style1">Issued By</td>
-                                    <td class="style1">
+                                    <td>Issued By</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="issuedBy" name="issuedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="issuedBy" name="issuedBy" value="${model.tss[0].issued_by}" size="30">
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td class="style1">Batch No.</td>
-                                    <td class="style1">
+                                    <td>Batch No.</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="batchNo" name="batchNo" value="" 
-                                                   readonly="readonly" size="30" class="validate[required] text-input"/>
+                                            <input type="text" id="batchNo" name="batchNo" value="${model.tss[0].batch_no}" readonly="readonly" size="30">
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                     <td></td>
-                                    <td class="style1">Approved By</td>
-                                    <td class="style1">
+                                    <td>Approved By</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="approvedBy" name="approvedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="approvedBy" name="approvedBy" value="${model.tss[0].approved_by}" size="30">
                                         </label>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td class="style1">Noted By</td>
-                                    <td class="style1">
+                                    <td>Noted By</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="notedBy" name="notedBy" value="" 
-                                                   size="30" class="text-input"/>
+                                            <input type="text" id="notedBy" name="notedBy" value="${model.tss[0].noted_by}" size="30">
                                         </label>
                                     </td>
                                     <td></td>
-                                    <td class="style1">Received By</td>
-                                    <td class="style1">
+                                    <td>Received By</td>
+                                    <td>
                                         <label>
-                                            <input type="text" id="receivedBy" name="receivedBy" value="" size="30" class="text-input"/>
+                                            <input type="text" id="receivedBy" name="receivedBy" value="${model.tss[0].received_by}" size="30">
                                         </label>
                                     </td>
                                 </tr>
@@ -97,7 +94,7 @@
                             <caption>Transfer Slip &there4; Detail</caption>
                             <thead>
                                 <tr>
-                                    <td class="style1">No.</td>
+                                    <td>No.</td>
                                     <td class="center">Fish Code</td>
                                     <td class="center">Description</td>
                                     <td class="center">Request Qty.</td>
@@ -105,7 +102,18 @@
                                     <td class="center">Storage</td>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                                <c:forEach items="${model.tss}" var="x" varStatus="vs">
+                                    <tr data-id="${x.id}" data-fish="${x.fish_id}" data-storage="${x.storage_id}">
+                                        <td>${vs.index + 1}</td>
+                                        <td>${x.fish_code}</td>
+                                        <td>${x.fish_description}</td>
+                                        <td><input type="text" value="${x.qty}" name="qty" id="qty" data-value="${x.qty}"></td>
+                                        <td>${x.uom_code}</td>
+                                        <td>${x.storage_name}</td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
                         </table>
 
                         <table class="collapse tblForm row-select ui-widget-content">
@@ -114,12 +122,10 @@
                             <tfoot class="ui-widget-header">
                                 <tr><td colspan="7">
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false"                                                    
-                                                   role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-                                                   name="btnSave" id="btnSave" value="Save" class="simpan" />
+                                            <input type="submit" style="font-size: smaller;" name="btnSave" id="btnSave" value="Update" class="simpan">
                                         </label>
                                         <label>
-                                            <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" onclick="location.href = 'FishTs.htm';">
+                                            <input type="button" style="font-size: smaller;" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" onclick="location.href = 'FishTs.htm';">
                                         </label>
                                     </td>
                                 </tr>
@@ -136,7 +142,43 @@
             </div>
         </div>
         <script>
-            $('#tsDate').datepicker({ dateFormat: "dd/mm/yy", changeYear: true, changeMonth: true });
+            $('#tsDate').datepicker({dateFormat: "dd/mm/yy", changeYear: true, changeMonth: true}).val(gnvs.util.toViewDate('${model.tss[0].ts_date}'));
+            $('#updateForm').bind('submit', function() {
+                var data = '', header;
+                header = $('#tsId').val() + ':s:' + $('#wdsId').val() + ':s:' + $('#vesselId').val() + ':s:' + $('#tsNo').val() + ':s:' + gnvs.util.toDBDate($('#tsDate').val()) + ':s:' + $('#issuedBy').val() + ':s:' + $('#notedBy').val() + ':s:' + $('#approvedBy').val() + ':s:' + $('#receivedBy').val() + ':s:';
+
+                $('#main tbody tr[data-status]').each(function() {
+                    data = data + header + $(this).data('id') + ':s:' + $(this).data('fish') + ':s:' + $(this).data('storage') + ':s:' + $(this).find('td:eq(2)').html() + ':s:' + $(this).find('input').val() + ':s:' + $(this).find('td:eq(4)').html() + ':s::se:';
+                });
+
+                if (confirm('Update Fish Transfer #' + $('#tsNo').val() + ' ?')) {
+                    if (data === '') {
+                        data = data + header + '-1:s::se:';
+                    }
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
+                }
+
+                return false;
+            });
+
+            $('#main tbody tr input').live('blur', function() {
+                if (isNaN(this.value)) {
+                    this.value = 0;
+                }
+                
+                if (parseFloat($(this).data('value')) !== parseFloat(this.value)) {
+                    $(this).parent().parent().attr('data-status', 'U');
+                } else {
+                    $(this).parent().parent().removeAttr()('data-status');
+                }
+            });
         </script>
     </body>
 </html>

@@ -3,9 +3,12 @@ package com.spfi.ims.controller;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.FGPalletRejectionDao;
+import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -100,12 +103,13 @@ public class FGPalletRejectionController extends MultiActionController {
             if (b) {
                 sb.append(",");
             }
-            sb.append("{\"1\": \"").append(x.get("pack_style")).append("\", ");
-            sb.append("\"2\": \"").append(x.get("pack_size")).append("\", ");
-            sb.append("\"3\": \"").append(x.get("item_name")).append("\", ");
-            sb.append("\"4\": \"").append(x.get("pts_pdate")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("pts_pqty")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("pts_total_qty")).append("\"}");
+            sb.append("{\"1\": \"").append(x.get("pts_id")).append("\", ");
+            sb.append("\"2\": \"").append(x.get("pack_style")).append("\", ");
+            sb.append("\"3\": \"").append(x.get("pack_size")).append("\", ");
+            sb.append("\"4\": \"").append(x.get("item_name")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("pts_pdate")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("pts_pqty")).append("\", ");
+            sb.append("\"7\": \"").append(x.get("pts_total_qty")).append("\"}");
 
             b = Boolean.TRUE;
         }
@@ -114,6 +118,78 @@ public class FGPalletRejectionController extends MultiActionController {
         pw.flush();
         pw.close();
 
+    }
+    
+    // 2015 Update | by FYA
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFGPalletRejectionDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
+    }
+
+    public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+            DaoFactory.createFGPalletRejectionDao().delete(request.getParameter("key"), lu.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:FGPalletRejection.htm");
+    }
+
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, Object> model = new HashMap<String, Object>();
+
+        try {
+            String key = request.getParameter("key");
+
+            FGPalletRejectionDao dao = DaoFactory.createFGPalletRejectionDao();
+            model.put("pds", dao.getPalletRejection(key));
+
+            return new ModelAndView("default/finish_goods/PalletRejectionUpdate", "model", model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("redirect:FGPalletRejection.htm");
+        }
+    }
+
+    public ModelAndView ajaxNUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        Map<String, Object> json = new HashMap<String, Object>();
+
+        try {
+            LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+
+            String data = URLDecoder.decode(request.getParameter("data"), "utf-8");
+            String[] separator = StringHelper.getDataSeparator(data, 2);
+
+            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
+            DaoFactory.createFGPalletRejectionDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+
+            json.put("message", "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            json.put("message", e.getMessage());
+        }
+
+        return new ModelAndView("jsonView", json);
     }
     
 }

@@ -49,4 +49,21 @@ public class FGPalletRejectionDaoImpl extends AbstractDAO implements FGPalletRej
         jdbcTemplate.update("EXEC FG_PALLET_REJECTION_INSERT ?, ?", data, createdBy);
     }
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_REJECTION_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_REJECTION_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_REJECTION_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getPalletRejection(String key) {
+        return jdbcTemplate.queryForList("EXEC FG_PALLET_REJECTION_GET_CONTENT_FOR_UPDATE ?", key);
+    }
+    
 }

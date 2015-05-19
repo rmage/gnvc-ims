@@ -23,6 +23,7 @@
 <script type="text/javascript" src="resources/jquery/jquery-ui-timepicker-addon-0.5.min.js"></script>
 <script type="text/javascript" src="resources/jquery/jquery.cookies.2.2.0.js"></script>
 <script src="resources/js/scripts.js" type="text/javascript"></script>
+<script src="resources/default/js/scripts.js" type="text/javascript"></script>
 <!-- script type="text/javascript" src="resources/js/pagination.js"></script -->
 
 <!--    

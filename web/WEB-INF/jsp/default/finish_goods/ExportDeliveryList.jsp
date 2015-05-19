@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Export Delivery</title>
+        <title>Export Delivery &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -41,15 +41,17 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="lmr_code">EDS Number</td>
                                 <td>EDS Date</td>
-                                <td>LM Quantity</td>
+                                <td>LM Code</td>
                                 <td column="ofal_code">OFAL Code</td>
-                                <td>OFAL Date</td>
                                 <td>Buyer</td>
                                 <td>Brand</td>
-                                <td>Reff</td>
+                                <td>VAN</td>
+                                <td>Seal</td>
+                                <td>Vessel</td>
+                                <td>Plat Number</td>
                                 <td>Creator</td>
                             </tr>
                         </thead>
@@ -66,57 +68,9 @@
         </div>
 
         <!-- javascript block HERE -->
-        <!--<div id="fyaQPanel" class="div-dtl" style="width: 100%; display: none;" ondblclick="fyaQPanel(0)"></div>-->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), ''/*'R_FGEds_Print Export Delivery (xls)'*/);
-            
-//            var cs = 0;
-//            var loc = '';
-//            
-//            $('.d').live('click', function(){
-//                var $p = $(this).parent().parent();
-//                cs = $p.data('cs');
-//                loc = $p.data('location');
-//                fyaQPanel($(this).html());
-//            });
-//            
-//            function fyaQPanel(p) {
-//                if(p === 0) {
-//                    $('#fyaQPanel').fadeOut(300, function(){ $('#fyaQPanel').html(null); });
-//                } else {
-//                    $('#fyaQPanel').fadeIn(300, function(){
-//                        $('#fyaQPanel').html('<center><img src="resources/img/load-spin.gif" /></center>');
-//                        $.ajax({
-//                            url: 'Pts.htm',
-//                            data: {action: 'ajaxDocument', key: p},
-//                            dataType: 'json',
-//                            success: function(json) {
-//                                $('#fyaQPanel').html(null);
-//                                $('#fyaQPanel').append('<h6>PTS Number : ' + p + ' | Cs : ' + cs + ' | Location : ' + loc + '</h6><hr />');
-//                                $('#fyaQPanel').append('<table><thead><tr><th>NS/DS</th><th>Date</th>' +
-//                                    '<th>Prod. Batch</th><th>Basket</th><th>Quantity</th></tr></thead><tbody id="fyaQPanelBody"></tbody></table>');
-//                                for(var i = 0; i < json.length; i++) {
-//                                    $('#fyaQPanelBody').append('<tr><td>' + json[i].shift + '</td><td>' + json[i].date +
-//                                        '</td><td>' + json[i].prodbatch + '</td><td>' + json[i].basket + 
-//                                        '</td><td>' + numberWithCommas(json[i].qty) + '</td></tr>');
-//                                }
-//                            },
-//                            complete: function() {
-//                                if($('#fyaQPanel').html() === '')
-//                                    fyaQPanel(0);
-//                            }
-//                        });
-//                    }); 
-//                }
-//            }
-//            
-//            function numberWithCommas(x) {
-//                var parts = x.toString().split(".");
-//                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-//                return parts.join(".");
-//            }
-           
+            util.initListTable($('#list'), 'u:d:R_FGEds_Print Export Delivery (xls)');
         </script>
     </body>
 </html>

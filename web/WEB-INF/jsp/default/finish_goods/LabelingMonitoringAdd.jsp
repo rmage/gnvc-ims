@@ -8,20 +8,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Labeling Monitoring &therefore; Create</title>
+        <title>Create &therefore; Labeling Monitoring &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <link href="resources/default/css/style-table.css" rel="stylesheet" type="text/css">
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
-            #list thead td {
-                width: 60px;
-            }
-            #detail td:nth-child(n+5) input:nth-child(2n+1) {
-                width: 25px;
-            }
-            #detail td:nth-child(n+5) input:nth-child(2n) {
-                width: 15px;
-            }
+            #list thead td { width: 60px; }
+            #detail td:nth-child(n+5) input:nth-child(2n+1) { width: 50px; }
+            #detail td:nth-child(n+5) input:nth-child(2n) { width: 15px; }
         </style>
     </head>
     <body>
@@ -43,7 +37,7 @@
                                     <td style="width: 200px;">LM Number</td>
                                     <td><input type="text" id="lmCode" name="lmCode" required="required" /></td>
                                     <td style="width: 200px;">LM Date</td>
-                                    <td><input type="text" id="lmDatePicker" name="lmDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10"" required /></td>
+                                    <td><input type="text" id="lmDatePicker" name="lmDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required /></td>
                                 </tr>
                                 <tr>
                                     <td>OFAL Number</td>
@@ -75,7 +69,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGLabelingMonitoring.htm');" />
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGLabelingMonitoring.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -124,13 +118,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#lmDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#lmDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#lmDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#lmDate", changeYear: true, changeMonth: true});
 
             // BIND | Remove all previous data if keyup in OFAL Code
             $("#ofalCode").bind("keyup", function() {
@@ -153,34 +141,55 @@
                             });
 
                             // DATA | Set item per cartons
-                            $("#itemPerCs").val(json[0][7]);
+//                            $("#itemPerCs").val(json[0][7]);
 
                             $("#detail").html("");
-                            var sAppend = [], cAppend = 0;
+                            $("#ofalCode").data('id', json[0][11]);
+//                            var sAppend = [], cAppend = 0;
                             for (var i = 0; i < json.length; i++) {
-                                var ppc = parseInt($("#itemPerCs").val()) - 1,
-                                        qtyServed = json[i][11].split('.');
-                                sAppend[cAppend++] = '<tr data-id="' + json[i][12] + '">';
-                                sAppend[cAppend++] = '<td>' + json[i][8] + '</td>';
-                                sAppend[cAppend++] = '<td>' + json[i][9] + '</td>';
-                                sAppend[cAppend++] = '<td>' + json[i][10] + '</td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="" size="10" /></td>';
-                                sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" class="qtyServedCs" value="' + (parseInt(qtyServed[0])) + '" data-max="' + qtyServed[0] + '" size="6" readonly><input type="text" id="qtyServedTin" name="qtyServedTin" value="' + parseInt(qtyServed[1]) + '" data-max="' + qtyServed[1] + '" readonly></td>';
-                                sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" class="lmQtyCs" value="0"><input type="text" class="lmQtyTin" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-red-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td id="remainings">0.00</td>';
-                                sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
-                                sAppend[cAppend++] = '<td><input type="text" value="" style="width: 100px;"></td>';
-                                sAppend[cAppend++] = '</tr>';
+                                $('#detail').append('<tr data-ofald="' + json[i][12] + '">' +
+                                        '<td>' + json[i][7] + '</td>' +
+                                        '<td>' + json[i][8] + '</td>' +
+                                        '<td>' + json[i][9] + '</td>' +
+                                        '<td><input class="lmBatch" type="text" value="" size="10" /></td>' +
+                                        '<td class="bg-gray-1"><input type="text" class="qtyServed" value="' + json[i][10] + '" size="6" readonly></td>' +
+                                        '<td class="bg-green-1"><input type="text" class="lmQty" value="0" size="6"></td>' +
+                                        '<td class="bg-yellow-1"><input type="text" class="lmDented" value="0" size="6"></td>' +
+                                        '<td class="bg-red-1"><input type="text" class="lmRusty" value="0" size="6"></td>' +
+                                        '<td class="bg-gray-1"><input type="text" class="lmFlipper" value="0" size="6"></td>' +
+                                        '<td class="bg-green-1"><input type="text" class="lmBulger" value="0" size="6"></td>' +
+                                        '<td class="bg-yellow-1"><input type="text" class="lmSeam" value="0" size="6"></td>' +
+                                        '<td id="remainings">0.00</td>' +
+                                        '<td class="bg-gray-1"><input type="text" class="lmNoCode" value="0" size="6"></td>' +
+                                        '<td class="bg-green-1"><input type="text" class="lmBlurred" value="0" size="6"></td>' +
+                                        '<td class="bg-yellow-1"><input type="text" class="lmLacquor" value="0" size="6"></td>' +
+                                        '<td><input class="lmRemark" type="text" style="width: 100px;"></td>' +
+                                        '</tr>');
+                                /*
+                                 var ppc = parseInt($("#itemPerCs").val()) - 1,
+                                 qtyServed = json[i][11].split('.');
+                                 sAppend[cAppend++] = '<tr data-ofald="' + json[i][12] + '">';
+                                 sAppend[cAppend++] = '<td>' + json[i][8] + '</td>';
+                                 sAppend[cAppend++] = '<td>' + json[i][9] + '</td>';
+                                 sAppend[cAppend++] = '<td>' + json[i][10] + '</td>';
+                                 sAppend[cAppend++] = '<td><input type="text" value="" size="10" /></td>';
+                                 sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" class="qtyServedCs" value="' + (parseInt(qtyServed[0])) + '" data-max="' + qtyServed[0] + '" size="6" readonly><input type="text" id="qtyServedTin" name="qtyServedTin" value="' + parseInt(qtyServed[1]) + '" data-max="' + qtyServed[1] + '" readonly></td>';
+                                 sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" class="lmQtyCs" value="0"><input type="text" class="lmQtyTin" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-red-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td id="remainings">0.00</td>';
+                                 sAppend[cAppend++] = '<td class="bg-gray-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-green-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td class="bg-yellow-1"><input type="text" value="0"><input type="text" value="0" data-max="' + ppc + '"></td>';
+                                 sAppend[cAppend++] = '<td><input type="text" value="" style="width: 100px;"></td>';
+                                 sAppend[cAppend++] = '</tr>';
+                                 */
                             }
-                            $("#detail").append(sAppend.join(''));
-                            bindEvents();
+                            //$("#detail").append(sAppend.join(''));
+//                            bindEvents();
                         }
                     },
                     complete: function() {
@@ -189,103 +198,87 @@
                 });
             });
 
-            function bindEvents() {
-
-                $('#detail tr').each(function() {
-                    // VALIDATE | Quantity maximum and minimum value
-                    $(this).find('td:gt(4):lt(6) input:nth-child(2),td:gt(7):lt(10) input:nth-child(2)')
-                            .bind("blur", function() {
-                                if ($(this).val() < 0 || parseInt($(this).val()) > $(this).data('max')) {
-                                    alert('[Error] Maximum number exceeded!');
-                                    $(this).val(0);
-                                }
-                            });
-
-                    // VALIDATE | Remaining quantity
-                    $(this).find('td:gt(4):lt(6) input').live("blur", function() {
-                        var $td = $(this).parent().parent().find('td:eq(4)'),
-                                ppc = parseInt($("#itemPerCs").val()),
-                                qtyCs = parseInt($td.find('input:nth-child(2n+1)').val()) * ppc,
-                                qtyTin = parseInt($td.find('input:nth-child(2n)').val()),
-                                qtyTotal = qtyCs + qtyTin,
-                                qtyLess = 0;
-
-                        $(this).parent().parent().find('td:gt(4):lt(6)').each(function(i) {
-                            qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
-                        });
-
-                        if (qtyTotal - qtyLess < 0) {
-                            alert('[Error] Maximum number exceeded!');
-                            $(this).val(0).trigger('blur');
-                            return false;
-                        }
-
-                        $(this).parent().parent().find('td:eq(11)').html(tinToCs(qtyTotal - qtyLess, ppc).toFixed(2));
-                    }).trigger('blur');
-                    $(this).find('td:gt(11):lt(3) input').live("blur", function() {
-                        var re = $(this).parent().parent().find('td:eq(11)').html().split('.'),
-                                ppc = parseInt($("#itemPerCs").val()),
-                                qtyCs = parseInt(re[0]) * ppc,
-                                qtyTin = parseInt(re[1]),
-                                qtyTotal = qtyCs + qtyTin,
-                                qtyLess = 0;
-
-                        $(this).parent().parent().find('td:gt(11):lt(3)').each(function(i) {
-                            qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
-                        });
-
-                        if (qtyTotal - qtyLess < 0) {
-                            alert('[Error] Maximum number exceeded!');
-                            $(this).val(0).trigger('blur');
-                        }
-                    });
-                });
-            }
+//            function bindEvents() {
+//                $('#detail tr').each(function() {
+//                    // VALIDATE | Quantity maximum and minimum value
+//                    $(this).find('td:gt(4):lt(6) input:nth-child(2),td:gt(7):lt(10) input:nth-child(2)')
+//                            .bind("blur", function() {
+//                                if ($(this).val() < 0 || parseInt($(this).val()) > $(this).data('max')) {
+//                                    alert('[Error] Maximum number exceeded!');
+//                                    $(this).val(0);
+//                                }
+//                            });
+//
+//                    // VALIDATE | Remaining quantity
+//                    $(this).find('td:gt(4):lt(6) input').live("blur", function() {
+//                        var $td = $(this).parent().parent().find('td:eq(4)'),
+//                                ppc = parseInt($("#itemPerCs").val()),
+//                                qtyCs = parseInt($td.find('input:nth-child(2n+1)').val()) * ppc,
+//                                qtyTin = parseInt($td.find('input:nth-child(2n)').val()),
+//                                qtyTotal = qtyCs + qtyTin,
+//                                qtyLess = 0;
+//
+//                        $(this).parent().parent().find('td:gt(4):lt(6)').each(function(i) {
+//                            qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
+//                        });
+//
+//                        if (qtyTotal - qtyLess < 0) {
+//                            alert('[Error] Maximum number exceeded!');
+//                            $(this).val(0).trigger('blur');
+//                            return false;
+//                        }
+//
+//                        $(this).parent().parent().find('td:eq(11)').html(tinToCs(qtyTotal - qtyLess, ppc).toFixed(2));
+//                    }).trigger('blur');
+//                    $(this).find('td:gt(11):lt(3) input').live("blur", function() {
+//                        var re = $(this).parent().parent().find('td:eq(11)').html().split('.'),
+//                                ppc = parseInt($("#itemPerCs").val()),
+//                                qtyCs = parseInt(re[0]) * ppc,
+//                                qtyTin = parseInt(re[1]),
+//                                qtyTotal = qtyCs + qtyTin,
+//                                qtyLess = 0;
+//
+//                        $(this).parent().parent().find('td:gt(11):lt(3)').each(function(i) {
+//                            qtyLess = qtyLess + (parseInt($(this).find('input:eq(0)').val()) * ppc) + parseInt($(this).find('input:eq(1)').val());
+//                        });
+//
+//                        if (qtyTotal - qtyLess < 0) {
+//                            alert('[Error] Maximum number exceeded!');
+//                            $(this).val(0).trigger('blur');
+//                        }
+//                    });
+//                });
+//            }
 
             // BIND | Save function
             $("#fLabeling").bind("submit", function() {
-                var data = "",
-                        lmQty = 0.00,
-                        m = parseFloat($("#itemPerCs").val());
+                var data = '', header = $('#lmCode').val() + ':s:' + $('#ofalCode').data('id') + ':s:' + $('#lmDate').val() + ':s:' + eachSum('lmQty') + ':s:' + eachSum('lmFlipper') + ':s:0:s:' + eachSum('lmBulger') + ':s:0:s:' + eachSum('lmSeam') + ':s:0:s:';
 
-                // DATA | Prepare total quantity data
-                $(".lmQtyCs").each(function() {
-                    lmQty = lmQty + (parseInt($(this).val()) * parseInt(m)) + parseInt($(this).next().val());
+                $('#detail tr').each(function() {
+                    data = data + header + $(this).data('ofald') + ':s:' + $(this).find('.lmBatch').val() + ':s:' + $(this).find('.qtyServed').val() + ':s:' + $(this).find('.lmQty').val() + ':s:' + $(this).find('.lmDented').val() + ':s:' + $(this).find('.lmRusty').val() + ':s:' + $(this).find('.lmFlipper').val() + ':s:' + $(this).find('.lmBulger').val() + ':s:' + $(this).find('.lmSeam').val() + ':s:' + $(this).find('#remainings').html() + ':s:' + $(this).find('.lmNoCode').val() + ':s:' + $(this).find('.lmBlurred').val() + ':s:' + $(this).find('.lmLacquor').val() + ':s:' + $(this).find('.lmRemark').val() + ':s::se:';
                 });
 
-
-                $("#detail tr").each(function() {
-                    var $i = $(this).find('input');
-                    data = data + $("#lmCode").val() + "^" + $("#ofalCode").val() + "^" + $("#lmDate").val() + "^" + tinToCs(lmQty, m) + "^" +
-                            $(this).data("id") + "^" +
-                            $i[0].value + "^" +
-                            (parseFloat($i[1].value) + (parseInt($i[2].value) / 100)) + "^" +
-                            (parseFloat($i[3].value) + (parseInt($i[4].value) / 100)) + "^" +
-                            (parseFloat($i[5].value) + (parseInt($i[6].value) / 100)) + "^" +
-                            (parseFloat($i[7].value) + (parseInt($i[8].value) / 100)) + "^" +
-                            (parseFloat($i[9].value) + (parseInt($i[10].value) / 100)) + "^" +
-                            (parseFloat($i[11].value) + (parseInt($i[12].value) / 100)) + "^" +
-                            (parseFloat($i[13].value) + (parseInt($i[14].value) / 100)) + "^" +
-                            $(this).find("td:eq(11)").html() + "^" +
-                            (parseFloat($i[15].value) + (parseInt($i[16].value) / 100)) + "^" +
-                            (parseFloat($i[17].value) + (parseInt($i[18].value) / 100)) + "^" +
-                            (parseFloat($i[19].value) + (parseInt($i[20].value) / 100)) + "^" +
-                            $i[21].value + "^@";
-                });
-//                console.log(data);
-                if (data !== "") {
-                    if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data);
-                    }
+                if (data !== '' && confirm('Save Labelling Monitoring #' + $('#lmCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
             });
 
-            // FUNCTION | Tin to Cs
-            function tinToCs(v, m) {
-                var cs = Math.floor(v / m);
-                return cs + ((v % m) / 100);
+            // UPDATE | function
+            function eachSum(className) {
+                var sum = 0;
+                $('.' + className).each(function() {
+                    sum = sum + parseFloat($(this).val());
+                });
+                return sum;
             }
 
         </script>

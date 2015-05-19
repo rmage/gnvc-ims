@@ -1,14 +1,8 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-<%    Date cDate = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
-%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Create &therefore; Order Fill Authority to Label &therefore; IMS</title>
+        <title>Update &therefore; Order Fill Authority to Label &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <link href="resources/default/css/style-table.css" rel="stylesheet" type="text/css">
         <style>
@@ -17,7 +11,7 @@
             .ui-datepicker { display: none; }
         </style>
     </head>
-    <body onload="input.resetForm(this);">
+    <body onload="updateTotal();">
         <div class="container">
             <!-- include file header HERE -->
             <%@include file="../../header.jsp" %>
@@ -27,74 +21,75 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="#" id="fOfal" name="fOfal" method="post">
-                        <input type="hidden" id="ofalDate" name="ofalDate" value="<%=sdf.format(cDate)%>" />
-                        <input type="hidden" id="itemCode" name="itemCode">
+                        <input id="ofalId" name="ofalId" type="hidden" value="${model.ofals[0].ofal_id}">
+                        <input type="hidden" id="ofalDate" name="ofalDate" value="${model.ofals[0].ofal_date}">
+                        <input type="hidden" id="itemCode" name="itemCode" value="${model.ofals[0].item_code}">
                         <table class="collapse tblForm row-select">
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">Reference Number</td>
-                                    <td><input id="borReference" id="borReference" type="text" class="bor-info" size="30" tabindex="1" onblur="input.checkDataValid(this);" required></td>
+                                    <td><input id="borReference" id="borReference" type="text" class="bor-info" size="30" tabindex="1" value="${model.ofals[0].bor_reference}" readonly></td>
                                     <td style="width: 200px;">OFAL Number</td>
-                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" tabindex="2" required="required"></td>
+                                    <td><input type="text" id="ofalCode" name="ofalCode" size="10" tabindex="2" value="${model.ofals[0].ofal_code}" required></td>
                                 </tr>
                                 <tr>
                                     <td>Bor Number</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" value="${model.ofals[0].bor_number}" readonly></td>
                                     <td>OFAL Date</td>
-                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" tabindex="3" required="required"></td>
+                                    <td><input type="text" class="" id="ofalDatePicker" name="ofalDatePicker" value="" size="10" tabindex="3" required></td>
                                 </tr>
                                 <tr>
                                     <td>Buyer</td>
-                                    <td><input type="text" class="bor-info" size="50" readonly></td>
+                                    <td><input type="text" class="bor-info" size="50" value="${model.ofals[0].buyer_name}" readonly></td>
                                     <td><b>Label Declaration</b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td>Brand</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" value="${model.ofals[0].brand_name}" readonly></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="lNw" tabindex="4"></td>
+                                    <td><input type="text" id="lNw" tabindex="4" value="${model.ofals[0].ofal_lnw}"></td>
                                 </tr>
                                 <tr>
                                     <td>Destination Port</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" value="${model.ofals[0].bor_destination}" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="lDw" tabindex="5"></td>
+                                    <td><input type="text" id="lDw" tabindex="5" value="${model.ofals[0].ofal_ldw}"></td>
                                 </tr>
                                 <tr>
                                     <td>Quantity</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" value="${model.ofals[0].bor_case}" readonly></td>
                                     <td>BBE</td>
-                                    <td><input type="text" id="lBbe" tabindex="6"></td>
+                                    <td><input type="text" id="lBbe" tabindex="6" value="${model.ofals[0].ofal_lbbe}"></td>
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
-                                    <td><input type="text" class="bor-info" readonly></td>
+                                    <td><input type="text" class="bor-info" value="${model.ofals[0].pack_size}" readonly></td>
                                     <td><b>Actual Specification</b></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td>Can Code</td>
-                                    <td><input type="text" id="canCode" name="canCode" size="50" tabindex="7"></td>
+                                    <td><input type="text" id="canCode" name="canCode" size="50" tabindex="7" value="${model.ofals[0].ofal_cancode}"></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="aNw" readonly></td>
+                                    <td><input type="text" id="aNw" value="${model.ofals[0].bor_anw}" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Max Code</td>
-                                    <td><input type="text" id="vMaxCOde" name="vMaxCOde" class="bor-info" size="10" readonly></td>
+                                    <td><input type="text" id="vMaxCode" name="vMaxCode" class="bor-info" size="10" value="${model.ofals[0].bor_maxcancode}" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="aDw" readonly></td>
+                                    <td><input type="text" id="aDw" value="${model.ofals[0].bor_adw}" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Shipment Schedule</td>
-                                    <td><input type="text" id="shipment" name="shipment" tabindex="8"></td>
+                                    <td><input type="text" id="shipment" name="shipment" tabindex="8" value="${model.ofals[0].ofal_shipment}"></td>
                                     <td>Flakes</td>
-                                    <td><input type="text" id="aFlk" name="aFlk" readonly></td>
+                                    <td><input type="text" id="aFlk" name="aFlk" value="${model.ofals[0].bor_flakes}" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Special Instruction</td>
-                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="9"></td>
+                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="9" value="${model.ofals[0].ofal_remarks}"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -135,9 +130,28 @@
                                 <td>Net Weight</td>
                                 <td>Drained Weight</td>
                                 <td>Flakes</td>
+
                             </tr>
                         </thead>
-                        <tbody id="detail"></tbody>
+                        <tbody id="detail">
+                            <c:forEach items="${model.ofals}" var="x" varStatus="vs">
+                                <tr data-id="${x.ofald_id}" data-pts="${x.pts_id}">
+                                    <td>${vss.index + 1}</td>
+                                    <td>${x.pts_code}</td>
+                                    <td>${x.pts_can_code}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="bg-gray-1"><input type="text" class="qtyCs" value="${x.ofal_qty}" data-max="${x.pts_total_qty}"></td>
+                                    <td class="bg-green-1">${x.pts_coenw}</td>
+                                    <td class="bg-yellow-1">${x.pts_coedw}</td>
+                                    <td class="bg-red-1">${x.pts_coeflk}</td>
+                                    <td>${x.loca_name}</td>
+                                    <td><input type="text" class="remarks" value="${x.ofald_remarks}"></td>
+                                    <td><input type="button" value="Remove" class="ui-button ui-widget ui-state-default ui-corner-all" role="button" aria-disabled="false" style="font-size: smaller;" onclick="if (confirm('Continue to remove this data?')) { removeRow(this); }"></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="13" class="right">
@@ -160,15 +174,12 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#ofalDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#ofalDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#ofalDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ofalDate", changeYear: true, changeMonth: true})
+                    .val(gnvs.util.toViewDate($('#ofalDate').val()));
+
             // BIND | Add PTS button
-            $("#btnAdd").bind("click", function () {
+            var idx = -1;
+            $("#btnAdd").bind("click", function() {
                 // VALIDATE | no same pts number in list
                 var ptsCode = $("#ptsCode").val();
                 if ($("#detail tr td:nth-child(2):containsCI('" + ptsCode + "')").size() > 0) {
@@ -189,9 +200,9 @@
                         url: "?", type: "post",
                         data: {action: "getPts", pts: ptsCode, item: $('#itemCode').val()},
                         dataType: "json",
-                        success: function (json) {
+                        success: function(json) {
                             if (json.length > 0) {
-                                $("#detail").append('<tr data-id="' + json[0][0] + '">' +
+                                $("#detail").append('<tr data-id="' + idx + '" data-pts="' + json[0][0] + '" data-status="C">' +
                                         '<td>' + ($("#detail tr").size() + 1) + '</td>' +
                                         '<td>' + json[0][1] + '</td>' +
                                         '<td>' + json[0][2] + '</td>' +
@@ -210,16 +221,18 @@
 //                                setCanCode();
                                 updateTotal();
                                 $('#ptsCode').focus();
+                                
+                                idx = idx - 1;
                             }
                         },
-                        complete: function () {
+                        complete: function() {
                             $('#load').remove();
                         }
                     });
                 }
             });
             // BIND | Quantity maximum and minimum value
-            $(".qtyCs").live("blur", function () {
+            $(".qtyCs").live("blur", function() {
                 if ($(this).val() > $(this).data('max')) {
                     alert('[Error] Maximum number exceeded!');
                     $(this).val($(this).data('max'));
@@ -227,50 +240,28 @@
 
                 updateTotal();
             });
-            // BIND | Reset form if bor change
-            $("#borReference").bind("keyup", function () {
-                if ($(this).data("reference")) {
-                    $(".bor-info,#aNw,#aDw,#aFlk").each(function (i) {
-                        $(this).val("");
-                    });
-                    $(this).data("reference", '');
-                    $('#itemCode').val('');
-                    $("#detail").html('');
-                    updateTotal();
-                }
-            });
-            // AUTOCOMPLETE | Get bor info
-            $("#borReference").autocomplete({
-                source: "?action=getBor",
-                minLength: 1,
-                select: function (event, ui) {
-                    $(this).data("reference", ui.item[1]);
-                    $(this).attr('data-valid', true);
-                    $(".bor-info,#aNw,#aDw,#aFlk").each(function (i) {
-                        $(this).val(ui.item[i + 3]);
-                    });
-                    $('#itemCode').val(ui.item[101]);
-
+            
+            $("#fOfal").bind("submit", function() {
+                // VALIDATE | minimum one row on detail
+                if ($('#detail tr:visible').length === 0) {
+                    alert('Minimum one Pallet Transfer on Order Fill detail');
                     return false;
                 }
-            }).data('autocomplete')._renderItem = function (ul, item) {
-                return $('<li>')
-                        .data("item", item)
-                        .append('<a><b>' + item[4] + ' | ' + item[2] + '</b><br />Buyer: ' + item[5] + '</a></li>')
-                        .appendTo(ul);
-            };
-            $("#fOfal").bind("submit", function () {
-                var data = '', header = $('#ofalCode').val() + ':s:' + $('#borReference').val() + ':s:' + $('#ofalDate').val() + ':s:' + $('#canCode').val() + ':s:' + $('#lNw').val() + ':s:' + $('#lDw').val() + ':s:' + $('#lBbe').val() + ':s:' + $('#aNw').val() + ':s:' + $('#aDw').val() + ':s:' + $('#aFlk').val() + ':s:' + $('#shipment').val() + ':s:' + $('#remarks').val() + ':s:';
+                
+                var data = '', header = $('#ofalId').val() + ':s:' + $('#ofalCode').val() + ':s:' + $('#borReference').val() + ':s:' + $('#ofalDate').val() + ':s:' + $('#canCode').val() + ':s:' + $('#lNw').val() + ':s:' + $('#lDw').val() + ':s:' + $('#lBbe').val() + ':s:' + $('#aNw').val() + ':s:' + $('#aDw').val() + ':s:' + $('#aFlk').val() + ':s:' + $('#shipment').val() + ':s:' + $('#remarks').val() + ':s:';
 
-                $('#detail tr').each(function () {
+                $('#detail tr[data-status]').each(function() {
                     if ($(this).find('input:eq(0)').val() > 0) {
-                        data = data + header + $(this).data('id') + ':s:' + $(this).find('input:eq(0)').val() + ':s:' + $(this).find('input:eq(1)').val() + ':s::se:';
+                        data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).data('pts') + ':s:' + $(this).find('input:eq(0)').val() + ':s:' + $(this).find('input:eq(1)').val() + ':s::se:';
                     }
                 });
-                
-                if (data !== '' && confirm('Save Order Fill Authority to Label #' + $('#ofalCode').val() + ' ?')) {
+
+                if (confirm('Update Order Fill Authority to Label #' + $('#ofalCode').val() + ' ?')) {
+                    if (data === '') {
+                        data = header + 'X:s:-1:s::se:';
+                    }
                     console.log(data);
-                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function (json) {
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
                         if (json.message === '') {
                             $('#btnCancel').trigger('click');
                         } else {
@@ -283,10 +274,17 @@
             });
             // FUNCTION | remove row
             function removeRow(e) {
-                $(e).parent().parent().remove();
-                $("#detail tr td:nth-child(1)").each(function (i) {
-                    $(this).html(i + 1);
-                });
+                var $tr = $(e).parent().parent();
+                if ($tr.data('id') > 0) {
+                    $tr.attr('data-status', 'D').hide();
+                } else {
+                    $tr.remove();
+                }
+                
+                gnvs.util.reNumbering($('#detail'), 1);
+//                $("#detail tr td:nth-child(1)").each(function(i) {
+//                    $(this).html(i + 1);
+//                });
                 updateTotal();
 //                setCanCode();
             }
@@ -309,12 +307,20 @@
             // FUNCTION | to set total
             function updateTotal() {
                 var cs = 0;
-                $('#detail tr td:nth-child(7)').each(function () {
+                $('#detail tr:visible td:nth-child(7)').each(function() {
                     var $i = $(this).find('input:eq(0)');
                     cs = cs + parseFloat($i.val());
                 });
                 $('#totalCs').val(cs);
             }
+            
+            // UPDATE | function
+            $('#detail tr input[type="text"]').live('keyup', function() {
+                var $tr = $(this).parent().parent();
+                if ($tr.data('id') > 0) {
+                    $tr.attr('data-status', 'U');
+                }
+            });
 
         </script>
     </body>

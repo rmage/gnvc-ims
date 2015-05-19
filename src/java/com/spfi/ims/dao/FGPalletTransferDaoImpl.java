@@ -37,18 +37,18 @@ public class FGPalletTransferDaoImpl extends AbstractDAO implements FGPalletTran
         }
     }
     
-    public List<Map<String, Object>> getBor(String borCode) {
+    public List<Map<String, Object>> getBor(String borReference) {
         try {
-            return jdbcTemplate.queryForList("EXEC FG_BOOKED_ORDER_DTL_FIND_BY_BOR_CODE ?", borCode);
+            return jdbcTemplate.queryForList("EXEC FG_BOOKED_ORDER_DTL_FIND_BY_BOR_REFERENCE ?", borReference);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
         }
     }
     
-    public List<Map<String, Object>> getItem(int packId) {
+    public List<Map<String, Object>> getItem(String itemCode) {
         try {
-            return jdbcTemplate.queryForList("EXEC FG_ITEM_BY_PACKID ?", packId);
+            return jdbcTemplate.queryForList("EXEC FG_ITEM_BY_ITEMCODE ?", itemCode);
         } catch(Exception e) {
             e.printStackTrace();
             return new ArrayList<Map<String, Object>>();
@@ -75,6 +75,23 @@ public class FGPalletTransferDaoImpl extends AbstractDAO implements FGPalletTran
     
     public void insert(String data, String createdBy) {
         jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_INSERT ?, ?", data, createdBy);
+    }
+    
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getPalletTransfer(int key) {
+        return jdbcTemplate.queryForList("EXEC FG_PALLET_TRANSFER_GET_CONTENT_FOR_UPDATE ?", key);
     }
     
 }

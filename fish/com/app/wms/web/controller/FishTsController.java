@@ -123,7 +123,6 @@ public class FishTsController extends MultiActionController {
     }
     
     // 2015 Update | by FYA
-
     public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
         try {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
@@ -158,7 +157,7 @@ public class FishTsController extends MultiActionController {
             String[] separator = StringHelper.getDataSeparator(data, 2);
 
             data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
-            DaoFactory.createFishReclassificationDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
+            DaoFactory.createFishTsDao().ajaxNUpdate(data, separator[0], separator[1], lu.getUserId());
 
             json.put("message", "");
         } catch (Exception e) {

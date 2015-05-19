@@ -49,4 +49,21 @@ public class FGPalletDispositionDaoImpl extends AbstractDAO implements FGPalletD
         jdbcTemplate.update("EXEC FG_PALLET_DISPOSITION_INSERT ?, ?", data, createdBy);
     }
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_DISPOSITION_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_DISPOSITION_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC FG_PALLET_DISPOSITION_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getPalletDisposition(int key) {
+        return jdbcTemplate.queryForList("EXEC FG_PALLET_DISPOSITION_GET_CONTENT_FOR_UPDATE ?", key);
+    }
+    
 }

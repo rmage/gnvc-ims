@@ -49,4 +49,21 @@ public class FGLabelingMonitoringDaoImpl extends AbstractDAO implements FGLabeli
         jdbcTemplate.update("EXEC FG_LABELING_MONITORING_INSERT ?, ?", data, createdBy);
     }
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_LABELING_MONITORING_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_LABELING_MONITORING_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(int key, String updatedBy) {
+        jdbcTemplate.update("EXEC FG_LABELING_MONITORING_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getLabelingMonitoring(int key) {
+        return jdbcTemplate.queryForList("EXEC FG_LABELING_MONITORING_GET_CONTENT_FOR_UPDATE ?", key);
+    }
+    
 }

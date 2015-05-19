@@ -1,14 +1,8 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-<%    Date cDate = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
-%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Create &therefore; Pallet Transfer &therefore; IMS</title>
+        <title>Update &therefore; Pallet Transfer &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -16,7 +10,7 @@
             .ui-datepicker { display: none; }
         </style>
     </head>
-    <body onload="input.resetForm(this);">
+    <body>
         <div class="container">
             <!-- include file header HERE -->
             <%@include file="../../header.jsp" %>
@@ -26,14 +20,15 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="#" id="fPts" name="fPts" method="post">
-                        <input type="hidden" id="ptsDate" name="ptsDate" value="<%=sdf.format(cDate)%>" />
+                        <input type="hidden" id="ptsId" name="ptsId" value="${model.ptss[0].pts_id}">
+                        <input type="hidden" id="ptsDate" name="ptsDate">
                         <table class="collapse tblForm row-select">
                             <caption>Pallet Transfer &therefore; Header</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">PTS Number</td>
                                     <td>
-                                        <input type="text" id="ptsCode" name="ptsCode" required="required" />
+                                        <input type="text" id="ptsCode" name="ptsCode" value="${model.ptss[0].pts_code}" required>
                                         Status: 
                                         <select id="ptsStatus" name="ptsStatus" required>
                                             <option value="">-</option>
@@ -42,7 +37,7 @@
                                         </select>
                                     </td>
                                     <td style="width: 200px;">PTS Date</td>
-                                    <td><input type="text" id="ptsDatePicker" name="ptsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required="required" /></td>
+                                    <td><input type="text" id="ptsDatePicker" name="ptsDatePicker" size="10" required></td>
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
@@ -50,23 +45,23 @@
                                         <select id="packStyle" name="packStyle"><option value="">-- no pack style --</option></select>
                                     </td>
                                     <td>For Brand</td>
-                                    <td><input type="text" id="forBrand" name="forBrand" size="30"></td>
+                                    <td><input type="text" id="forBrand" name="forBrand" size="30" value="${model.ptss[0].pts_for_brand}"></td>
                                 </tr>
                                 <tr>
                                     <td>Can Code</td>
-                                    <td><input type="text" id="canCode" name="canCode" required="required"></td>
+                                    <td><input type="text" id="canCode" name="canCode" value="${model.ptss[0].pts_can_code}" required></td>
                                     <td>Reff</td>
-                                    <td><input type="text" id="borReference" name="borReference" onblur="input.checkDataValid(this);"></td>
+                                    <td><input type="text" id="borReference" name="borReference" value="${model.ptss[0].bor_reference}" data-valid="true" onblur="input.checkDataValid(this);"></td>
                                 </tr>
                                 <tr>
                                     <td>Item</td>
                                     <td>
-                                        <input id="itemCode" name="itemCode" type="text" onblur="input.checkDataValid(this);" required>
+                                        <input id="itemCode" name="itemCode" type="text" value="${model.ptss[0].item_code}" data-valid="true" onblur="input.checkDataValid(this);" required>
                                     </td>
                                     <td>Location</td>
                                     <td>
                                         <select id="ptsLocation" name="ptsLocation">
-                                            <c:forEach items="${ims.ls}" var="x">
+                                            <c:forEach items="${model.ls}" var="x">
                                                 <option value="${x.loca_id}">${x.loca_code} | ${x.loca_name}</option>
                                             </c:forEach>
                                         </select>
@@ -76,8 +71,8 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave" />
-                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGPalletTransfer.htm');" />
+                                        <input type="submit" value="Save" name="btnSave">
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGPalletTransfer.htm');">
                                     </td>
                                 </tr>
                             </tfoot>
@@ -106,10 +101,33 @@
                                     <td>Remarks</td>
                                 </tr>
                             </thead>
-                            <tbody id="detail"></tbody>
+                            <tbody id="detail">
+                                <c:forEach items="${model.ptss}" var="x" varStatus="vs">
+                                    <tr data-id="${x.ptsd_id}">
+                                        <td>
+                                            <select class="i0" data-value="${x.pts_shift}">
+                                                <option value="DS">Day Shift</option>
+                                                <option value="2ND">Second Shift</option>
+                                                <option value="NS">Night Shift</option>
+                                            </select>
+                                        </td>
+                                        <td><input type="hidden" id="date${vs.index + 1}" class="i1" value="${x.pts_pdate}"><input type="text" id="datePicker${vs.index + 1}" class="i1Picker" size="8" required></td>
+                                        <td><input type="text" class="i2" size="11" value="${x.pts_pprodbatch}"></td>
+                                        <td><input type="text" class="i3" size="11" value="${x.pts_pbasket}"></td>
+                                        <td><input type="text" class="i4" size="5" value="${x.pts_pqty}"></td>
+                                        <td><input type="text" class="i5" size="11" value="${x.pts_coeflk}"></td>
+                                        <td><input type="text" class="i6" size="11" value="${x.pts_coenw}"></td>
+                                        <td><input type="text" class="i7" size="11" value="${x.pts_coedw}"></td>
+                                        <td><input type="text" class="i8" size="11" value="${x.pts_coepw}"></td>
+                                        <td><input type="text" class="i9" size="11" value="${x.pts_qadreleaseto}"></td>
+                                        <td><input type="text" class="i10" size="11" value="${x.pts_qadremarks}"></td>
+                                        <td><input type="button" class="ui-button ui-widget ui-state-default ui-corner-all" value="" style="font-size: smaller;"></td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="12" style="text-align: right;">Quantity (Cs): <input type="text" id="ptsQty" name="ptsQty" value="0.00" readonly="readonly" /></td>
+                                    <td colspan="12" style="text-align: right;">Quantity (Cs): <input type="text" id="ptsQty" name="ptsQty" value="${model.ptss[0].pts_total_qty}" readonly></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -127,7 +145,8 @@
         <script>
 
             //  BIND | Date Picker to pts date
-            $("#ptsDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ptsDate", changeYear: true, changeMonth: true});
+            $('#ptsDate').val('${model.ptss[0].pts_date}');
+            $("#ptsDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ptsDate", changeYear: true, changeMonth: true}).val(gnvs.util.toViewDate('${model.ptss[0].pts_date}'));
 
             //  BIND | Blur on detail quantity to calculate Cs value
             $(".i4").live("blur", function () {
@@ -135,7 +154,7 @@
             });
             function calculateCs() {
                 var cs = 0.00;
-                $(".i4").each(function () {
+                $(".i4:visible").each(function () {
                     if ($(this).val() >= 0) {
                         cs = cs + parseFloat($(this).val());
                     }
@@ -181,26 +200,35 @@
             });
             $(".detailDelete").live("click", function () {
                 if (confirm("Delete selected row?")) {
-                    $(this).parent().parent().remove();
+                    var $tr = $(this).parent().parent();
+
+                    if ($tr.data('id') > 0) {
+                        $tr.attr('data-status', 'D').hide();
+                    } else {
+                        $tr.remove();
+                    }
                     calculateCs();
                 }
             });
 
             //  FORM | Submit action
             $("#fPts").bind("submit", function () {
-                var data = '', header = $('#ptsCode').val() + ':s:' + $('#packStyle').val() + ':s:' + $('#borReference').val() + ':s:' + $('#ptsLocation').val() + ':s:' + $('#itemCode').val() + ':s:' + $('#ptsDate').val() + ':s:' + $('#canCode').val() + ':s:' + $('#forBrand').val() + ':s:' + $('#ptsQty').val() + ':s:' + $('#ptsStatus').val() + ':s:';
+                var data = '', header = $('#ptsId').val() + ':s:' + $('#ptsCode').val() + ':s:' + $('#packStyle').val() + ':s:' + $('#borReference').val() + ':s:' + $('#ptsLocation').val() + ':s:' + $('#itemCode').val() + ':s:' + $('#ptsDate').val() + ':s:' + $('#canCode').val() + ':s:' + $('#forBrand').val() + ':s:' + $('#ptsQty').val() + ':s:' + $('#ptsStatus').val() + ':s:';
 
-                $('#detail tr').each(function () {
-                    var input = '';
+                $('#detail tr[data-status]').each(function () {
+                    var input = $(this).data('status') + ':s:' + $(this).data('id') + ':s:';
                     for (var i = 0; i < 11; i++) {
                         input = input + $(this).find('.i' + i).val() + ':s:';
                     }
                     data = data + header + input + ':se:';
                 });
 
-                if (data !== '' && confirm('Save Pallet Transfer #' + $('#ptsCode').val() + ' ?')) {
+                if (confirm('Update Pallet Transfer #' + $('#ptsCode').val() + ' ?')) {
+                    if (data === '') {
+                        data = header + 'X:s:-1:s::se:';
+                    }
                     console.log(data);
-                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function (json) {
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function (json) {
                         if (json.message === '') {
                             $('#btnCancel').trigger('click');
                         } else {
@@ -208,15 +236,15 @@
                         }
                     });
                 }
-                
+
                 return false;
             });
-//
+
             //  FUNCTION | Add detail input form
-            var counter = 0;
+            var counter = 0, idx = -1;
             function addNewDetail(mode) {
-                var detail = '<tr><td><select class="i0"><option value="DS">Day Shift</option><option value="2ND">Second Shift</option><option value="NS">Night Shift</option></select></td>'
-                        + '<td><input type="hidden" id="date' + counter + '" class="i1" /><input type="text" id="datePicker' + counter + '" class="i1Picker" size="8" /></td><td><input type="text" class="i2" size="11" /></td>'
+                var detail = '<tr data-id="' + idx + '" data-status="C"><td><select class="i0"><option value="DS">Day Shift</option><option value="2ND">Second Shift</option><option value="NS">Night Shift</option></select></td>'
+                        + '<td><input type="hidden" id="date' + counter + '" class="i1" /><input type="text" id="datePicker' + counter + '" class="i1Picker" size="8" required></td><td><input type="text" class="i2" size="11" /></td>'
                         + '<td><input type="text" class="i3" size="11" /></td><td><input type="text" class="i4" size="5" value="0" /></td><td><input type="text" class="i5" size="11" /></td>'
                         + '<td><input type="text" class="i6" size="11" /></td><td><input type="text" class="i7" size="11" /></td><td><input type="text" class="i8" size="11" /></td>'
                         + '<td><input type="text" class="i9" size="11" /></td><td><input type="text" class="i10" size="11" /></td><td><input type="button" class="detailAdd ui-button ui-widget ui-state-default ui-corner-all" value="Add" style="font-size: smaller;" /></td></tr>';
@@ -227,8 +255,41 @@
                 }
 
                 counter = counter + 1;
+                idx = idx - 1;
             }
-            addNewDetail();
+
+            // UPDATE | data value
+            $('#ptsStatus').val('${model.ptss[0].is_hold}');
+            $('#packStyle').val('${model.ptss[0].pack_id}');
+            $('#ptsLocation').val('${model.ptss[0].loca_id}');
+
+            var trLength = $('#detail tr').length;
+            $('#detail tr').each(function (i) {
+                var $shift = $(this).find('.i0');
+                $shift.val($shift.data('value'));
+
+                var $datePicker = $(this).find('.i1Picker');
+                if ($datePicker.prev().val() !== '') {
+                    $datePicker.val(gnvs.util.toViewDate($datePicker.prev().val()))
+                            .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#date" + (i + 1), changeYear: true, changeMonth: true});
+                }
+
+                var $button = $(this).find('.ui-button');
+                if ((i + 1) !== trLength) {
+                    $button.addClass('detailDelete').val('Remove');
+                } else {
+                    $button.addClass('detailAdd').val('Add');
+                }
+            });
+
+            // UPDATE | function
+            $('#detail tr').find('input:not(:button), select').live('click', function () {
+                var $tr = $(this).parent().parent();
+
+                if ($tr.data('id') > 0) {
+                    $tr.attr('data-status', 'U');
+                }
+            });
 
         </script>
     </body>

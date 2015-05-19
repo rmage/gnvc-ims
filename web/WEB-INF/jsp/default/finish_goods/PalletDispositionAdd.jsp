@@ -8,16 +8,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Pallet Disposition &therefore; Create</title>
+        <title>Create &therefore; Pallet Disposition &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
-            .ui-datepicker {
-                display: none;
-            }
+            .ui-datepicker { display: none; }
         </style>
     </head>
-    <body>
+    <body onload="input.resetForm(this);">
         <div class="container">
             <!-- include file header HERE -->
             <%@include file="../../header.jsp" %>
@@ -56,7 +54,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGPalletDisposition.htm');" />
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGPalletDisposition.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -122,7 +120,7 @@
             $("#btnSelect").bind("click", function() {
                 var ptsCode = $('#ptsCode').val();
                 $('tbody#detail').html('');
-                
+
                 // VALIDATE | pallet transfer number is empty
                 if (ptsCode !== '') {
                     $(this).after('<img id="load" src="resources/ui-anim_basic_16x16.gif" />');
@@ -131,15 +129,18 @@
                         data: {action: "getPalletTransfer", key: ptsCode},
                         dataType: "json",
                         success: function(json) {
-                            for (var i = 0; i < json.length; i++) {
-                                $('tbody#detail').append('<tr>' + 
-                                        '<td>' + json[i][1] + '</td>' +
-                                        '<td>' + json[i][2] + '</td>' +
-                                        '<td>' + json[i][3] + '</td>' +
-                                        '<td>' + json[i][4] + '</td>' +
-                                        '<td>' + json[i][5] + '</td>' +
-                                        '<td>' + json[i][6] + '</td>' +
-                                        '</tr>');
+                            if (json.length > 0) {
+                                $('#ptsCode').data('id', json[0][1]);
+                                for (var i = 0; i < json.length; i++) {
+                                    $('tbody#detail').append('<tr>' +
+                                            '<td>' + json[i][2] + '</td>' +
+                                            '<td>' + json[i][3] + '</td>' +
+                                            '<td>' + json[i][4] + '</td>' +
+                                            '<td>' + json[i][5] + '</td>' +
+                                            '<td>' + json[i][6] + '</td>' +
+                                            '<td>' + json[i][7] + '</td>' +
+                                            '</tr>');
+                                }
                             }
                         },
                         complete: function() {
@@ -151,27 +152,28 @@
 
             // BIND | Save function
             $("#fPalletDisposition").bind("submit", function() {
-                // VALIDATE | Pallet has been added
-                if ($("tbody#detail tr").length <= 0) {
-                    alert('[Error] No pallet number added? Try adding one.');
-                    return false;
+                var data = '', header = $('#qaCode').val() + ':s:' + $('#qaDate').val() + ':s:' + $('#ptsCode').data('id') + ':s:' + $('#evaDate').val() + ':s:' + $('#disDate').val() + ':s:' + $('#qaReason').val() + ':s:' + $('#qaRemarks').val() + ':s:';
+
+                if ($('#detail tr').length > 0) {
+                    data = header + ':se:';
                 }
 
-                var data = $('#qaCode').val() + '^' + $('#qaDate').val() + '^' + $('#ptsCode').val() + '^' + $('#evaDate').val() + '^' + 
-                        $('#disDate').val() + '^' + $('#qaReason').val() + '^' + $('#qaRemarks').val() + '^@';
-
-//                console.log(data);
-                if (data !== "") {
-                    if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data);
-                    }
+                if (data !== '' && confirm('Save Pallet Disposition #' + $('#qaCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
             });
-            
+
             // BIND | focus will remove existing selected pallet number
-            $('#ptsCode').bind('focus', function(){
+            $('#ptsCode').bind('focus', function() {
                 $('tbody#detail').html('');
             });
 

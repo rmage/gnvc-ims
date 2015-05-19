@@ -8,16 +8,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Export Delivery &therefore; Create</title>
+        <title>Create &therefore; Export Delivery &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
-            .ui-datepicker {
-                display: none;
-            }
+            .ui-datepicker { display: none; }
         </style>
     </head>
-    <body>
+    <body onload="input.resetForm(this);">
         <div class="container">
             <!-- include file header HERE -->
             <%@include file="../../header.jsp" %>
@@ -89,7 +87,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGExportDelivery.htm');" />
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGExportDelivery.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -122,13 +120,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#edsDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#edsDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#edsDatePicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#edsDate", changeYear: true, changeMonth: true });
 
             // BIND | Remove all previous data if keyup in OFAL Code
             $("#lmrCode").bind("keyup", function() {
@@ -150,14 +142,12 @@
                         if (json.length > 0) {
                             $("#detail").html('');
                             $(".lmr-info").each(function(i) {
-                                $(this).val(json[0][i + 1]);
+                                $(this).val(json[0][i + 2]);
                             });
 
                             var sAppend = [], cAppend = 0;
                             for (var i = 0; i < json.length; i++) {
                                 sAppend[cAppend++] = '<tr><td>';
-                                sAppend[cAppend++] = json[i][6];
-                                sAppend[cAppend++] = '</td><td>';
                                 sAppend[cAppend++] = json[i][7];
                                 sAppend[cAppend++] = '</td><td>';
                                 sAppend[cAppend++] = json[i][8];
@@ -165,9 +155,12 @@
                                 sAppend[cAppend++] = json[i][9];
                                 sAppend[cAppend++] = '</td><td>';
                                 sAppend[cAppend++] = json[i][10];
+                                sAppend[cAppend++] = '</td><td>';
+                                sAppend[cAppend++] = json[i][11];
                                 sAppend[cAppend++] = '</td></tr>';
                             }
                             $("#detail").append(sAppend.join(''));
+                            $("#lmrCode").data('id', json[0][1]);
                         }
                     },
                     complete: function() {
@@ -178,25 +171,43 @@
 
             // BIND | Save function
             $("#fExport").bind("submit", function() {
-                // VALIDATE | LMR has been selected
-                if ($(".lmr-info:eq(1)").val() === '') {
-                    return false;
+                var data = '', header = $('#edsCode').val() + ':s:' + $('#lmrCode').data('id') + ':s:' + $('#edsDate').val() + ':s:' + $('#edsVan').val() + ':s:' + $('#edsPelayaranSeal').val() + ':s:' + $('#edsVessel').val() + ':s:' + $('#edsPlatNo').val() + ':s:' + $('#edsTimeIn').val() + ':s:' + $('#edsTimeOut').val() + ':s:' + $('#edsDriverName').val() + ':s:' + $('#edsCi').val() + ':s:' + $('#edsRemarks').val() + ':s:';
+
+                if ($('#detail tr').length > 0) {
+                    data = header + ':se:';
                 }
 
-                var data = "";
-
-                data = data + $("#edsCode").val() + "^" + $("#lmrCode").val() + "^" + $("#edsDate").val() + "^" + $("#edsVan").val() + "^" +
-                        $("#edsPelayaranSeal").val() + "^" + $("#edsVessel").val() + "^" + $("#edsPlatNo").val() + "^" + $("#edsTimeIn").val() + "^" +
-                        $("#edsTimeOut").val() + "^" + $("#edsDriverName").val() + "^" + $("#edsCi").val() + "^" + $("#edsRemarks").val() + "^@";
-
-//                console.log(data);
-                if (data !== "") {
-                    if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data);
-                    }
+                if (data !== '' && confirm('Save Export Delivery #' + $('#edsCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
+//                // VALIDATE | LMR has been selected
+//                if ($(".lmr-info:eq(1)").val() === '') {
+//                    return false;
+//                }
+//
+//                var data = "";
+//
+//                data = data + $('#edsCode').val() + ':s:' + $('#lmrCode').val() + ':s:' + $('#edsDate').val() + ':s:' + $('#edsVan').val() + ':s:' +
+//                        $('#edsPelayaranSeal').val() + ':s:' + $('#edsVessel').val() + ':s:' + $('#edsPlatNo').val() + ':s:' + $('#edsTimeIn').val() + ':s:' +
+//                        $('#edsTimeOut').val() + ':s:' + $('#edsDriverName').val() + ':s:' + $('#edsCi').val() + ':s:' + $('#edsRemarks').val() + ':s:';
+//
+////                console.log(data);
+//                if (data !== "") {
+//                    if (confirm("Continue to save this document?")) {
+//                        window.location.replace("?action=save&data=" + data);
+//                    }
+//                }
+//
+//                return false;
             });
 
         </script>
