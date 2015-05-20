@@ -318,7 +318,7 @@ public class AssignCanvasserDaoImpl extends AbstractDAO implements Parameterized
     }
     
     public List<Map<String, Object>> getAssignedCanvasser(int id) {
-        return jdbcTemplate.queryForList("SELECT acd.id, acd.prsnumber, p.product_code, p.product_name, prsd.qty, acd.user_id FROM assign_canv_dtl acd INNER JOIN prs_detail prsd ON prsd.prsnumber = acd.prsnumber AND prsd.productcode = acd.productcode INNER JOIN assign_canv ac ON ac.prsnumber = acd.prsnumber LEFT JOIN product p ON p.product_code = acd.productcode WHERE ac.id = ? AND ac.is_active = 'Y'", id);
+        return jdbcTemplate.queryForList("SELECT acd.id, acd.prsnumber, p.product_code, p.product_name, prsd.qty, acd.user_id FROM assign_canv_dtl acd INNER JOIN prs_detail prsd ON prsd.prsnumber = acd.prsnumber AND prsd.productcode = acd.productcode AND prsd.is_active = 'Y' INNER JOIN assign_canv ac ON ac.prsnumber = acd.prsnumber LEFT JOIN product p ON p.product_code = acd.productcode WHERE ac.id = ? AND ac.is_active = 'Y'", id);
     }
     
 }

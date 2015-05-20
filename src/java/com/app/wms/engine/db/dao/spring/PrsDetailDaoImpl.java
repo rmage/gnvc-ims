@@ -165,7 +165,7 @@ public class PrsDetailDaoImpl extends AbstractDAO implements ParameterizedRowMap
             return jdbcTemplate.query(" "
                     + " SELECT id, prsnumber, productcode, productname, "
                     + " qty, uom_name FROM " + getTableName()
-                    + " WHERE prsnumber = ? ORDER BY prsnumber", this, prsnumber);
+                    + " WHERE prsnumber = ? AND is_active = 'Y' ORDER BY prsnumber", this, prsnumber);
         } catch (Exception e) {
             throw new PrsDetailDaoException("Query failed", e);
         }

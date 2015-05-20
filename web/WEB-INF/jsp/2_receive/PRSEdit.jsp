@@ -382,7 +382,7 @@
                             var header = $('#prsId').val() + ':s:' + $('#prsNumber').val() + ':s:' + gnvs.util.toDBDate($('#prsdate').val()) + ':s:' + gnvs.util.toDBDate($('#requestdate').val()) + ':s:' + $('#remarks').val() + ':s:' + $('#departmentName').val() + ':s:';
                             $('#main tbody').find('tr:data(status),tr[data-status]').each(function() {
                                 var detail = $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(2)').data('code') + ':s:' +
-                                        $(this).find('td:eq(2)').html() + ':s:' + $(this).find('td:eq(3)').html() + ':s:' + $(this).find('td:eq(4)').html() + ':s:' +
+                                        $(this).find('td:eq(2)').html() + ':s:' + $(this).find('td:eq(3)').html() + ':s:' + $(this).find('td:eq(4)').html().replace(/,/g, '') + ':s:' +
                                         $(this).find('td:eq(5)').html() + ':s:';
 
                                 data = data + header + detail + ':se:';
