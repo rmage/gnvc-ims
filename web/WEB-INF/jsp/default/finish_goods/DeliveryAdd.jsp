@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Delivery &therefore; Create</title>
+        <title>Create &therefore; Delivery &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -52,7 +52,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGDelivery.htm');" />
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGDelivery.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -106,7 +106,7 @@
             $("#btnAdd").bind("click", function() {
                 var ptsCode = $('#ptsCode').val();
                 if ($('tbody#detail tr td:nth-child(4):containsCI("' + ptsCode + '")').length > 0) {
-                    alert('Pallet Reclassification Number #' + ptsCode + ' is in detail! Duplicate detected.');
+                    alert('Pallet Number #' + ptsCode + ' is in detail! Duplicate detected.');
                     return false;
                 }
 
@@ -119,16 +119,14 @@
                         dataType: "json",
                         success: function(json) {
                             for (var i = 0; i < json.length; i++) {
-                                var x = json[i][1].split('^'),
-                                        qty = json[i][5].split('.');
-                                $('tbody#detail').append('<tr data-ppc="' + parseInt(x[1]) + '" data-item="' + json[i][3] + '">' +
+                                $('tbody#detail').append('<tr data-item="' + json[i][3] + '">' +
                                         '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
-                                        '<td>' + x[0] + '</td>' +
+                                        '<td>' + json[i][1] + '</td>' +
                                         '<td>' + json[i][2] + '</td>' +
-                                        '<td>' + json[i][6] + '</td>' +
+                                        '<td data-id="' + json[i][6] + '">' + json[i][7] + '</td>' +
                                         '<td>' + json[i][4] + '</td>' +
                                         '<td>' + json[i][5] + '</td>' +
-                                        '<td><input type="text" class="cs" value="0" data-max="' + parseInt(qty[0]) + '" size="6"><input type="text" class="tin" value="0" data-max="' + parseInt(qty[1]) + '" size="2"></td>' +
+                                        '<td><input type="text" class="qty" value="0" size="6"></td>' +
                                         '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
                                         '</tr>');
                             }
@@ -156,7 +154,7 @@
                 // VALIDATE | 0 (zero) value in bad quantity
                 if ($('tbody#detail input.cs')
                         .filter(function() {
-                            return parseInt($(this).val()) <= 0 && parseInt($(this).next().val()) <= 0;
+                            return parseFloat($(this).val()) <= 0;
                         }).length > 0) {
                     alert('[Error] 0 (zero) value detected! Please remove or fill quantity greater than 0 (zero).');
                     return false;
@@ -164,42 +162,44 @@
 
                 var data = "";
 
-                var header = $('#drCode').val() + '^' + $('#drDate').val() + '^' + $('#drFrom').val() + '^' + $('#drTo').val() + '^' + $('#drRemarks').val() + '^';
+                var header = $('#drCode').val() + ':s:' + $('#drDate').val() + ':s:' + $('#drFrom').val() + ':s:' + $('#drTo').val() + ':s:' + $('#drRemarks').val() + ':s:';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').html() + '^' +
-                            $(this).data('item') + '^' +
-                            (parseFloat($(this).find('.cs').val()) + (parseInt($(this).find('.tin').val()) / 100)) + '^@';
+                    data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('.qty').val() + ':s::se:';
                 });
 
-//                console.log(data);
-                if (data !== "") {
-                    if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data);
-                    }
+                if (data !== '' && confirm('Save Delivery #' + $('#drCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
             });
 
             // LIVE | validate maximum quantity
-            $('tbody#detail .cs,tbody#detail .tin').live('blur', function() {
-                var ppc = $(this).parent().parent().data('ppc');
-
-                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
-                    if ($(this).hasClass('tin')) {
-                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
-                            $(this).val($(this).data('max'));
-                        } else if (parseInt($(this).val()) > (ppc - 1)) {
-                            $(this).val(ppc - 1);
-                        }
-                    } else {
-                        $(this).val($(this).data('max'));
-                        $(this).next().trigger('blur');
-                        return false;
-                    }
-                }
-            });
+//            $('tbody#detail .cs,tbody#detail .tin').live('blur', function() {
+//                var ppc = $(this).parent().parent().data('ppc');
+//
+//                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
+//                    if ($(this).hasClass('tin')) {
+//                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+//                            $(this).val($(this).data('max'));
+//                        } else if (parseInt($(this).val()) > (ppc - 1)) {
+//                            $(this).val(ppc - 1);
+//                        }
+//                    } else {
+//                        $(this).val($(this).data('max'));
+//                        $(this).next().trigger('blur');
+//                        return false;
+//                    }
+//                }
+//            });
 
         </script>
     </body>

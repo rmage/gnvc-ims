@@ -1,14 +1,8 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-<%    Date cDate = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
-%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Create &therefore; Reclassification &therefore; IMS</title>
+        <title>Update &therefore; Reclassification &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -27,25 +21,25 @@
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
                     <form action="#" id="fReclassification" name="fReclassification" method="post">
-                        <input type="hidden" id="reccDate" name="reccDate" value="<%=sdf.format(cDate)%>" />
+                        <input type="hidden" id="reccDate" name="reccDate">
                         <table class="collapse tblForm row-select">
                             <caption>Reclassification &therefore; Header</caption>
                             <tbody>
                                 <tr>
                                     <td style="width: 200px;">Reclassification Number</td>
-                                    <td><input type="text" id="reccCode" name="reccCode" required="required"></td>
+                                    <td><input type="text" id="reccCode" name="reccCode" value="${model.reccs[0].recc_code}" readonly></td>
                                     <td>Reclassification Date</td>
-                                    <td><input type="text" id="reccDatePicker" name="reccDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required></td>
+                                    <td><input type="text" id="reccDatePicker" name="reccDatePicker" size="10" required></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="reccRemarks" name="reccRemarks" size="50" pattern="[^#\^@]+" title="accept all, except: [#][^][@]" /></td>
+                                    <td colspan="3"><input type="text" id="reccRemarks" name="reccRemarks" size="50" value="${model.reccs[0].recc_remarks}"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave" />
+                                        <input type="submit" value="Update" name="btnSave" />
                                         <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGReclassification.htm');" />
                                     </td>
                                 </tr>
@@ -74,7 +68,21 @@
                                 <td>Action</td>
                             </tr>
                         </thead>
-                        <tbody id="detail"></tbody>
+                        <tbody id="detail">
+                            <c:forEach items="${model.reccs}" var="x" varStatus="vs">
+                                <tr data-item="${x.item_code}" data-id="${x.recc_id}"> 
+                                    <td>${vs.index + 1}</td> 
+                                    <td>${x.pack_style}</td> 
+                                    <td>${x.pack_size}</td> 
+                                    <td data-id="${x.pts_id}">${x.pts_code}</td> 
+                                    <td>${x.item_name}</td> 
+                                    <td><select data-item="${x.to_item_code}"><c:out escapeXml="false" value="${x.x}"/></select></td> 
+                                    <td>${x.sc_cqty}</td> 
+                                    <td><input type="text" class="qty" value="${x.recc_quantity}"></td> 
+                                    <td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="actionDelete(this);"></td> 
+                                </tr>
+                            </c:forEach>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -89,15 +97,13 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#reccDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#reccDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#reccDatePicker")
+                    .val(gnvs.util.toViewDate('${model.reccs[0].recc_date}'))
+                    .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#reccDate", changeYear: true, changeMonth: true});
+            $('#reccDate').val(gnvs.util.toDBDate($('#reccDatePicker').val()));
 
             // BIND | Search PTS button
+            var idx = -1;
             $("#btnAdd").bind("click", function() {
                 // VALIDATE | No same pts number in list
                 var ptsCode = $('#ptsCode').val();
@@ -115,7 +121,7 @@
                         dataType: "json",
                         success: function(json) {
                             for (var i = 0; i < json.length; i++) {
-                                $('tbody#detail').append('<tr data-item="' + json[i][3] + '">' +
+                                $('tbody#detail').append('<tr data-item="' + json[i][3] + '" data-status="C" data-id="' + idx + '">' +
                                         '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
                                         '<td>' + json[i][1] + '</td>' +
                                         '<td>' + json[i][2] + '</td>' +
@@ -124,8 +130,9 @@
                                         '<td><select>' + $("<div/>").html(json[i][5]).text() + '</select>' + '</td>' +
                                         '<td>' + json[i][6] + '</td>' +
                                         '<td><input type="text" class="qty" value="0"></td>' +
-                                        '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
+                                        '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="actionDelete(this);"></td>' +
                                         '</tr>');
+                                idx = idx - 1;
                             }
 
                             if (json.length > 0) {
@@ -159,13 +166,16 @@
 
                 var data = "", header = $('#reccCode').val() + ':s:' + $('#reccDate').val() + ':s:' + $('#reccRemarks').val() + ':s:';
 
-                $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('select').val() + ':s:' + $(this).find('.qty').val() + ':s::se:';
+                $('tbody#detail tr[data-status]').each(function() {
+                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('select').val() + ':s:' + $(this).find('.qty').val() + ':s::se:';
                 });
-                
-                if (data !== '' && confirm('Save Reclassification #' + $('#reccCode').val() + ' ?')) {
+
+                if (confirm('Update Reclassification #' + $('#reccCode').val() + ' ?')) {
+                    if(data === '') {
+                        data = header + 'X:s:-1:s::se:';
+                    }
                     console.log(data);
-                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
                         if (json.message === '') {
                             $('#btnCancel').trigger('click');
                         } else {
@@ -195,6 +205,28 @@
 //                    }
 //                }
 //            });
+
+            // UPDATE | function
+            $('#detail input[type="text"]').bind('keyup', function() {
+                $(this).parent().parent().attr('data-status', 'U');
+            });
+            $('#detail select').bind('change', function() {
+                $(this).parent().parent().attr('data-status', 'U');
+            });
+
+            $('select[data-item]').each(function() {
+                $(this).val($(this).data('item'));
+            });
+            
+            function actionDelete(el) {
+                var $tr = $(el).parent().parent();
+                if ($tr.data('id') > 0) {
+                    $tr.attr('data-status', 'D').hide();
+                } else {
+                    $tr.remove();
+                }
+                gnvs.util.reNumbering($('#detail'), 1);
+            }
 
         </script>
     </body>

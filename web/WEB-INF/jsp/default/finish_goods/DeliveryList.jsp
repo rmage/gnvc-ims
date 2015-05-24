@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Delivery</title>
+        <title>Delivery &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -43,7 +43,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="dr_code">Delivery Code</td>
                                 <td column="dr_date">Delivery Date</td>
                                 <td>From</td>
@@ -67,7 +67,7 @@
         <!-- javascript block HERE -->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_Delivery Report (xls)');
+            util.initListTable($('#list'), 'u:d:R_Delivery Report (xls)');
         </script>
     </body>
 </html>

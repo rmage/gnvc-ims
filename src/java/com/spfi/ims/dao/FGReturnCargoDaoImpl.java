@@ -49,4 +49,21 @@ public class FGReturnCargoDaoImpl extends AbstractDAO implements FGReturnCargoDa
         jdbcTemplate.update("EXEC FG_RETURN_CARGO_INSERT ?, ?", data, createdBy);
     }
     
+    // 2015 Update | by FYA
+    public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_RETURN_CARGO_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC FG_RETURN_CARGO_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+
+    public void delete(String key, String updatedBy) {
+        jdbcTemplate.update("EXEC FG_RETURN_CARGO_DELETE ?, ?", key, updatedBy);
+    }
+
+    public List<Map<String, Object>> getReturnCargo(String key) {
+        return jdbcTemplate.queryForList("EXEC FG_RETURN_CARGO_GET_CONTENT_FOR_UPDATE ?", key);
+    }
+    
 }

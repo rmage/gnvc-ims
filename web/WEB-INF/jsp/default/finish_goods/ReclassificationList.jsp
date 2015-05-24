@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Reclassification</title>
+        <title>Reclassification &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -43,7 +43,7 @@
                         <thead>
                             <tr>
                                 <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
+                                <td style="width: 60px">Action</td>
                                 <td column="recc_code">Reclassification Code</td>
                                 <td column="recc_date">Reclassification Date</td>
                                 <td>Remarks</td>
@@ -65,7 +65,7 @@
         <!-- javascript block HERE -->
         <script>
             util.initSearchForm($('#search'));
-            util.initListTable($('#list'), 'R_Reclassification (xls)');
+            util.initListTable($('#list'), 'u:d:R_Reclassification (xls)');
         </script>
     </body>
 </html>

@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS &therefore; Return Cargo &therefore; Create</title>
+        <title>Create &therefore; Return Cargo &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -62,7 +62,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="submit" value="Save" name="btnSave" />
-                                        <input type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGReturnCargo.htm');" />
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGReturnCargo.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -120,20 +120,19 @@
                             $('tbody#detail').html('');
                             if (json.length > 0) {
                                 // HEADER | value
-                                $('#edsCode').val(json[0][1]);
+                                $('#edsCode').val(json[0][1]).data('id', json[0][103]);
                                 $('#rrFrom').val(json[0][2]);
 
                                 for (var i = 0; i < json.length; i++) {
-                                    var qtyReturn = json[i][7].split('.');
-                                    $('tbody#detail').append('<tr data-item="' + json[i][101] + '" data-ppc="' + json[i][102] + '">' +
+                                    $('tbody#detail').append('<tr data-item="' + json[i][101] + '">' +
                                             '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
                                             '<td>' + json[i][3] + '</td>' +
                                             '<td>' + json[i][4] + '</td>' +
-                                            '<td>' + json[i][5] + '</td>' +
+                                            '<td data-id="' + json[i][102] + '">' + json[i][5] + '</td>' +
                                             '<td>' + json[i][6] + '</td>' +
                                             '<td>' + json[i][7] + '</td>' +
-                                            '<td><input type="text" class="cs" value="0" size="6" data-max="' + parseInt(qtyReturn[0]) + '"><input type="text" class="tin" value="0" size="2" data-max="' + parseInt(qtyReturn[1]) + '"></td>' +
-                                            '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
+                                            '<td><input type="text" class="qty" value="0" size="6"></td>' +
+                                            '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="actionDelete(this);"></td>' +
                                             '</tr>');
                                 }
                             }
@@ -154,52 +153,57 @@
                 }
 
                 // VALIDATE | 0 (zero) value in quantity
-                if ($('tbody#detail input.cs')
+                if ($('tbody#detail input[type="text"].qty')
                         .filter(function() {
-                            return parseInt($(this).val()) <= 0 && parseInt($(this).next().val()) <= 0;
+                            return parseFloat($(this).val()) <= 0;
                         }).length > 0) {
                     alert('[Error] 0 (zero) value detected! Please remove or fill quantity greater than 0 (zero).');
                     return false;
                 }
 
-                var data = "";
-
-                var header = $('#rrCode').val() + '^' + $('#rrDate').val() + '^' + $('#edsCode').val() + '^' + $('#rrFrom').val() + '^' + $('#rrRemarks').val() + '^' + $('#isReplace').val() + '^';
+                var data = "", header = $('#rrCode').val() + ':s:' + $('#rrDate').val() + ':s:' + $('#edsCode').data('id') + ':s:' + $('#rrFrom').val() + ':s:' + $('#rrRemarks').val() + ':s:' + $('#isReplace').val() + ':s:';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').html() + '^' + 
-                            $(this).data('item') + '^' + 
-                            (parseFloat($(this).find('.cs').val()) + (parseInt($(this).find('.tin').val()) / 100)) + '^@';
+                    data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('.qty').val() + ':s::se:';
                 });
 
-//                console.log(data);
-                if (data !== "") {
-                    if (confirm("Continue to save this document?")) {
-                        window.location.replace("?action=save&data=" + data);
-                    }
+                if (data !== '' && confirm('Save Return Cargo #' + $('#rrCode').val() + ' ?')) {
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
                 }
 
                 return false;
             });
 
-            // LIVE | validate maximum quantity
-            $('tbody#detail tr input').live('blur', function() {
-                var ppc = $(this).parent().parent().data('ppc');
-                
-                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
-                    if ($(this).hasClass('tin')) {
-                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
-                            $(this).val($(this).data('max'));
-                        } else if (parseInt($(this).val()) > (ppc - 1)) {
-                            $(this).val(ppc - 1);
-                        }
-                    } else {
-                        $(this).val($(this).data('max'));
-                        $(this).next().trigger('blur');
-                        return false;
-                    }
-                }
-            });
+//            // LIVE | validate maximum quantity
+//            $('tbody#detail tr input').live('blur', function() {
+//                var ppc = $(this).parent().parent().data('ppc');
+//                
+//                if ($(this).val() < 0 || parseInt($(this).val()) >= parseInt($(this).data('max'))) {
+//                    if ($(this).hasClass('tin')) {
+//                        if (parseInt($(this).prev().val()) === $(this).prev().data('max')) {
+//                            $(this).val($(this).data('max'));
+//                        } else if (parseInt($(this).val()) > (ppc - 1)) {
+//                            $(this).val(ppc - 1);
+//                        }
+//                    } else {
+//                        $(this).val($(this).data('max'));
+//                        $(this).next().trigger('blur');
+//                        return false;
+//                    }
+//                }
+//            });
+
+            function actionDelete(el) {
+                el.parentNode.parentNode.remove();
+                gnvs.util.reNumbering($('#detail'), 1);
+            }
 
         </script>
     </body>

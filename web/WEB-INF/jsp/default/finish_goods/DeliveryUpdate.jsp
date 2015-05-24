@@ -1,14 +1,8 @@
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-<%    Date cDate = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat sdfPicker = new SimpleDateFormat("dd/MM/yyyy");
-%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Create &therefore; Reclassification &therefore; IMS</title>
+        <title>Update &therefore; Delivery &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -26,38 +20,44 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="#" id="fReclassification" name="fReclassification" method="post">
-                        <input type="hidden" id="reccDate" name="reccDate" value="<%=sdf.format(cDate)%>" />
+                    <form action="#" id="fDelivery" name="fDelivery" method="post">
+                        <input type="hidden" id="drDate" name="drDate">
                         <table class="collapse tblForm row-select">
-                            <caption>Reclassification &therefore; Header</caption>
+                            <caption>Delivery &therefore; Header</caption>
                             <tbody>
                                 <tr>
-                                    <td style="width: 200px;">Reclassification Number</td>
-                                    <td><input type="text" id="reccCode" name="reccCode" required="required"></td>
-                                    <td>Reclassification Date</td>
-                                    <td><input type="text" id="reccDatePicker" name="reccDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required></td>
+                                    <td style="width: 200px;">Delivery Number</td>
+                                    <td><input type="text" id="drCode" name="drCode" value="${model.ds[0].dr_code}" readonly></td>
+                                    <td>Delivery Date</td>
+                                    <td><input type="text" id="drDatePicker" name="drDatePicker" size="10" required></td>
+                                </tr>
+                                <tr>
+                                    <td>From</td>
+                                    <td><input type="text" id="drFrom" name="drFrom" size="50" value="${model.ds[0].dr_from}"></td>
+                                    <td>To</td>
+                                    <td><input type="text" id="drTo" name="drTo" size="50" value="${model.ds[0].dr_to}"></td>
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="reccRemarks" name="reccRemarks" size="50" pattern="[^#\^@]+" title="accept all, except: [#][^][@]" /></td>
+                                    <td colspan="3"><input type="text" id="drRemarks" name="drRemarks" size="50" value="${model.ds[0].dr_remarks}"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave" />
-                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGReclassification.htm');" />
+                                        <input type="submit" value="Update" name="btnSave" />
+                                        <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGDelivery.htm');" />
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </form>
                     <table class="collapse tblForm row-select" id="list">
-                        <caption>Reclassification &therefore; Detail</caption>
+                        <caption>Delivery &therefore; Detail</caption>
                         <thead>
                             <tr>
                                 <th>Pallet Number</th>
-                                <th colspan="8">
+                                <th colspan="7">
                                     <input type="text" id="ptsCode" name="ptsCode">
                                     <input type="button" id="btnAdd" name="btnAdd" value="Add Item">
                                 </th>
@@ -67,14 +67,26 @@
                                 <td>Pack Style</td>
                                 <td>Pack Size</td>
                                 <td>Pallet Number</td>
-                                <td>From Item</td>
-                                <td>To Item</td>
+                                <td>Item Name</td>
                                 <td>Quantity</td>
-                                <td>Reclassification Quantity</td>
+                                <td>Delivery Quantity</td>
                                 <td>Action</td>
                             </tr>
                         </thead>
-                        <tbody id="detail"></tbody>
+                        <tbody id="detail">
+                            <c:forEach items="${model.ds}" var="x" varStatus="vs">
+                                <tr data-item="${x.item_code}" data-id="${x.dr_id}">
+                                    <td>${vs.index + 1}</td>
+                                    <td>${x.pack_style}</td>
+                                    <td>${x.pack_size}</td>
+                                    <td data-id="${x.pts_id}">${x.pts_code}</td>
+                                    <td>${x.item_name}</td>
+                                    <td>${x.sc_cqty}</td>
+                                    <td><input type="text" class="qty" value="${x.dr_qty}" size="6"></td>
+                                    <td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="actionDelete(this);"></td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -89,20 +101,16 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#reccDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#reccDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#drDatePicker").val(gnvs.util.toViewDate('${model.ds[0].dr_date}'))
+                    .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#drDate", changeYear: true, changeMonth: true});
+            $('#drDate').val(gnvs.util.toDBDate($('#drDatePicker').val()));
 
             // BIND | Search PTS button
+            var idx = -1;
             $("#btnAdd").bind("click", function() {
-                // VALIDATE | No same pts number in list
                 var ptsCode = $('#ptsCode').val();
                 if ($('tbody#detail tr td:nth-child(4):containsCI("' + ptsCode + '")').length > 0) {
-                    alert('Pallet Reclassification Number #' + ptsCode + ' is in detail! Duplicate detected.');
+                    alert('Pallet Number #' + ptsCode + ' is in detail! Duplicate detected.');
                     return false;
                 }
 
@@ -115,17 +123,17 @@
                         dataType: "json",
                         success: function(json) {
                             for (var i = 0; i < json.length; i++) {
-                                $('tbody#detail').append('<tr data-item="' + json[i][3] + '">' +
+                                $('tbody#detail').append('<tr data-item="' + json[i][3] + '" data-status="C" data-id="' + idx + '">' +
                                         '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
                                         '<td>' + json[i][1] + '</td>' +
                                         '<td>' + json[i][2] + '</td>' +
-                                        '<td data-id="' + json[i][101] + '">' + json[i][100] + '</td>' +
+                                        '<td data-id="' + json[i][6] + '">' + json[i][7] + '</td>' +
                                         '<td>' + json[i][4] + '</td>' +
-                                        '<td><select>' + $("<div/>").html(json[i][5]).text() + '</select>' + '</td>' +
-                                        '<td>' + json[i][6] + '</td>' +
-                                        '<td><input type="text" class="qty" value="0"></td>' +
-                                        '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
+                                        '<td>' + json[i][5] + '</td>' +
+                                        '<td><input type="text" class="qty" value="0" size="6"></td>' +
+                                        '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="actionDelete(this);"></td>' +
                                         '</tr>');
+                                idx = idx - 1;
                             }
 
                             if (json.length > 0) {
@@ -133,7 +141,7 @@
                             }
                         },
                         complete: function() {
-                            $('#load').remove();
+                            $('img#load').remove();
                             $('#ptsCode').focus();
                         }
                     });
@@ -141,7 +149,7 @@
             });
 
             // BIND | Save function
-            $("#fReclassification").bind("submit", function() {
+            $("#fDelivery").bind("submit", function() {
                 // VALIDATE | Pallet has been added
                 if ($("tbody#detail tr").length <= 0) {
                     alert('[Error] No pallet number added? Try adding one.');
@@ -149,7 +157,7 @@
                 }
 
                 // VALIDATE | 0 (zero) value in bad quantity
-                if ($('tbody#detail input.qty')
+                if ($('tbody#detail input.cs')
                         .filter(function() {
                             return parseFloat($(this).val()) <= 0;
                         }).length > 0) {
@@ -157,15 +165,20 @@
                     return false;
                 }
 
-                var data = "", header = $('#reccCode').val() + ':s:' + $('#reccDate').val() + ':s:' + $('#reccRemarks').val() + ':s:';
+                var data = "";
 
-                $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('select').val() + ':s:' + $(this).find('.qty').val() + ':s::se:';
+                var header = $('#drCode').val() + ':s:' + $('#drDate').val() + ':s:' + $('#drFrom').val() + ':s:' + $('#drTo').val() + ':s:' + $('#drRemarks').val() + ':s:';
+
+                $('tbody#detail tr[data-status]').each(function() {
+                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('.qty').val() + ':s::se:';
                 });
-                
-                if (data !== '' && confirm('Save Reclassification #' + $('#reccCode').val() + ' ?')) {
+
+                if (confirm('Update Delivery #' + $('#drCode').val() + ' ?')) {
+                    if (data === '') {
+                        data = header + 'X:s:-1:s::se:';
+                    }
                     console.log(data);
-                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                    gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
                         if (json.message === '') {
                             $('#btnCancel').trigger('click');
                         } else {
@@ -177,7 +190,7 @@
                 return false;
             });
 
-//            // LIVE | validate maximum quantity
+            // LIVE | validate maximum quantity
 //            $('tbody#detail .cs,tbody#detail .tin').live('blur', function() {
 //                var ppc = $(this).parent().parent().data('ppc');
 //
@@ -195,6 +208,26 @@
 //                    }
 //                }
 //            });
+
+            // UPDATE | function
+            $('#detail tr input[type="text"]').live('keyup', function() {
+                var $tr = $(this).parent().parent();
+
+                if ($tr.data('id') > 0) {
+                    $tr.attr('data-status', 'U');
+                }
+            });
+
+            function actionDelete(el) {
+                var $tr = $(el).parent().parent();
+                if ($tr.data('id') < 0) {
+                    $tr.remove();
+                } else {
+                    $tr.attr('data-status', 'D').hide();
+                }
+
+                gnvs.util.reNumbering($('#detail'), 1);
+            }
 
         </script>
     </body>
