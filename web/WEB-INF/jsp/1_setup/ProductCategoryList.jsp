@@ -25,7 +25,7 @@
                                     <td><input type="text" name="category_code" value=""/></td>
 
                                     <td>Category Name</td>
-                                    <td><input type="text" name="category_name value="" /></td>
+                                    <td><input type="text" name="category_name" value="" /></td>
                                     <td colspan="2">
                                     </td>
                                 </tr>

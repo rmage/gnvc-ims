@@ -28,7 +28,7 @@
                                 <tr>
                                     <td style="width: 200px;">PTS Number</td>
                                     <td>
-                                        <input type="text" id="ptsCode" name="ptsCode" value="${model.ptss[0].pts_code}" required>
+                                        <input type="text" id="ptsCode" name="ptsCode" value="${model.ptss[0].pts_code}" readonly>
                                         Status: 
                                         <select id="ptsStatus" name="ptsStatus" required>
                                             <option value="">-</option>
@@ -56,7 +56,7 @@
                                 <tr>
                                     <td>Item</td>
                                     <td>
-                                        <input id="itemCode" name="itemCode" type="text" value="${model.ptss[0].item_code}" data-valid="true" onblur="input.checkDataValid(this);" required>
+                                        <input id="itemCode" name="itemCode" type="text" value="${model.ptss[0].item_code}" data-valid="true" onblur="input.checkDataValid(this);" readonly>
                                     </td>
                                     <td>Location</td>
                                     <td>
@@ -71,7 +71,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave">
+                                        <input type="submit" value="Update" name="btnSave">
                                         <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGPalletTransfer.htm');">
                                     </td>
                                 </tr>
@@ -163,20 +163,20 @@
             }
 
             //  AUTOCOMPLETE | Item
-            $("#itemCode").autocomplete({
-                source: "?action=getItem",
-                minLength: 1,
-                select: function (event, ui) {
-                    $(this).val(ui.item[1]);
-                    $(this).attr('data-valid', true);
-                    return false;
-                }
-            }).data('autocomplete')._renderItem = function (ul, item) {
-                return $('<li>')
-                        .data("item", item)
-                        .append('<a><b>Item Code: ' + item[1] + ' | Can Size: ' + item[2] + '</b></a></li>')
-                        .appendTo(ul);
-            };
+//            $("#itemCode").autocomplete({
+//                source: "?action=getItem",
+//                minLength: 1,
+//                select: function (event, ui) {
+//                    $(this).val(ui.item[1]);
+//                    $(this).attr('data-valid', true);
+//                    return false;
+//                }
+//            }).data('autocomplete')._renderItem = function (ul, item) {
+//                return $('<li>')
+//                        .data("item", item)
+//                        .append('<a><b>Item Code: ' + item[1] + ' | Can Size: ' + item[2] + '</b></a></li>')
+//                        .appendTo(ul);
+//            };
 
             //  AUTOCOMPLETE | Reff to bor dtl
             $("#borReference").autocomplete({
@@ -259,7 +259,7 @@
             }
 
             // UPDATE | data value
-            $('#ptsStatus').val('${model.ptss[0].is_hold}');
+            $('#ptsStatus').val('${model.ptss[0].is_hold}').find('option:not(:selected)').remove();
             $('#packStyle').val('${model.ptss[0].pack_id}');
             $('#ptsLocation').val('${model.ptss[0].loca_id}');
 

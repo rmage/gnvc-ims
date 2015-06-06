@@ -73,7 +73,7 @@
                                 <td>Pack Style</td>
                                 <td>Pack Size</td>
                                 <td>Pallet Number</td>
-                                <td>Item Name</td>
+                                <td>Item Code</td>
                                 <td>Quantity</td>
                                 <td>Delivery Quantity</td>
                                 <td>Action</td>
@@ -124,7 +124,7 @@
                                         '<td>' + json[i][1] + '</td>' +
                                         '<td>' + json[i][2] + '</td>' +
                                         '<td data-id="' + json[i][6] + '">' + json[i][7] + '</td>' +
-                                        '<td>' + json[i][4] + '</td>' +
+                                        '<td>' + json[i][3] + '</td>' +
                                         '<td>' + json[i][5] + '</td>' +
                                         '<td><input type="text" class="qty" value="0" size="6"></td>' +
                                         '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
@@ -160,9 +160,7 @@
                     return false;
                 }
 
-                var data = "";
-
-                var header = $('#drCode').val() + ':s:' + $('#drDate').val() + ':s:' + $('#drFrom').val() + ':s:' + $('#drTo').val() + ':s:' + $('#drRemarks').val() + ':s:';
+                var data = "", header = $('#drCode').val() + ':s:' + $('#drDate').val() + ':s:' + $('#drFrom').val() + ':s:' + $('#drTo').val() + ':s:' + $('#drRemarks').val() + ':s:';
 
                 $('tbody#detail tr').each(function() {
                     data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('.qty').val() + ':s::se:';

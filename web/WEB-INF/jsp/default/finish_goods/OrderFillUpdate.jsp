@@ -95,7 +95,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave" />
+                                        <input type="submit" value="Update" name="btnSave" />
                                         <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGOrderFill.htm');" />
                                     </td>
                                 </tr>
@@ -142,7 +142,7 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td class="bg-gray-1"><input type="text" class="qtyCs" value="${x.ofal_qty}" data-max="${x.pts_total_qty}"></td>
+                                    <td class="bg-gray-1"><input type="text" class="qtyCs" value="${x.ofal_qty}" data-max="${x.sc_cqty}"></td>
                                     <td class="bg-green-1">${x.pts_coenw}</td>
                                     <td class="bg-yellow-1">${x.pts_coedw}</td>
                                     <td class="bg-red-1">${x.pts_coeflk}</td>

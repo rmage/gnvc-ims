@@ -297,11 +297,11 @@ public class AssignCanvasserDaoImpl extends AbstractDAO implements Parameterized
     }
 
     public int ajaxMaxPage(String where, BigDecimal show) {
-        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(id)/?) maxpage FROM " + getTableName() + " " + (where.isEmpty()? "where prsnumber like '%%%'" : where + " AND prsnumber like '%%%'"), show);
+        return jdbcTemplate.queryForInt("SELECT CEILING(COUNT(ca.id)/?) maxpage FROM " + getTableName() + " ca " + (where.isEmpty()? "where ca.is_active = 'Y'" : where + " AND ca.is_active = 'Y'"), show);
     }
 
     public List<AssignCanvasser> ajaxSearch(String where, String order, int page, int show) {
-        return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize=?; with PagedResult as (select ca.id, ca.prsnumber, ca.canvassername, ca.created_by, ca.created_date, ca.updated_by, ca.updated_date, ROW_NUMBER() over (order by ca.id desc) as idx from " + getTableName() + " ca left join \"user\" u on u.user_id = canvassername "+ (where.isEmpty()? "where ca.is_active = 'Y'" : where + " AND ca.is_active = 'Y'")+") select * from PagedResult where idx between case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", this, page, show);
+        return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize=?; with PagedResult as (select ca.id, ca.prsnumber, ca.canvassername, ca.created_by, ca.created_date, ca.updated_by, ca.updated_date, ROW_NUMBER() over (order by ca.id desc) as idx from " + getTableName() + " ca left join \"user\" u on u.user_id = canvassername "+ (where.isEmpty()? "where ca.is_active = 'Y'" : where + " AND ca.is_active = 'Y'") + ") select * from PagedResult where idx between case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", this, page, show);
     }
 
     // 2015 Update | by FYA

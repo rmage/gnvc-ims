@@ -547,6 +547,11 @@
                     });
                 }
             });
+            
+            // Update function
+            if ($('#storageId').html().trim() === '') {
+                $('#storageId').append('<option value="0">-- NONE --</option>');
+            }
         </script>
     </body>
 </html>

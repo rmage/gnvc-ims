@@ -23,9 +23,9 @@
                             <tbody>
                                 <tr>
                                     <td>UOM Code</td>
-                                    <td><input type="text" name="uom_code" value=""/></td>
+                                    <td><input type="text" name="uom_code"></td>
                                     <td>UOM Name</td>
-                                    <td><input type="text" name="uom_name" value="" /></td>
+                                    <td><input type="text" name="uom_name"></td>
                                 </tr>
                             </tbody>
                             <tfoot>

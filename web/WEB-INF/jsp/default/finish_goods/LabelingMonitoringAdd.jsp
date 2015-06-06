@@ -281,6 +281,14 @@
                 return sum;
             }
 
+            $('#detail input[type="text"]').live('blur', function() {
+                var $tr = $(this).parent().parent(), remaining;
+
+                remaining = parseFloat($tr.find('.qtyServed').val()) - parseFloat($tr.find('.lmQty').val()) - parseFloat($tr.find('.lmDented').val()) - parseFloat($tr.find('.lmRusty').val()) - parseFloat($tr.find('.lmFlipper').val()) - parseFloat($tr.find('.lmBulger').val()) - parseFloat($tr.find('.lmSeam').val());
+                console.log(remaining);
+                $tr.find('#remainings').html(parseFloat(remaining).toFixed(2));
+            });
+
         </script>
     </body>
 </html>

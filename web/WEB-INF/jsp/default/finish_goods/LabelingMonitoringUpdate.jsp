@@ -61,7 +61,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" name="btnSave" />
+                                        <input type="submit" value="Update" name="btnSave" />
                                         <input id="btnCancel" type="button" value="Cancel" name="btnCancel" onclick="window.location.replace('FGLabelingMonitoring.htm');" />
                                     </td>
                                 </tr>
@@ -231,6 +231,14 @@
             
             $('#detail input').bind('keyup', function() {
                 $(this).parent().parent().attr('data-status', 'U');
+            });
+            
+            $('#detail input[type="text"]').live('blur', function() {
+                var $tr = $(this).parent().parent(), remaining;
+
+                remaining = parseFloat($tr.find('.qtyServed').val()) - parseFloat($tr.find('.lmQty').val()) - parseFloat($tr.find('.lmDented').val()) - parseFloat($tr.find('.lmRusty').val()) - parseFloat($tr.find('.lmFlipper').val()) - parseFloat($tr.find('.lmBulger').val()) - parseFloat($tr.find('.lmSeam').val());
+                console.log(remaining);
+                $tr.find('#remainings').html(parseFloat(remaining).toFixed(2));
             });
         </script>
     </body>

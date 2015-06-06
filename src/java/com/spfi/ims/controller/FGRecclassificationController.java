@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.richfaces.json.JSONArray;
+import org.richfaces.json.JSONException;
+import org.richfaces.json.JSONObject;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -78,38 +81,29 @@ public class FGRecclassificationController extends MultiActionController {
     }
 
     public void getPalletTransfer(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+            throws IOException, JSONException {
 
         /* DATA | get initial value */
-        Boolean b = Boolean.FALSE;
-        PrintWriter pw = response.getWriter();
-        StringBuilder sb = new StringBuilder();
+        JSONArray json = new JSONArray();
 
         /* DAO | Define needed dao here */
         FGReclassificationDao fgrDao = DaoFactory.createFGReclassificationDao();
 
         /* TRANSACTION | Something complex here */
-        sb.append("[");
         List<Map<String, Object>> ms = fgrDao.getPalletTransfer(request.getParameter("key"));
         for (Map<String, Object> x : ms) {
-            if (b) {
-                sb.append(",");
-            }
-            sb.append("{\"1\": \"").append(x.get("pack_style")).append("\", ");
-            sb.append("\"2\": \"").append(x.get("pack_size")).append("\", ");
-            sb.append("\"3\": \"").append(x.get("item_code")).append("\", ");
-            sb.append("\"4\": \"").append(x.get("item_name")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("x")).append("\", ");
-            sb.append("\"6\": \"").append(x.get("sc_cqty")).append("\", ");
-            sb.append("\"100\": \"").append(x.get("pts_code")).append("\",");
-            sb.append("\"101\": \"").append(x.get("pts_id")).append("\"}");
-
-            b = Boolean.TRUE;
+            JSONObject row = new JSONObject();
+            row.put("1", x.get("pack_style"));
+            row.put("2", x.get("pack_size"));
+            row.put("3", x.get("item_code"));
+            row.put("4", x.get("item_name"));
+            row.put("5", x.get("x"));
+            row.put("6", x.get("sc_cqty"));
+            row.put("100", x.get("pts_code"));
+            row.put("101", x.get("pts_id"));
+            json.put(row);
         }
-        sb.append("]");
-        pw.print(sb.toString());
-        pw.flush();
-        pw.close();
+        json.write(response.getWriter());
 
     }
     

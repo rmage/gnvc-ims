@@ -325,10 +325,13 @@
 
                 header = $('#dateShift').val() + ':s:' + $('#timeShift').val() + ':s:' + $('#vesselId').val() + ':s:';
                 $('#main tbody tr[data-status]').each(function() {
-                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(1)').html() + ':s:' + $(this).find('td:eq(2)').data('id') + ':s:' + $(this).find('td:eq(3)').html() + ':s:' + $(this).find('td:eq(4)').html() + ':s:' + $(this).find('td:eq(5)').html() + ':s:' + $(this).find('td:eq(6)').html() + ':s::se:';
+                    data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(1)').html() + ':s:' + $(this).find('td:eq(2)').data('id') + ':s:' + $(this).find('td:eq(3)').html().replace(/,/g, '') + ':s:' + $(this).find('td:eq(4)').html().replace(/,/g, '') + ':s:' + $(this).find('td:eq(5)').html().replace(/,/g, '') + ':s:' + $(this).find('td:eq(6)').html() + ':s::se:';
                 });
                 
-                if (data !== '' && confirm('Update Spoilage ?')) {
+                if (confirm('Update Spoilage ?')) {
+                    if (data === '') {
+                        data = data + header + 'X:s:1:s::se:';
+                    }
                     console.log(data);
                     gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {
                         if (json.message === '') {

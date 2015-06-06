@@ -115,14 +115,14 @@
                         dataType: "json",
                         success: function(json) {
                             for (var i = 0; i < json.length; i++) {
-                                $('tbody#detail').append('<tr data-item="' + json[i][3] + '">' +
+                                $('tbody#detail').append('<tr>' +
                                         '<td>' + ($('tbody#detail tr').length + 1) + '</td>' +
                                         '<td>' + json[i][1] + '</td>' +
                                         '<td>' + json[i][2] + '</td>' +
                                         '<td data-id="' + json[i][101] + '">' + json[i][100] + '</td>' +
-                                        '<td>' + json[i][4] + '</td>' +
-                                        '<td><select>' + $("<div/>").html(json[i][5]).text() + '</select>' + '</td>' +
-                                        '<td>' + json[i][6] + '</td>' +
+                                        '<td><select>' + json[i][3] + '</select></td>' +
+                                        '<td><select>' + json[i][5] + '</select>' + '</td>' +
+                                        '<td></td>' +
                                         '<td><input type="text" class="qty" value="0"></td>' +
                                         '<td><input class="ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Remove" style="font-size: smaller;" onclick="this.parentNode.parentNode.remove()"></td>' +
                                         '</tr>');
@@ -130,6 +130,7 @@
 
                             if (json.length > 0) {
                                 $('#ptsCode').val("");
+                                $('tbody#detail tr:last select:first option:selected').each(function() { $(this).parent().parent().next().next().html($(this).data('qty')); });
                             }
                         },
                         complete: function() {
@@ -160,7 +161,7 @@
                 var data = "", header = $('#reccCode').val() + ':s:' + $('#reccDate').val() + ':s:' + $('#reccRemarks').val() + ':s:';
 
                 $('tbody#detail tr').each(function() {
-                    data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).data('item') + ':s:' + $(this).find('select').val() + ':s:' + $(this).find('.qty').val() + ':s::se:';
+                    data = data + header + $(this).find('td:eq(3)').data('id') + ':s:' + $(this).find('select:eq(0)').val() + ':s:' + $(this).find('select:eq(1)').val() + ':s:' + $(this).find('.qty').val() + ':s::se:';
                 });
                 
                 if (data !== '' && confirm('Save Reclassification #' + $('#reccCode').val() + ' ?')) {
@@ -175,6 +176,10 @@
                 }
 
                 return false;
+            });
+            
+            $('#detail td:nth-child(5) select').live('change', function() {
+                $(this).parent().next().next().html($(this).find('option:selected').data('qty'));
             });
 
 //            // LIVE | validate maximum quantity
