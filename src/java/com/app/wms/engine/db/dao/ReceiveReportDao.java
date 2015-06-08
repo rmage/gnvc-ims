@@ -41,7 +41,7 @@ public interface ReceiveReportDao {
     
     public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
     
-    public void delete(int key, String updatedBy);
+    public void delete(String key, String updatedBy);
     
     public List<Map<String, Object>> getReceiving(String rrCode);
 

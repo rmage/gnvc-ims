@@ -39,7 +39,7 @@
                             </tr>
                             <tr>
                                 <td>Supplier Code</td>
-                                <td><input type="text" value="${model.ap.supplier_code}" readonly></td>
+                                <td><input id="supplierCode" name="supplierCode" type="text" value="${model.ap.supplier_code}" readonly></td>
                                 <td>Supplier Name</td>
                                 <td><input size="50" type="text" value="${model.ap.supplier_name}" readonly></td>
                             </tr>
@@ -107,7 +107,7 @@
 
             // EVENT | save data
             $('#btnUpdate').bind('click', function() {
-                var data = $(this).data('id') + ':s:' + $('#col1').val().replace(/,/g, '') + ':s:' + $('#col2').val() + ':s:' + $('#col3').val() + ':s:' + $('#col4').val() + ':s:' + gnvs.util.toDBDate($('#col5').val()) + ':s:' + $('#col6').val() + ':s::se:';
+                var data = $(this).data('id') + ':s:' + $('#col1').val().replace(/,/g, '') + ':s:' + $('#col2').val() + ':s:' + $('#col3').val() + ':s:' + $('#col4').val() + ':s:' + gnvs.util.toDBDate($('#col5').val()) + ':s:' + $('#col6').val() + ':s:' + $('#supplierCode').val() + ':s::se:';
                 if (confirm('Update price assignment?')) {
                     console.log(data);
                     gnvs.ajaxCall({action: 'ajaxNUpdate', data: encodeURIComponent(data)}, function(json) {

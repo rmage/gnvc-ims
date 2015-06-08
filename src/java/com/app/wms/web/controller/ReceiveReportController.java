@@ -185,7 +185,7 @@ public class ReceiveReportController extends MultiActionController {
     public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
         try {
             LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
-            DaoFactory.createReceiveReportDao().delete(Integer.parseInt(request.getParameter("key")), lu.getUserId());
+            DaoFactory.createReceiveReportDao().delete(request.getParameter("key"), lu.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }

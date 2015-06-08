@@ -147,6 +147,11 @@
             };
 
             $('#drForm').bind('submit', function() {
+                if (!$('#drTo').data('code')) {
+                    alert('Select supplier from list not type-in on field!');
+                    return false;
+                }
+                
                 var data = '';
                 var header = $('#drCode').val() + ':s:' + gnvs.util.toDBDate($('#drDate').val()) + ':s:' + $('#drFrom').val() + ':s:' + $('#drFromLoc').val() + ':s:' + $('#drToLoc').val() + ':s:' + $('#drRemarks').val() + ':s:NF:s:' + $('#drTo').data('code') + ':s:' + $('#orCode').val() + ':s:' + $('#dmCode').val() + ':s:';
 

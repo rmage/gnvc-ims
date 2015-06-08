@@ -248,7 +248,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
         jdbcTemplate.update("EXEC NF_RR_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
     }
 
-    public void delete(int key, String updatedBy) {
+    public void delete(String key, String updatedBy) {
         jdbcTemplate.update("EXEC NF_RR_DELETE ?, ?", key, updatedBy);
     }
 

@@ -61,7 +61,6 @@
                                     <td style="width: 100px;">Select SWS</td>
                                     <td colspan="7">
                                         <input type="text" id="swsCode" name="swsCode" size="10" value="${model.ts[0].sws_code}" readonly>
-                                        <input type="button" id="select" name="select" value="Select">
                                     </td>
                                 </tr>
                                 <tr>
