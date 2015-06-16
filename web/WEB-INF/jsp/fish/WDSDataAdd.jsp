@@ -116,7 +116,7 @@
                                     "<input id='uomCode" + rowCount + "' type='hidden' name='uomCode" + rowCount + "' value='Kg' /></td>" +
                                     "<td id='storageHTML" + rowCount + "' class='center'>" + localRowData.storageName + "</td>" +
                                     "<input id='storageId" + rowCount + "' type='hidden' name='storageId" + rowCount + "' value='" + localRowData.storageId + "' /></td>" +
-                                    "<td id='" + rowCount + "' class='center' onClick='addRequestQuantity(this)'>Add Quantity</td>" +
+                                    "<td id='" + rowCount + "' class='ui-button ui-widget ui-state-default ui-corner-all' type='button' onClick='addRequestQuantity(this)'>Add Quantity</td>" +
                                     "</tr>").appendTo("#main tbody");
 
                             $('#totalData').val(rowCount);

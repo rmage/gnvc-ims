@@ -107,6 +107,14 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.MSupplier, "EXEC RPT_M_SUPPLIER");
         ListMap.put(Report.MProduct, "EXEC RPT_M_PRODUCT");
         //  ***END*** | Master Module | Form and Report List
+        
+        //  iCore Module | Report List
+        ListMap.put(Report.reportBC23, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?");
+        ListMap.put(Report.reportBC40, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?");        
+        ListMap.put(Report.reportBC30, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?");
+        ListMap.put(Report.reportBC41, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?");
+        ListMap.put(Report.reportFinishGood, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?");
+        //  ***END*** | iCore Module | Report List
 
         ListMap.put(Report.FWS,
                 "SELECT f.code AS kode, wdsd.description AS nama_barang, "

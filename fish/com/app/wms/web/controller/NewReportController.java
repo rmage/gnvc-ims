@@ -521,6 +521,11 @@ public class NewReportController extends MultiActionController {
         return new ModelAndView("default/rendering/ReportSummary");
     }
     
+    // iCore Module | Form and Report List
+    public ModelAndView getIcoreNfRr(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("bc_code/BcCodeReport"); //jsp
+    }
+    
     public boolean isLogin(HttpServletRequest request) {
         return request.getSession().getAttribute("user") != null;
     }

@@ -496,5 +496,20 @@
     <bean id="DBLogginDao" class="com.spfi.ims.dao.DBLoggingDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    
+    <!--    HS CODE-->
+    <bean id="HsCodeDao" class="com.app.wms.engine.db.dao.spring.HsCodeDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <!--    ICORE MAP-->
+    <bean id="IcoreMapDao" class="com.spfi.ims.dao.IcoreMapDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+     <!-- BC CODE -->
+    <bean id="BcCodeDao" class="com.spfi.ims.dao.BcCodeDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
         
 </beans>

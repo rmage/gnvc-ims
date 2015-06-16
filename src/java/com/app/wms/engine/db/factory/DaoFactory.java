@@ -994,5 +994,19 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (DBLoggingDao) bf.getBean("DBLoggingDao");
     }
-
+    
+    public static HsCodeDao createHsCodeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (HsCodeDao) bf.getBean("HsCodeDao");
+    }
+    
+    public static IcoreMapDao createIcoreMapDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (IcoreMapDao) bf.getBean("IcoreMapDao");
+    }
+    
+    public static BcCodeDao createBcCodeDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (BcCodeDao) bf.getBean("BcCodeDao");
+    }    
 }

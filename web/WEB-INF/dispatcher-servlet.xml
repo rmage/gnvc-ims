@@ -406,4 +406,17 @@
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
+    <!--iCore-->
+    <bean name="/HsCode.htm" class="com.app.wms.web.controller.HsCodeController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <bean name="/BcCode.htm" class="com.spfi.ims.controller.BcCodeController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+
+    <bean name="/IcoreMap.htm" class="com.spfi.ims.controller.IcoreMapController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
 </beans>

@@ -40,7 +40,12 @@ public class ReportFactory {
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod //  Finished Goods Module | Form and Report List
         , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGBor15, FGPts, FGOfal, FGLmr, FGBor15Report //  Rendering Module | Form and Report List
         , RendDailyReport, RendSummaryReport, RendSales
-        , MSupplier, MProduct;
+        , MSupplier, MProduct
+        , reportBC23 //iCore Module | Report List BC 2.3;
+        , reportBC40 //iCore Module | Report List BC 4.0;
+        , reportBC30 //iCore Module | Report List BC 3.0
+        , reportBC41 //iCore Module | Report List BC 4.1
+        , reportFinishGood; //iCore Module | Report List Finish Good  
     }
 
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -278,6 +283,22 @@ public class ReportFactory {
         reportMap.put(Report.FGFM, reportTemplateMap.get("FGFM"));
         reportMap.put(Report.FGFO, reportTemplateMap.get("FGFO"));
         reportMap.put(Report.Accounting, reportTemplateMap.get("stockCardReport"));
+        
+         // iCore Module | Report List
+        reportTemplateMap.put("reportBC23", new ReportModel("bccode/RptBcCode_bc23", false));
+        reportMap.put(Report.reportBC23, reportTemplateMap.get("reportBC23"));
+        
+        reportTemplateMap.put("reportBC40", new ReportModel("bccode/RptBcCode_bc40", false));
+        reportMap.put(Report.reportBC40, reportTemplateMap.get("reportBC40"));
+        
+        reportTemplateMap.put("reportBC30", new ReportModel("bccode/RptBcCode_bc30", false));
+        reportMap.put(Report.reportBC30, reportTemplateMap.get("reportBC30"));
+        
+        reportTemplateMap.put("reportBC41", new ReportModel("bccode/RptBcCode_bc41", false));
+        reportMap.put(Report.reportBC41, reportTemplateMap.get("reportBC41"));
+        
+        reportTemplateMap.put("reportFinishGood", new ReportModel("bccode/RptBcCode_bc_finishGood", false));
+        reportMap.put(Report.reportFinishGood, reportTemplateMap.get("reportFinishGood"));
 
         IGNORED_COLUMN.add("index");
     }
