@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Fish Ws Type</title>
+        <title>Create &therefore; Fish WS Type &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
              $(document).ready(function(){
@@ -25,7 +25,7 @@
             <jsp:include page="../dynmenu.jsp" />
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="FishWsType.htm" method="post" name="form" id="addForm">
+                    <form action="FishWsType.htm" method="post" name="form" id="addForm" onsubmit="document.getElementById('btnSave').setAttribute('disabled', 'disabled');">
                         <input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" name="isActive" value="Y"/>
@@ -60,7 +60,7 @@
                                         <label>
                                             <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-                                                   name="btnSave" id="btnSave" value="Save" class="simpan" />
+                                                   name="btnSave" id="btnSave" value="Save" class="simpan"  class="simpan">
                                         </label>
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" />

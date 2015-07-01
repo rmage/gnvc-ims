@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>IMS &there4; Weight Slip &there4; Create</title>
+        <title>Create &therefore; Weight Slip &there4; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -515,10 +515,11 @@
                 });
 
                 if (data !== '') {
+                    $('body').append('<div class="gnvs-overlay"><div class="gnvs-overlay-process">Processing request ....</div></div>');
                     window.location.replace("?action=save&data=" + encodeURIComponent(data));
                     //console.log(encodeURIComponent(data));
                 }
-
+                
                 return false;
             });
         </script>

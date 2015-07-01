@@ -1,64 +1,67 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
-        <title>IMS - Fish Type List</title>
+        <title>Fish Vessel &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script type="text/javascript" language="javascript">
-        	$(document).ready(function() {
+            $(document).ready(function() {
                 $('#btnSearch').click(function() {
-        			var fishCode = $('#queryBatchNo').val();
-        			location.href = "FishVessel.htm?search=true&batchNo="+fishCode;
-        		});
-                
+                    var fishCode = $('#queryBatchNo').val();
+                    location.href = "FishVessel.htm?search=true&batchNo=" + fishCode;
+                });
+
                 $('#btnCleanFilter').click(function() {
-                   location.href = "FishVessel.htm"; 
+                    location.href = "FishVessel.htm";
                 });
-                
-        		$('#btnAdd').click(function() {
-					$("#dialog").dialog({ 
-						width: 450, 
-						height: 350, 
-						position: "center", 
-						modal: true, 
-						zindex: 9999, 
-						title: 'Select Supplier' });
+
+                $('#btnAdd').click(function() {
+                    $("#dialog").dialog({
+                        width: 450,
+                        height: 350,
+                        position: "center",
+                        modal: true,
+                        zindex: 9999,
+                        title: 'Select Supplier'});
                 });
-        		
-				$('#ajaxSearchBtn').click(function() {
-					query = $('#query').val();
-					
-					$("#list").jqGrid({ 
-						url:'FishJson.htm?action=findFishSupplier&query='+query, 
-						datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
-	                    colNames:['id','Code','Supplier Name'], 
-	                    colModel:[ 
-								   {name:'id',index:'id',width:100}, 
-	                               {name:'code',index:'code',width:100}, 
-	                               {name:'name',index:'name',width:350}], 
-	                    sortname: 'code',
-	                    rowNum:10, rowList:[10,20,30],
-	                    jsonReader:{repeatitems: false},
-	                    onSelectRow: function(ids){
-	                    	var localRowData = $(this).getRowData(ids);
-	                    	location.href = 'FishVessel.htm?action=create&supplierId='+localRowData.id;
-	                    },
-	                    pager: '#pager', sortname: 'code', viewrecords: true, sortorder: "desc"}
-					).trigger("reloadGrid"); 
-	               	
-					jQuery("#list").jqGrid('navGrid','#pager',{edit:false,add:false,del:false});
-				});
-			});
-		</script>
+
+                $('#ajaxSearchBtn').click(function() {
+                    if ($('#list')[0].grid) {
+                        $("#list").jqGrid().setGridParam({
+                            url : 'FishJson.htm?action=findFishSupplier&query=' + $('#query').val()
+                        }).trigger("reloadGrid");
+                    } else {
+                        $("#list").jqGrid({
+                            url: 'FishJson.htm?action=findFishSupplier&query=' + $('#query').val(),
+                            datatype: "json", hidegrid: false, shrinkToFit: true, autowidth: true,
+                            colNames: ['id', 'Code', 'Supplier Name'],
+                            colModel: [
+                                {name: 'id', index: 'id', width: 100},
+                                {name: 'code', index: 'code', width: 100},
+                                {name: 'name', index: 'name', width: 350}],
+                            sortname: 'code',
+                            rowNum: 10, rowList: [10, 20, 30],
+                            jsonReader: {repeatitems: false},
+                            onSelectRow: function(ids) {
+                                var localRowData = $(this).getRowData(ids);
+                                location.href = 'FishVessel.htm?action=create&supplierId=' + localRowData.id;
+                            },
+                            pager: '#pager', viewrecords: true, sortorder: "desc"}
+                        );
+
+                        $("#list").jqGrid('navGrid', '#pager', {edit: false, add: false, del: false});
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
-        <%
-        	com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch(); 
+        <%            com.app.web.engine.search.ProductSearch criteria = new com.app.web.engine.search.ProductSearch();
             if (request.getSession().getAttribute("FishVesselSearch") != null) {
                 criteria = (com.app.web.engine.search.ProductSearch) request.getSession().getAttribute("FishVesselSearch");
             }
-            
+
             java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String querySearch = m.get("querySearch") == null ? "" : (String) m.get("querySearch");
             String queryBatchNo = m.get("queryBatchNo") == null ? "" : (String) m.get("queryBatchNo");
@@ -85,18 +88,18 @@
                                 </tr>
                             </tbody>
                             <tfoot>
-                                <td colspan="4">
-                                    <span class="style1">
-                                        <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
-                                    </span>
-                                     <label>
-                                        <input type="button" name="button" id="btnAdd" value="Add" />
-                                    </label>
-                                    <label>
-	                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
-	                                </label>
-                                </td>
-                                <td></td>
+                            <td colspan="4">
+                                <span class="style1">
+                                    <input class ="style1" type="button" value="Search" id="btnSearch" name="btnSearch" />
+                                </span>
+                                <label>
+                                    <input type="button" name="button" id="btnAdd" value="Add" />
+                                </label>
+                                <label>
+                                    <input type="button" name="button" id="btnCleanFilter" value="Clean Filter" />
+                                </label>
+                            </td>
+                            <td></td>
                             </tfoot>
                         </table>
                     </form>
@@ -110,6 +113,7 @@
                                 <td class="left">Vessel Name</td>
                                 <td class="left">Batch No.</td>
                                 <td class="left">Supplier Name</td>
+                                <td>Created Date</td>
                             </tr>
                         </thead>
                         <tbody id="main">
@@ -121,13 +125,13 @@
                                             <c:out value="${nomor}" />
                                             <c:set scope="page" value="${nomor+1}" var="nomor"/>
                                         </td>
-                                       
+
                                         <c:url value="FishVessel.htm" var="urlEdit">
                                             <c:param name="id" value="${vessel.id}"/>
                                             <c:param name="page" value="${model.page}" />
                                             <c:param name="action" value="edit"/>
                                         </c:url>
-                                       
+
                                         <c:url value="FishVessel.htm" var="urlDelete">
                                             <c:param name="id" value="${vessel.id}"/>
                                             <c:param name="page" value="${model.page}" />
@@ -143,49 +147,44 @@
                                         <td class="left"><c:out value="${vessel.name}"/></td>
                                         <td class="left"><c:out value="${vessel.batchNo}"/></td>
                                         <td class="left"><c:out value="${vessel.supplier.name}"/></td>
+                                        <td><fmt:formatDate type="date" value="${vessel.createdDate}"/></td>
                                     </tr>
                                 </c:forEach>
                             </c:if>
-                          <tr>
-	                           <td colspan="6">
-	                               <span class="style1">
-	                                   <c:if test="${model.page !=null && model.page > 1}">
-	                                       <a href="FishVessel.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
-	                                           &lt;
-	                                       </a>
-	                                   </c:if>
-	                                   &nbsp;page: <c:out value="${model.page}" />&nbsp;
-										<c:if test="${model.page < model.totalRows/model.paging}">
-						    				<a href="FishVessel.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
-											&gt;
-						    				</a>
-										</c:if>
-					   				</span>
-	                           </td>
+                            <tr>
+                                <td colspan="7">
+                                    <span class="style1">
+                                        <c:if test="${model.page !=null && model.page > 1}">
+                                            <a href="FishVessel.htm?page=<c:out value="${model.page-1}" /><%=querySearch%>">
+                                                &lt;
+                                            </a>
+                                        </c:if>
+                                        &nbsp;page: <c:out value="${model.page}" />&nbsp;
+                                        <c:if test="${model.page < model.totalRows/model.paging}">
+                                            <a href="FishVessel.htm?page=<c:out value="${model.page+1}" /><%=querySearch%>">
+                                                &gt;
+                                            </a>
+                                        </c:if>
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
-
-                            <td colspan="6">
-                                <span class="style1">
-                                   
-                                </span>
-                            </td>
+                            <tr><td colspan="7"></td></tr>
                         </tfoot>
-
                     </table>
                 </div>
             </div>
             <div id="dialog" title="Batch Number Search" style="display:none;z-index:1;">
-	        	<label>Supplier Name</label>
-	        	<label>:</label>
-	        	<input type="text" id="query" size="30" class="text-input"/>
-	        	<input type="button" id="ajaxSearchBtn" style="font-size: smaller;" aria-disabled="false"                                                    
-	                                                   role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-	                                                   name="ajaxSearchBtn" id="btnSave" value="Search" class="search" />
-	        	<table id="list"></table> 
-	            <div id="pager"></div> 
-	        </div>
+                <label>Supplier Name</label>
+                <label>:</label>
+                <input type="text" id="query" size="30" class="text-input"/>
+                <input type="button" id="ajaxSearchBtn" style="font-size: smaller;" aria-disabled="false"                                                    
+                       role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
+                       name="ajaxSearchBtn" id="btnSave" value="Search" class="search" />
+                <table id="list"></table> 
+                <div id="pager"></div> 
+            </div>
             <div class="span-24 last border-top">
                 <div class="box">
                     &copy; 2013 SPFI
@@ -199,15 +198,15 @@
                 });
 
                 $('.tab').hide();
-                
+
                 $('#btnEdit').click(function() {
                     $('.tab').show();
                 });
 
-                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom','-1px').css('position', 'relative');
+                $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');
             });
         </script>
-        
+
     </body>
 
 </html>

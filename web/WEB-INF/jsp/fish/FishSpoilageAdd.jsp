@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Create &there4; Fish Spoilage &there4; IMS</title>
+        <title>Create &therefore;; Fish Spoilage &therefore;; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function() {
@@ -350,6 +350,7 @@
                             $(this).dialog("close");
                         },
                         "Save": function() {
+                            
                             $("form#addForm").submit();
                         }
                     },
@@ -395,6 +396,7 @@
                 });
 
                 if (data !== '') {
+                    $('body').append('<div class="gnvs-overlay"><div class="gnvs-overlay-process">Processing request ....</div></div>');
                     window.location.replace("?action=save&data=" + encodeURIComponent(data));
 //                    console.log(encodeURIComponent(data));
                 }

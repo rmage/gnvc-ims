@@ -1,24 +1,24 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
     <head>
-        <title>IMS - New Fish Type</title>
+        <title>Create &therefore; Fish &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
-            $(document).ready(function(){
-                
+            $(document).ready(function() {
+
                 $('#addForm').validationEngine('attach');
-                
-                $('#code').focus().on("blur",function() {
-        			var code = $('#code').val();
-        			$.ajax({
-        				url:"FishJson.htm?action=checkFishCode&query="+code,
-        				dataType: 'json',
-        				success: function(data) {
-        					if(data.result) {
-        						$("#dialog-not-unique").dialog({
-                                    open: function () {
+
+                $('#code').focus().on("blur", function() {
+                    var code = $('#code').val();
+                    $.ajax({
+                        url: "FishJson.htm?action=checkFishCode&query=" + code,
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.result) {
+                                $("#dialog-not-unique").dialog({
+                                    open: function() {
                                         $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
                                         $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
                                     },
@@ -27,23 +27,22 @@
                                     height: 120,
                                     modal: true,
                                     buttons: {
-                                        "Ok" : function () {
+                                        "Ok": function() {
                                             $(this).dialog("close");
                                             $('#code').focus();
                                         }
                                     }
                                 });
-        					}
-        				}
-        			});
-        		});
-                
+                            }
+                        }
+                    });
+                });
+
             });
         </script>
     </head>
     <body>
-        <%
-        	java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             String mode = (String) m.get("mode");
         %>
 
@@ -62,8 +61,8 @@
                             <caption>Fish Type - Add</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
-                                   <td class="style1">Code</td>
-                                   <td class="style1">
+                                    <td class="style1">Code</td>
+                                    <td class="style1">
                                         <label>
                                             <input type="text" id="code" name="code" value="" size="30" class="validate[required] text-input"/>
                                         </label>
@@ -71,30 +70,30 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">Species</td>
+                                    <td class="style1">Species</td>
                                     <td class="style1">
                                         <label>
                                             <select name="fishTypeId">
-                                            	<c:forEach items="${model.fishTypes}" var="fishType">
-                                            		<option value="${fishType.id}">
-                                            			<c:out value="${fishType.code} - ${fishType.description}" />
-                                            		</option>
-                                            	</c:forEach>
+                                                <c:forEach items="${model.fishTypes}" var="fishType">
+                                                    <option value="${fishType.id}">
+                                                        <c:out value="${fishType.code} - ${fishType.description}" />
+                                                    </option>
+                                                </c:forEach>
                                             </select>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td class="style1">Weight Category</td>
+                                    <td class="style1">Weight Category</td>
                                     <td class="style1">
                                         <label>
                                             <select name="fishWeightTypeId">
-                                            	<c:forEach items="${model.weightTypes}" var="weightType">
-                                            		<option value="${weightType.id}">
-                                            			<c:out value="${weightType.code}" />
-                                            		</option>
-                                            	</c:forEach>
+                                                <c:forEach items="${model.weightTypes}" var="weightType">
+                                                    <option value="${weightType.id}">
+                                                        <c:out value="${weightType.code}" />
+                                                    </option>
+                                                </c:forEach>
                                             </select>
                                         </label>
                                         <label class="requiredfield" title="This Field Is Required!">*</label>
@@ -105,7 +104,7 @@
                         <table class="collapse tblForm row-select ui-widget-content">
 
                             <tbody class="tbl-nohover">
-                                
+
                             </tbody>
                             <tfoot class="ui-widget-header">
                                 <tr><td colspan="7">
@@ -119,7 +118,7 @@
                                         </label>
                                     </td>
                                 </tr>
-                           </tfoot>
+                            </tfoot>
                         </table>
                     </form>
                 </div>
@@ -137,70 +136,71 @@
                 });
             });
 
-            $("#btnSave").click(function () {                         
+            $("#btnSave").click(function() {
 
                 //if invalid do nothing
-                if(!$("#addForm").validationEngine('validate')){
+                if (!$("#addForm").validationEngine('validate')) {
                     $("#dialog-incomplete").dialog({
-                            open: function () {
-                                $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-                                $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-                            },
-                            title: 'Incomplete Form',
-                            resizable: false,
-                            height: 120,
-                            modal: true,
-                            buttons: {
-                                "Ok" : function () {
-                                    $(this).dialog("close");
-                                }
+                        open: function() {
+                            $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
+                            $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
+                        },
+                        title: 'Incomplete Form',
+                        resizable: false,
+                        height: 120,
+                        modal: true,
+                        buttons: {
+                            "Ok": function() {
+                                $(this).dialog("close");
                             }
-                        });
+                        }
+                    });
                     return false;
-                 }
-                
-                $("#dialog-confirm").dialog({ width: 300, height: 150, position: "center", modal: true, 
+                }
+
+                $("#dialog-confirm").dialog({width: 300, height: 150, position: "center", modal: true,
                     buttons: {
-                        "Cancel": function() {                                       
-                            $( this ).dialog( "close" );                                        
+                        "Cancel": function() {
+                            $(this).dialog("close");
                         },
                         "Save": function() {
+                            $('#btnSave').attr('disabled', 'disabled');
                             $("form#addForm").submit();
                         }
                     },
-                    zindex: 1, title: 'Confirm' });
+                    zindex: 1, title: 'Confirm'});
 
             });
         </script>
 
         <script language="JavaScript">
-			function cek(){
-			if(form.length.value == "" || form.width.value == ""|| form.height.value == ""){
-			alert("data empty"); 
-			exit;
-			}
-			}
-			function kali() {
-			cek();
-			a=eval(form.length.value);
-			b=eval(form.width.value);
-			c=eval(form.height.value);
-			d=a*b*c
-			form.volumeMatrix.value = d;
-			}
-		</script>
-		
-		<script type="text/javascript">
-		   function formfocus() {
-		      document.getElementById('autofocus').focus();
-		   }
-		   window.onload = formfocus;
-    	</script>             
-        
+            function cek() {
+                if (form.length.value == "" || form.width.value == "" || form.height.value == "") {
+                    alert("data empty");
+                    exit;
+                }
+            }
+            function kali() {
+                cek();
+                a = eval(form.length.value);
+                b = eval(form.width.value);
+                c = eval(form.height.value);
+                d = a * b * c
+                form.volumeMatrix.value = d;
+            }
+        </script>
+
+        <script type="text/javascript">
+            function formfocus() {
+                document.getElementById('autofocus').focus();
+            }
+            window.onload = formfocus;
+        </script>             
+
         <div id="dialog-confirm" title="confirm" style="display:none;z-index:1;">
             Save data?
         </div>
-        
+
         <div id="dialog-incomplete" title="incomplete" style="display:none;z-index:1;">
             Please to fill mandatory data
         </div>
@@ -208,6 +208,6 @@
         <div id="dialog-not-unique" title="warning" style="display:none;z-index:1;">
             "Fish Code" is not unique
         </div> 
-                                        
+
     </body>
 </html>

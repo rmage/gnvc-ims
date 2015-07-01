@@ -24,7 +24,7 @@
             <jsp:include page="../../dynmenu.jsp" />
             <div id="content" class="span-24 last">
                 <div class="box">
-                    <form id="fmForm" method="post" action="FishWsSummary.htm">
+                    <form id="fmForm" method="post" action="FishWsSummary.htm" onsubmit="document.getElementById('save').setAttribute('disabled', 'disabled');">
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" id="altDateFrom" name="altDateFrom" value="<%=cDateH%>" />
                         <input type="hidden" id="altDateTo" name="altDateFrom" value="<%=cDateH%>" />
@@ -50,7 +50,7 @@
                                 <tr>
                                     <td colspan="4">
                                         <input type="button" id="preview" value="Preview" />
-                                        <input type="submit" id="save" value="Save" />
+                                        <input type="submit" id="save" value="Save">
                                         <input type="button" value="Cancel" onclick="window.location.replace('FishWsSummary.htm')" />
                                     </td>
                                 </tr>

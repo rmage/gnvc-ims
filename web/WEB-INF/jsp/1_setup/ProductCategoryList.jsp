@@ -6,9 +6,6 @@
         <title>IMS - Product Category List</title>
         <%@include file="../metaheader.jsp" %>
     </head>
-    <%        int row = 0;
-        java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
-    %>   
     <body>
         <div class="container">
             <%@include file="../header.jsp" %>
@@ -22,19 +19,13 @@
                             <tbody>
                                 <tr>
                                     <td width="20%">Category Code</td>
-                                    <td><input type="text" name="category_code" value=""/></td>
-
+                                    <td><input type="text" name="category_code"></td>
                                     <td>Category Name</td>
-                                    <td><input type="text" name="category_name" value="" /></td>
-                                    <td colspan="2">
-                                    </td>
-                                </tr>
-                                <tr>
-
+                                    <td><input type="text" name="category_name"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
-                            <td colspan="10">
+                            <td colspan="4">
                                 <span>
                                     <input class ="style1" type="submit" value="Search" id="btnSearch" name="btnSearch" />
                                 </span>

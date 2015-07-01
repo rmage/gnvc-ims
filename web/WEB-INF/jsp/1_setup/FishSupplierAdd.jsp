@@ -5,7 +5,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New WS Data</title>
+        <title>Create &therefore; Fish Supplier &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
     </head>
     <body>
@@ -18,7 +18,7 @@
             <jsp:include page="../dynmenu.jsp" />
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="FishSupplier.htm" method="post" id="addForm">
+                    <form action="FishSupplier.htm" method="post" id="addForm" onsubmit="document.getElementById('btnSave').setAttribute('disabled', 'disabled');">
                     	<input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" name="isActive" value="Y"/>
@@ -101,7 +101,7 @@
                                         <label>
                                             <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-                                                   name="btnSave" id="btnSave" value="Save" class="simpan" />
+                                                   name="btnSave" id="btnSave" value="Save" class="simpan">
                                         </label>
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnBack" id="btnBack" value="Back" class="cancel" />

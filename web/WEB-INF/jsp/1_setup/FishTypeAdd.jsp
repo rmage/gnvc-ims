@@ -2,21 +2,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>IMS - New Fish Type</title>
+        <title>Create &therefore; Fish Type &therefore; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
-            $(document).ready(function(){
-                $('#addForm').validationEngine('attach'); 
+            $(document).ready(function() {
+                $('#addForm').validationEngine('attach');
             });
         </script>
     </head>
     <body>
-        <%
-            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
+        <%            java.util.HashMap m = (java.util.HashMap) request.getAttribute("model");
             FishType dto = (FishType) m.get("dto");
             String mode = (String) m.get("mode");
         %>
@@ -25,17 +24,17 @@
             <jsp:include page="../dynmenu.jsp" />
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="FishType.htm" method="post" name="form" id="addForm">
+                    <form action="FishType.htm" method="post" name="form" id="addForm" onsubmit="document.getElementById('btnSave').setAttribute('disabled', 'disabled');">
                         <input type="hidden" name="mode" value="<%=mode%>" />
                         <input type="hidden" name="action" value="save" />
                         <input type="hidden" name="isActive" value="Y"/>
-                         <input type="hidden" name="fishTypeId" value="<%= mode.equals("create") ? "" : dto.getId()%>"/>
+                        <input type="hidden" name="fishTypeId" value="<%= mode.equals("create") ? "" : dto.getId()%>"/>
                         <table class="collapse tblForm row-select">
                             <caption>Fish Type - Add</caption>
                             <tbody class="tbl-nohover">                          
                                 <tr>
-                                   <td>Code</td>
-                                   <td>
+                                    <td>Code</td>
+                                    <td>
                                         <label>
                                             <input type="text" name="code" id="code" value="" size="30" pattern="^\S+[A-Za-z0-9 ]{1,}" required="true"  />
                                         </label>
@@ -61,14 +60,14 @@
                                         <label>
                                             <input type="submit" style="font-size: smaller;" aria-disabled="false"                                                    
                                                    role="button" class="ui-button ui-widget ui-state-default ui-corner-all" 
-                                                   name="btnSave" id="btnSave" value="Save" class="simpan" />
+                                                   name="btnSave" id="btnSave" value="Save" class="simpan">
                                         </label>
                                         <label>
                                             <input type="button" style="font-size: smaller;" aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all" name="btnCancel" id="btnCancel" value="Cancel" class="cancel" />
                                         </label>
                                     </td>
                                 </tr>
-                           </tfoot>
+                            </tfoot>
                         </table>
                     </form>
                 </div>
@@ -84,26 +83,27 @@
                 $('#btnCancel').click(function() {
                     location.href = 'FishType.htm';
                 });
-            });       
+            });
 //            $(function() {
-                $('#code').bind('blur', function() {
-                  var $o = $(this);
-                   if (!$o.val()) return;
-                   
-                   $.ajax({
-                       url: 'FishType.htm?term='+$o.val(),
-                       method: 'post',
-                       data: {
-                           action: 'getUnique', term: $o.val()
-                       },
-                       dataType: 'json',
-                       success: function(json){
-                           if(json.status) {
-                               alert('Not Unique code found!');
-                               $o.val(null);
-                               $o.focus();
-                           }
-                       }
+            $('#code').bind('blur', function() {
+                var $o = $(this);
+                if (!$o.val())
+                    return;
+
+                $.ajax({
+                    url: 'FishType.htm?term=' + $o.val(),
+                    method: 'post',
+                    data: {
+                        action: 'getUnique', term: $o.val()
+                    },
+                    dataType: 'json',
+                    success: function(json) {
+                        if (json.status) {
+                            alert('Not Unique code found!');
+                            $o.val(null);
+                            $o.focus();
+                        }
+                    }
                 });
             });
 //        });

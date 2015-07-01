@@ -116,9 +116,10 @@
                             $('#main').append('<tr data-id="' + json.rows[i][0] + '"><td>' + json.rows[i][1] + '</td><td>' + json.rows[i][2] + '</td><td>' + json.rows[i][3] + '</td><td>' + json.rows[i][4] + '</td><td>' + json.rows[i][5] + '</td><td>' + json.rows[i][6] +
                                     '</td><td>' + json.rows[i][7] + '</td><td><input name="selected" title="Selected Supplier" type="checkbox"> <input class="price" name="price" size="10" type="text"></td><td><select name="top"><option>Cash</option><option>Credit</option></select>' +
                                     '<input name="topDesc" type="text"></td><td><input name="tod" type="text"></td><td><input class="wp" name="wp" size="8" type="text"></td></tr>');
-
-                            setEvent();
                         }
+
+                        // prevent multiple event assignment
+                        setEvent();
                     },
                     complete: function() {
                         $('#load').remove();
@@ -157,9 +158,22 @@
 
             function setEvent() {
                 $('.wp').datepicker({dateFormat: "dd/mm/yy"});
-                $('.price').bind('blur', function() {
+                
+                // event: focus
+                $(document).on('focus', '.price', function() {
+                    $(this).val($(this).val().replace(/,/g, ''));
+                });
+                
+                // event: blur
+                $(document).on('blur', '.price', function() {
+                    console.log('This is value: ' + $(this).val() + ' / parseFloat value: ' + parseFloat($(this).val()));
                     if (parseFloat($(this).val()) > 0) {
-                        $(this).val(parseFloat($(this).val()).toLocaleString('en-US'));
+                        $(this).val(parseFloat($(this).val()).toLocaleString('en-US', {
+                            style: 'decimal',
+                            maximumFractionDigits: 4
+                        }));
+                    } else {
+                        $(this).val(0);
                     }
                 });
             }
