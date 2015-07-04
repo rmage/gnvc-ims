@@ -122,7 +122,7 @@
                             $('#vesselId').val(localRowData.vesselId);
                             $('#dialog-ajaxSearch').dialog('close');
 
-                            if (localRowData.batchNo.indexOf('F') > -1) {
+                            if (localRowData.batchNo.slice(-1).toUpperCase().indexOf('F') > -1) {
                                 $('#wsTypeId').find('option:contains(WSNR), option:contains(WSNC)').attr('disabled', true);
                                 $('#wsTypeId').find('option:contains(WSHR), option:contains(WSBF), option:contains(WSABF), option:contains(WSL)').attr('disabled', false);
                             } else {

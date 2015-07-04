@@ -27,7 +27,7 @@
                     <form id="poster" method="post" action="FishReceivingReport.htm">
                         <input type="hidden" name="action" value="save" />
                     </form>
-                    <form id="rrForm" method="post">
+                    <form id="rrForm" method="post" onsubmit="document.getElementById('save').setAttribute('disabled', 'disabled');">
                         <input type="hidden" id="type" />
                         <input id="dateFrom" type="hidden" name="dateFrom" value="<%=cDateH%>" />
                         <input id="dateTo" type="hidden" name="dateTo" value="<%=cDateH%>" />
@@ -56,7 +56,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="4">
-                                        <input type="submit" value="Save" />
+                                        <input type="submit" id="save" name="save" value="Save" />
                                         <input type="button" value="Cancel" onclick="window.location.replace('FishReceivingReport.htm')" />
                                     </td>
                                 </tr>
