@@ -31,8 +31,8 @@
 
                 $('#batchNo').click(function() {
                     $("#dialog-ajaxSearch").dialog({
-                        width: 500,
-                        height: 350,
+                        width: 550,
+                        height: 500,
                         position: "center",
                         modal: true,
                         zindex: 9999,
@@ -53,7 +53,8 @@
                             {name: 'vesselName', index: 'vesselName', width: 200},
                             {name: 'supplierName', index: 'supplierName', width: 200}],
                         sortname: 'batchNo',
-                        rowNum: 10, rowList: [10, 20, 30],
+                        height: 400,
+                        rowNum: 100, rowList: [100],
                         jsonReader: {repeatitems: false},
                         onSelectRow: function(ids) {
                             var localRowData = $(this).getRowData(ids);
@@ -116,7 +117,7 @@
                                     "<input id='uomCode" + rowCount + "' type='hidden' name='uomCode" + rowCount + "' value='Kg' /></td>" +
                                     "<td id='storageHTML" + rowCount + "' class='center'>" + localRowData.storageName + "</td>" +
                                     "<input id='storageId" + rowCount + "' type='hidden' name='storageId" + rowCount + "' value='" + localRowData.storageId + "' /></td>" +
-                                    "<td id='" + rowCount + "' class='ui-button ui-widget ui-state-default ui-corner-all' type='button' onClick='addRequestQuantity(this)'>Add Quantity</td>" +
+                                    "<td id='" + rowCount + "' style='width: 160px; text-align: center;'><button type='button' onclick='addRequestQuantity(this.parentNode);'>Add Quantity</button><button type='button' onclick='this.parentNode.parentNode.remove();'>Remove</button></td>" +
                                     "</tr>").appendTo("#main tbody");
 
                             $('#totalData').val(rowCount);
@@ -196,7 +197,7 @@
                 var id = selectedRow.getAttribute('id');
                 var balance = $('#balance' + id).html();
                 $('#dBalanceQty').html(balance);
-                $('#dRequestedQty').val(balance);
+                $('#dRequestedQty').val('');
                 $('#dId').val(id);
 
                 $("#dialog-request").dialog({

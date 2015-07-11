@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Create &therefore;; Fish Spoilage &therefore;; IMS</title>
+        <title>Create &therefore; Fish Spoilage &therefore;; IMS</title>
         <%@include file="../metaheader.jsp" %>
         <script language="JavaScript">
             $(document).ready(function() {
@@ -22,8 +22,8 @@
 
                 $('#batchNo').click(function() {
                     $("#dialog-ajaxSearch").dialog({
-                        width: 500,
-                        height: 350,
+                        width: 550,
+                        height: 530,
                         position: "center",
                         modal: true,
                         zindex: 9999,
@@ -44,7 +44,8 @@
                             {name: 'vesselName', index: 'vesselName', width: 200},
                             {name: 'supplierName', index: 'supplierName', width: 200}],
                         sortname: 'batchNo',
-                        rowNum: 10, rowList: [10, 20, 30],
+                        height: 400,
+                        rowNum: 100, rowList: [10],
                         jsonReader: {repeatitems: false},
                         onSelectRow: function(ids) {
                             var localRowData = $(this).getRowData(ids);
@@ -350,7 +351,7 @@
                             $(this).dialog("close");
                         },
                         "Save": function() {
-                            
+
                             $("form#addForm").submit();
                         }
                     },
@@ -402,6 +403,13 @@
                 }
 
                 return false;
+            });
+
+            // keyboard shortcut on add item
+            $(document).bind('keydown', function(e) {
+                if (e.keyCode === 107 && e.altKey) {
+                    $('#addItem').trigger('click');
+                }
             });
         </script>
     </body>

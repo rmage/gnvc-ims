@@ -143,21 +143,21 @@ public class FishReceivingReportController extends MultiActionController {
                 sb.append("\"timeShift\":\"").append(x.get("time_shift").toString()).append("\",");
                 sb.append("\"description\":\"<ul><li>").append(x.get("code").toString()).append("(").append(x.get("total_weight").toString()).append(")</li>");
                 // check if end of list (only 1 loop)
-                if (ms.size() == (i + 1)) {
-                    sb.append("</ul>\"}");
-                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
-                    row[0][0] = null;
-                    sb.append("</ul>\"}");
-                }
+//                if (ms.size() == (i + 1)) {
+//                    sb.append("</ul>\"}");
+//                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
+//                    row[0][0] = null;
+//                    sb.append("</ul>\"}");
+//                }
             } else {
-                sb.append("<li>").append(x.get("code").toString()).append("(").append(x.get("total_weight").toString()).append(")</li>");
-                // check if end of list
-                if (ms.size() == (i + 1)) {
-                    sb.append("</ul>\"}");
-                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
-                    row[0][0] = null;
-                    sb.append("</ul>\"}");
-                }
+//                sb.append("<li>").append(x.get("code").toString()).append("(").append(x.get("total_weight").toString()).append(")</li>");
+//                // check if end of list
+//                if (ms.size() == (i + 1)) {
+//                    sb.append("</ul>\"}");
+//                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
+//                    row[0][0] = null;
+//                    sb.append("</ul>\"}");
+//                }
             }
         }
         sb.append("]");

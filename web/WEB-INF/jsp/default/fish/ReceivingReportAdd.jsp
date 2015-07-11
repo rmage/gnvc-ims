@@ -13,6 +13,14 @@
                 /* prevent horizontal scrollbar */
                 overflow-x: hidden;
             }
+            
+            .fish-description { width: 305px; }
+            .fish-description span:first-child {
+                
+            }
+            .fish-description span:last-child {
+                
+            }
         </style>
     </head>
     <body>
@@ -108,7 +116,7 @@
                     $('#info').html(ui.item.boat + ' / ' + ui.item.supplier);
                     $('#dateShiftF').focus();
 
-                    if (ui.item.batchNo.indexOf('NF') > -1) {
+                    if (ui.item.batchNo.slice(-1).toUpperCase().indexOf('F') > -1) {
                         $('#type').val('FRESH');
                     } else {
                         $('#type').val('FROZEN');
@@ -150,7 +158,7 @@
                         for (var i = 0; i < json.length; i++) {
                             wsNo = wsNo + json[i].wsNo + ',';
                             $('#RRDetail').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].wsNo + '</td><td>' + json[i].dateShift +
-                                    '</td><td>' + json[i].regu + '</td><td>' + json[i].timeShift + '</td><td>' + json[i].description + '</td></tr>');
+                                    '</td><td>' + json[i].regu + '</td><td>' + json[i].timeShift + '</td><td class="fish-description">' + json[i].description + '</td></tr>');
                         }
                         $('#wsNo').val(wsNo.substr(0, wsNo.length - 1));
                     },

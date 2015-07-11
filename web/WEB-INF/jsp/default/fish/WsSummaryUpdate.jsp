@@ -86,7 +86,7 @@
             });
 
             function detectFishType(t) {
-                if (t.indexOf('F') > -1) {
+                if (t.slice(-1).toUpperCase().indexOf('F') > -1) {
                     $('#fishType').val('FishWssFresh');
                     $('#fishTypeHTML').val('FRESH');
                 } else {
