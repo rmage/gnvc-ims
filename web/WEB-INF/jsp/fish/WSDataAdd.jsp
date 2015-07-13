@@ -53,7 +53,7 @@
                                 "<input id='fishId" + rowCount + "' type='hidden' name='fishId" + rowCount + "' value='" + fishId + "' /></td>" +
                                 "<td id='totalWeightHTML" + rowCount + "' class='center'>" + addCommas(totalWeight) + "</td>" +
                                 "<input id='totalWeight" + rowCount + "' type='hidden' name='totalWeight" + rowCount + "' value='" + totalWeight + "' /></td>" +
-                                "<td id='" + rowCount + "' class='center' onClick='editItem(this)'>Edit</td>" +
+                                '<td id="' + rowCount + '" class="center"><img onclick="editItem(this.parentNode)" alt="edit button" src="resources/images/edit.gif"><img onclick="removeItem(this)" alt="delete button" src="resources/images/delete.gif"></td>' +
                                 "</tr>").appendTo("#main tbody");
 
                         $('#totalData').val(rowCount);
@@ -70,34 +70,6 @@
                     $('#dialog-add-item').dialog('close');
                     wsTotalWeight();
                 });
-
-//                $('#wsNo').on("blur", function() {
-//                    var wsNo = $('#wsNo').val();
-//                    $.ajax({
-//                        url: "FishJson.htm?action=checkWsNo&query=" + wsNo,
-//                        dataType: 'json',
-//                        success: function(data) {
-//                            if (data.result) {
-//                                $("#dialog-not-unique").dialog({
-//                                    open: function() {
-//                                        $(this).parents(".ui-dialog:first").find(".ui-dialog-titlebar").addClass("ui-state-error");
-//                                        $(this).parents(".ui-dialog:first").find(".ui-button").addClass("ui-state-error");
-//                                    },
-//                                    title: 'Warning',
-//                                    resizable: false,
-//                                    height: 120,
-//                                    modal: true,
-//                                    buttons: {
-//                                        "Ok": function() {
-//                                            $(this).dialog("close");
-//                                            $('#wsNo').focus();
-//                                        }
-//                                    }
-//                                });
-//                            }
-//                        }
-//                    });
-//                });
 
                 $('#ajaxSearchBtn').click(function() {
                     var query = $('#query').val();
@@ -155,6 +127,13 @@
                     zindex: 9999,
                     title: 'Edit Item'
                 });
+            }
+            
+            function removeItem(el) {
+                if(confirm('Continue to delete?')) {
+                    el.parentNode.parentNode.remove();
+                    wsTotalWeight();
+                }
             }
 
             function addCommas(nStr) {
@@ -243,8 +222,7 @@
                                     <td width="20%">WS No</td>
                                     <td class="style1">
                                         <label>
-                                            <input type="text" name="wsNo" id="wsNo" size="30"                                                    
-                                                   value="" class="validate[required] text-input numeric" />
+                                            <input type="text" name="wsNo" id="wsNo" size="30" class="validate[required] text-input">
                                             <label class="requiredfield" title="This Field Is Required!">*</label>
                                         </label>
                                     </td>
@@ -362,8 +340,7 @@
                             <td width="20%">Total Weight</td>
                             <td class="style1">
                                 <label>                                                                                                                                                                             
-                                    <input type="text" id="totalWeight" name="totalWeight" size="10" id="fishTotalWeight" value="" 
-                                           class="validate[required] text-input numeric" /> Kg 
+                                    <input type="text" id="totalWeight" name="totalWeight" size="10" id="fishTotalWeight" class="validate[required] text-input numeric" /> Kg 
                                     <label class="requiredfield" title="This Field Is Required!">*</label>                                                           
                                 </label>
                             </td> 

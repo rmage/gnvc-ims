@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class TestClass {
 
@@ -29,7 +30,7 @@ public class TestClass {
 //            System.out.println(separator[1]);
 //            data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
 //            System.out.println(data);
-            String x = "febryan@genevacons.com,ronald@genevacons.com";
+            System.out.println(String.format(Locale.US, "%,.2f", "1197123123.33"));
         } catch (Exception e) {
             e.printStackTrace();
         }

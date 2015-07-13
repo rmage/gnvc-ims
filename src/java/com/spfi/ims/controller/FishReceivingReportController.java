@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -126,11 +127,15 @@ public class FishReceivingReportController extends MultiActionController {
         FishRrDao frDao = DaoFactory.createFishRrDao();
 
         /* TRANSACTION | Something complex here */
-        sb.append("[");
+        sb.append("{\"rows\": [");
+        Double dGrandTotal = 0.00;
         Map<String, Object> x;
         List<Map<String, Object>> ms = frDao.getWeightSlip(batchNo, dateFrom, dateTo, type);
         for (int i = 0; i < ms.size(); i++) {
             x = ms.get(i);
+            Double dQuantity = Double.valueOf(x.get("total_weight").toString());
+            dGrandTotal = dGrandTotal + dQuantity;
+            
             if (row[0][0] == null) {
                 if (i > 0) {
                     sb.append(",");
@@ -141,26 +146,26 @@ public class FishReceivingReportController extends MultiActionController {
                 sb.append("\"dateShift\":\"").append(sdf.format(sdfDB.parse(x.get("date_shift").toString()))).append("\",");
                 sb.append("\"regu\":\"").append(x.get("regu").toString()).append("\",");
                 sb.append("\"timeShift\":\"").append(x.get("time_shift").toString()).append("\",");
-                sb.append("\"description\":\"<ul><li>").append(x.get("code").toString()).append("(").append(x.get("total_weight").toString()).append(")</li>");
+                sb.append("\"description\":\"<ol class=\\\"fish-rr\\\"><li><span>").append(x.get("code")).append("</span><span>").append(String.format(Locale.US, "%,.2f", dQuantity)).append("</span></li>");
                 // check if end of list (only 1 loop)
-//                if (ms.size() == (i + 1)) {
-//                    sb.append("</ul>\"}");
-//                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
-//                    row[0][0] = null;
-//                    sb.append("</ul>\"}");
-//                }
+                if (ms.size() == (i + 1)) {
+                    sb.append("</ul>\"}");
+                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
+                    row[0][0] = null;
+                    sb.append("</ul>\"}");
+                }
             } else {
-//                sb.append("<li>").append(x.get("code").toString()).append("(").append(x.get("total_weight").toString()).append(")</li>");
+                sb.append("<li><span>").append(x.get("code").toString()).append("</span><span>").append(String.format(Locale.US, "%,.2f", dQuantity)).append("</span></li>");
 //                // check if end of list
-//                if (ms.size() == (i + 1)) {
-//                    sb.append("</ul>\"}");
-//                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
-//                    row[0][0] = null;
-//                    sb.append("</ul>\"}");
-//                }
+                if (ms.size() == (i + 1)) {
+                    sb.append("</ul>\"}");
+                } else if (!ms.get(i + 1).get("ws_no").equals(row[0][0]) && !ms.get(i + 1).get("ws_no").equals(row[0][1])) {
+                    row[0][0] = null;
+                    sb.append("</ul>\"}");
+                }
             }
         }
-        sb.append("]");
+        sb.append("], \"grandTotal\": \"").append(String.format(Locale.US, "%,.2f", dGrandTotal)).append("\"}");
         response.getWriter().print(sb.toString());
     }
     

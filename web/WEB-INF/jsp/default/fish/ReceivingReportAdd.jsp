@@ -13,13 +13,25 @@
                 /* prevent horizontal scrollbar */
                 overflow-x: hidden;
             }
-            
-            .fish-description { width: 305px; }
-            .fish-description span:first-child {
-                
+
+            ol.fish-rr {
+                margin: 0;
+                padding: 0;
             }
-            .fish-description span:last-child {
-                
+            .fish-rr span:first-child {
+                border-bottom: 1px solid #c6c6c6;
+                display: inline-block;
+                font-weight: bold;
+                padding: 5px 0;
+                width: 150px;
+            }
+            .fish-rr span:last-child {
+                background-color: #000;
+                color: #fff;
+                display: inline-block;
+                padding: 5px 5px 5px 0;
+                text-align: right;
+                width: 60px;
             }
         </style>
     </head>
@@ -75,10 +87,10 @@
                             <thead>
                                 <tr>
                                     <td colspan="6">
-                                        <!--                                        <select id="type">
-                                                                                    <option>FRESH</option>
-                                                                                    <option>FROZEN</option>
-                                                                                </select>-->
+                                        <!--<select id="type">
+                                            <option>FRESH</option>
+                                            <option>FROZEN</option>
+                                        </select>-->
                                         <input id="getWs" type="button" value="Get Weight Slip" readonly="readonly" />
                                     </td>
                                 </tr>
@@ -88,10 +100,16 @@
                                     <th>WS Date</th>
                                     <th>Shift No</th>
                                     <th>Time Shift</th>
-                                    <th>Description</th>
+                                    <th style="width: 225px;">Description</th>
                                 </tr>
                             </thead>
                             <tbody class="tbl-nohover" id="RRDetail"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td style="text-align: right;" colspan="5">GRAND TOTAL</td>
+                                    <td id="grandTotal" style="text-align: right; padding-right: 20px;">0.00</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </form>
                 </div>
@@ -155,11 +173,12 @@
                     dataType: 'json',
                     success: function(json) {
                         var wsNo = '';
-                        for (var i = 0; i < json.length; i++) {
-                            wsNo = wsNo + json[i].wsNo + ',';
-                            $('#RRDetail').append('<tr><td>' + (i + 1) + '</td><td>' + json[i].wsNo + '</td><td>' + json[i].dateShift +
-                                    '</td><td>' + json[i].regu + '</td><td>' + json[i].timeShift + '</td><td class="fish-description">' + json[i].description + '</td></tr>');
+                        for (var i = 0; i < json.rows.length; i++) {
+                            wsNo = wsNo + json['rows'][i].wsNo + ',';
+                            $('#RRDetail').append('<tr><td>' + (i + 1) + '</td><td>' + json['rows'][i].wsNo + '</td><td>' + json['rows'][i].dateShift +
+                                    '</td><td>' + json['rows'][i].regu + '</td><td>' + json['rows'][i].timeShift + '</td><td>' + json['rows'][i].description + '</td></tr>');
                         }
+                        $('#grandTotal').html(json['grandTotal']);
                         $('#wsNo').val(wsNo.substr(0, wsNo.length - 1));
                     },
                     complete: function() {
