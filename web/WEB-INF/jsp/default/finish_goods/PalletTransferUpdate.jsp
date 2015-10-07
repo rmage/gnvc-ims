@@ -42,7 +42,7 @@
                                 <tr>
                                     <td>Pack Style / Size</td>
                                     <td>
-                                        <select id="packStyle" name="packStyle"><option value="">-- no pack style --</option></select>
+                                        <input type="text" id="packStyle" name="packStyle" value="${model.ptss[0].pack_style_code} / ${model.ptss[0].can_size}" readonly>
                                     </td>
                                     <td>For Brand</td>
                                     <td><input type="text" id="forBrand" name="forBrand" size="30" value="${model.ptss[0].pts_for_brand}"></td>

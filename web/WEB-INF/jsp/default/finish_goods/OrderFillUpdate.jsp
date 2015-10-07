@@ -23,7 +23,6 @@
                     <form action="#" id="fOfal" name="fOfal" method="post">
                         <input id="ofalId" name="ofalId" type="hidden" value="${model.ofals[0].ofal_id}">
                         <input type="hidden" id="ofalDate" name="ofalDate" value="${model.ofals[0].ofal_date}">
-                        <input type="hidden" id="itemCode" name="itemCode" value="${model.ofals[0].item_code}">
                         <table class="collapse tblForm row-select">
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
@@ -65,7 +64,7 @@
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
-                                    <td><input type="text" class="bor-info" value="${model.ofals[0].pack_size}" readonly></td>
+                                    <td><input type="text" class="bor-info" value="${model.ofals[0].pack_style_code} / ${model.ofals[0].pack_size}" readonly></td>
                                     <td><b>Actual Specification</b></td>
                                     <td></td>
                                 </tr>
@@ -73,13 +72,13 @@
                                     <td>Can Code</td>
                                     <td><input type="text" id="canCode" name="canCode" size="50" tabindex="7" value="${model.ofals[0].ofal_cancode}"></td>
                                     <td>Net Weight</td>
-                                    <td><input type="text" id="aNw" value="${model.ofals[0].bor_anw}" readonly></td>
+                                    <td><input type="text" id="aNw" value="${model.ofals[0].ofal_anw}" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Max Code</td>
                                     <td><input type="text" id="vMaxCode" name="vMaxCode" class="bor-info" size="10" value="${model.ofals[0].bor_maxcancode}" readonly></td>
                                     <td>Drained Weight</td>
-                                    <td><input type="text" id="aDw" value="${model.ofals[0].bor_adw}" readonly></td>
+                                    <td><input type="text" id="aDw" value="${model.ofals[0].ofal_adw}" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Shipment Schedule</td>
@@ -89,7 +88,9 @@
                                 </tr>
                                 <tr>
                                     <td>Special Instruction</td>
-                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="9" value="${model.ofals[0].ofal_remarks}"></td>
+                                    <td><input type="text" id="remarks" name="remarks" size="50" tabindex="9" value="${model.ofals[0].ofal_remarks}"></td>
+                                    <td><b style="color: red;">Item Code</b></td>
+                                    <td><input id="itemCode" name="itemCode" type="text" value="${model.ofals[0].item_code}"></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -223,6 +224,8 @@
                                 $('#ptsCode').focus();
                                 
                                 idx = idx - 1;
+                            } else {
+                                alert('[Error] PTS Not found!');
                             }
                         },
                         complete: function() {
@@ -311,7 +314,7 @@
                     var $i = $(this).find('input:eq(0)');
                     cs = cs + parseFloat($i.val());
                 });
-                $('#totalCs').val(cs);
+                $('#totalCs').val(cs.toFixed(2));
             }
             
             // UPDATE | function

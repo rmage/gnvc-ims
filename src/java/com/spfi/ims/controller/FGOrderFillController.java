@@ -99,6 +99,8 @@ public class FGOrderFillController extends MultiActionController {
         /* TRANSACTION | Something complex here */
         List<Map<String, Object>> ms = fgofDao.getBor(request.getParameter("term"));
         for (Map<String, Object> x : ms) {
+            String[] ndw = (x.get("pack_style").toString().split(" ; "))[5].split("/");
+            
             JSONObject row = new JSONObject();
             row.put("1", x.get("bor_reference"));
             row.put("2", x.get("bor_date"));
@@ -108,10 +110,10 @@ public class FGOrderFillController extends MultiActionController {
             row.put("6", x.get("brand_name"));
             row.put("7", x.get("bor_destination"));
             row.put("8", x.get("bor_case"));
-            row.put("9", "" + " / " + x.get("pack_size"));
-            row.put("10", "");
+            row.put("9", x.get("pack_style_code") + " / " + x.get("pack_size"));
+            row.put("10", ndw[0].trim());
             row.put("11", x.get("bor_maxcancode"));
-            row.put("12", "");
+            row.put("12", ndw[1].trim());
             row.put("13", x.get("bor_flakes"));
             row.put("101", x.get("item_code"));
             json.put(row);

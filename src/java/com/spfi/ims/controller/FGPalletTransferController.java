@@ -132,6 +132,7 @@ public class FGPalletTransferController extends MultiActionController {
             HashMap<String, Object> row = new HashMap<String, Object>();
             row.put("1", x.get("ProductCode"));
             row.put("2", x.get("CanSize"));
+            row.put("3", x.get("PackStyleCode"));
             json.put(row);
         }
 

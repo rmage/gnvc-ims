@@ -37,7 +37,7 @@
                                     <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="<%=sdfPicker.format(cDate)%>" size="10" required /></td>
                                 </tr>
                                 <tr>
-                                    <td>VAN</td>
+                                    <td>Container Number</td>
                                     <td><input type="text" id="edsVan" name="edsVan" size="50" /></td>
                                     <td>Seal Number</td>
                                     <td><input type="text" id="edsPelayaranSeal" name="edsPelayaranSeal" size="50" /></td>

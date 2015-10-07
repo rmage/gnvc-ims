@@ -31,7 +31,7 @@
                                     <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="" size="10" required></td>
                                 </tr>
                                 <tr>
-                                    <td>VAN</td>
+                                    <td>Container Number</td>
                                     <td><input type="text" id="edsVan" name="edsVan" size="50" value="${model.edss[0].eds_van}"></td>
                                     <td>Seal Number</td>
                                     <td><input type="text" id="edsPelayaranSeal" name="edsPelayaranSeal" size="50" value="${model.edss[0].eds_pelayaranseal}"></td>

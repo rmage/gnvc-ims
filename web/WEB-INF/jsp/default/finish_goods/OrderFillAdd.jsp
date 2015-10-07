@@ -28,7 +28,6 @@
                 <div class="box">
                     <form action="#" id="fOfal" name="fOfal" method="post">
                         <input type="hidden" id="ofalDate" name="ofalDate" value="<%=sdf.format(cDate)%>" />
-                        <input type="hidden" id="itemCode" name="itemCode">
                         <table class="collapse tblForm row-select">
                             <caption>Order Fill Authority to Label &therefore; Header</caption>
                             <tbody>
@@ -94,7 +93,9 @@
                                 </tr>
                                 <tr>
                                     <td>Special Instruction</td>
-                                    <td colspan="3"><input type="text" id="remarks" name="remarks" size="50" tabindex="9"></td>
+                                    <td><input type="text" id="remarks" name="remarks" size="50" tabindex="9"></td>
+                                    <td><b style="color: red;">Item Code</b></td>
+                                    <td><input id="itemCode" name="itemCode" type="text" readonly></td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -210,6 +211,8 @@
 //                                setCanCode();
                                 updateTotal();
                                 $('#ptsCode').focus();
+                            } else {
+                                alert('[Error] PTS Not found!');
                             }
                         },
                         complete: function () {
@@ -256,7 +259,7 @@
             }).data('autocomplete')._renderItem = function (ul, item) {
                 return $('<li>')
                         .data("item", item)
-                        .append('<a><b>' + item[4] + ' | ' + item[2] + '</b><br />Buyer: ' + item[5] + '</a></li>')
+                        .append('<a><b>BOR</b>: ' + item[4] + ' | ' + item[2] + '<br><b>Buyer/Brand</b>: ' + item[5] + '/' + item[6] + '<br><b>Item</b>: ' + item[101] + '</a></li>')
                         .appendTo(ul);
             };
             $("#fOfal").bind("submit", function () {
@@ -313,7 +316,7 @@
                     var $i = $(this).find('input:eq(0)');
                     cs = cs + parseFloat($i.val());
                 });
-                $('#totalCs').val(cs);
+                $('#totalCs').val(cs.toFixed(2));
             }
 
         </script>

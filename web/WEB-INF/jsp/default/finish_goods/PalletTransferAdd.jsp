@@ -47,7 +47,7 @@
                                 <tr>
                                     <td>Pack Style / Size</td>
                                     <td>
-                                        <select id="packStyle" name="packStyle"><option value="">-- no pack style --</option></select>
+                                        <input type="text" id="packStyle" name="packStyle" readonly>
                                     </td>
                                     <td>For Brand</td>
                                     <td><input type="text" id="forBrand" name="forBrand" size="30"></td>
@@ -149,13 +149,14 @@
                 minLength: 1,
                 select: function (event, ui) {
                     $(this).val(ui.item[1]);
+                    $('#packStyle').val(ui.item[3] + ' / ' + ui.item[2]);
                     $(this).attr('data-valid', true);
                     return false;
                 }
             }).data('autocomplete')._renderItem = function (ul, item) {
                 return $('<li>')
                         .data("item", item)
-                        .append('<a><b>Item Code: ' + item[1] + ' | Can Size: ' + item[2] + '</b></a></li>')
+                        .append('<a><b>Item Code: ' + item[1] + ' | Pack Style: ' + item[3] + ' | Can Size: ' + item[2] + '</b></a></li>')
                         .appendTo(ul);
             };
 
