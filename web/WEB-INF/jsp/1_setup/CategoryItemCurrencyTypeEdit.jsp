@@ -44,7 +44,7 @@
                                         Item Name
                                     </td>
                                     <td>
-                                        ${model.categoryItemCurrencyType.productId}
+                                        <%--${model.categoryItemCurrencyType.productId}--%>-
                                     </td>
                                 </tr>
                                 <tr>
@@ -52,10 +52,10 @@
                                         Currency Type
                                     </td>
                                     <td>
-                                        <select name="groupCurrencyType" id="groupCurrencyType" style="width: 20%" onchange="throwType()" >
-                                            <option value="DAILY" <c:if test="${DAILY == model.categoryItemCurrencyType.currencyType}"> selected="selected" </c:if> >DAILY</option>
-                                            <option value="WEEKLY" <c:if test="${WEEKLY == model.categoryItemCurrencyType.currencyType}"> selected="selected" </c:if>>WEEKLY</option>
-                                            <option value="MONTHLY" <c:if test="${MONTHLY == model.categoryItemCurrencyType.currencyType}"> selected="selected" </c:if>>MONTHLY</option>
+                                        <select name="groupCurrencyType" id="groupCurrencyType" style="width: 20%">
+                                            <option value="DAILY" <c:if test="${'DAILY' == model.categoryItemCurrencyType.currencyType}"> selected="selected" </c:if> >DAILY</option>
+                                            <option value="WEEKLY" <c:if test="${'WEEKLY' == model.categoryItemCurrencyType.currencyType}"> selected="selected" </c:if>>WEEKLY</option>
+                                            <option value="MONTHLY" <c:if test="${'MONTHLY' == model.categoryItemCurrencyType.currencyType}"> selected="selected" </c:if>>MONTHLY</option>
                                         </select>
                                     </td>
                                 </tr>

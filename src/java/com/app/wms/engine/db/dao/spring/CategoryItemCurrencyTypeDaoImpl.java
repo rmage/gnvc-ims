@@ -36,7 +36,6 @@ public class CategoryItemCurrencyTypeDaoImpl extends AbstractDAO implements Para
 
     public CategoryItemCurrencyType mapRow(ResultSet rs, int i) throws SQLException {
         CategoryItemCurrencyType categoryItemCurrencyType = new CategoryItemCurrencyType();
-        categoryItemCurrencyType.setNumber(rs.getInt("number"));
         categoryItemCurrencyType.setId(rs.getInt("id"));
         categoryItemCurrencyType.setCategoryCode(rs.getString("category_code"));
         categoryItemCurrencyType.setProductId(rs.getInt("product_id"));
@@ -45,6 +44,7 @@ public class CategoryItemCurrencyTypeDaoImpl extends AbstractDAO implements Para
         categoryItemCurrencyType.setCreatedDate(rs.getDate("created_date"));
         categoryItemCurrencyType.setUpdatedBy(rs.getString("updated_by"));
         categoryItemCurrencyType.setUpdatedDate(rs.getDate("updated_date"));
+        
         return categoryItemCurrencyType;
     }
 
@@ -68,12 +68,23 @@ public class CategoryItemCurrencyTypeDaoImpl extends AbstractDAO implements Para
         return jdbcTemplate.query("declare @Page int, @PageSize int set @Page = ?; set @PageSize = ?; "
                 + "with PagedResult as (select ROW_NUMBER() over (order by id asc) as number, id, "
                 + "category_code, product_id, currency_type , created_by, created_date, updated_by , updated_date from " + getTableName() + (where.isEmpty() ? " WHERE 1=1 " : " " + where) + " ) "
-                + "select * from PagedResult where number between case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page", this, page, show);
+                + "select * from PagedResult where number between case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 else @Page end and @PageSize * @Page "
+                + "ORDER BY CASE WHEN currency_type = 'DAILY' THEN 1 WHEN currency_type = 'WEEKLY' THEN 2 WHEN currency_type = 'MONTHLY' THEN 3 END, category_code ASC", this, page, show);
     }
 
     public CategoryItemCurrencyType findCurrencyTypeByCategoryCode(String categoryCode) {
         List<CategoryItemCurrencyType> cris = jdbcTemplate.query("select id as number , * from " + getTableName() + " where category_code = ? ", this, categoryCode);
         return cris.isEmpty() ? null : cris.get(0);
+    }
+    
+    public CategoryItemCurrencyType getById(int id) {
+        CategoryItemCurrencyType categoryItemCurrencyType = jdbcTemplate.queryForObject("SELECT id, category_code, product_id, currency_type, created_by, created_date, updated_by, updated_date FROM category_item_currency_type WHERE id = ?", this, id);
+        
+        return categoryItemCurrencyType;
+    }
+    
+    public void deleteByCategoryCode(String categoryCode) {
+        jdbcTemplate.update("DELETE FROM category_item_currency_type WHERE category_code = ?", categoryCode);
     }
 
 }

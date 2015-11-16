@@ -41,7 +41,7 @@
                                                 <c:forEach items="${model.productCategoryList}" var="prodCat">
                                                     <option value=<c:out value="${prodCat.categoryCode}"/>
                                                             <c:if test="${prodCat.categoryCode == model.selectedCatCode}"> selected </c:if>>
-                                                        <c:out value="${prodCat.categoryCode} - ${prodCat.categoryName}" />
+                                                        <c:out value="${prodCat.categoryCode}" />
                                                     </option>
                                                 </c:forEach>
                                             </c:if>

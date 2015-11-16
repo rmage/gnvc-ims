@@ -106,7 +106,8 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         SqlUpdate su = new SqlUpdate(dataSource, "UPDATE " + getTableName()
                 + " SET product_code=?, product_name=?, product_alias=?, product_category=?,"
                 + " brand_name=?, is_active=?, is_delete=?, updated_by=?, updated_date=?,"
-                + " uom_name=?, packstyle=?, packsize=?, lid=?, nwdwpw=?, product_description = ?  WHERE product_id=?");
+                + " uom_name=?, packstyle=?, packsize=?, lid=?, nwdwpw=?, product_description = ?,"
+                + " product_type = ? WHERE product_id=?");
 
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
@@ -124,32 +125,11 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
         su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-//        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-//        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-//        su.declareParameter(new SqlParameter(java.sql.Types.INTEGER));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.CHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
-//        su.declareParameter(new SqlParameter(java.sql.Types.TIMESTAMP));
-//        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
+        su.declareParameter(new SqlParameter(java.sql.Types.VARCHAR));
 
         su.compile();
 //        su.update(new Object[]{dto.getBarCode(), dto.getProductCode(), dto.getProductName(), dto.getProductAlias(), dto.getProductCategory(), dto.getBrandName(), dto.getProductType(), dto.getProductColor(), dto.getProductDescription(), dto.getVolumeWeight(), dto.getUnitWeight(), dto.getVolumeMatrix(), dto.getUnitMatrix(), dto.getUnitLength(), dto.getUnitWidth(), dto.getUnitHeight(), dto.getUnitPiece(), dto.getUnitBox(), dto.getUnitCartoon(), dto.getUnitPallete(), dto.getUserId(), dto.getCorpId(), dto.getWhCode(), dto.getIsActive(), dto.getIsDelete(), dto.getCreatedBy(), dto.getCreatedDate(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getUom(), dto.getSupplier(), dto.getBuyer(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), pk.getProductId()});
-        su.update(new Object[]{dto.getProductCode(), dto.getProductName(), dto.getProductAlias(), dto.getProductCategory(), dto.getBrandName(), dto.getIsActive(), dto.getIsDelete(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getUom(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), dto.getProductDescription(),
+        su.update(new Object[]{dto.getProductCode(), dto.getProductName(), dto.getProductAlias(), dto.getProductCategory(), dto.getBrandName(), dto.getIsActive(), dto.getIsDelete(), dto.getUpdatedBy(), dto.getUpdatedDate(), dto.getUom(), dto.getPackstyle(), dto.getPacksize(), dto.getLid(), dto.getNwdwpw(), dto.getProductDescription(), dto.getProductType(),
             pk.getProductId()});
     }
 
@@ -383,7 +363,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
     @Transactional
     public List<Product> findWhereProductCategoryEquals(String productCategory) throws ProductDaoException {
         try {
-            return jdbcTemplate.query("SELECT id, product_id, product_code, product_name, is_active, product_category, updated_by, updated_date FROM " + getTableName() + " WHERE product_category = ? ORDER BY product_code", new ProductListMap(), productCategory);
+            return jdbcTemplate.query("SELECT id, product_id, product_code, product_name, is_active, product_category, product_type, uom_name, updated_by, updated_date FROM " + getTableName() + " WHERE product_category = ? ORDER BY product_code", new ProductListMap(), productCategory);
         } catch (Exception e) {
             throw new ProductDaoException("Query failed", e);
         }
@@ -799,7 +779,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
                     + "set @Page = '" + i + "'; "
                     + "set @PageSize = 10; "
                     + "with PagedResult "
-                    + "as (select ROW_NUMBER() over (order by product_code desc) as id, product_id, product_code, product_name, is_active, product_category from product"
+                    + "as (select ROW_NUMBER() over (order by product_code desc) as id, product_id, product_code, product_name, is_active, product_category, uom_name, product_type from product"
                     + " where product_code like '%" + productCode + "%' and product_name like '%" + productName + "%' AND is_active = 'Y' ) "
                     + "select * from PagedResult where id between "
                     + "case when @Page > 1 then (@PageSize * @Page) - @PageSize + 1 "
@@ -855,7 +835,7 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
         return jdbcTemplate.query("DECLARE @page INT, @show INT "
                 + "SELECT @page=?, @show=? "
                 + "SELECT * FROM ("
-                + "SELECT id, product_id, product_code, product_name, is_active, product_category, ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY id" : order) + ") row FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE is_active='Y'" : where + " AND is_active='Y'")
+                + "SELECT id, product_id, product_code, product_name, is_active, product_category, product_type, uom_name, ROW_NUMBER() OVER (" + (order.isEmpty() ? "ORDER BY id" : order) + ") row FROM " + getTableName() + " " + (where.isEmpty() ? "WHERE is_active='Y'" : where + " AND is_active='Y'")
                 + ") list WHERE row BETWEEN (((@page - 1) * @show) + 1) AND (@page * @show)", new ProductListMap(), page, show);
     }
 

@@ -43,9 +43,9 @@
                                     </select>
                                 </td>                                
                             </tr>
-                                <td>
-                                    <input id="fishProduct" name="fishProduct" type="text" hidden="true"/>
-                                </td>
+                        <td>
+                            <input id="fishProduct" name="fishProduct" type="text" hidden="true"/>
+                        </td>
                         </tbody>
                         <tfoot>
                             <tr>
@@ -59,13 +59,14 @@
                         <caption>Item List</caption>
                         <thead>
                             <tr>
-                                <td>Item Code</td>
+                                <td>Item Code/ID</td>
                                 <td>Item Name</td>
                                 <td>Item Type</td>
                                 <td>Uom</td>
-                                <td>HS Code</td>
-                                <td>HS Name</td>
+                                <td>Custom Code</td>
+                                <td>Custom Name</td>
                                 <td style="width: 100px;">Status</td>
+                                <td>Is Wastes?</td>
                             </tr>
                         </thead>
                         <tbody id="main"></tbody>
@@ -81,14 +82,14 @@
 
         <!-- javascript block HERE -->
         <script>
-           $('#itemType').bind('change', function(){
+            $('#itemType').bind('change', function() {
                 if ($(this).val() === 'FISH') {
-                   $('#fishProduct').val($('#itemType').val());
-                } else if ($(this).val() === 'RENDERING'){
-                   $('#fishProduct').val($('#itemType').val());
-                } else if ($(this).val() === 'FINISHED GOODS'){
-                   $('#fishProduct').val($('#itemType').val());                    
-                }else {
+                    $('#fishProduct').val($('#itemType').val());
+                } else if ($(this).val() === 'RENDERING ITEM') {
+                    $('#fishProduct').val($('#itemType').val());
+                } else if ($(this).val() === 'FINISHED GOODS') {
+                    $('#fishProduct').val($('#itemType').val());
+                } else {
                     $('#fishProduct').val('PRODUCT');
                 }
             });
@@ -102,35 +103,42 @@
             $('#main input').live('focus', function() {
                 $(this).parent().next().next().html(sFocus);
             });
-            
-            $('#main input').live('blur', function() {
-                $o = $(this);
-                if($o.data('u')) {
-                    $o.data('u', false);
-                    
-                    var regexp = /^\d+(\.\d{1,})?$/;
-                    if(!regexp.test($o.val())) {
-                        return;
-                    } $o.parent().next().next().html(sSave);
-                    
-                    $.ajax({
-                        url: 'IcoreMap.htm',
-                        data: {action:'insertNUpdate', code: $o.parent().prev().prev().prev().prev().html(), hscode: $o.val(), scPro: $('#fishProduct').val()},
-                        dataType: 'json',
-                        success: function(json) {
-                            if(json.s) {
-                                $o.val(json.hscode);
-                                $o.parent().next().next().html(sDone);
-                            }
-                        }
-                    });
-                } else {
-                    $(this).parent().next().next().html(sNone);
-                }
-            });
 
+            var isFocus = 0;
+            $('#main input').live('click', function() {
+                isFocus = 1;
+            });
             $('#main input').live('keyup', function() {
                 $(this).data('u', true);
+            });
+
+            $('#main input').live('blur', function() {
+                $o = $(this);
+                setTimeout(function() {
+                    if ($o.data('u') && isFocus === 0) {
+                        $o.data('u', false);
+
+                        var regexp = /^\d+(\.\d{1,})?$/;
+                        if (!regexp.test($o.val())) {
+                            return;
+                        }
+                        $o.parent().next().next().html(sSave);
+
+                        $.ajax({
+                            url: 'IcoreMap.htm',
+                            data: {action: 'insertNUpdate', code: $o.parent().prev().prev().prev().prev().html(), hscode: $o.val(), scPro: $('#fishProduct').val()},
+                            dataType: 'json',
+                            success: function(json) {
+                                if (json.s) {
+                                    $o.val(json.hscode);
+                                    $o.parent().next().next().html(sDone);
+                                }
+                            }
+                        });
+                    } else {
+                        $o.parent().next().next().html(sNone);
+                    }
+                }, 600);
             });
 
             $('.item').live("keydown.autocomplete", function() {
@@ -138,10 +146,13 @@
                     source: '?action=getHsCodeList',
                     minLength: 2,
                     select: function(event, ui) {
-                        $(this).val(ui.item.code); 
+                        $(this).val(ui.item.code);
                         $(this).parent().next().html(ui.item.name);
+
+                        isFocus = 0;
+
                         return false;
-                    }                   
+                    }
                 }).data('autocomplete')._renderItem = function(ul, item) {
                     return $('<li>')
                             .data("item", item)
@@ -166,9 +177,10 @@
                     data: {action: 'getProductList', key: $('#itemType').val(), soc: $('#fishProduct').val()},
                     dataType: 'json',
                     success: function(json) {
-                        for (var i = 0; i < json.rows.length; i++) {                            
+                        for (var i = 0; i < json.rows.length; i++) {
                             $('#main').append('<tr><td>' + json.rows[i].code + '</td><td>' + json.rows[i].name + '</td><td>' + json.rows[i].type + '</td><td>' + json.rows[i].uom
-                                    + '</td><td><input class="item" name="codeList" type="text" value="' + json.rows[i].hscode + '"/></td><td>' + json.rows[i].hsname + '</td><td>' + sNone + '</td></tr>');
+                                    + '</td><td><input class="item" name="codeList" type="text" value="' + json.rows[i].hscode + '"/></td><td>' + json.rows[i].hsname + '</td><td>' + sNone + '</td>'
+                                    + '<td class="center"><input type="checkbox" class="is_wastes"></td></tr>');
                         }
                     },
                     complete: function() {

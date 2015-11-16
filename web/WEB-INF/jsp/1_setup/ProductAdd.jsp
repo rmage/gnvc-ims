@@ -55,8 +55,15 @@
                                             </c:forEach>
                                         </select> *
                                     </td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><b style="color: red;">Type</b></td>
+                                    <td>
+                                        <select name="type">
+                                            <option value="">NO TYPE</option>
+                                            <c:forEach items="${model.productType}" var="pt">
+                                                <option value="${pt}">${pt}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

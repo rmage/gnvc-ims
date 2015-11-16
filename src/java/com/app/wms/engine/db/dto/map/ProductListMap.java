@@ -21,6 +21,8 @@ public class ProductListMap implements ParameterizedRowMapper <Product>{
             p.setProductName(rs.getString(4));
             p.setIsActive(rs.getString(5));
             p.setProductCategory(rs.getString("product_category"));
+            p.setUom(rs.getString("uom_name"));
+            p.setProductType(rs.getString("product_type"));
             p.setUpdatedBy(hasColumn(rs, "updated_by") ? rs.getString("updated_by") : null);
             p.setUpdatedDate(hasColumn(rs, "updated_date") ? rs.getDate("updated_date") : null);
 

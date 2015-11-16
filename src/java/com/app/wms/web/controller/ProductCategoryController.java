@@ -389,6 +389,16 @@ public class ProductCategoryController extends MultiActionController {
             if (isCreate) {
                 ProductCategoryPk cpk = dao.insert(dto);
                 dto.setId(cpk.getId());
+                
+                // 2015 | add new category on category_item_currency_type
+                CategoryItemCurrencyType categoryItemCurrencyType = new CategoryItemCurrencyType();
+                categoryItemCurrencyType.setCategoryCode(dto.getCategoryCode());
+                categoryItemCurrencyType.setCurrencyType("DAILY");
+                categoryItemCurrencyType.setCreatedBy(dto.getCreatedBy());
+                categoryItemCurrencyType.setCreatedDate(dto.getCreatedDate());
+                
+                CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
+                categoryItemCurrencyTypeDao.insert(categoryItemCurrencyType);
             } else {
                 dto.setUpdatedBy(userId);
                 dto.setUpdatedDate(now);
@@ -433,6 +443,10 @@ public class ProductCategoryController extends MultiActionController {
             dto.setUpdatedBy(pcreatedBy);
             dto.setUpdatedDate(new java.util.Date());
             dao.update(dto.createPk(), dto);
+            
+            // 2015 | remove product category from category_item_currency_type
+            CategoryItemCurrencyTypeDao categoryItemCurrencyTypeDao = DaoFactory.createCategoryItemCurrencyTypeDao();
+            categoryItemCurrencyTypeDao.deleteByCategoryCode(dto.getCategoryCode());
         }
 
         List<ProductCategory> list = dao.findAll();

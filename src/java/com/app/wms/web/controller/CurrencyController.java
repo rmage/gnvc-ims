@@ -14,14 +14,17 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import com.app.wms.engine.db.dao.CurrencyDao;
+import com.app.wms.engine.db.dao.CurrencyRateDao;
 import com.app.wms.engine.db.dto.Currency;
 import com.app.wms.engine.db.dto.CurrencyPk;
+import com.app.wms.engine.db.dto.CurrencyRate;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.CurrencyDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.app.wms.web.util.AppConstant;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
 
 public class CurrencyController extends MultiActionController {
 
@@ -184,6 +187,37 @@ public class CurrencyController extends MultiActionController {
                 if (isCreate) {
                     CurrencyPk cp = dao.insert(dto);
                     dto.setId(cp.getId());
+                    
+                    // 2015 | set CURRENCY_RATE to 1:1 for all currency and type
+                    CurrencyDao currencyDao = DaoFactory.createCurrencyDao();
+                    CurrencyRateDao currencyRateDao = DaoFactory.createCurrencyRateDao();
+                    String[] rateType = {"DAILY"/*, "WEEKLY", "MONTHLY"*/};
+                    for (String s : rateType) {
+                        List<Currency> currencyList = currencyDao.findWhereIsActiveEquals("Y");
+                        
+                        for (Currency currency : currencyList) {
+                            CurrencyRate currencyRate = new CurrencyRate();
+                            currencyRate.setcurrencyCodeFrom(dto.getCurrencyCode());
+                            currencyRate.setCurrencyCodeTo(currency.getCurrencyCode());
+                            currencyRate.setRateValue(BigDecimal.ONE);
+                            currencyRate.setCurrencyType(s);
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(Calendar.YEAR, 2000);
+                            calendar.set(Calendar.MONTH, 0);
+                            calendar.set(Calendar.DAY_OF_MONTH, 1);
+                            calendar.set(Calendar.HOUR_OF_DAY, 0);
+                            calendar.set(Calendar.MINUTE, 0);
+                            calendar.set(Calendar.SECOND, 0);
+                            calendar.set(Calendar.MILLISECOND, 0);
+                            currencyRate.setRateDate(calendar.getTime());
+                            
+                            currencyRate.setCreatedDate(new Date());
+                            currencyRate.setCreatedBy(dto.getCreatedBy());
+                            currencyRate.setCreatedDate(new Date());
+                            currencyRateDao.insert(currencyRate);
+                        }
+                    }
                 } else {
                     dao.update(dto.createPk(), dto);
                 }

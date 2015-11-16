@@ -21,4 +21,6 @@ public interface RenderingSalesDao {
     
     public List<Map<String, Object>> getSales(String key);
     
+    public List<Map<String, Object>> getRenderingItem();
+    
 }

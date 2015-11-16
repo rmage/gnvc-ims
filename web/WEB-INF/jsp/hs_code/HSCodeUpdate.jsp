@@ -34,14 +34,30 @@
                             <tbody class="tbl-nohover">
                                 <tr>
                                     <td>Code</td>
-                                    <td>
-                                        <input type="text" id="hscode_code" name="hscode_code" size="50" value="${model.hs_code[0].code}" readonly />
-                                    </td>
+                                    <td><input type="text" id="hscode_code" name="hscode_code" size="50" value="${model.hs_code[0].code}" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Name</td>
+                                    <td><input type="text" id="hscode_name" name="hscode_name" size="50" value="${model.hs_code[0].name}" required></td>
+                                </tr>
+                                <tr>
+                                    <td>Unit of Measurement</td>
                                     <td>
-                                        <input type="text" id="hscode_name" name="hscode_name" size="50" value="${model.hs_code[0].name}"/>
+                                        <select id="hscode_uom" name="hscode_uom" required>
+                                            <c:forEach items="${model.uomList}" var="x">
+                                                <option value="${x.uomCode}" <c:if test="${model.hs_code[0].uom == x.uomCode}">selected</c:if>>${x.uomCode}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Unit of Measurement</td>
+                                    <td>
+                                        <select id="hscode_type" name="hscode_type" required>
+                                            <c:forEach items="${model.productType}" var="x">
+                                                <option value="${x}" <c:if test="${model.hs_code[0].type == x}">selected</c:if>>${x}</option>
+                                            </c:forEach>
+                                        </select>
                                     </td>
                                 </tr>
                             </tbody>
@@ -67,7 +83,7 @@
         <!-- javascript block HERE -->
         <script>
             $('#save').bind('click', function() {
-                var data = $('#hscode_code').val() + ':s:' + $('#hscode_name').val() + ':s::se:';
+                var data = $('#hscode_code').val() + ':s:' + $('#hscode_name').val() + ':s:' + $('#hscode_uom').val() + ':s:' + $('#hscode_type').val() + ':s::se:';
 
 //                $('#main tr').each(function() {
 //                    data = data + $(this).find('td:eq(1)').html() + ':s:' + $(this).find('td:eq(4)').html().replace(/,/g, '') + ':s:' + $(this).find('input[type="text"]').val() + ':s:' + $(this).find('td:eq(6)').html() + ':s::se:';

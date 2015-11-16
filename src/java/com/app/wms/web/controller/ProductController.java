@@ -13,6 +13,7 @@ import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.UomDaoException;
 import com.app.wms.engine.db.factory.*;
 import com.app.wms.web.util.AppConstant;
+import com.app.wms.web.util.SPFIConstant;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -57,41 +58,41 @@ public class ProductController extends MultiActionController {
         try {
             HashMap m = new HashMap();
 
-            Integer page = null;
-            Integer paging = null;
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-            }
-            if (request.getParameter("paging") != null) {
-                paging = Integer.parseInt(request.getParameter("paging"));
-            }
-            if (page == null) {
-                page = 1;
-            }
-            if (paging == null) {
-                paging = 10;
-            }
-            int start = (page - 1) * paging + 1;
-            int end = start + paging - 1;
-
-            Product p = new Product();
-            p.setProductCode(request.getParameter("productCode"));
-            p.setProductName(request.getParameter("productName"));
-
-            ProductDao dao = DaoFactory.createProductDao();
-            List<Product> listSearchPage = dao.findProductPaging(p, page);
-
-            ProductCategoryDao productCategoryDao = DaoFactory.createProductCategoryDao();
-            for (Product x : listSearchPage) {
-                List<ProductCategory> pc = productCategoryDao.findWhereCategoryCodeEquals(x.getProductCategory());
-                x.setProductCategory(pc.isEmpty() ? "- product category not found -" : pc.get(0).getCategoryName());
-            }
-
-            int total = 2000;
-            m.put("product", listSearchPage);
-            m.put("totalRows", total);
-            m.put("page", page);
-            m.put("paging", paging);
+//            Integer page = null;
+//            Integer paging = null;
+//            if (request.getParameter("page") != null) {
+//                page = Integer.parseInt(request.getParameter("page"));
+//            }
+//            if (request.getParameter("paging") != null) {
+//                paging = Integer.parseInt(request.getParameter("paging"));
+//            }
+//            if (page == null) {
+//                page = 1;
+//            }
+//            if (paging == null) {
+//                paging = 10;
+//            }
+//            int start = (page - 1) * paging + 1;
+//            int end = start + paging - 1;
+//
+//            Product p = new Product();
+//            p.setProductCode(request.getParameter("productCode"));
+//            p.setProductName(request.getParameter("productName"));
+//
+//            ProductDao dao = DaoFactory.createProductDao();
+//            List<Product> listSearchPage = dao.findProductPaging(p, page);
+//
+//            ProductCategoryDao productCategoryDao = DaoFactory.createProductCategoryDao();
+//            for (Product x : listSearchPage) {
+//                List<ProductCategory> pc = productCategoryDao.findWhereCategoryCodeEquals(x.getProductCategory());
+//                x.setProductCategory(pc.isEmpty() ? "- product category not found -" : pc.get(0).getCategoryName());
+//            }
+//
+//            int total = 2000;
+//            m.put("product", listSearchPage);
+//            m.put("totalRows", total);
+//            m.put("page", page);
+//            m.put("paging", paging);
 
             return m;
         } catch (Exception e) {
@@ -304,8 +305,8 @@ public class ProductController extends MultiActionController {
         Map map = new HashMap();
         map = this.getModelByPrimaryKey(request);
         map.put("mode", "create");
+        map.put("productType", SPFIConstant.productType);
 
-//        ProductDao dao = DaoFactory.createProductDao();
         return new ModelAndView("1_setup/ProductAdd", "model", map);
     }
 
@@ -339,6 +340,7 @@ public class ProductController extends MultiActionController {
             p.setProductDescription(request.getParameter("itemDescription"));
             p.setProductCategory(request.getParameter("category"));
             p.setUom(request.getParameter("uom"));
+            p.setProductType(request.getParameter("type"));
             p.setIsActive("Y");
             p.setIsDelete("N");
             p.setCreatedBy(createdBy);
@@ -500,6 +502,7 @@ public class ProductController extends MultiActionController {
             p.setProductDescription(request.getParameter("itemDescription"));
             p.setProductCategory(request.getParameter("category"));
             p.setUom(request.getParameter("uom"));
+            p.setProductType(request.getParameter("type"));
             p.setUpdatedBy(uDao.findByPrimaryKey(lu.getUserId()).getName());
             p.setUpdatedDate(new Date());
             pDao.update(p.createPk(), p);
@@ -550,6 +553,8 @@ public class ProductController extends MultiActionController {
         // get product unit of measurement
         List<Uom> dropListUOM = daoUoM.findAll();
         map.put("dropListUOM", dropListUOM);
+        
+        map.put("productType", SPFIConstant.productType);
 
         return new ModelAndView("1_setup/ProductEdit", "model", map);
     }
@@ -569,8 +574,10 @@ public class ProductController extends MultiActionController {
             pw.print("{\"1\": \"" + x.getProductId() + "\", ");
             pw.print("\"2\": \"" + x.getProductCode() + "\", ");
             pw.print("\"3\": \"" + x.getProductName() + "\", ");
-            pw.print("\"4\": \"" + x.getProductCategory() + "\", ");
-            pw.print("\"5\": \"" + x.getIsActive() + "\"}");
+            pw.print("\"4\": \"" + x.getUom() + "\", ");
+            pw.print("\"5\": \"" + x.getProductCategory() + "\", ");
+            pw.print("\"6\": \"" + (x.getProductType() == null ? "<i>Not Set</i>" : (x.getProductType().isEmpty() ? "NO TYPE" : x.getProductType())) + "\", ");
+            pw.print("\"7\": \"" + x.getIsActive() + "\"}");
 
             b = Boolean.TRUE;
         }

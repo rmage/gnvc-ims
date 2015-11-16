@@ -2,8 +2,11 @@ package com.app.wms.web.controller;
 
 
 import com.app.wms.engine.db.dao.HsCodeDao;
+import com.app.wms.engine.db.dao.UomDao;
 import com.app.wms.engine.db.dto.map.LoginUser;
+import com.app.wms.engine.db.exceptions.UomDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.app.wms.web.util.SPFIConstant;
 import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,11 +25,16 @@ public class HsCodeController extends MultiActionController {
         return new ModelAndView("hs_code/HSCodeList");
     }
 
-    public ModelAndView create(HttpServletRequest request, HttpServletResponse response){
+    public ModelAndView create(HttpServletRequest request, HttpServletResponse response) throws UomDaoException {
 
         /* DATA | get initial value */
         HashMap m = new HashMap();
         LoginUser lu = (LoginUser) request.getSession().getAttribute("user");
+        
+        UomDao uomDao = DaoFactory.createUomDao();
+        m.put("uomList", uomDao.findAll());
+        
+        m.put("productType", SPFIConstant.productType);
 
         return new ModelAndView("hs_code/HSCodeAdd", "model", m);
     }
@@ -52,11 +60,10 @@ public class HsCodeController extends MultiActionController {
             sb.append("{\"1\": \"").append(x.get("code")).append("\", ");
             sb.append("\"2\": \"").append(x.get("code")).append("\", ");
             sb.append("\"3\": \"").append(x.get("name")).append("\", ");
-            sb.append("\"4\": \"").append(x.get("created_by")).append("\"}");
+            sb.append("\"4\": \"").append(x.get("uom")).append("\", ");
+            sb.append("\"5\": \"").append(x.get("type")).append("\", ");
+            sb.append("\"6\": \"").append(x.get("created_by")).append("\"}");
 
-            System.out.println("append 1 = " + x.get("name"));
-            System.out.println("append 2 = " + x.get("code"));
-            System.out.println("append 3 = " + x.get("created_by"));
             b = Boolean.TRUE;
         }
         sb.append("]}");
@@ -77,10 +84,6 @@ public class HsCodeController extends MultiActionController {
 
             data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
             DaoFactory.createHsCodeDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
-            
-            System.out.println("data = " + data);
-            System.out.println("separator 0 = " + separator[0]);
-            System.out.println("separator 1 = " + separator[1]);            
 
             json.put("message", "");
         } catch (Exception e) {
@@ -102,11 +105,16 @@ public class HsCodeController extends MultiActionController {
         return new ModelAndView("redirect:HsCode.htm");
     }
 
-    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) {
+    public ModelAndView update(HttpServletRequest request, HttpServletResponse response) throws UomDaoException {
         Map<String, Object> model = new HashMap<String, Object>();
             try {
                 String key = request.getParameter("key");
                 model.put("hs_code", DaoFactory.createHsCodeDao().getHsCode(key));
+                
+                UomDao uomDao = DaoFactory.createUomDao();
+                model.put("uomList", uomDao.findAll());
+                
+                model.put("productType", SPFIConstant.productType);
             } catch (Exception e) {
                 e.printStackTrace();
             }

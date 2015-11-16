@@ -28,142 +28,101 @@
             <!-- transaction form HERE -->
             <div id="content" style="display: none" class="span-24 last">
                 <div class="box">
-                    <form action="BcCode.htm" id="poster" method="post" style="display: none;">
-                        <input name="action" type="hidden" value="save" />
-                    </form>
-                    <form action="#" id="bcForm" method="get">
-                        <table class="collapse tblForm row-select">
-                            <caption>Transaction &therefore; Detail</caption>
-                            <thead>
-                                <tr>
-                                    <td style="width: 100px;">Module</td>
-                                    <td colspan="4">
-                                        <select id="moduleCategory" name="moduleCategory">
-                                            <option value="empty">Select Module</option>                                            
-                                            <option value="nfRR">Non Fish - Receiving Report</option>
-                                            <option value="fishRR">Fish - Receiving Report</option>
-                                            <option value="fgEDS">Finish Goods - Export Delivery Slip</option>
-                                            <!--                                        <option value="fgDR">Finish Goods - Delivery Report</option>                                        -->
-                                            <!--                                        <option value="fgPTS">Finish Goods - Pallet Transfer Slip</option>-->
-                                            <option value="rmDR">Rendering Module - Delivery Report</option>
-                                            <!--                                        <option value="rawTsMU">TS/WDS - Raw Material Used</option>-->
-                                            <!--                                        <option value="rawWdsMU">WDS - Raw Material Used</option>-->
-                                        </select>
-                                        <label> Trx No </label>
-                                        <input id="trxNo" name="trxNo" size="20" type="text" />
-                                        <input id = "btnSearchTrx" type="submit" value="Search" name="btnSearchTrx" />
-                                        <input id="btnClear" type="button" value="Cancel" name="btnClear" />
-                                    </td>
-                                <tr>
-                                    <td><label> Trx Date </label></td>
-                                    <td colspan="4">
-                                        <input id="trxDate" name="trxDate" size="10" type="text" disabled="true" />
-                                    </td>
-                                </tr>
-                                </tr>                            
-                                <tr>
-                                    <td rowspan="2">Item Code</td>
-                                    <td rowspan="2">Item Name</td> 
-                                    <td rowspan="2">Qty</td>                                
-                                    <td rowspan="2">Hs Code</td>
-                                    <td rowspan="2">Harga per Satuan</td>                                
-                                </tr>
-                            </thead>
-                            <tbody class="tbl-nohover" id="main"></tbody>
-                        </table>
-                        <table id="bcDetail" class="collapse tblForm" hidden="">
-                            <caption>Bc Code &therefore;</caption>
-                            <tbody>
-                                <tr>
-                                    <td style="width: 137px">No Pesanan Penjualan</td>
-                                    <td>
-                                        <input id="pesanNo" name="pesanNo" type="text" size="30" />
-                                    </td>
-                                    <td style="width: 137px">Tanggal Pesanan Penjualan</td>
-                                    <td>
-                                        <input id="pesanTgl" name="pesanTgl" type="text" size="30" />
-                                    </td>
-                                </tr>   
-                                <tr>
-                                    <td style="width: 137px">Pajak</td>
-                                    <td>
-                                        <input id="pajak" name="pajak" type="text" size="30" />
-                                    </td>
-                                    <td style="width: 137px">No BC</td>
-                                    <td>
-                                        <select id="bcNo" name="bcNo" required="true">
-                                            <option value="0">Select No BC</option>
-                                            <c:forEach items="${model.pc}" var="x">
-                                                <option value="${x.code_bc}">${x.name_bc}</option>
-                                            </c:forEach>
-                                        </select>
-                                        <span class="requiredfield">*</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 137px">Presentase Pajak</td>
-                                    <td>
-                                        <input id="presenPajak" name="presenPajak" type="text" size="30" />
-                                    </td>
-                                    <td style="width: 137px">Bc Date</td>
-                                    <td>
-                                        <input id="bcDate" name="bcDate" type="text" size="30" required="true" />
-                                        <span class="requiredfield">*</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 137px">No Seri</td>
-                                    <td>
-                                        <input id="seriNo" name="seriNo" type="text" size="30" />
-                                    </td>
-                                    <td style="width: 137px">No Registration</td>
-                                    <td>
-                                        <input id="regNo" name="regNo" type="text" size="30" required="true" />
-                                        <span class="requiredfield">*</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 137px">BEA</td>
-                                    <td>
-                                        <input id="bea" name="bea" type="text" size="30" value="Bebas Bea" />
-                                    </td>
-                                    <td style="width: 137px">Presentase BEA</td>
-                                    <td>
-                                        <input id="presenBea" name="presenBea" type="text" size="30" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 137px">Valuta</td>
-                                    <td>
-                                        <input id="valuta" name="valuta" type="text" size="30" value="0" />
-                                    </td>
-                                    <td style="width: 137px">Currency</td>
-                                    <td>
-                                        <select id="currency" name="currency">                                            
-                                            <option value="USD">USD</option>                                            
-                                            <option value="IDR">IDR</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="width: 137px">Keterangan</td>
-                                    <td>
-                                        <input id="ketrgn" name="ketrgn" type="text" size="30" />
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5">
-                                        <input id="save" type="submit" value="Save" />
-                                        <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('BcCode.htm');" />
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </form>
+                    <table class="collapse tblForm row-select">
+                        <caption>Transaction &therefore; Search</caption>
+                        <thead>
+                            <tr>
+                                <td style="width: 100px;">Transaction</td>
+                                <td colspan="4">
+                                    <select id="moduleCategory" name="moduleCategory">
+                                        <option value="empty">-- Transaction Type --</option>                                            
+                                        <option value="nfRR">Non Fish - Receiving Report</option>
+                                        <!--<option value="fishRR">Fish - Receiving Report</option>-->
+                                        <!--<option value="fgEDS">Finish Goods - Export Delivery Slip</option>-->
+                                        <!--                                        <option value="fgDR">Finish Goods - Delivery Report</option>                                        -->
+                                        <!--                                        <option value="fgPTS">Finish Goods - Pallet Transfer Slip</option>-->
+                                        <!--<option value="rmDR">Rendering Module - Delivery Report</option>-->
+                                        <!--                                        <option value="rawTsMU">TS/WDS - Raw Material Used</option>-->
+                                        <!--                                        <option value="rawWdsMU">WDS - Raw Material Used</option>-->
+                                    </select>
+                                    <label> Document #</label>
+                                    <input id="trxNo" name="trxNo" size="20" type="text" placeholder="Number" style="background: rgba(0, 0, 0, 0) none repeat scroll 0 0; border-style: none none dashed; border-width: medium medium 1px;width: 50px;">
+                                    <input id = "btnSearchTrx" type="submit" value="Search" name="btnSearchTrx" />
+                                    <input id="btnClear" type="button" value="Cancel" name="btnClear" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background: none;">Information</td>
+                                <td colspan="3" id="sumPlaceholder" style="background: none;"></td>
+                            </tr>
+                            <tr>
+                                <td>Item Code</td>
+                                <td>Item Name</td> 
+                                <td>Qty</td>                                
+                                <td>iCore Code</td>
+                                <!--<td rowspan="2">Harga per Satuan</td>-->                                
+                            </tr>
+                        </thead>
+                        <tbody class="tbl-nohover" id="main"></tbody>
+                    </table>
+
+                    <div id="bcDetail" style="display: none;">
+                        <ul>
+                            <li><a href="#tabs-bc23" id="nav-bc23">BC 2.3</a></li>
+                        </ul>
+                        <div id="tabs-bc23">
+                            <form action="#" class="bcForm" id="bcForm23" name="bcForm23" method="get" autocomplete="off">
+                                <input type="hidden" id="bcNo" name="bcNo" value="BC 2.3">
+                                <input type="hidden" id="srjalanNo" name="srjalanNo">
+                                <input type="hidden" id="valuta" name="valuta">
+
+                                <input type="hidden" id="pajak" name="pajak">
+                                <input type="hidden" id="presenPajak" name="presenPajak">
+                                <input type="hidden" id="seriNo" name="seriNo">
+                                <input type="hidden" id="currency" name="currency">
+                                <input type="hidden" id="ketrgn" name="ketrgn">
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>NOMOR DOKUMEN PABEAN</td>
+                                            <td>:
+                                                <input id="regNo" name="regNo" type="text" size="30" required>
+                                                <span class="requiredfield">*</span>
+                                            </td>
+
+                                            <td>BEA</td>
+                                            <td>: <input id="bea" name="bea" type="text" size="30" value="0%"></td>
+
+                                            <td>NOMOR PESANAN PENJUALAN</td>
+                                            <td>: <input id="pesanNo" name="pesanNo" type="text" size="30"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>TGL DOKUMEN PABEAN</td>
+                                            <td>:
+                                                <input id="bcDate" name="bcDate" type="text" size="30" required> 
+                                                <span class="requiredfield">*</span>
+                                            </td>
+
+                                            <td>PERSENTASE BEA</td>
+                                            <td>: <input id="presenBea" name="presenBea" type="text" size="30" value="BEBAS BEA"></td>
+
+                                            <td>TANGGAL PESANAN PENJUALAN</td>
+                                            <td>: <input id="pesanTgl" name="pesanTgl" type="text" size="30"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="6">
+                                                <input id="save" type="submit" value="Save" />
+                                                <input id="btnCancel" type="reset" value="Cancel" onclick="window.location.replace('BcCode.htm');" />
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -175,25 +134,41 @@
 
         <!-- javascript block HERE -->
         <script>
+            $('#bcDetail').tabs();
             $('#bcDate').datepicker({dateFormat: "dd/mm/yy"}).datepicker("setDate", new Date());
             $('#pesanTgl').datepicker({dateFormat: "dd/mm/yy"}).datepicker();
 
-            $('#bcForm').bind('submit', function() {
-                var data = $('#moduleCategory').val() + ':s:' + $('#pesanNo').val() + ':s:' + ($('#pesanTgl').val() === '' ? '' : gnvs.util.toDBDate($('#pesanTgl').val())) + ':s:' + $('#srjalanNo').val() + ':s:' +
-                        $('#trxNo').val() + ':s:' + $('#bcNo').val() + ':s:' + gnvs.util.toDBDate($('#bcDate').val()) + ':s:' + $('#regNo').val() + ':s:' + $('#pajak').val() + ':s:' +
-                        $('#presenPajak').val() + ':s:' + $('#seriNo').val() + ':s:' + $('#bea').val() + ':s:' + $('#presenBea').val() + ':s:' + $('#valuta').val() + ':s:' + $('#currency').val() + ':s:' +
-                        $('#ketrgn').val() + ':s::se:';
+            $('.bcForm').each(function() {
+                $(this).bind('submit', function() {
+                    var $f = $(this);
+                    var data = $('#moduleCategory').val() + ':s:' +
+                            $f.find('#pesanNo').val() + ':s:' +
+                            ($f.find('#pesanTgl').val() === '' ? '' : gnvs.util.toDBDate($f.find('#pesanTgl').val())) + ':s:' +
+                            $f.find('#srjalanNo').val() + ':s:' +
+                            $('#trxNo').val() + ':s:' +
+                            $f.find('#bcNo').val() + ':s:' +
+                            gnvs.util.toDBDate($f.find('#bcDate').val()) + ':s:' +
+                            $f.find('#regNo').val() + ':s:' +
+                            $f.find('#pajak').val() + ':s:' +
+                            $f.find('#presenPajak').val() + ':s:' +
+                            $f.find('#seriNo').val() + ':s:' +
+                            $f.find('#bea').val() + ':s:' +
+                            $f.find('#presenBea').val() + ':s:' +
+                            $f.find('#valuta').val() + ':s:' +
+                            $f.find('#currency').val() + ':s:' +
+                            $f.find('#ketrgn').val() + ':s::se:';
 
-                console.log(data);
-                gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
-                    if (json.message === '') {
-                        $('#btnCancel').trigger('click');
-                    } else {
-                        alert(json.message);
-                    }
+                    console.log(data);
+                    gnvs.ajaxCall({action: 'ajaxNSave', data: encodeURIComponent(data)}, function(json) {
+                        if (json.message === '') {
+                            $('#btnCancel').trigger('click');
+                        } else {
+                            alert(json.message);
+                        }
+                    });
+
+                    return false;
                 });
-
-                return false;
             });
 
             $('#btnClear').click(function() {
@@ -216,13 +191,21 @@
                     dataType: 'json',
                     success: function(json) {
                         if (json.rows.length > 0) {
-                            $('#trxDate').val(gnvs.util.toViewDate(json.rows[0].tanggal));
+                            $('#sumDocumentNumber').text($('#trxNo').val());
+                            $('#sumDocumentDate').text(gnvs.util.toViewDate(json.rows[0].tanggal));
+                            $('#sumDocumentSupplier').text(json.rows[0].supplier);
+                            $('#sumDocumentValuta').text(json.rows[0].valuta);
+
+                            // BC Form
+                            $('#tabs-bc23').find('#srjalanNo').val($('#trxNo').val());
+                            $('#tabs-bc23').find('#valuta').val(json.rows[0].valuta);
                         } else if (json.rows.length === 0) {
                             alert('Nomor Trx Ini Sudah Teregistrasi');
                         }
+
                         for (var i = 0; i < json.rows.length; i++) {
                             $('#main').append('<tr><td>' + json.rows[i].prodCode + '</td><td>' + json.rows[i].prodName + '</td><td>'
-                                    + json.rows[i].qty + '</td><td>' + json.rows[i].hs_code + '</td><td>' + json.rows[i].harga_per_satuan + '</td></tr>');
+                                    + json.rows[i].qty + '</td><td>' + json.rows[i].hs_code + '</td></tr>');
                             $('#bcDetail').show();
                         }
                     },
@@ -243,13 +226,12 @@
                 $('#pesanNo').val('');
                 $('#pesanTgl').val('');
                 $('#srjalanNo').val('');
-                $('#bcNo').val('');
                 $('#pajak').val('');
                 $('#presenPajak').val('');
                 $('#regNo').val('');
                 $('#seriNo').val('');
-                $('#presenBea').val('0%');
-                $('#bea').val('Bebas Bea');
+                $('#presenBea').val('BEBAS BEA');
+                $('#bea').val('0%');
                 $('#currency').val('');
                 $('#valuta').val('0');
                 $('#ketrgn').val('');
@@ -260,6 +242,16 @@
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 return parts.join(".");
             }
+
+            // added by : FYA
+            $('#moduleCategory').on('change', function() {
+                if ($(this).val() === 'nfRR') {
+                    $('#sumPlaceholder').html('<table style="margin-bottom: 0px;"><tbody><tr><td style="width: 125px;">NOMOR SURAT JALAN</td><td style="">: <span id="sumDocumentNumber"></span></td><td style="width: 125px;">SUPPLIER</td><td>: <span id="sumDocumentSupplier"></span></td></tr><tr><td>TANGGAL PEMASUKAN</td><td>: <span id="sumDocumentDate"></span></td><td>VALUTA</td><td>: <span id="sumDocumentValuta"></span></td></tr></tbody></table>');
+                } else {
+                    $('#sumPlaceholder,#main').html('');
+                    $('#bcDetail').hide();
+                }
+            });
         </script>
     </body>
 </html>

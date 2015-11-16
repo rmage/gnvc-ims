@@ -40,21 +40,11 @@
                                                 <c:forEach items="${model.productCategoryList}" var="prodCat">
                                                     <option value=<c:out value="${prodCat.categoryCode}"/>
                                                             <c:if test="${prodCat.categoryCode == model.selectedCatCode}"> selected </c:if>>
-                                                        <c:out value="${prodCat.categoryCode} - ${prodCat.categoryName}" />
+                                                        <c:out value="${prodCat.categoryCode}" />
                                                     </option>
                                                 </c:forEach>
                                             </c:if>
                                         </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width="20%">
-                                        Item Name
-                                    </td>
-                                    <td>
-                                        <input type="text" id="itemName" name="tbd" value="" />
-                                        <input type="text" id="currencyTypeHidden" name="currency_type" style="visibility: hidden;" />
-                                        <input type="text" id="prodCatHidden" name="category_code" style="visibility: hidden;" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -68,6 +58,8 @@
                                             <option value="WEEKLY">WEEKLY</option>
                                             <option value="MONTHLY">MONTHLY</option>
                                         </select>
+                                        <input type="text" id="currencyTypeHidden" name="currency_type" style="visibility: hidden;" />
+                                        <input type="text" id="prodCatHidden" name="category_code" style="visibility: hidden;" />
                                     </td>
                                 </tr>
                             </tbody>

@@ -20,9 +20,13 @@ public interface CategoryItemCurrencyTypeDao {
     public int update(CategoryItemCurrencyType ciCurrType);
     
     public CategoryItemCurrencyType findCurrencyTypeByCategoryCode(String categoryCode);
+    
+    public CategoryItemCurrencyType getById(int id);
 
     public int ajaxMaxPage(String where, BigDecimal show);
 
     public List<CategoryItemCurrencyType> ajaxSearch(String condition, String where, String order, int page, int show);
+    
+    public void deleteByCategoryCode(String categoryCode);
 
 }

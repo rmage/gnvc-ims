@@ -64,4 +64,8 @@ public class RenderingSalesDaoImpl extends AbstractDAO implements RenderingSales
         return jdbcTemplate.queryForList("EXEC REND_SALES_GET_CONTENT_FOR_UPDATE ?", key);
     }
     
+    public List<Map<String, Object>> getRenderingItem() {
+        return jdbcTemplate.queryForList("SELECT item_id, item_name, item_unit FROM rend_dr_item WHERE is_active = 'Y' ORDER BY item_id");
+    }
+    
 }

@@ -173,6 +173,11 @@ public class BcCodeController extends MultiActionController{
             map.put("qty", x.get("qty"));
             map.put("hs_code", x.get("hs_code"));
             map.put("harga_per_satuan", x.get("harga_per_satuan"));            
+            
+            // added by : FYA
+            map.put("tanggal_pemasukan", x.get("tanggal_pemasukan"));   
+            map.put("supplier", x.get("supplier"));
+            map.put("valuta", x.get("valuta"));
             list.add(map);
         }
         

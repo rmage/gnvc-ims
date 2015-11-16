@@ -40,9 +40,11 @@
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 75px">Action</td>
-                                <td column="product_code">Product Code</td>
-                                <td column="product_name">Product Name</td>
+                                <td column="product_code">Code</td>
+                                <td column="product_name">Name</td>
+                                <td>Unit</td>
                                 <td>Category</td>
+                                <td>Type</td>
                                 <td>Is Active</td>
                             </tr>
                         </thead>

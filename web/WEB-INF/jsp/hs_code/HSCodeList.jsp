@@ -47,8 +47,10 @@
                             <tr>
                                 <td style="width: 15px">No</td>
                                 <td style="width: 60px">Action</td>
-                                <td column="hscode_code">Code</td>
-                                <td column="hscode_name">Name</td>
+                                <td column="code">Code</td>
+                                <td column="name">Name</td>
+                                <td column="uom">Unit of Measurement</td>
+                                <td column="type">Type</td>
                                 <td>Creator</td>
                             </tr>
                         </thead>

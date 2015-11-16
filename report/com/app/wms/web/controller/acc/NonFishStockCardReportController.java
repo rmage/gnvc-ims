@@ -136,13 +136,13 @@ public class NonFishStockCardReportController extends MultiActionController {
             begBalanceList.add(calculateLastMonthQtyAndBalance(productCodeList.get(i), dateAsOf));
         }
 
-        for (int i = 0; i < productCodeList.size(); i++) {
-            System.out.println("CODE " + productCodeList.get(i));
-            System.out.println("BAL " + begBalanceList.get(i).balance);
-            System.out.println("QTY " + begBalanceList.get(i).qty);
-            System.out.println("UC " + begBalanceList.get(i).unitCost);
-            System.out.println("--------------------------------");
-        }
+//        for (int i = 0; i < productCodeList.size(); i++) {
+//            System.out.println("CODE " + productCodeList.get(i));
+//            System.out.println("BAL " + begBalanceList.get(i).balance);
+//            System.out.println("QTY " + begBalanceList.get(i).qty);
+//            System.out.println("UC " + begBalanceList.get(i).unitCost);
+//            System.out.println("--------------------------------");
+//        }
 
         /*String csv = productCodeList.toString().replace("[", "").replace("]", "").replace(", ", ",");*/
         /*GET LAST DATE*/
