@@ -114,6 +114,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.reportBC30, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?, ?");
         ListMap.put(Report.reportBC41, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?, ?");
         ListMap.put(Report.reportFinishGood, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?, ?");
+        ListMap.put(Report.reportFinishGoodRendering, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?, ?");
         //  ***END*** | iCore Module | Report List
 
         ListMap.put(Report.FWS,

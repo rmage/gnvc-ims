@@ -45,7 +45,8 @@ public class ReportFactory {
         , reportBC40 //iCore Module | Report List BC 4.0;
         , reportBC30 //iCore Module | Report List BC 3.0
         , reportBC41 //iCore Module | Report List BC 4.1
-        , reportFinishGood; //iCore Module | Report List Finish Good  
+        , reportFinishGood //iCore Module | Report List Finish Good  
+        , reportFinishGoodRendering; //iCore Module | Report List Finish Good for Fish Meal and Fish Oil
     }
 
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -299,6 +300,9 @@ public class ReportFactory {
         
         reportTemplateMap.put("reportFinishGood", new ReportModel("bccode/RptBcCode_bc_finishGood", false));
         reportMap.put(Report.reportFinishGood, reportTemplateMap.get("reportFinishGood"));
+        
+        reportTemplateMap.put("reportFinishGoodRendering", new ReportModel("bccode/RptBcCode_bc_finishGoodRendering", false));
+        reportMap.put(Report.reportFinishGoodRendering, reportTemplateMap.get("reportFinishGoodRendering"));
 
         IGNORED_COLUMN.add("index");
     }
