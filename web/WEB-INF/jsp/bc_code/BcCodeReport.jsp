@@ -37,6 +37,7 @@
                                             <option value="nfRR" data-bc="BC 2.3">iCore Template - BC 2.3</option>
                                             <option value="nfRRfRR" data-bc="BC 4.0">iCore Template - BC 4.0</option>
                                             <option value="rmDR" data-bc="BC 4.1">iCore Template - BC 4.1</option>
+                                            <option value="fgPTSnfTS" data-bc="0">iCore Template - Finished Goods and Raw Material Consumption</option>
 <!--                                            <option value="nfRR" data-bc="BC 2.3">Non Fish - BC 2.3</option>
                                             <option value="nfRR" data-bc="BC 4.0">Non Fish - BC 4.0</option>
                                             <option value="fishRR" data-bc="BC 2.3">Fish - BC 2.3</option>
@@ -103,7 +104,11 @@
                     $('#item').val('reportBC40');
                 } else if($(this).val() === 'rmDR' && $(this).find('option:selected').data('bc') === 'BC 4.1'){
                     $('#item').val('reportBC41');
-                }/* else if ($(this).val() === 'fishRR' && $(this).find('option:selected').data('bc') === 'BC 2.3'){
+                } else if($(this).val() === 'fgPTSnfTS') {
+                    $('#item').val('reportFinishGood');
+                }
+                
+        /* else if ($(this).val() === 'fishRR' && $(this).find('option:selected').data('bc') === 'BC 2.3'){
                     $('#item').val('reportBC23');
                 }  else if($(this).val() === 'fgEDS' && $(this).find('option:selected').data('bc') === 'BC 3.0'){
                     $('#item').val('reportBC30');
@@ -117,7 +122,7 @@
             });
 
             $("#btnGenerate").bind("focus", function() {
-                $('#params').val($("#moduleCategory").val() + ":" + $("#moduleCategory option:selected").attr('data-bc') + ":" + $("#dateFrom").val() + ":" + $("#dateTo").val() + ':' + $('#bcNumberStart').val());
+                $('#params').val($("#moduleCategory").val() + ":" + $("#moduleCategory option:selected").attr('data-bc') + ":" + $("#dateFrom").val() + ":" + $("#dateTo").val() + ':' + ($('#bcNumberStart').val() === '' ? '000001' : $('#bcNumberStart').val()));
             });
         </script>
 

@@ -244,7 +244,8 @@ public class TransferSlipController extends MultiActionController {
             sb.append("\"4\": \"").append(x.get("ts_type")).append("\", ");
             sb.append("\"5\": \"").append(x.get("sws_code")).append("\", ");
             sb.append("\"6\": \"").append(StringEscapeUtils.escapeHtml(x.get("ts_info").toString())).append("\", ");
-            sb.append("\"7\": \"").append(x.get("created_by")).append("\"}");
+            sb.append("\"7\": \"").append(x.get("received_by") == null ? "<i>Not Set</i>" : (x.get("received_by").toString().isEmpty() ? "No" : "Yes")).append("\", ");
+            sb.append("\"8\": \"").append(x.get("created_by")).append("\"}");
 
             b = Boolean.TRUE;
         }

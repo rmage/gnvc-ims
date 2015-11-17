@@ -64,6 +64,7 @@
                                 <td>TS Type</td>
                                 <td>Sws Number</td>
                                 <td>Info</td>
+                                <td>For Production?</td>
                                 <td>Creator</td>
                             </tr>
                         </thead>

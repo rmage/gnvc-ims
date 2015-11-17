@@ -45,7 +45,16 @@
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50"></td>
+                                    <td><input type="text" id="tsInfo" name="tsInfo" size="50"></td>
+                                    
+                                    <td>For Production ?</td>
+                                    <td>
+                                        <select id="is_production" name="is_production">
+                                            <option value="">No</option>
+                                            <option value="PRODUCTION">Yes</option>
+                                        </select>
+                                        <small>(if select "yes" this Transfer Slip will be counted on iCore Template - Consumption report)</small>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -135,7 +144,7 @@
 
                 $('#main tr').each(function() {
                     if (!isNaN(parseFloat($(this).find('input:eq(1)').val())) && parseFloat($(this).find('input:eq(1)').val()) > 0) {
-                        data = data + header + $(this).find('input:eq(0)').val() + ':s:' + $(this).find('input:eq(1)').val() + ':s::se:';
+                        data = data + header + $(this).find('input:eq(0)').val() + ':s:' + $(this).find('input:eq(1)').val() + ':s:' + $('#is_production').val() + ':s::se:';
                     }
                 });
 

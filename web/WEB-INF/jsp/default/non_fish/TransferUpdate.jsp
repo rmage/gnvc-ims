@@ -42,7 +42,16 @@
                                 </tr>
                                 <tr>
                                     <td>Remarks</td>
-                                    <td colspan="3"><input type="text" id="tsInfo" name="tsInfo" size="50" value="${model.ts[0].ts_info}"></td>
+                                    <td><input type="text" id="tsInfo" name="tsInfo" size="50" value="${model.ts[0].ts_info}"></td>
+                                    
+                                    <td>For Production ?</td>
+                                    <td>
+                                        <select id="is_production" name="is_production">
+                                            <option value="" <c:if test="${model.ts[0].received_by == ''}">selected</c:if>>No</option>
+                                            <option value="PRODUCTION" <c:if test="${model.ts[0].received_by == 'PRODUCTION'}">selected</c:if>>Yes</option>
+                                        </select>
+                                        <small>(if select "yes" this Transfer Slip will be counted on iCore Template - Consumption report)</small>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -142,7 +151,7 @@
             // VALIDATE | Minimum 1 (one) quantity
             $("#tsForm").bind("submit", function() {
                 var data = '';
-                var header = $('#tsCode').val() + ':s:' + gnvs.util.toDBDate($('#tsDate').val()) + ':s:' + $('#tsInfo').val() + ':s:NF:s:NORMAL:s:' + $('#swsCode').val() + ':s:';
+                var header = $('#tsCode').val() + ':s:' + gnvs.util.toDBDate($('#tsDate').val()) + ':s:' + $('#tsInfo').val() + ':s:NF:s:NORMAL:s:' + $('#swsCode').val() + ':s:' + $('#is_production').val() + ':s:';
 
                 $('#main tr[data-status]').each(function() {
                     data = data + header + $(this).data('status') + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(2)').html() + ':s:' + $(this).find('input:eq(0)').val() + ':s::se:';

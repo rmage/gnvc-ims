@@ -83,15 +83,16 @@
         <!-- javascript block HERE -->
         <script>
             $('#itemType').bind('change', function() {
-                if ($(this).val() === 'FISH') {
-                    $('#fishProduct').val($('#itemType').val());
-                } else if ($(this).val() === 'RENDERING ITEM') {
-                    $('#fishProduct').val($('#itemType').val());
-                } else if ($(this).val() === 'FINISHED GOODS') {
-                    $('#fishProduct').val($('#itemType').val());
-                } else {
-                    $('#fishProduct').val('PRODUCT');
-                }
+                $('#fishProduct').val($('#itemType').val());
+//                if ($(this).val() === 'FISH') {
+//                    $('#fishProduct').val($('#itemType').val());
+//                } else if ($(this).val() === 'RENDERING ITEM') {
+//                    $('#fishProduct').val($('#itemType').val());
+//                } else if ($(this).val() === 'FINISHED GOODS') {
+//                    $('#fishProduct').val($('#itemType').val());
+//                } else {
+//                    $('#fishProduct').val('PRODUCT');
+//                }
             });
 
 
