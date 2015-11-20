@@ -97,7 +97,7 @@
             // EVENT | unit price
             $('#col1').bind('blur', function() {
                 if (parseFloat($(this).val()) > 0) {
-                    $(this).val(parseFloat($(this).val()).toLocaleString('en-US'));
+                    $(this).val(parseFloat($(this).val()).kThousandFormat2(5));
                 }
             }).trigger('blur').bind('focus', function() {
                 $(this).val($(this).val().replace(/,/g, ''));

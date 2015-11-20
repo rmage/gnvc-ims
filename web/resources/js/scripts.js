@@ -12,6 +12,13 @@ Number.prototype.kThousandFormat = function(digit) {
     return this.toFixed(digit).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 };
 
+Number.prototype.kThousandFormat2 = function(digit) {
+    return this.toLocaleString('en-US', {
+        minimumFractionDigits: digit,
+        maximumFractionDigits: digit
+    });
+};
+
 var variable = {
     page: 1,
     show: 5,

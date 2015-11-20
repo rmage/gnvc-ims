@@ -166,12 +166,8 @@
                 
                 // event: blur
                 $(document).on('blur', '.price', function() {
-                    console.log('This is value: ' + $(this).val() + ' / parseFloat value: ' + parseFloat($(this).val()));
                     if (parseFloat($(this).val()) > 0) {
-                        $(this).val(parseFloat($(this).val()).toLocaleString('en-US', {
-                            style: 'decimal',
-                            maximumFractionDigits: 4
-                        }));
+                        $(this).val(parseFloat($(this).val()).kThousandFormat2(5));
                     } else {
                         $(this).val(0);
                     }
