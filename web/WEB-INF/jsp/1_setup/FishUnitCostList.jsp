@@ -36,7 +36,7 @@
                                                 <c:forEach items="${model.suppliers}" var="supplier">
                                                     <option value=<c:out value="${supplier.code}"/>
                                                             <c:if test="${supplier.code == model.supplierCode}"> selected </c:if>>
-                                                        <c:out value="${supplier.name}" />
+                                                        <c:out value="${supplier.code} - ${supplier.name}" />
                                                     </option>
                                                 </c:forEach>
                                             </c:if>

@@ -529,5 +529,26 @@ public class NewReportController extends MultiActionController {
     public boolean isLogin(HttpServletRequest request) {
         return request.getSession().getAttribute("user") != null;
     }
+    
+    // Accounting Module | Form and Report List
+    public ModelAndView getAccountingStockCardReportPerCategory(HttpServletRequest request, HttpServletResponse response) throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            model.put("pcs", DaoFactory.createProductCategoryDao().findAll());
+            return new ModelAndView("default/accounting/StockCardReportPerCategory", "model", model);
+        } else {
+            return new ModelAndView("redirect:/index.htm");
+        }
+    }
+    
+    public ModelAndView getAccountingTransactionReportPerCategory(HttpServletRequest request, HttpServletResponse response) throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            model.put("pcs", DaoFactory.createProductCategoryDao().findAll());
+            return new ModelAndView("default/accounting/TransactionReportPerCategory", "model", model);
+        } else {
+            return new ModelAndView("redirect:/index.htm");
+        }
+    }
 
 }

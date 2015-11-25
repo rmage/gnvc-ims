@@ -12,6 +12,8 @@ public class ReceiveReport implements Serializable {
     private int poCode;
 
     private String rrFrom;
+    
+    private String rrRemarks;
 
     private String evaluatedBy;
 
@@ -182,6 +184,14 @@ public class ReceiveReport implements Serializable {
 
     public void setCurrencyRate(CurrencyRate currencyRate) {
         this.currencyRate = currencyRate;
+    }
+
+    public String getRrRemarks() {
+        return rrRemarks;
+    }
+
+    public void setRrRemarks(String rrRemarks) {
+        this.rrRemarks = rrRemarks;
     }
 
 }

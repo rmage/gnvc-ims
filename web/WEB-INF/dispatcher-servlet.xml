@@ -334,12 +334,12 @@
     <bean name="/FGItem.htm" class="com.spfi.ims.controller.FGItemController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <bean name="/FGBookedOrder.htm" class="com.spfi.ims.controller.FGBookedOrderController">
+    <!--<bean name="/FGBookedOrder.htm" class="com.spfi.ims.controller.FGBookedOrderController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/FGBookedOrderAddendum.htm" class="com.spfi.ims.controller.FGBookedOrderAddendumController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
+    </bean>-->
     <bean name="/FGPalletTransfer.htm" class="com.spfi.ims.controller.FGPalletTransferController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
@@ -416,6 +416,14 @@
     </bean>
 
     <bean name="/IcoreMap.htm" class="com.spfi.ims.controller.IcoreMapController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
+    <!-- FYA | Accounting Module -->
+    <bean name="/AccNonFishRR.htm" class="com.spfi.ims.controller.AccountingNonFishController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    <bean name="/AccFishRR.htm" class="com.spfi.ims.controller.AccountingFishController">
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     

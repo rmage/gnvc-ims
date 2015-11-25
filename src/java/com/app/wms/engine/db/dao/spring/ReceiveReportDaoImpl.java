@@ -15,6 +15,7 @@ import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.dao.mapper.MapperNonFishReceiveReportAccounting;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -251,9 +252,33 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     public void delete(String key, String updatedBy) {
         jdbcTemplate.update("EXEC NF_RR_DELETE ?, ?", key, updatedBy);
     }
+    
+    public void doAccounting(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC ACC_RR_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public void doAccountingRevise(String data, String separatorColumn, String separatorRow, String updatedBy) {
+        jdbcTemplate.update("EXEC ACC_RR_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, updatedBy);
+    }
+    
+    public void removeAccounting(String rrCode) {
+        jdbcTemplate.update("EXEC ACC_RR_DELETE ?", rrCode);
+    }
 
     public List<Map<String, Object>> getReceiving(String rrCode) {
         return jdbcTemplate.queryForList("EXEC NF_RR_GET_CONTENT_FOR_UPDATE ?", rrCode);
+    }
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode) {
+        return this.getReceivingDetailForAccounting(rrCode, 0);
+    }
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode, int isRevise) {
+        return jdbcTemplate.queryForList("EXEC ACC_RR_GET_BY_CODE ?, ?", rrCode, isRevise);
+    }
+    
+    public List<ReceiveReport> findByDatePeriod(Date dateFrom, Date dateTo) {
+        return jdbcTemplate.query("SELECT rr_code, rr_date, po_code, rr_from, rr_remarks, approved_by, created_by, created_date FROM rr WHERE rr_date BETWEEN ? AND ? ORDER BY rr_code", new MapperNonFishReceiveReportAccounting(), dateFrom, dateTo);
     }
 
 }

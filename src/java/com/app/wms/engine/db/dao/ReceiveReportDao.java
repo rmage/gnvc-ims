@@ -43,6 +43,18 @@ public interface ReceiveReportDao {
     
     public void delete(String key, String updatedBy);
     
+    public void doAccounting(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void doAccountingRevise(String data, String separatorColumn, String separatorRow, String updatedBy);
+    
+    public void removeAccounting(String rrCode);
+    
     public List<Map<String, Object>> getReceiving(String rrCode);
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode);
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode, int isRevise);
+    
+    public List<ReceiveReport> findByDatePeriod(Date dateFrom, Date dateTo);
 
 }

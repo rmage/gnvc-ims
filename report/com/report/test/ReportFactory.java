@@ -46,7 +46,8 @@ public class ReportFactory {
         , reportBC30 //iCore Module | Report List BC 3.0
         , reportBC41 //iCore Module | Report List BC 4.1
         , reportFinishGood //iCore Module | Report List Finish Good  
-        , reportFinishGoodRendering; //iCore Module | Report List Finish Good for Fish Meal and Fish Oil
+        , reportFinishGoodRendering //iCore Module | Report List Finish Good for Fish Meal and Fish Oil
+        , ACCStockCardPerCategory, ACCTransactionReportPerCategory;
     }
 
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -303,6 +304,12 @@ public class ReportFactory {
         
         reportTemplateMap.put("reportFinishGoodRendering", new ReportModel("bccode/RptBcCode_bc_finishGoodRendering", false));
         reportMap.put(Report.reportFinishGoodRendering, reportTemplateMap.get("reportFinishGoodRendering"));
+        
+        // Accounting Module | Report List
+        reportTemplateMap.put("ACCStockCardPerCategory", new ReportModel("accounting/scrpc", false));
+        reportMap.put(Report.ACCStockCardPerCategory, reportTemplateMap.get("ACCStockCardPerCategory"));
+        reportTemplateMap.put("ACCTransactionReportPerCategory", new ReportModel("accounting/trpc", false));
+        reportMap.put(Report.ACCTransactionReportPerCategory, reportTemplateMap.get("ACCTransactionReportPerCategory"));
 
         IGNORED_COLUMN.add("index");
     }

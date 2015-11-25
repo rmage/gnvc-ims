@@ -116,6 +116,11 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.reportFinishGood, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?, ?");
         ListMap.put(Report.reportFinishGoodRendering, "EXEC RPT_ICORE_NF_RR ?, ?, ?, ?, ?");
         //  ***END*** | iCore Module | Report List
+        
+        //  Accounting Module | Report List
+        ListMap.put(Report.ACCStockCardPerCategory, "EXEC RPT_ACC_STOCK_CARD_PER_CATEGORY ?, ?");
+        ListMap.put(Report.ACCTransactionReportPerCategory, "EXEC RPT_ACC_TRANSACTION_REPORT_PER_CATEGORY ?, ?");
+        //  ***END*** | Accounting Module | Report List
 
         ListMap.put(Report.FWS,
                 "SELECT f.code AS kode, wdsd.description AS nama_barang, "
