@@ -55,7 +55,7 @@
                                             <c:if test="${model.suppliers!=null}">
                                                 <c:forEach items="${model.suppliers}" var="supplier">
                                                     <option value=<c:out value="${supplier.id}"/> >
-                                                        <c:out value="${supplier.name}" />
+                                                        ${supplier.code} - <c:out value="${supplier.name}" />
                                                     </option>
                                                 </c:forEach>
                                             </c:if>
@@ -132,13 +132,17 @@
 
                 $('#contractBeginDate').datepicker({
                     dateFormat: "dd/mm/yy",
+                    changeMonth: true,
+                    changeYear: true,
                     onSelect: function(dateText) {
                         $("#contractEndDate").datepicker("option", "minDate", dateText);
                     }
                 });
 
                 $('#contractEndDate').datepicker({
-                    dateFormat: "dd/mm/yy"
+                    dateFormat: "dd/mm/yy",
+                    changeMonth: true,
+                    changeYear: true
                 });
 
                 $('.tblForm caption').addClass('span-7 ui-corner-tr ui-corner-tl').css('margin-bottom', '-1px').css('position', 'relative');

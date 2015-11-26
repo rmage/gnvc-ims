@@ -150,7 +150,7 @@ public class FishUnitCostController extends MultiActionController {
         String supplierId = request.getParameter("groupSupplierId");
         String currencyCode = request.getParameter("groupCurrencyCode");
         String startDate = request.getParameter("contractBeginDate");
-        String endDate = request.getParameter("contractEndDate");
+        String endDate = request.getParameter("contractEndDate").concat(" 23:59:59");
         
         Integer supId = Integer.parseInt(supplierId);
 
@@ -173,8 +173,9 @@ public class FishUnitCostController extends MultiActionController {
                 return new ModelAndView("1_setup/FishUnitCostAdd", "model", modelMap);
             }
 
+            SimpleDateFormat dfEnd = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             start = df.parse(startDate);
-            end = df.parse(endDate);
+            end = dfEnd.parse(endDate);
 
             fc.setContractNumber(contractNumber);
             fc.setContractBeginDate(start);
