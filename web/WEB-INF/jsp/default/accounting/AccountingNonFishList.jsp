@@ -140,26 +140,34 @@
                             <tr>
                                 <td colspan="4">
                                     <br>
-                                    <table class="collapse tblForm row-select ui-widget-content">
-                                        <caption class="ui-widget-header left span-7 ui-corner-tr ui-corner-tl" style="margin-bottom: -1px; position: relative;">Item List</caption>
-                                        <thead>
-                                            <tr>
-                                                <th class="center" rowspan="2">#</th>
-                                                <th class="center" rowspan="2">Item Name</th>
-                                                <th class="center" rowspan="2">Item Code</th>
-                                                <th class="center" rowspan="2">Department</th>
-                                                <th class="center" colspan="2">Quantity</th>
-                                                <th class="center" rowspan="2">Unit of Measurement</th>
-                                                <th class="center" rowspan="2">Unit Cost</th>
-                                                <th class="center" rowspan="2">Amount</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="center">Good</th>
-                                                <th class="center">Bad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="rrDetailList"><tr><td colspan="9" class="center"><i>-- tidak ada data --</i></td></tr></tbody>
-                                    </table>
+                                    <div style="overflow-y: auto; height: 350px;">
+                                        <table class="collapse tblForm row-select ui-widget-content">
+                                            <caption class="ui-widget-header left span-7 ui-corner-tr ui-corner-tl" style="margin-bottom: -1px; position: relative;">Item List</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th class="center" rowspan="2">#</th>
+                                                    <th class="center" rowspan="2">Item Name</th>
+                                                    <th class="center" rowspan="2">Item Code</th>
+                                                    <th class="center" rowspan="2">Department</th>
+                                                    <th class="center" colspan="2">Quantity</th>
+                                                    <th class="center" rowspan="2">Unit of Measurement</th>
+                                                    <th class="center" rowspan="2">Unit Cost</th>
+                                                    <th class="center" rowspan="2">Amount</th>
+                                                </tr>
+                                                <tr>
+                                                    <th class="center">Good</th>
+                                                    <th class="center">Bad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rrDetailList"><tr><td colspan="9" class="center"><i>-- tidak ada data --</i></td></tr></tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td class="right" colspan="8"><b>G R A N D - T O T A L</b></td>
+                                                    <td id="rrGrandTotal" class="right">0.00</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -314,6 +322,7 @@
                             $('#rrDetailList').html('<tr><td colspan="9" class="center"><i>-- tidak ada data --</i></td></tr>');
                         },
                         success: function(json) {
+                            var grandTotal = 0.00;
                             if (json.rows.length > 0) {
                                 $('*[id="rrCode"]').text(json.rows[0].rrCode);
                                 $('#rrDate').text(json.rows[0].rrDate);
@@ -335,7 +344,9 @@
                                             '<td class="center"><input id="rrUnitCost" class="right format-separator-thousand" type="text" value="' + parseFloat(json.rows[i].accUnitCost).kThousandFormat2(2) + '" data-value="' + json.rows[i].accUnitCost + '"></td>' +
                                             '<td class="right" id="rrAmount">' + parseFloat(json.rows[i].accAmount).kThousandFormat2(2) + '</td>' +
                                             '</tr>');
+                                    grandTotal = grandTotal + parseFloat(json.rows[i].accAmount);
                                 }
+                                $('#rrGrandTotal').text(grandTotal.kThousandFormat2(2));
 
                                 $('.popup-box').fadeIn('slow');
                             } else {

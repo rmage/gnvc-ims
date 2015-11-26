@@ -173,7 +173,7 @@
                             '<td data-vesselid="' + $('#fromBatchNo').data('vesselId') + '">' + $('#fromBatchNo').val() + '</td>' +
                             '<td data-fishid="' + $('#fromFish').val() + '">' + $('#fromFish option:selected').html() + '</td>' +
                             '<td data-storageid="' + $('#fromCS').val() + '">' + $('#fromCS option:selected').html() + '</td>' +
-                            '<td>' + money_desimal_to_value($('#fromQty').val()) + '</td>' +
+                            '<td>' + $('#fromQty').val() + '</td>' +
                             '<td data-vesselid="' + $('#toBatchNo').data('vesselId') + '">' + $('#toBatchNo').val() + '</td>' +
                             '<td data-fishid="' + $('#toFish').val() + '">' + $('#toFish option:selected').html() + '</td>' +
                             '<td data-storageid="' + $('#toCS').val() + '">' + $('#toCS option:selected').html() + '</td>' +
