@@ -1008,5 +1008,11 @@ public class DaoFactory {
     public static BcCodeDao createBcCodeDao() {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (BcCodeDao) bf.getBean("BcCodeDao");
-    }    
+    }
+    
+    // added by FYA - Accounting
+    public static AccountingCutOffDao createAccountingCutOffDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (AccountingCutOffDao) bf.getBean("AccountingCutOffDao");
+    }
 }

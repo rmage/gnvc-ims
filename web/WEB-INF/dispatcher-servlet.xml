@@ -426,5 +426,8 @@
     <bean name="/AccFishRR.htm" class="com.spfi.ims.controller.AccountingFishController">
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
+    <bean name="/AccFishCutOff.htm" class="com.spfi.ims.controller.AccountingFishCutOffController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     
 </beans>

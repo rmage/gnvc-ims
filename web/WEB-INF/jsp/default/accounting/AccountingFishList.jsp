@@ -8,7 +8,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Accounting &therefore; Non-Fish Receiving Report &therefore; IMS</title>
+        <title>Accounting &therefore; Fish Receiving Report &therefore; IMS</title>
         <%@include file="../../metaheader.jsp" %>
         <style>
             :-moz-ui-invalid:not(output) { box-shadow: none; }
@@ -68,9 +68,9 @@
                             <tr>
                                 <th>RR Number</th>
                                 <th>RR Date</th>
-                                <th>PO Number</th>
-                                <th>Supplier</th>
-                                <th>Remarks</th>
+                                <th>From</th>
+                                <th>WS Number</th>
+                                <th>Batch Number</th>
                                 <th>Creator</th>
                                 <th>Created Date</th>
                                 <th class="center" style="width: 50px;">Action</th>
@@ -85,9 +85,9 @@
                             <tr>
                                 <th>RR Number</th>
                                 <th>RR Date</th>
-                                <th>PO Number</th>
-                                <th>Supplier</th>
-                                <th>Remarks</th>
+                                <th>From</th>
+                                <th>WS Number</th>
+                                <th>Batch Number</th>
                                 <th>Creator</th>
                                 <th>Created Date</th>
                                 <th class="center" style="width: 50px;">Action</th>
@@ -122,18 +122,23 @@
                             <tr>
                                 <td class="bold">From</td>
                                 <td id="rrFrom"></td>
-                                <td class="bold">Purchase Order Number</td>
-                                <td id="poCode"></td>
+                                <td class="bold">WS Number</td>
+                                <td id="wsCodes"></td>
                             </tr>
                             <tr>
                                 <td class="bold">To</td>
                                 <td>PT. Sinar Pure Foods International</td>
-                                <td class="bold">Purchase Order Date</td>
-                                <td id="poDate"></td>
+                                <td class="bold">Batch Number</td>
+                                <td id="batchNumber"></td>
                             </tr>
                             <tr>
-                                <td class="bold">Remarks</td>
-                                <td colspan="3" id="rrRemarks"></td>
+                                <td class="bold">Tax Paid By</td>
+                                <td>
+                                    <select id="receivedBy" name="receivedBy">
+                                        <option value="Supplier">Supplier</option>
+                                        <option value="SPFI">PT. Sinar Pure Foods International</option>
+                                    </select>
+                                </td>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,23 +151,27 @@
                                             <thead>
                                                 <tr>
                                                     <th class="center" rowspan="2">#</th>
-                                                    <th class="center" rowspan="2">Item Name</th>
-                                                    <th class="center" rowspan="2">Item Code</th>
-                                                    <th class="center" rowspan="2">Department</th>
+                                                    <th class="center" rowspan="2">Description</th>
                                                     <th class="center" colspan="2">Quantity</th>
-                                                    <th class="center" rowspan="2">Unit of Measurement</th>
-                                                    <th class="center" rowspan="2">Unit Cost</th>
-                                                    <th class="center" rowspan="2">Amount</th>
+                                                    <th class="center" >Contract</th>
+                                                    <th class="center" colspan="2">iCore</th>
+                                                    <th class="center" rowspan="2">Tax Rate</th>
+                                                    <th class="center" colspan="2">Accounting</th>
                                                 </tr>
                                                 <tr>
-                                                    <th class="center">Good</th>
-                                                    <th class="center">Bad</th>
+                                                    <th class="center">Number</th>
+                                                    <th class="center">U/M</th>
+                                                    <th class="center">Price</th>
+                                                    <th class="center">Unit Price</th>
+                                                    <th class="center">Amount</th>
+                                                    <th class="center">Unit Price</th>
+                                                    <th class="center">Amount</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="rrDetailList"><tr><td colspan="9" class="center"><i>-- tidak ada data --</i></td></tr></tbody>
+                                            <tbody id="rrDetailList"><tr><td colspan="10" class="center"><i>-- tidak ada data --</i></td></tr></tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td class="right" colspan="8"><b>G R A N D - T O T A L</b></td>
+                                                    <td class="right" colspan="9"><b>G R A N D - T O T A L</b></td>
                                                     <td id="rrGrandTotal" class="right">0.00</td>
                                                 </tr>
                                             </tfoot>
@@ -204,7 +213,7 @@
                     success: function(json) {
                         var htmlTRow = '', rrUpFlag = true, rrDownFlag = true;
                         for (var i = 0; i < json.rows.length; i++) {
-                            htmlTRow = '<tr><td>' + json.rows[i].rrCode + '</td><td>' + json.rows[i].rrDate + '</td><td>' + json.rows[i].poCode + '</td><td>' + json.rows[i].rrFrom + '</td><td>' + json.rows[i].rrRemarks + '</td><td>' + json.rows[i].createdBy + '</td><td>' + json.rows[i].createdDate + '</td><td><a class="ACTION_CLASS" href="javascript:void(0);"><img src="ACTION_IMAGE" width="16px"></a></td></tr>';
+                            htmlTRow = '<tr><td>' + json.rows[i].rrCode + '</td><td>' + json.rows[i].rrDate + '</td><td>' + json.rows[i].rrFrom + '</td><td>' + json.rows[i].wsCodes + '</td><td>' + json.rows[i].batchNumber + '</td><td>' + json.rows[i].createdBy + '</td><td>' + json.rows[i].createdDate + '</td><td><a class="ACTION_CLASS" href="javascript:void(0);"><img src="ACTION_IMAGE" width="16px"></a></td></tr>';
 
                             if (json.rows[i].approvedBy === undefined || json.rows[i].approvedBy === '') {
                                 if (rrUpFlag) {
@@ -232,6 +241,11 @@
                     }
                 });
             });
+            
+            $('#receivedBy').on('change', function() {
+                $('input[id="rrContractPrice"]').each(function() { rrRecalculateDetail(this); });
+                rrDetailGrandTotal();
+            });
 
             $('#btnCancel').on('click', function() {
                 $('.popup-box').fadeOut('fast');
@@ -243,7 +257,7 @@
                 var isError = false, data = '';
 
                 $('#rrDetailList tr').each(function() {
-                    data = data + $(this).data('id') + ':s:' + $(this).find('td:eq(2)').text() + ':s:' + $(this).find('td:eq(7) > input').data('value') + ':s:' + $(this).find('td:eq(8)').text().replace(/,/g, '') + ':s::se:';
+                    data = data + $('#receivedBy').val() + ':s:' + $(this).data('id') + ':s:' + $(this).find('td:eq(1)').data('id') + ':s:' + $(this).find('td:eq(4) > input').data('value') + ':s:' + $(this).find('td:eq(5)').data('value') + ':s:' + $(this).find('td:eq(6)').data('value') + ':s:' + $(this).find('td:eq(7) > input').val() + ':s:' + $(this).find('td:eq(8)').data('value') + ':s:' + $(this).find('td:eq(9)').data('value') + ':s::se:';
                 });
 
                 $(this).attr('disabled', 'disabled').css('cursor', 'wait');
@@ -319,36 +333,39 @@
                         data: {action: 'getRRDetail', rrCode: htmlTRow.text()},
                         dataType: 'json',
                         beforeSend: function() {
-                            $('#rrDetailList').html('<tr><td colspan="9" class="center"><i>-- tidak ada data --</i></td></tr>');
+                            $('#rrDetailList').html('<tr><td colspan="10" class="center"><i>-- tidak ada data --</i></td></tr>');
                         },
                         success: function(json) {
+
                             if (json.rows.length > 0) {
                                 $('*[id="rrCode"]').text(json.rows[0].rrCode);
                                 $('#rrDate').text(json.rows[0].rrDate);
-                                $('#poCode').text(json.rows[0].poCode);
-                                $('#poDate').text(json.rows[0].poDate);
                                 $('#rrFrom').text(json.rows[0].rrFrom);
-                                $('#rrRemarks').text(json.rows[0].rrRemarks);
+                                $('#wsCodes').text(json.rows[0].wsCodes);
+                                $('#batchNumber').text(json.rows[0].batchNumber);
+                                $('#receivedBy').val(json.rows[0].receivedBy);
 
                                 $('#rrDetailList').html('');
                                 for (var i = 0; i < json.rows.length; i++) {
-                                    $('#rrDetailList').append('<tr data-id="' + json.rows[i].rrdId + '" data-quantity="' + (json.rows[i].rrQuantityGood + json.rows[i].rrQUantityBad) + '">' +
+                                    $('#rrDetailList').append('<tr data-id="' + json.rows[i].rrId + '" data-quantity="' + json.rows[i].rrQuantity + '">' +
                                             '<td class="center" style="width: 50px">' + (i + 1) + '</td>' +
-                                            '<td>' + json.rows[i].productName + '</td>' +
-                                            '<td class="center">' + json.rows[i].productCode + '</td>' +
-                                            '<td class="center">' + json.rows[i].departmentCode + '</td>' +
-                                            '<td class="right">' + json.rows[i].rrQuantityGood + '</td>' +
-                                            '<td class="right">' + json.rows[i].rrQUantityBad + '</td>' +
+                                            '<td data-id="' + json.rows[i].fishId + '">' + json.rows[i].fishName + '</td>' +
+                                            '<td class="right">' + json.rows[i].rrQuantity + '</td>' +
                                             '<td class="center">' + json.rows[i].rrUom + '</td>' +
-                                            '<td class="center"><input id="rrUnitCost" class="right format-separator-thousand" type="text" value="' + parseFloat(json.rows[i].accUnitCost).kThousandFormat2(2) + '" data-value="' + json.rows[i].accUnitCost + '"></td>' +
+                                            '<td class="center"><input id="rrContractPrice" class="right format-separator-thousand" type="text" value="' + parseFloat(json.rows[i].contractPrice).kThousandFormat2(2) + '" data-value="' + json.rows[i].contractPrice + '" size="7"></td>' +
+                                            '<td class="right" id="rrUnitCostICore" data-value="' + json.rows[i].iCoreUnitCost + '">' + parseFloat(json.rows[i].iCoreUnitCost).kThousandFormat2(2) + '</td>' +
+                                            '<td class="right" id="rrAmountICore">' + parseFloat(json.rows[i].iCoreAmount).kThousandFormat2(2) + '</td>' +
+                                            '<td class="center"><input id="rrTaxRate" class="right" type="text" value="' + parseFloat(json.rows[i].taxRate).kThousandFormat2(4) + '" data-value="' + json.rows[i].taxRate + '" size="5"></td>' +
+                                            '<td class="right" id="rrUnitCost" data-value="' + json.rows[i].accUnitCost + '">' + parseFloat(json.rows[i].accUnitCost).kThousandFormat2(2) + '</td>' +
                                             '<td class="right" id="rrAmount">' + parseFloat(json.rows[i].accAmount).kThousandFormat2(2) + '</td>' +
                                             '</tr>');
                                 }
+                                $('input[id="rrContractPrice"]').each(function() { rrRecalculateDetail(this); });
                                 rrDetailGrandTotal();
 
                                 $('.popup-box').fadeIn('slow');
                             } else {
-                                alert("Please check your configuration below:\n- Product Category has been correctly mapped to DAILY, WEEKLY, or MONTHLY Currency Type\n- Currency Rate has been set correctly");
+                                alert("Please check your configuration below:\n- Fish Contract per supplier already encoded\n- Currency Rate has been set correctly for USD to IDR and OTHER_CURRENCY to USD\n- Make sure Currency Rate on DAILY BASE");
                             }
                         },
                         error: function() {
@@ -367,35 +384,38 @@
                         beforeSend: function() {
                             $('#btnDelete').show();
                             $('#isRevise').val(1);
-                            $('#rrDetailList').html('<tr><td colspan="9" class="center"><i>-- tidak ada data --</i></td></tr>');
+                            $('#rrDetailList').html('<tr><td colspan="10" class="center"><i>-- tidak ada data --</i></td></tr>');
                         },
                         success: function(json) {
                             if (json.rows.length > 0) {
                                 $('*[id="rrCode"]').text(json.rows[0].rrCode);
                                 $('#rrDate').text(json.rows[0].rrDate);
-                                $('#poCode').text(json.rows[0].poCode);
-                                $('#poDate').text(json.rows[0].poDate);
                                 $('#rrFrom').text(json.rows[0].rrFrom);
-                                $('#rrRemarks').text(json.rows[0].rrRemarks);
+                                $('#wsCodes').text(json.rows[0].wsCodes);
+                                $('#batchNumber').text(json.rows[0].batchNumber);
+                                $('#receivedBy').val(json.rows[0].receivedBy);
 
                                 $('#rrDetailList').html('');
                                 for (var i = 0; i < json.rows.length; i++) {
-                                    $('#rrDetailList').append('<tr data-id="' + json.rows[i].rrdId + '" data-quantity="' + (json.rows[i].rrQuantityGood + json.rows[i].rrQUantityBad) + '">' +
+                                    $('#rrDetailList').append('<tr data-id="' + json.rows[i].rrId + '" data-quantity="' + json.rows[i].rrQuantity + '">' +
                                             '<td class="center" style="width: 50px">' + (i + 1) + '</td>' +
-                                            '<td>' + json.rows[i].productName + '</td>' +
-                                            '<td class="center">' + json.rows[i].productCode + '</td>' +
-                                            '<td class="center">' + json.rows[i].departmentCode + '</td>' +
-                                            '<td class="right">' + json.rows[i].rrQuantityGood + '</td>' +
-                                            '<td class="right">' + json.rows[i].rrQUantityBad + '</td>' +
+                                            '<td data-id="' + json.rows[i].fishId + '">' + json.rows[i].fishName + '</td>' +
+                                            '<td class="right">' + parseFloat(json.rows[i].rrQuantity).kThousandFormat2(2) + '</td>' +
                                             '<td class="center">' + json.rows[i].rrUom + '</td>' +
-                                            '<td class="center"><input id="rrUnitCost" class="right format-separator-thousand" type="text" value="' + parseFloat(json.rows[i].accUnitCost).kThousandFormat2(2) + '" data-value="' + json.rows[i].accUnitCost + '"></td>' +
+                                            '<td class="center"><input id="rrContractPrice" class="right format-separator-thousand" type="text" value="' + parseFloat(json.rows[i].contractPrice).kThousandFormat2(2) + '" data-value="' + json.rows[i].contractPrice + '" size="7"></td>' +
+                                            '<td class="right" id="rrUnitCostICore" data-value="' + json.rows[i].iCoreUnitCost + '">' + parseFloat(json.rows[i].iCoreUnitCost).kThousandFormat2(2) + '</td>' +
+                                            '<td class="right" id="rrAmountICore">' + parseFloat(json.rows[i].iCoreAmount).kThousandFormat2(2) + '</td>' +
+                                            '<td class="center"><input id="rrTaxRate" class="right" type="text" value="' + parseFloat(json.rows[i].taxRate).kThousandFormat2(4) + '" data-value="' + json.rows[i].taxRate + '" size="5"></td>' +
+                                            '<td class="right" id="rrUnitCost" data-value="' + json.rows[i].accUnitCost + '">' + parseFloat(json.rows[i].accUnitCost).kThousandFormat2(2) + '</td>' +
                                             '<td class="right" id="rrAmount">' + parseFloat(json.rows[i].accAmount).kThousandFormat2(2) + '</td>' +
                                             '</tr>');
                                 }
+                                $('input[id="rrContractPrice"]').each(function() { rrRecalculateDetail(this); });
+                                rrDetailGrandTotal();
 
                                 $('.popup-box').fadeIn('slow');
                             } else {
-                                alert("Please check your configuration below:\n- Product Category has been correctly mapped to DAILY, WEEKLY, or MONTHLY Currency Type\n- Currency Rate has been set correctly");
+                                alert("Please check your configuration below:\n- Fish Contract per supplier already encoded\n- Currency Rate has been set correctly for USD to IDR and OTHER_CURRENCY to USD\n- Make sure Currency Rate on DAILY BASE");
                             }
                         },
                         error: function() {
@@ -409,13 +429,53 @@
                 htmlTRow.find('#rrAmount').text(((parseFloat($(this).data('value'))) * (parseFloat(htmlTRow.data('quantity')))).kThousandFormat2(2));
                 rrDetailGrandTotal();
             });
-            
+            $('body').on('blur', 'input[id="rrContractPrice"]', function() {
+                $(this).data('value', $(this).val().replace(/,/, ''));
+                rrRecalculateDetail(this);
+                rrDetailGrandTotal();
+            });
+            $('body').on('blur', 'input[id="rrTaxRate"]', function() {
+                rrRecalculateDetail(this);
+                rrDetailGrandTotal();
+            });
+
             function rrDetailGrandTotal() {
                 var grandTotal = 0.00;
-                $('#rrDetailList tr td:nth-child(9)').each(function() {
+                $('#rrDetailList tr td:nth-child(10)').each(function() {
                     grandTotal = grandTotal + parseFloat($(this).text().replace(/,/g, ''));
                 });
                 $('#rrGrandTotal').text(grandTotal.kThousandFormat2(2));
+            }
+
+            function rrRecalculateDetail(_this) {
+                var $row = (_this.nodeName === 'INPUT' ? $(_this).parent().parent() : $(_this).parent());
+                
+                var receivedBy = $('#receivedBy').val(),
+                        quantity = $row.find('td:eq(2)').text().replace(/,/g, ''),
+                        contractPrice = $row.find('td:eq(4) > input').data('value'),
+                        $icUnitPrice = $row.find('td:eq(5)'),
+                        $icAmount = $row.find('td:eq(6)'),
+                        taxRate = $row.find('td:eq(7) > input').val(),
+                        $accUnitPrice = $row.find('td:eq(8)'),
+                        $accAmount = $row.find('td:eq(9)');
+
+                if (receivedBy === 'Supplier') {
+                    //iCore
+                    $icUnitPrice.data('value', contractPrice * (1.0000 - taxRate)).text(parseFloat(contractPrice * (1.0000 - taxRate)).kThousandFormat(2));
+                    $icAmount.data('value', $icUnitPrice.data('value') * quantity).text(parseFloat($icUnitPrice.data('value') * quantity).kThousandFormat(2));
+
+                    // Accounting
+                    $accUnitPrice.data('value', contractPrice).text(parseFloat(contractPrice).kThousandFormat(2));
+                    $accAmount.data('value', contractPrice * quantity).text(parseFloat(contractPrice * quantity).kThousandFormat(2));
+                } else {
+                    //iCore
+                    $icUnitPrice.data('value', contractPrice).text(parseFloat(contractPrice).kThousandFormat(2));
+                    $icAmount.data('value', $icUnitPrice.data('value') * quantity).text(parseFloat($icUnitPrice.data('value') * quantity).kThousandFormat(2));
+
+                    // Accounting
+                    $accUnitPrice.data('value', contractPrice / (1.0000 - taxRate)).text(parseFloat(contractPrice / (1.0000 - taxRate)).kThousandFormat(2));
+                    $accAmount.data('value', $accUnitPrice.data('value') * quantity).text(parseFloat($accUnitPrice.data('value') * quantity).kThousandFormat(2));
+                }
             }
         </script>
     </body>

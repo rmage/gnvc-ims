@@ -153,6 +153,6 @@ public class FishTypeDaoImpl extends AbstractDAO
     }
     
      public List<FishType> findByCode(String code){
-         return jdbcTemplate.query("SELECT * FROM fish_type WHERE code = ?", this, code);
+         return jdbcTemplate.query("SELECT * FROM fish_type WHERE code = ? AND is_active = 'Y'", this, code);
      }
 }

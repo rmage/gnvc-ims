@@ -511,5 +511,10 @@
     <bean id="BcCodeDao" class="com.spfi.ims.dao.BcCodeDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    
+    <!-- Added by FYA | Accounting -->
+    <bean id="AccountingCutOffDao" class="com.spfi.ims.dao.AccountingCutOffDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
         
 </beans>

@@ -18,6 +18,7 @@ import com.app.wms.engine.db.dto.FishRr;
 import com.app.wms.engine.db.dto.FishVessel;
 import com.app.wms.engine.db.exceptions.DaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.dao.mapper.MapperFishReceiveReportAccounting;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
@@ -260,6 +261,34 @@ public class FishRrDaoImpl extends AbstractDAO implements
 
     public List<Map<String, Object>> getReceiving(int key) {
         return jdbcTemplate.queryForList("EXEC F_RR_GET_CONTENT_FOR_UPDATE ?", key);
+    }
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode) {
+        return this.getReceivingDetailForAccounting(rrCode, 0);
+    }
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode, int isRevise) {
+        return jdbcTemplate.queryForList("EXEC ACC_F_RR_GET_BY_CODE ?, ?", rrCode, isRevise);
+    }
+    
+    public List<Map<String, Object>> findByDatePeriod(Date dateFrom, Date dateTo) {
+        return jdbcTemplate.query("SELECT frr.rr_no as rr_code, frr.rr_date, fs.name as rr_from, frr.ws_no as ws_codes, fv.batch_no as batch_number, frr.approved_by, frr.created_by, frr.created_date " +
+                    "FROM fish_rr frr " +
+                    "   INNER JOIN fish_vessel fv ON fv.id = frr.vessel_id " +
+                    "   INNER JOIN fish_supplier fs ON fs.id = supplier_id " +
+                    "WHERE frr.created_date BETWEEN ? AND ? ORDER BY frr.rr_no ", new MapperFishReceiveReportAccounting(), dateFrom, dateTo);
+    }
+    
+    public void doAccounting(String data, String separatorColumn, String separatorRow, String createdBy) {
+        jdbcTemplate.update("EXEC ACC_F_RR_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    }
+    
+    public void doAccountingRevise(String data, String separatorColumn, String separatorRow, String updatedBy) {
+        jdbcTemplate.update("EXEC ACC_F_RR_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, updatedBy);
+    }
+    
+    public void removeAccounting(String rrCode) {
+        jdbcTemplate.update("EXEC ACC_F_RR_DELETE ?", rrCode);
     }
 
 }

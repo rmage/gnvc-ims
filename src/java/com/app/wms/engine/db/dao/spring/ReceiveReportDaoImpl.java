@@ -278,7 +278,9 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     }
     
     public List<ReceiveReport> findByDatePeriod(Date dateFrom, Date dateTo) {
-        return jdbcTemplate.query("SELECT rr_code, rr_date, po_code, rr_from, rr_remarks, approved_by, created_by, created_date FROM rr WHERE rr_date BETWEEN ? AND ? ORDER BY rr_code", new MapperNonFishReceiveReportAccounting(), dateFrom, dateTo);
+        return jdbcTemplate.query("SELECT rr_code, rr_date, po_code, rr_from, rr_remarks, approved_by, created_by, created_date " +
+                "FROM rr " +
+                "WHERE created_date BETWEEN ? AND ? ORDER BY rr_code", new MapperNonFishReceiveReportAccounting(), dateFrom, dateTo);
     }
 
 }

@@ -35,7 +35,7 @@ public class ReportFactory {
         //        Laporanpertanggungjawabanmutasibarangjadi, // added by edw
         //        Laporanpertanggungjawabanmutasibarangsisadanscrap, Laporanpertanggungjawabanmutasimesindanperalatanperkantoran // added by edw
         //  Fish Module | Form and Report List
-        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ, FishDailyInCS, FishSummaryInCS //  Purchase Module | Form and Report List
+        , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ, FishDailyInCS, FishSummaryInCS, FFrozenFishInColdStorage //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister //  Non-Fish Module | Form and Report List
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod //  Finished Goods Module | Form and Report List
         , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGBor15, FGPts, FGOfal, FGLmr, FGBor15Report //  Rendering Module | Form and Report List
@@ -47,7 +47,7 @@ public class ReportFactory {
         , reportBC41 //iCore Module | Report List BC 4.1
         , reportFinishGood //iCore Module | Report List Finish Good  
         , reportFinishGoodRendering //iCore Module | Report List Finish Good for Fish Meal and Fish Oil
-        , ACCStockCardPerCategory, ACCTransactionReportPerCategory;
+        , ACCStockCardPerCategory, ACCTransactionReportPerCategory, ACCNFDocumentRecapPerCategory, ACCNFDocumentSummaryPerCategory, ACCFFrozenFishInColdStorage
     }
 
     public static final Map<String, ReportModel> reportTemplateMap = new HashMap<String, ReportModel>();
@@ -109,6 +109,9 @@ public class ReportFactory {
         reportMap.put(Report.FishWsSF, reportTemplateMap.get("FishWsSF"));
         reportTemplateMap.put("FishWsSZ", new ReportModel("fish/wssfrozenl", false));
         reportMap.put(Report.FishWsSZ, reportTemplateMap.get("FishWsSZ"));
+        reportTemplateMap.put("FFrozenFishInColdStorage", new ReportModel("fish/ffics", false));
+        reportMap.put(Report.FFrozenFishInColdStorage, reportTemplateMap.get("FFrozenFishInColdStorage"));
+        
 
         //  Purchasing Module | Form and Report List
         reportTemplateMap.put("PRCPrs", new ReportModel("purchase/prs", false));
@@ -310,7 +313,13 @@ public class ReportFactory {
         reportMap.put(Report.ACCStockCardPerCategory, reportTemplateMap.get("ACCStockCardPerCategory"));
         reportTemplateMap.put("ACCTransactionReportPerCategory", new ReportModel("accounting/trpc", false));
         reportMap.put(Report.ACCTransactionReportPerCategory, reportTemplateMap.get("ACCTransactionReportPerCategory"));
-
+        reportTemplateMap.put("ACCNFDocumentRecapPerCategory", new ReportModel("accounting/nf_trrod", false));
+        reportMap.put(Report.ACCNFDocumentRecapPerCategory, reportTemplateMap.get("ACCNFDocumentRecapPerCategory"));
+        reportTemplateMap.put("ACCNFDocumentSummaryPerCategory", new ReportModel("accounting/nf_dsrpc", false));
+        reportMap.put(Report.ACCNFDocumentSummaryPerCategory, reportTemplateMap.get("ACCNFDocumentSummaryPerCategory"));
+        reportTemplateMap.put("ACCFFrozenFishInColdStorage", new ReportModel("accounting/f_ffsic", false));
+        reportMap.put(Report.ACCFFrozenFishInColdStorage, reportTemplateMap.get("ACCFFrozenFishInColdStorage"));
+        
         IGNORED_COLUMN.add("index");
     }
 

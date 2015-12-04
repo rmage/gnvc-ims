@@ -447,6 +447,16 @@ public class NewReportController extends MultiActionController {
     public ModelAndView getPoRegisteredPerSupplier(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("default/purchase/PoRegisteredPerSupplier");
     }
+    
+    // Fish Module | Form and Report List
+    public ModelAndView getFFrozenFishInColdstorage(HttpServletRequest request, HttpServletResponse response) {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            return new ModelAndView("default/fish/FFrozenFishInColdstorage", "model", model);
+        } else {
+            return new ModelAndView("redirect:/index.htm");
+        }
+    }
 
     //  Non-Fish Module | Form and Report List
     public ModelAndView getNFRStockInventoryPerCategory(HttpServletRequest request, HttpServletResponse response)
@@ -546,6 +556,35 @@ public class NewReportController extends MultiActionController {
             HashMap<String, Object> model = new HashMap<String, Object>();
             model.put("pcs", DaoFactory.createProductCategoryDao().findAll());
             return new ModelAndView("default/accounting/TransactionReportPerCategory", "model", model);
+        } else {
+            return new ModelAndView("redirect:/index.htm");
+        }
+    }
+    
+    public ModelAndView getAccountingNFDocumentRecapPerCategory(HttpServletRequest request, HttpServletResponse response) throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            model.put("pcs", DaoFactory.createProductCategoryDao().findAll());
+            return new ModelAndView("default/accounting/NFDocumentRecapPerCategory", "model", model);
+        } else {
+            return new ModelAndView("redirect:/index.htm");
+        }
+    }
+    
+    public ModelAndView getAccountingNFDocumentSummaryPerCategory(HttpServletRequest request, HttpServletResponse response) throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            model.put("pcs", DaoFactory.createProductCategoryDao().findAll());
+            return new ModelAndView("default/accounting/NFDocumentSummaryPerCategory", "model", model);
+        } else {
+            return new ModelAndView("redirect:/index.htm");
+        }
+    }
+    
+    public ModelAndView getAccountingFFrozenFishInColdstorage(HttpServletRequest request, HttpServletResponse response) throws ProductCategoryDaoException {
+        if (isLogin(request)) {
+            HashMap<String, Object> model = new HashMap<String, Object>();
+            return new ModelAndView("default/accounting/FFrozenFishInColdstorage", "model", model);
         } else {
             return new ModelAndView("redirect:/index.htm");
         }

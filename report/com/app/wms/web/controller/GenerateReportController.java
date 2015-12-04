@@ -55,6 +55,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FishFMov, "EXEC PRT_F_FISH_MOVING ?");
         ListMap.put(Report.FishWsSF, "EXEC PRT_F_WSS ?");
         ListMap.put(Report.FishWsSZ, "EXEC PRT_F_WSS ?");
+        ListMap.put(Report.FFrozenFishInColdStorage, "EXEC RPT_F_FROZEN_IN_COLD_STORAGE ?, ?");
         //  ***END*** | Fish Module | Form and Report List
 
         //  Purcashing Module | Form and Report List
@@ -120,6 +121,10 @@ public class GenerateReportController extends MultiActionController {
         //  Accounting Module | Report List
         ListMap.put(Report.ACCStockCardPerCategory, "EXEC RPT_ACC_STOCK_CARD_PER_CATEGORY ?, ?");
         ListMap.put(Report.ACCTransactionReportPerCategory, "EXEC RPT_ACC_TRANSACTION_REPORT_PER_CATEGORY ?, ?");
+        ListMap.put(Report.ACCNFDocumentRecapPerCategory, "EXEC RPT_ACC_NF_DOC_RECAP_PER_CATEGORY ?, ?");
+        ListMap.put(Report.ACCNFDocumentSummaryPerCategory, "EXEC RPT_ACC_NF_DOC_SUMMARY_PER_CATEGORY ?, ?");
+        ListMap.put(Report.ACCFFrozenFishInColdStorage, "EXEC RPT_ACC_F_FROZEN_IN_COLD_STORAGE ?");
+        
         //  ***END*** | Accounting Module | Report List
 
         ListMap.put(Report.FWS,

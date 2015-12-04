@@ -37,4 +37,16 @@ public interface FishRrDao extends GeneralDao<FishRr> {
     
     public List<Map<String, Object>> getReceiving(int key);
     
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode);
+    
+    public List<Map<String, Object>> getReceivingDetailForAccounting(String rrCode, int isRevise);
+    
+    public List<Map<String, Object>> findByDatePeriod(Date dateFrom, Date dateTo);
+    
+    public void doAccounting(String data, String separatorColumn, String separatorRow, String createdBy);
+    
+    public void doAccountingRevise(String data, String separatorColumn, String separatorRow, String updatedBy);
+    
+    public void removeAccounting(String rrCode);
+    
 }

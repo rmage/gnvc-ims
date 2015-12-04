@@ -1,10 +1,11 @@
 package com.spfi.ims.controller;
 
+import com.app.wms.engine.db.dao.FishRrDao;
 import com.app.wms.engine.db.dao.ReceiveReportDao;
 import com.app.wms.engine.db.dto.ReceiveReport;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
-import com.spfi.ims.dao.mapper.MapperNonFishReceiveReportAccounting;
+import com.spfi.ims.dao.mapper.MapperFishReceiveReportAccounting;
 import com.spfi.ims.helper.StringHelper;
 import java.net.URLDecoder;
 import java.text.ParseException;
@@ -18,33 +19,33 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-public class AccountingNonFishController extends MultiActionController {
-
+public class AccountingFishController extends MultiActionController {
+    
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/accounting/AccountingNonFishList");
+        return new ModelAndView("default/accounting/AccountingFishList");
     }
-
+    
     public ModelAndView getRR(HttpServletRequest request, HttpServletResponse response) throws ParseException {
         HashMap<String, Object> json = new HashMap<String, Object>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<HashMap<String, Object>> rows = new ArrayList<HashMap<String, Object>>();
 
-        ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
-        List<ReceiveReport> rrList = rrDao.findByDatePeriod(sdf.parse(request.getParameter("dateFrom")), sdf.parse(request.getParameter("dateTo")));
-        for (ReceiveReport rr : rrList) {
-            HashMap<String, Object> row = MapperNonFishReceiveReportAccounting.parseToHashMap(rr);
+        FishRrDao frrDao = DaoFactory.createFishRrDao();
+        List<Map<String, Object>> rrList = frrDao.findByDatePeriod(sdf.parse(request.getParameter("dateFrom")), sdf.parse(request.getParameter("dateTo")));
+        for (Map<String, Object> rr : rrList) {
+            HashMap<String, Object> row = MapperFishReceiveReportAccounting.parseToHashMap(rr);
             rows.add(row);
         }
         json.put("rows", rows);
 
         return new ModelAndView("jsonView", json);
     }
-
+    
     public ModelAndView getRRDetail(HttpServletRequest request, HttpServletResponse response) throws ParseException {
         HashMap<String, Object> json = new HashMap<String, Object>();
 
-        ReceiveReportDao rrDao = DaoFactory.createReceiveReportDao();
+        FishRrDao rrDao = DaoFactory.createFishRrDao();
 
         List<Map<String, Object>> rows;
         if (request.getParameter("isRevise") == null) {
@@ -56,7 +57,7 @@ public class AccountingNonFishController extends MultiActionController {
 
         return new ModelAndView("jsonView", json);
     }
-
+    
     public ModelAndView doRRProcess(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> json = new HashMap<String, Object>();
 
@@ -69,9 +70,9 @@ public class AccountingNonFishController extends MultiActionController {
             data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
 
             if (request.getParameter("isRevise").equals("0")) {
-                DaoFactory.createReceiveReportDao().doAccounting(data, separator[0], separator[1], lu.getUserId());
+                DaoFactory.createFishRrDao().doAccounting(data, separator[0], separator[1], lu.getUserId());
             } else {
-                DaoFactory.createReceiveReportDao().doAccountingRevise(data, separator[0], separator[1], lu.getUserId());
+                DaoFactory.createFishRrDao().doAccountingRevise(data, separator[0], separator[1], lu.getUserId());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,12 +81,12 @@ public class AccountingNonFishController extends MultiActionController {
 
         return new ModelAndView("jsonView", json);
     }
-
+    
     public ModelAndView doRRRemove(HttpServletRequest request, HttpServletResponse response) {
         HashMap<String, Object> json = new HashMap<String, Object>();
 
         try {
-            DaoFactory.createReceiveReportDao().removeAccounting(request.getParameter("rrCode"));
+            DaoFactory.createFishRrDao().removeAccounting(request.getParameter("rrCode"));
         } catch (Exception e) {
             e.printStackTrace();
             json.put("message", e.getMessage());
