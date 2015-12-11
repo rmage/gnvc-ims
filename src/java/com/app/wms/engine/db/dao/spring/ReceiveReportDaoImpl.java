@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -280,7 +281,7 @@ public class ReceiveReportDaoImpl extends AbstractDAO
     public List<ReceiveReport> findByDatePeriod(Date dateFrom, Date dateTo) {
         return jdbcTemplate.query("SELECT rr_code, rr_date, po_code, rr_from, rr_remarks, approved_by, created_by, created_date " +
                 "FROM rr " +
-                "WHERE created_date BETWEEN ? AND ? ORDER BY rr_code", new MapperNonFishReceiveReportAccounting(), dateFrom, dateTo);
+                "WHERE created_date BETWEEN ? AND ? ORDER BY rr_code", new MapperNonFishReceiveReportAccounting(), dateFrom, DateUtils.addMilliseconds(DateUtils.addDays(dateTo, 1), -1));
     }
 
 }

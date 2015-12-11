@@ -59,6 +59,9 @@
         </div>
         
         <script>
+            // set initial show
+            variable.show = 20;
+            
             util.initSearchForm($('#search'));
             util.initListTable($('#list'), 'u:d:R_FishABF_Air Blast Freezing Report (xls)');
         </script>

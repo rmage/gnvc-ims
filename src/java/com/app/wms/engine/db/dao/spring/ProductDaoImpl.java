@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -794,11 +795,19 @@ public class ProductDaoImpl extends AbstractDAO implements ParameterizedRowMappe
     }
 
     public List<Product> findWhereProductNameEquals(String productName, int limit) {
+        String[] params = productName.split(" ", -1);
+        productName = "(";
+        for (String param : params) {
+            productName = productName + " product_name LIKE '%" + param + "%' OR";
+        }
+        productName = productName.substring(0, productName.length() - 3) + ")";
+        
         HashMap hm = new HashMap();
-        hm.put("productName", "%" + productName + "%");
         hm.put("limit", limit);
+//        return jdbcTemplate.query("SELECT TOP(:limit) product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName()
+//                + " WHERE product_name LIKE :productName AND is_active = 'Y' ORDER BY product_name", this, hm);
         return jdbcTemplate.query("SELECT TOP(:limit) product_id, bar_code, product_code, product_name, product_alias, product_category, brand_name, product_type, product_color, product_description, volume_weight, unit_weight, volume_matrix, unit_matrix, unit_length, unit_width, unit_height, unit_piece, unit_box, unit_cartoon, unit_pallete, user_id, corp_id, wh_code, is_active, is_delete, created_by, created_date, updated_by, updated_date, uom_name, supplier_name, buyer, packstyle, packsize, lid, nwdwpw  FROM " + getTableName()
-                + " WHERE product_name LIKE :productName AND is_active = 'Y' ORDER BY product_name", this, hm);
+                + " WHERE " + productName + " AND is_active = 'Y' ORDER BY product_name", this, hm);
     }
 
     public List<Product> findWhereProductCodeEquals(String productCode, int limit) {

@@ -1,0 +1,25 @@
+*** #1 on December 11, 2015 by Febryan Y. Andika ***
+Purchase Requisition Slip:
+	- modify product searching by name to use multiple like criteria (full-text search not supported) for better result
+
+Rendering:
+	- fix daily printout formula (on total percentage)
+
+Accounting - Non-Fish Receive Report:
+	- fix issue on same-day rr searching to include millisecond up to 23:59:59.999
+	- modify procedure to include discount value from po
+	
+Report:
+	- iCore template read unit price from receive report document
+	
+== Fish Module ==
+	- default weight slip (ws) list show 20 row per page
+	- default spoilage  report(sr) list show 20 row per page
+	- default weight slip summary (wss) list show 20 row per page
+	- default receiving report (rr) list show 20 row per page
+	- default withdrawal slip (wds) list show 20 row per page
+	- default transfer slip (ts) list show 20 row per page
+	- default brine freezing (bf) list show 20 row per page
+	- default air blast freezing (abf) list show 20 row per page
+	- default reclassification (recc) list show 20 row per page
+	- default moving (moving) list show 20 row per page

@@ -57,6 +57,9 @@
         </div>
         
         <script>
+            // set initial show
+            variable.show = 20;
+            
             util.initSearchForm($('#search'));
             util.initListTable($('#list'), 'u:d:R_FishWDS_Withdrawal Report (xls)');
         </script>
