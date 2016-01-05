@@ -91,7 +91,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FGPts, "EXEC PRT_FG_PALLET_TRANSFER_SLIP ?");
         ListMap.put(Report.FGOfal, "EXEC PRT_FG_ORDER_FILL ?");
         ListMap.put(Report.FGLmr, "EXEC PRT_FG_LABELING_MONITORING_REPORT ?");
-        ListMap.put(Report.FGPtsPerPeriod, "EXEC RPT_FG_PALLET_TRANSFER_REGISTER ?, ?, ?");
+        ListMap.put(Report.FGPtsPerPeriod, "EXEC RPT_FG_PALLET_TRANSFER_REGISTER ?, ?");
         ListMap.put(Report.FGStockInventory, "EXEC RPT_FG_STOCK_INVENTORY_PER_PACKSIZE ?, ?");
         ListMap.put(Report.FGPtsCheckList, "EXEC RPT_FG_PTS_CHECKLIST");
         ListMap.put(Report.FGActualInventory, "EXEC RPT_FG_INVENTORY_PER_COUNT ?, ?");

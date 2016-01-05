@@ -32,7 +32,7 @@
                                     <td>Date To</td>
                                     <td><input type="text" id="dateToSource" name="dateTo" size="10" value="<%=cDate%>" required="required" pattern="(0[1-9]|1[0-9]|2[0-9]|3[01])/(0[1-9]|1[012])/[0-9]{4}" /></td>
                                 </tr>
-                                <tr>
+<!--                                <tr>
                                     <td>By</td>
                                     <td>
                                         <select id="ptsBy" name="ptsBy">
@@ -40,7 +40,7 @@
                                             <option value="C">System Date</option>
                                         </select>
                                     </td>
-                                </tr>
+                                </tr>-->
                             </tbody>
                         </table>
                         <table class="collapse tblForm row-select ui-widget-content">
@@ -67,7 +67,7 @@
             $('#dateToSource').datepicker({changeMonth: true, changeYear: true, dateFormat: "dd/mm/yy", altField: "#dateTo", altFormat: "yy-mm-dd"});
             $('#genForm').bind('submit', function() {
                 window.location.replace('GenerateReport.htm?action=index&item=FGPtsPerPeriod&type=xls&params=' +
-                        $('#dateFrom').val() + ':' + $('#dateTo').val() + ':' + $('#ptsBy').val());
+                        $('#dateFrom').val() + ':' + $('#dateTo').val());// + ':' + $('#ptsBy').val());
                 return false;
             });
         </script>

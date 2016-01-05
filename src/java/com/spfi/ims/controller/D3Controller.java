@@ -211,7 +211,11 @@ public class D3Controller extends MultiActionController {
             sb.append("\"9\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col8").toString()))).append("\", ");
             sb.append("\"10\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col9").toString()))).append("\", ");
             sb.append("\"11\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col10").toString()))).append("\", ");
-            sb.append("\"12\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col12").toString()))).append("\"}");
+            sb.append("\"12\": \"").append(NumberFormat.getNumberInstance().format(new BigDecimal(x.get("col12").toString()))).append("\", ");
+            sb.append("\"13\": \"").append(x.get("col13")).append("\", ");
+            sb.append("\"14\": \"").append(x.get("col14")).append("\", ");
+            sb.append("\"15\": \"").append(x.get("col15")).append("\", ");
+            sb.append("\"16\": \"").append(x.get("col16")).append("\"}");
             
             b = Boolean.TRUE;
         }

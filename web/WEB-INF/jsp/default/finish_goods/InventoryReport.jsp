@@ -55,7 +55,11 @@
                         <thead>
                             <tr>
                                 <td class="center" style="width: 25px;">No</td>
-                                <td class="center">Item Name</td>
+                                <td class="center">Item Code</td>
+                                <td class="center">Pack Style</td>
+                                <td class="center">Can Type</td>
+                                <td class="center">Lid Type</td>
+                                <td class="center">NW/DW</td>
                                 <td class="center">Beginning</td>
                                 <td class="center">IN Pallet Transfer</td>
                                 <td class="center">IN Pallet Hold</td>
@@ -107,7 +111,11 @@
                         for (var i = 0; i < json.length; i++) {
                             $('tbody#rptPreview').append('<tr>' +
                                     '<td class="center">' + ($('tbody#rptPreview tr').length + 1) + '</td>' +
+                                    '<td>' + json[i][13] + '</td>' +
                                     '<td>' + json[i][1] + '</td>' +
+                                    '<td>' + json[i][14] + '</td>' +
+                                    '<td>' + json[i][15] + '</td>' +
+                                    '<td>' + json[i][16] + '</td>' +
                                     '<td class="right">' + json[i][2] + '</td>' +
                                     '<td class="right">' + json[i][3] + '</td>' +
                                     '<td class="right">' + json[i][4] + '</td>' +
