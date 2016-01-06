@@ -96,6 +96,7 @@ public class GenerateReportController extends MultiActionController {
         ListMap.put(Report.FGPtsCheckList, "EXEC RPT_FG_PTS_CHECKLIST");
         ListMap.put(Report.FGActualInventory, "EXEC RPT_FG_INVENTORY_PER_COUNT ?, ?");
         ListMap.put(Report.FGBor15Report, "EXEC RPT_FG_BOR15_REPORT ?, ?");
+        ListMap.put(Report.FGStockStatusPerPts, "EXEC RPT_FG_STOCK_STATUS_PER_PTS ?, ?");
         //  ***END*** | Finished Goods Module | Form and Report List    
 
         //  Rendering Module | Form and Report List

@@ -38,7 +38,7 @@ public class ReportFactory {
         , FishWSHR, FishWSNC, FishWSBF, FishWSNR, FishWSABF, FishWSL, FishSR, FishWssFresh, FishWssFrozen, FishRR/*, FishSumPerSupp, FishSumPerCS, FishStockCard*/, FishTS, FishBF, FishABF/*, FishSumPerSuppActual, FishSumPerCSActual, FishStockCardActual*/, FishWDS, FishRECC, FishFMov, FishWsSF, FishWsSZ, FishDailyInCS, FishSummaryInCS, FFrozenFishInColdStorage //  Purchase Module | Form and Report List
         , PRCPrs, PRCPo, PRCPrsNotYetPo, PRCPoNotYetRr, PRCPoRegisteredPerPeriod, PRCPoRegisteredPerPeriodConfirmatory, PRCPoRegisteredPerDepartment, PRCPoRegisteredPerItem, PRCPoRegisteredPerSupplier, PRCPrsRegister //  Non-Fish Module | Form and Report List
         , NFRr, NFSws, NFSwsP, NFTs, NFDr, NFSIPerCat, NFTPerCat, NFRrRegisterPerPeriod, NFSwsRegisterPerPeriod, NFTsRegisterPerPeriod, NFDrRegisterPerPeriod //  Finished Goods Module | Form and Report List
-        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGBor15, FGPts, FGOfal, FGLmr, FGBor15Report //  Rendering Module | Form and Report List
+        , FGPtsPerPeriod, FGStockInventory, FGPtsCheckList, FGActualInventory, FGBor, FGBor15, FGPts, FGOfal, FGLmr, FGBor15Report, FGStockStatusPerPts //  Rendering Module | Form and Report List
         , RendDailyReport, RendSummaryReport, RendSales
         , MSupplier, MProduct
         , reportBC23 //iCore Module | Report List BC 2.3;
@@ -180,6 +180,8 @@ public class ReportFactory {
         reportMap.put(Report.FGActualInventory, reportTemplateMap.get("FGActualInventory"));
         reportTemplateMap.put("FGBor15Report", new ReportModel("finished_goods/borr", false));
         reportMap.put(Report.FGBor15Report, reportTemplateMap.get("FGBor15Report"));
+        reportTemplateMap.put("FGStockStatusPerPts", new ReportModel("finished_goods/fgssppts", false));
+        reportMap.put(Report.FGStockStatusPerPts, reportTemplateMap.get("FGStockStatusPerPts"));
         
         // Rendering Module | Form and Report List
         reportTemplateMap.put("RendDailyReport", new ReportModel("rendering/daily", false));

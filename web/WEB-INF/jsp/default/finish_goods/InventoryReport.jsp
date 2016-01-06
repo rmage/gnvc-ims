@@ -45,6 +45,7 @@
                                     <td colspan="2">
                                         <input type="button" id="btnPreview" name="btnPreview" value="Preview Data">
                                         <input type="submit" value="Generate Report" name="btnGenerate">
+                                        <input type="button" value="Stock Status per PTS" id="btnSsppts" name="btnSsppts">
                                     </td>
                                 </tr>
                             </tfoot>
@@ -83,6 +84,7 @@
                 </div>
             </div>
         </div>
+        <iframe src="" id="iFrameDownloader" style="display: none;"></iframe>
 
         <script>
             // BINDING | date picker to as of
@@ -97,6 +99,10 @@
             // BINDING | generate report button
             $('#generator').bind('submit', function() {
                 $('#params').val($("#packSize").val() + ':' + $("#asOf").val());
+            });
+            
+            $('#btnSsppts').bind('click', function() {
+                $('#iFrameDownloader')[0].src = 'GenerateReport.htm?action=index&item=FGStockStatusPerPts&type=xls&params=' + $("#asOf").val() + ':' + $("#packSize").val();
             });
 
             // BINDING | preview data button
