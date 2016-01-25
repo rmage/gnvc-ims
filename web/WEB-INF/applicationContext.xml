@@ -17,7 +17,7 @@
     <!-- XXX : FYA | Database Connection Setting -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="url" value="jdbc:jtds:sqlserver://127.0.0.1:1433/inventory" />
+        <property name="url" value="jdbc:jtds:sqlserver://127.0.0.1:1433/b12d4a36" />
         <property name="username" value="sa" />
         <property name="password" value="qts1n@r" />
     </bean>

@@ -15,7 +15,7 @@ public class ctrlKoneksiDB {
 		try{
                     //  XXX : FYA | Database Connection Setting
                     Class.forName("net.sourceforge.jtds.jdbc.Driver");
-                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433/inventory","sa","qts1n@r");
+                    connect = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433/b12d4a36","sa","qts1n@r");
                     return connect;
 		}
 		catch(SQLException se){
