@@ -430,4 +430,9 @@
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
+    <!-- fya} CR-1601-01 -->
+    <bean name="/BackDateManagement.htm" class="com.spfi.ims.controller.MBackDateManagementController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
+    
 </beans>

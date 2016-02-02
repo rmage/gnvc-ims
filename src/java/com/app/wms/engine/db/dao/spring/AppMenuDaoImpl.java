@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -184,6 +186,19 @@ public class AppMenuDaoImpl extends AbstractDAO implements ParameterizedRowMappe
             return jdbcTemplate.query(sb.toString(), this, roleCode);
         } catch (Exception e) {
             throw new AppMenuDaoException("Query failed", e);
+        }
+    }
+    
+    @Transactional
+    public List<AppMenu> findByUrls(String[] urls) throws AppMenuDaoException {
+        try {
+            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+            mapSqlParameterSource.addValue("urls", Arrays.asList(urls));
+            
+            return jdbcTemplate.getNamedParameterJdbcOperations().query("SELECT appm.MENU_CODE, appm.NAME, appm.URL, appm.CREATED_BY, appm.CREATED_DATE,  appm.UPDATED_BY,  appm.UPDATED_DATE, appm.GROUP_CODE, appm.SORT_NO FROM " + getTableName() + " appm WHERE url IN (:urls)", mapSqlParameterSource, this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AppMenuDaoException("Query failed " + e.getMessage(), e);
         }
     }
 }

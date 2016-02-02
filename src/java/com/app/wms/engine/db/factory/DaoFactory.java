@@ -1015,4 +1015,11 @@ public class DaoFactory {
         BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
         return (AccountingCutOffDao) bf.getBean("AccountingCutOffDao");
     }
+    
+    // fya} CR-1601-01
+    public static BackDateProfileDao createBackDateProfileDao() {
+        BeanFactory bf = new XmlBeanFactory(new ClassPathResource("dao-beans.xml"));
+        return (BackDateProfileDao) bf.getBean("BackDateProfileDao");
+    }
+    
 }

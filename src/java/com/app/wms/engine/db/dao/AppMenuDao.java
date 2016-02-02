@@ -88,4 +88,6 @@ public interface AppMenuDao {
     public List<AppMenu> findByMenuGroup(String groupCode) throws AppMenuDaoException;
 
     public List<AppMenu> findWhereNotInAppMenuRole(String roleCode, String filter) throws AppMenuDaoException;
+    
+    public List<AppMenu> findByUrls(String[] urls) throws AppMenuDaoException;
 }

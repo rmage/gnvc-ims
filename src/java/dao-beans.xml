@@ -516,5 +516,10 @@
     <bean id="AccountingCutOffDao" class="com.spfi.ims.dao.AccountingCutOffDaoImpl" scope="prototype">
         <property name="dataSource" ref="dataSource" />
     </bean>
+    
+    <!-- fya} CR-1601-01 -->
+    <bean id="BackDateProfileDao" class="com.spfi.ims.dao.BackDateProfileDaoImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
         
 </beans>
