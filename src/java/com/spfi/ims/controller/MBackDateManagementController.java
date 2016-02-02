@@ -1,11 +1,15 @@
 package com.spfi.ims.controller;
 
 import com.app.wms.engine.db.dao.AppMenuDao;
+import com.app.wms.engine.db.dto.AppMenu;
 import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.exceptions.AppMenuDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.spfi.ims.dao.BackDateProfileDao;
 import com.spfi.ims.dto.BackDateProfile;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,11 +19,20 @@ public class MBackDateManagementController extends MultiActionController {
     
     public ModelAndView findByPrimaryKey(HttpServletRequest request, HttpServletResponse response) throws AppMenuDaoException {
         HashMap<String, Object> model = new HashMap<String, Object>();
+        List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
         
         // fya} get module id
         String[] urls = {"FGPalletTransfer.htm", "FGExportDelivery.htm", "FGDelivery.htm", "FGReturnCargo.htm", "FGTransfer.htm", "FGReclassification.htm"};
         AppMenuDao appMenuDao = DaoFactory.createAppMenuDao();
-        model.put("fgMenuList", appMenuDao.findByUrls(urls));
+        BackDateProfileDao backDateProfileDao = DaoFactory.createBackDateProfileDao();
+        
+        for (AppMenu am : appMenuDao.findByUrls(urls)) {
+            HashMap<String, Object> row = new HashMap<String, Object>();
+            row.put("appMenuList", am);
+            row.put("userList", backDateProfileDao.findByAppMenu(am.getMenuCode()));
+            list.add(row);
+        }
+        model.put("fgMenuList", list);
         
         return new ModelAndView("default/master/BackDateManagementList", model);
     }

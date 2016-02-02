@@ -31,49 +31,18 @@
                             <c:forEach items="${fgMenuList}" var="x" varStatus="vs">
                                 <tr>
                                     <td class="center">${vs.index + 1}</td>
-                                    <td>${x.name}</td>
-                                    <td></td>
-                                    <td class="center"><img class="edit" src="resources/images/edit.gif" data-code="${x.menuCode}"></td>
+                                    <td>${x.appMenuList.name}</td>
+                                    <td>
+                                        <c:forEach items="${x.userList}" var="y" varStatus="vsY">
+                                            <c:if test="${vsY.index > 0}">, </c:if>
+                                            ${y.name}
+                                        </c:forEach>
+                                    </td>
+                                    <td class="center"><img class="edit" src="resources/images/edit.gif" data-code="${x.appMenuList.menuCode}"></td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
-<!--                    <form action="FGFreight.htm" id="search" method="post">
-                        <table class="collapse tblForm row-select">
-                            <caption>Finished Goods Freight &therefore; Search</caption>
-                            <tbody>
-                                <tr>
-                                    <td style="width: 200px;">Code</td>
-                                    <td><input type="text" name="freight_code" /></td>
-                                    <td style="width: 200px;">Description</td>
-                                    <td><input type="text" name="freight_description" /></td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="4">
-                                        <input type="submit" value="Search" name="btnSearch" />
-                                        <input type="button" value="Add" name="btnAdd" onclick="window.location.replace('FGFreight.htm?action=create');" />
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </form>
-                    <table class="collapse tblForm row-select" id="list">
-                        <caption>Finished Goods Freight &therefore; List</caption>
-                        <thead>
-                            <tr>
-                                <td style="width: 15px">No</td>
-                                <td style="width: 50px">Action</td>
-                                <td column="freight_code">Name</td>
-                                <td column="freight_description">Description</td>
-                                <td>Created By</td>
-                                <td>Created Date</td>
-                            </tr>
-                        </thead>
-                        <tbody id="main"></tbody>
-                        <tfoot></tfoot>
-                    </table>-->
                 </div>
             </div>
             
@@ -121,7 +90,8 @@
                     draggable: false,
                     resizable: false,
                     width: 1000,
-                    open: function() { loadDataUserList(); }
+                    open: function() { loadDataUserList(); },
+                    close: function() { location.href = location.href; }
                 });
             });
             
@@ -181,8 +151,6 @@
                     }
                 });
             }
-//            util.initSearchForm($('#search'));
-//            util.initListTable($('#list'), 'u:d');
         </script>
     </body>
 </html>
