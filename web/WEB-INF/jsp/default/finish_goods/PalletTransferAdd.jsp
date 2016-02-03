@@ -127,16 +127,7 @@
         <script>
 
             //  BIND | Date Picker to pts date
-            $("#ptsDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ptsDate", changeYear: true, changeMonth: true, onSelect: function() {
-                $.ajax({
-                    url: 'Validator.htm', type: 'get',
-                    data: { action: 'validateBackDate' },
-                    dataType: 'json',
-                    onSucess: function() {
-                        
-                    }
-                });
-            }});
+            $("#ptsDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ptsDate", changeYear: true, changeMonth: true, onSelect: function(dateText, inst) { gnvs.validator.backDate($(this), dateText, inst); }});
 
             //  BIND | Blur on detail quantity to calculate Cs value
             $(".i4").live("blur", function () {

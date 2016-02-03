@@ -57,5 +57,34 @@ var gnvs = {
             v = v.replace(/,/g, '');
             return parseFloat(v);
         }
+    },
+    validator: {
+        backDate: function($datePicker, dateText, inst) {
+            $.ajax({
+                url: 'Validator.htm', type: 'get',
+                data: { action: 'validateBackDate' },
+                dataType: 'json',
+                success: function(json) {
+                    // fya} update with previous value
+                    if (json.validity === '0') {
+                        if (json.currentDate !== undefined) {
+                            $datePicker.datepicker().datepicker('setDate', json.currentDate);
+                        } else {
+                            $datePicker.datepicker().datepicker('setDate', inst.lastVal);
+                        }
+
+                        alert('Please contact administrator to allow backdate process!');
+                    } else {
+                        var currTime = $.datepicker.parseDate('dd/mm/yy', dateText).getTime(),
+                            servTime = $.datepicker.parseDate('dd/mm/yy', json.currentDate).getTime();
+
+                        if (currTime > servTime) {
+                            $datePicker.datepicker().datepicker('setDate', json.currentDate);
+                            alert('Future date not allowed!');
+                        }
+                    }
+                }
+            });
+        }
     }
 };

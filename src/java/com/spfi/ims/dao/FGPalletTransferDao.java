@@ -23,7 +23,7 @@ public interface FGPalletTransferDao {
     // 2015 Update | by FYA
     public void ajaxNUpdate(String data, String separatorColumn, String separatorRow, String createdBy);
     
-    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy);
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy, int isBackDate);
     
     public void delete(int key, String updatedBy);
     

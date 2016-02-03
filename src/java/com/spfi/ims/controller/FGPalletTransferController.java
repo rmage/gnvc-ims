@@ -4,6 +4,7 @@ import com.app.wms.engine.db.dto.map.LoginUser;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.FGPalletTransferDao;
 import com.spfi.ims.helper.StringHelper;
+import com.spfi.ims.helper.ValidatorHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -141,8 +142,7 @@ public class FGPalletTransferController extends MultiActionController {
     }
 
     // 2015 Update | by FYA
-    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    public ModelAndView ajaxNSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> json = new HashMap<String, Object>();
 
         try {
@@ -152,7 +152,7 @@ public class FGPalletTransferController extends MultiActionController {
             String[] separator = StringHelper.getDataSeparator(data, 2);
 
             data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
-            DaoFactory.createFGPalletTransferDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+            DaoFactory.createFGPalletTransferDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId(), ValidatorHelper.backDateHelper(lu, "FGPalletTransfer.htm"));
 
             json.put("message", "");
         } catch (Exception e) {

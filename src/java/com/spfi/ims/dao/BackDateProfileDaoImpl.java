@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 public class BackDateProfileDaoImpl extends AbstractDAO implements BackDateProfileDao {
@@ -61,6 +62,9 @@ public class BackDateProfileDaoImpl extends AbstractDAO implements BackDateProfi
                 "FROM back_date_profile bdp " +
                 "	INNER JOIN app_menu am ON am.menu_code = bdp.menu_code AND am.url = ? " +
                 "WHERE bdp.user_id = ? AND bdp.is_active = 'Y'", pathName, userId);
+        } catch(EmptyResultDataAccessException e) {
+            // fya} when empty result set
+            return 0;
         } catch(Exception e) {
             e.printStackTrace();
             return 0;

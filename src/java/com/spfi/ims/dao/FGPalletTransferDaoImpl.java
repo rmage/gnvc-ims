@@ -82,8 +82,8 @@ public class FGPalletTransferDaoImpl extends AbstractDAO implements FGPalletTran
         jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
     }
 
-    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
-        jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy, int isBackDate) {
+        jdbcTemplate.update("EXEC FG_PALLET_TRANSFER_CREATE ?, ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy, isBackDate);
     }
 
     public void delete(int key, String updatedBy) {

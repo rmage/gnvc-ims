@@ -14,6 +14,11 @@ public interface BackDateProfileDao {
     
     List<Map<String, Object>> findUserByName(String name, String appMenuCode);
     
+    /**
+     * @param pathName  menu url that used for the request
+     * @param userId    user_id from database value
+     * @return          validity status 0 (invalid) or 1 (valid)
+     */
     int checkIsValid(String pathName, String userId);
     
 }
