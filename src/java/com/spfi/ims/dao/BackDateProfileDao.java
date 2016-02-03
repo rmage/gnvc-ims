@@ -14,4 +14,6 @@ public interface BackDateProfileDao {
     
     List<Map<String, Object>> findUserByName(String name, String appMenuCode);
     
+    int checkIsValid(String pathName, String userId);
+    
 }

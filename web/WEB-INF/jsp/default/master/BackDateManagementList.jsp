@@ -1,3 +1,4 @@
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -37,6 +38,9 @@
                                             <c:if test="${vsY.index > 0}">, </c:if>
                                             ${y.name}
                                         </c:forEach>
+                                        <c:if test="${fn:length(x.userList) eq 0}">
+                                            <em>-- no user --</em>
+                                        </c:if>
                                     </td>
                                     <td class="center"><img class="edit" src="resources/images/edit.gif" data-code="${x.appMenuList.menuCode}"></td>
                                 </tr>

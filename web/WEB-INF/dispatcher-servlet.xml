@@ -431,6 +431,9 @@
     </bean>
     
     <!-- fya} CR-1601-01 -->
+    <bean name="/Validator.htm" class="com.spfi.ims.controller.ValidatorController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
     <bean name="/BackDateManagement.htm" class="com.spfi.ims.controller.MBackDateManagementController">
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>

@@ -55,4 +55,16 @@ public class BackDateProfileDaoImpl extends AbstractDAO implements BackDateProfi
         }
     }
     
+    public int checkIsValid(String pathName, String userId) {
+        try {
+            return jdbcTemplate.queryForInt("SELECT 1 " +
+                "FROM back_date_profile bdp " +
+                "	INNER JOIN app_menu am ON am.menu_code = bdp.menu_code AND am.url = ? " +
+                "WHERE bdp.user_id = ? AND bdp.is_active = 'Y'", pathName, userId);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
 }
