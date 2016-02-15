@@ -97,13 +97,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#rrDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#rrDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#rrDatePicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#rrDate", changeYear: true, changeMonth: true, onSelect: function(dateText, inst) { gnvs.validator.backDate($(this), dateText, inst); } });
 
             // BIND | Search EDS button
             $("#btnAdd").bind("click", function() {

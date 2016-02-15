@@ -28,7 +28,7 @@
                                     <td style="width: 200px;">EDS Number</td>
                                     <td><input type="text" id="edsCode" name="edsCode" value="${model.edss[0].eds_code}" required></td>
                                     <td style="width: 200px;">EDS Date</td>
-                                    <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="" size="10" required></td>
+                                    <td><input type="text" id="edsDatePicker" name="edsDatePicker" value="" size="10" required readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Container Number</td>
@@ -122,7 +122,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#edsDatePicker").val(gnvs.util.toViewDate('${model.edss[0].eds_date}')).datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#edsDate", changeYear: true, changeMonth: true });
+            $("#edsDatePicker").val(gnvs.util.toViewDate('${model.edss[0].eds_date}'));//.datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#edsDate", changeYear: true, changeMonth: true });
             $('#edsDate').val(gnvs.util.toDBDate($('#edsDatePicker').val()));
             
             // BIND | Save function

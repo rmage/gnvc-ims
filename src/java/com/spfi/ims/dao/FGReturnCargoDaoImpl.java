@@ -54,8 +54,8 @@ public class FGReturnCargoDaoImpl extends AbstractDAO implements FGReturnCargoDa
         jdbcTemplate.update("EXEC FG_RETURN_CARGO_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
     }
 
-    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
-        jdbcTemplate.update("EXEC FG_RETURN_CARGO_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy, int isBackDate) {
+        jdbcTemplate.update("EXEC FG_RETURN_CARGO_CREATE ?, ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy, isBackDate);
     }
 
     public void delete(String key, String updatedBy) {

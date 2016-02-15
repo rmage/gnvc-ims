@@ -111,8 +111,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#tsDatePicker").val(gnvs.util.toViewDate('${model.tss[0].ts_date}'))
-                    .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#tsDate", changeYear: true, changeMonth: true});
+            $("#tsDatePicker").val(gnvs.util.toViewDate('${model.tss[0].ts_date}'));//.datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#tsDate", changeYear: true, changeMonth: true});
             $('#tsDate').val(gnvs.util.toDBDate($('#tsDatePicker').val()));
 
             // BIND | Search PTS button

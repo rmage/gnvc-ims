@@ -97,9 +97,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#reccDatePicker")
-                    .val(gnvs.util.toViewDate('${model.reccs[0].recc_date}'))
-                    .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#reccDate", changeYear: true, changeMonth: true});
+            $("#reccDatePicker").val(gnvs.util.toViewDate('${model.reccs[0].recc_date}'));//.datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#reccDate", changeYear: true, changeMonth: true});
             $('#reccDate').val(gnvs.util.toDBDate($('#reccDatePicker').val()));
 
             // BIND | Search PTS button

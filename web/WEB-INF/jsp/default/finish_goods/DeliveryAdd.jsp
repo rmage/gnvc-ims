@@ -94,13 +94,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#drDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#drDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#drDatePicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#drDate", changeYear: true, changeMonth: true, onSelect: function(dateText, inst) { gnvs.validator.backDate($(this), dateText, inst); } });
 
             // BIND | Search PTS button
             $("#btnAdd").bind("click", function() {

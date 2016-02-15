@@ -6,6 +6,7 @@ import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
 import com.spfi.ims.dao.FGTransferDao;
 import com.spfi.ims.helper.StringHelper;
+import com.spfi.ims.helper.ValidatorHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -172,7 +173,7 @@ public class FGTransferController extends MultiActionController {
             String[] separator = StringHelper.getDataSeparator(data, 2);
 
             data = data.replaceAll(":s:", separator[0]).replaceAll(":se:", separator[1]);
-            DaoFactory.createFGTransferDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId());
+            DaoFactory.createFGTransferDao().ajaxNSave(data, separator[0], separator[1], lu.getUserId(), ValidatorHelper.backDateHelper(lu, "FGTransfer.htm"));
 
             json.put("message", "");
         } catch (Exception e) {

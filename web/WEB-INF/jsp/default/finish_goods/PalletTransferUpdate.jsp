@@ -37,7 +37,7 @@
                                         </select>
                                     </td>
                                     <td style="width: 200px;">PTS Date</td>
-                                    <td><input type="text" id="ptsDatePicker" name="ptsDatePicker" size="10" required></td>
+                                    <td><input type="text" id="ptsDatePicker" name="ptsDatePicker" size="10" required readonly></td>
                                 </tr>
                                 <tr>
                                     <td>Pack Style / Size</td>
@@ -146,7 +146,7 @@
 
             //  BIND | Date Picker to pts date
             $('#ptsDate').val('${model.ptss[0].pts_date}');
-            $("#ptsDatePicker").datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ptsDate", changeYear: true, changeMonth: true}).val(gnvs.util.toViewDate('${model.ptss[0].pts_date}'));
+            $("#ptsDatePicker").val(gnvs.util.toViewDate('${model.ptss[0].pts_date}'));//.datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#ptsDate", changeYear: true, changeMonth: true});
 
             //  BIND | Blur on detail quantity to calculate Cs value
             $(".i4").live("blur", function () {

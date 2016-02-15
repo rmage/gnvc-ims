@@ -54,8 +54,8 @@ public class FGExportDeliveryDaoImpl extends AbstractDAO implements FGExportDeli
         jdbcTemplate.update("EXEC FG_EXPORT_DELIVERY_UPDATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
     }
 
-    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy) {
-        jdbcTemplate.update("EXEC FG_EXPORT_DELIVERY_CREATE ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+    public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy, int isBackDate) {
+        jdbcTemplate.update("EXEC FG_EXPORT_DELIVERY_CREATE ?, ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy, isBackDate);
     }
 
     public void delete(int key, String updatedBy) {

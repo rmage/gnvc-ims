@@ -89,13 +89,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#reccDatePicker").datepicker({
-                dateFormat: "dd/mm/yy",
-                altFormat: "yy-mm-dd",
-                altField: "#reccDate",
-                changeYear: true,
-                changeMonth: true
-            });
+            $("#reccDatePicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#reccDate", changeYear: true, changeMonth: true, onSelect: function(dateText, inst) { gnvs.validator.backDate($(this), dateText, inst); } });
 
             // BIND | Search PTS button
             $("#btnAdd").bind("click", function() {

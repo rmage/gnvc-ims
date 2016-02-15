@@ -29,7 +29,7 @@
                                     <td style="width: 200px;">Return Cargo Number</td>
                                     <td><input type="text" id="rrCode" name="rrCode" value="${model.rcs[0].rr_code}" readonly></td>
                                     <td>Return Cargo Date</td>
-                                    <td><input type="text" id="rrDatePicker" name="rrDatePicker" size="10" required></td>
+                                    <td><input type="text" id="rrDatePicker" name="rrDatePicker" size="10" required readonly></td>
                                 </tr>
                                 <tr>
                                     <td>EDS Number</td>
@@ -101,9 +101,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#rrDatePicker")
-                    .val(gnvs.util.toViewDate('${model.rcs[0].rr_date}'))
-                    .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#rrDate", changeYear: true, changeMonth: true});
+            $("#rrDatePicker").val(gnvs.util.toViewDate('${model.rcs[0].rr_date}'));//.datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#rrDate", changeYear: true, changeMonth: true});
             $('#rrDate').val(gnvs.util.toDBDate($('#rrDatePicker').val()));
 
             // BIND | Save

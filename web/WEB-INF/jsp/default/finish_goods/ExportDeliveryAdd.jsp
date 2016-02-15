@@ -120,7 +120,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#edsDatePicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#edsDate", changeYear: true, changeMonth: true });
+            $("#edsDatePicker").datepicker({ dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#edsDate", changeYear: true, changeMonth: true, onSelect: function(dateText, inst) { gnvs.validator.backDate($(this), dateText, inst); }});
 
             // BIND | Remove all previous data if keyup in OFAL Code
             $("#lmrCode").bind("keyup", function() {

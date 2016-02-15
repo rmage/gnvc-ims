@@ -29,7 +29,7 @@
                                     <td style="width: 200px;">Delivery Number</td>
                                     <td><input type="text" id="drCode" name="drCode" value="${model.ds[0].dr_code}" readonly></td>
                                     <td>Delivery Date</td>
-                                    <td><input type="text" id="drDatePicker" name="drDatePicker" size="10" required></td>
+                                    <td><input type="text" id="drDatePicker" name="drDatePicker" size="10" required readonly></td>
                                 </tr>
                                 <tr>
                                     <td>From</td>
@@ -101,8 +101,7 @@
         <script>
 
             // BIND | Date Picker to ofal date
-            $("#drDatePicker").val(gnvs.util.toViewDate('${model.ds[0].dr_date}'))
-                    .datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#drDate", changeYear: true, changeMonth: true});
+            $("#drDatePicker").val(gnvs.util.toViewDate('${model.ds[0].dr_date}'));//.datepicker({dateFormat: "dd/mm/yy", altFormat: "yy-mm-dd", altField: "#drDate", changeYear: true, changeMonth: true});
             $('#drDate').val(gnvs.util.toDBDate($('#drDatePicker').val()));
 
             // BIND | Search PTS button
