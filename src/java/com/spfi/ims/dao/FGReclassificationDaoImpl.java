@@ -55,7 +55,7 @@ public class FGReclassificationDaoImpl extends AbstractDAO implements FGReclassi
     }
 
     public void ajaxNSave(String data, String separatorColumn, String separatorRow, String createdBy, int isBackDate) {
-        jdbcTemplate.update("EXEC FG_RECLASSIFICATION_CREATE ?, ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy);
+        jdbcTemplate.update("EXEC FG_RECLASSIFICATION_CREATE ?, ?, ?, ?, ?", data, separatorColumn, separatorRow, createdBy, isBackDate);
     }
 
     public void delete(String key, String updatedBy) {

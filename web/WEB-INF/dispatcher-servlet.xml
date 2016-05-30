@@ -48,29 +48,13 @@
     </bean>
     <bean name="/main.htm" class="com.app.wms.web.controller.common.HomeController">
     </bean>
-    <!-- Add 30 juli 2012; app warehouse management system -->
-    <bean name="/Corporate.htm" class="com.app.wms.web.controller.CorporateController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
     <bean name="/Location.htm" class="com.app.wms.web.controller.WarehouseLocationController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/Purchase.htm" class="com.app.wms.web.controller.PurchaseController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <bean name="/Replenish.htm" class="com.app.wms.web.controller.ReplenishController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
     <bean name="/Sws.htm" class="com.app.wms.web.controller.StoreWithdrawalSlipController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/PickingAdm.htm" class="com.app.wms.web.controller.PickingController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/PickingSpv.htm" class="com.app.wms.web.controller.Picking2Controller">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/Packing.htm" class="com.app.wms.web.controller.PackingController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/Delivery.htm" class="com.app.wms.web.controller.DeliveryController">
@@ -100,12 +84,6 @@
     <bean name="/Stock.htm" class="com.app.wms.web.controller.StockController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <bean name="/Consolidate.htm" class="com.app.wms.web.controller.ConsolidateController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/Kitting.htm" class="com.app.wms.web.controller.KittingController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
      <bean name="/stocktake2.htm" class="com.app.wms.web.controller.StockTake2Controller">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
@@ -119,9 +97,6 @@
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/ProductCategory.htm" class="com.app.wms.web.controller.ProductCategoryController">
-	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
-    </bean>
-    <bean name="/Bundle.htm" class="com.app.wms.web.controller.BundleController">
 	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/LocatingArea.htm" class="com.app.wms.web.controller.WhLocatingAreaController">
