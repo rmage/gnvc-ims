@@ -306,10 +306,10 @@
     <bean name="/FGPackStyle.htm" class="com.spfi.ims.controller.FGPackStyleController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <bean name="/FGItem.htm" class="com.spfi.ims.controller.FGItemController">
+    <!--<bean name="/FGItem.htm" class="com.spfi.ims.controller.FGItemController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    <!--<bean name="/FGBookedOrder.htm" class="com.spfi.ims.controller.FGBookedOrderController">
+    <bean name="/FGBookedOrder.htm" class="com.spfi.ims.controller.FGBookedOrderController">
     	<property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/FGBookedOrderAddendum.htm" class="com.spfi.ims.controller.FGBookedOrderAddendumController">
@@ -405,12 +405,15 @@
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     
-    <!-- fya} CR-1601-01 -->
+    <!-- CR-1601-01 -->
     <bean name="/Validator.htm" class="com.spfi.ims.controller.ValidatorController">
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
     <bean name="/BackDateManagement.htm" class="com.spfi.ims.controller.MBackDateManagementController">
         <property name="methodNameResolver" ref="defaultMethodNameResolver" />
     </bean>
-    
+    <!-- CR-1605-01 -->
+    <bean name="/SystemOption.htm" class="com.spfi.ims.controller.MSystemOptionController">
+        <property name="methodNameResolver" ref="defaultMethodNameResolver" />
+    </bean>
 </beans>

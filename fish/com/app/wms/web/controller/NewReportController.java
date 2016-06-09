@@ -519,11 +519,17 @@ public class NewReportController extends MultiActionController {
     }
     
     public ModelAndView getFGInventoryReport(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/finish_goods/InventoryReport");
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("packSize", DaoFactory.createSystemOptionDao().findByCode("FG_PACK_SIZE").getValue().split(","));
+        
+        return new ModelAndView("default/finish_goods/InventoryReport", model);
     }
     
     public ModelAndView getFGActualInventoryReport(HttpServletRequest request, HttpServletResponse response) {
-        return new ModelAndView("default/finish_goods/ReportActualInventory");
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("packSize", DaoFactory.createSystemOptionDao().findByCode("FG_PACK_SIZE").getValue().split(","));
+        
+        return new ModelAndView("default/finish_goods/ReportActualInventory", model);
     }
     
     // Rendering Module | Form and Report List

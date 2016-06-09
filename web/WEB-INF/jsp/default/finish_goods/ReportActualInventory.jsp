@@ -35,8 +35,9 @@
                                     <td style="width: 200px;">Pack Size</td>
                                     <td>
                                         <select id="packSize" name="packSize">
-                                            <option>307</option>
-                                            <option>603</option>
+                                            <c:forEach items="${packSize}" var="x">
+                                                <option value="${x}">${x}</option>
+                                            </c:forEach>
                                         </select>
                                     </td>
                                 </tr>
