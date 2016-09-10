@@ -12,6 +12,9 @@ import com.app.wms.engine.db.exceptions.DepartmentDaoException;
 import com.app.wms.engine.db.exceptions.ProductDaoException;
 import com.app.wms.engine.db.exceptions.StockInventoryDaoException;
 import com.app.wms.engine.db.factory.DaoFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.spfi.ims.helper.StringHelper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -224,35 +227,30 @@ public class TransferSlipController extends MultiActionController {
     public void ajaxSearch(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         /* DATA | get initial value */
-        Boolean b = Boolean.FALSE;
-        PrintWriter pw = response.getWriter();
-        StringBuilder sb = new StringBuilder();
+        JsonObject json = new JsonObject();
 
         /* DAO | Define needed dao here */
         TsDao tsDao = DaoFactory.createTsDao();
 
         /* TRANSACTION | Something complex here */
-        sb.append("{\"maxpage\": ").append(tsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where"))).append(",\"data\": [");
+        json.addProperty("maxpage", tsDao.ajaxMaxPage(new BigDecimal(request.getParameter("show")), request.getParameter("where")));
+        JsonArray data = new JsonArray();
         List<Map<String, Object>> ms = tsDao.ajaxSearch(Integer.parseInt(request.getParameter("page"), 10), Integer.parseInt(request.getParameter("show"), 10), request.getParameter("where"), request.getParameter("order"));
         for (Map<String, Object> x : ms) {
-            if (b) {
-                sb.append(",");
-            }
-            sb.append("{\"1\": \"").append(x.get("ts_code")).append("\", ");
-            sb.append("\"2\": \"").append(x.get("ts_code")).append("\", ");
-            sb.append("\"3\": \"").append(x.get("ts_date")).append("\", ");
-            sb.append("\"4\": \"").append(x.get("ts_type")).append("\", ");
-            sb.append("\"5\": \"").append(x.get("sws_code")).append("\", ");
-            sb.append("\"6\": \"").append(StringEscapeUtils.escapeHtml(x.get("ts_info").toString())).append("\", ");
-            sb.append("\"7\": \"").append(x.get("received_by") == null ? "<i>Not Set</i>" : (x.get("received_by").toString().isEmpty() ? "No" : "Yes")).append("\", ");
-            sb.append("\"8\": \"").append(x.get("created_by")).append("\"}");
-
-            b = Boolean.TRUE;
+            JsonObject row = new JsonObject();
+            row.addProperty("1", x.get("ts_code").toString());
+            row.addProperty("2", x.get("ts_code").toString());
+            row.addProperty("3", x.get("ts_date").toString());
+            row.addProperty("4", x.get("ts_type").toString());
+            row.addProperty("5", x.get("sws_code").toString());
+            row.addProperty("6", StringEscapeUtils.escapeHtml(x.get("ts_info").toString()));
+            row.addProperty("7", x.get("received_by") == null ? "<i>Not Set</i>" : (x.get("received_by").toString().isEmpty() ? "No" : "Yes"));
+            row.addProperty("8", x.get("created_by").toString());
+            data.add(row);
         }
-        sb.append("]}");
-        pw.print(sb.toString());
-        pw.flush();
-        pw.close();
+        
+        json.add("data", data);
+        new Gson().toJson(json, response.getWriter());
     }
     
     // 2015 Update | by FYA
