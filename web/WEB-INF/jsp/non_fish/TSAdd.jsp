@@ -126,7 +126,7 @@
                         $('#main').html(null);
                         for (var i = 0; i < json.length; i++) {
                             $('#main').append('<tr><td>' + (i + 1) + '</td><td>' + json[i][2] + '</td><td><input name="item" type="hidden" value="' + json[i][1] + '" />' + json[i][1] +
-                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]{1,}" data-max="' + json[i][4].replace(/,/g, "") +
+                                    '</td><td>' + json[i][3] + '</td><td>' + json[i][4] + '</td><td>' + json[i][100] + '</td><td><input class="detailQty" name="qty" pattern="[0-9]+([\.][0-9]+)?" data-max="' + json[i][4].replace(/,/g, "") +
                                     '" type="text" /></td><td>' + json[i][5] + '</td></tr>');
                         }
                     },

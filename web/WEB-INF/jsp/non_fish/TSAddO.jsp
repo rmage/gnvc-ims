@@ -129,7 +129,7 @@
                 select: function( event, ui ) {
                     $('#main').append('<tr><td><input class="delete ui-button ui-widget ui-state-default ui-corner-all" type="button" value="Delete" style="font-size: smaller;"></td><td>' + 
                         '<input name="item" type="hidden" value="' + ui.item.itemCode + '" />' + ui.item.itemCode + '</td><td>' + ui.item.itemName + '</td><td>' + ui.item.type + '</td><td>' + numberWithCommas(ui.item.soh) + 
-                        '</td><td><input name="qty" pattern="[0-9]{1,}" size="10" type="text" style="font-size: smaller;" required /></td><td>' + ui.item.uom + '</td></tr>');
+                        '</td><td><input name="qty" pattern="[0-9]+([\.][0-9]+)?" size="10" type="text" style="font-size: smaller;" required /></td><td>' + ui.item.uom + '</td></tr>');
                     $('#main tr:last input[type="text"]').focus();
                     $('#itemCode').val(null);
                 }
